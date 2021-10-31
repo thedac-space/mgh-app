@@ -1,0 +1,135 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@layer base {
+
+  /* @font-face {
+    font-family: 'Montserrat';
+    font-weight: 100;
+    src: url("./fonts/Montserrat/Montserrat-Thin.ttf");
+  }
+  @font-face {
+    font-family: 'Montserrat';
+    font-weight: 300;
+    src: url("./fonts/Montserrat/Montserrat-Light.ttf");
+  }
+  @font-face {
+    font-family: 'Montserrat';
+    font-weight: 400;
+    src: url("./fonts/Montserrat/Montserrat-Regular.ttf");
+  }
+  @font-face {
+    font-family: 'Montserrat';
+    font-weight: 500;
+    src: url("./fonts/Montserrat/Montserrat-SemiBold.ttf");
+  }
+  @font-face {
+    font-family: 'Montserrat';
+    font-weight: 800;
+    src: url("./fonts/Montserrat/Montserrat-Bold.ttf");
+  } */
+
+  
+  @font-face {
+    font-family: 'Alterwave';
+    font-weight: 400;
+    src: url("./fonts/Alterwave/Alterwave-Thin.ttf");
+  }
+  @font-face {
+    font-family: 'Alterwave';
+    font-weight: 500;
+    src: url("./fonts/Alterwave/Alterwave-Light.ttf");
+  }
+  @font-face {
+    font-family: 'Alterwave';
+    font-weight: 600;
+    src: url("./fonts/Alterwave/Alterwave-Regular.ttf");
+  }
+
+  @font-face {
+    font-family: 'Lighters';
+    font-weight: 400;
+    src: url("./fonts/Lighters-Regular.ttf");
+  }
+}
+
+.nav-item {
+  @apply transform hover:scale-110 transition-all duration-500 ease-in-out hover:text-blue-400;
+}
+
+.nav-item-selected {
+  @apply hidden lg:block pb-1 text-xl font-medium bg-transparent;
+}
+
+.social-media-icon {
+  @apply text-2xl sm:text-3xl md:text-4xl lg:text-3xl xl:text-4xl text-gray-200 transform hover:scale-125 transition duration-300 ease-in-out;
+}
+
+.button {
+  @apply text-center rounded-full px-4 sm:px-6 py-1.5 sm:py-2 bg-gray-400 bg-opacity-10 transform hover:scale-105 transition duration-300 ease-in-out hover:shadow-button sm:hover:shadow-color border border-white border-opacity-20 hover:border-opacity-70 cursor-pointer;
+}
+
+.button-text {
+  @apply text-gray-300 font-medium mt-0.5 text-base;
+}
+
+.long-text {
+  @apply text-gray-400 text-base lg:text-lg xl:text-xl max-w-md lg:max-w-2xl;
+}
+
+.short-text {
+  @apply text-gray-400 z-10 ;
+}
+
+@responsive {
+
+  .toolbar-top {
+    @apply z-50 p-5 top-5 fixed w-11/12 text-gray-200 rounded-2xl bg-white transition-all duration-500 bg-opacity-20;
+  }
+
+  .toolbar-scroll {
+    @apply z-50 p-5 top-0 fixed w-11/12 text-gray-200 rounded-b-2xl bg-white transition-all duration-500 bg-opacity-20 backdrop-filter backdrop-blur-3xl;
+  }
+
+  .toolbar-top-small {
+    @apply p-5 top-0 fixed w-full text-gray-200 bg-white bg-opacity-20 backdrop-filter backdrop-blur-3xl;
+  }
+
+}
+
+.space-img {
+  --animate-duration: 5s;
+}
+
+html {
+  @apply bg-black;
+  scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
+}
+
+h1 {
+  @apply text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-medium py-3;
+}
+
+h2 {
+  @apply text-5xl sm:text-6xl xl:text-7xl font-medium py-3;
+}
+
+h3 {
+}
+
+h4 {
+  @apply text-gray-200 text-xl mb-3 z-10 border-b max-w-max;
+}
+
+h6 {
+  @apply text-3xl xs:text-4xl  sm:text-5xl lg:text-6xl font-lighters py-2;
+}
+
+
+.progress-ring__circle {
+  stroke-dashoffset: 250;
+  stroke-dasharray: 500 500;
+}
