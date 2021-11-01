@@ -1,21 +1,18 @@
 import { useEffect, useState } from 'react';
 import type { NextPage } from 'next'
 import Head from 'next/head'
+import Link from "next/link"
 import "animate.css"
+import { RiHome6Line, RiMoneyDollarCircleLine } from "react-icons/ri"
+import { IoIosSwap, IoIosArrowDown } from "react-icons/io"
+import { VscLock } from "react-icons/vsc"
+import { MdOutlineCollections, MdOutlineAttachMoney } from "react-icons/md"
+import { BsQuestionCircle } from "react-icons/bs"
+import { HiOutlineSearch } from "react-icons/hi"
+import Valuation from '../components/Valuation';
 
-import Intro from "../components/Intro";
-import Footer from "../components/Footer";
 
-
-const Home: NextPage = () => {
-    const [scroll, setScroll] = useState(0);
-
-    useEffect(function onFirstMount() {
-        function onScroll() {
-            setScroll(window.scrollY);
-        }
-        window.addEventListener("scroll", onScroll, { passive: true });
-    }, []);
+const Home: NextPage = ({ prices }: any) => {
 
     return (
         <>
@@ -25,21 +22,10 @@ const Home: NextPage = () => {
                 {/* <meta name="robots" content="noodp,noydir" /> */}
             </Head>
 
-            <main className="flex flex-col items-center">
-                <Intro scroll={scroll} />
-
-                <div className="max-w-full 2xl:max-w-screen-2xl">
-
-
-                </div>
-
-            </main>
-
-            <Footer />
-
 
         </>
     )
 }
+
 
 export default Home

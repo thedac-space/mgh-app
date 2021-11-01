@@ -59,7 +59,8 @@ module.exports = {
         '1/2': '50%'
       },
       transitionProperty: {
-        'visibility': 'visibility'
+        'visibility': 'visibility',
+        'textColor': 'textColor'
       },
       boxShadow: {
         round: '0 0px 30px -15px rgba(0, 0, 0, 0.25)',
