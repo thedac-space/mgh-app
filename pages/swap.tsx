@@ -1,112 +1,68 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import "animate.css"
-import { RiHome6Line, RiMoneyDollarCircleLine } from "react-icons/ri"
-import { IoIosSwap, IoIosArrowDown } from "react-icons/io"
-import { VscLock } from "react-icons/vsc"
-import { MdOutlineCollections, MdOutlineAttachMoney } from "react-icons/md"
-import { BsQuestionCircle } from "react-icons/bs"
-import { HiOutlineSearch } from "react-icons/hi"
-import Valuation from '../components/Valuation';
+import { IoSwapVertical } from "react-icons/io5"
+
+import TokenInput from '../components/TokenInput';
+import { useAppSelector } from '../state/hooks';
+import { Network, Tokens } from '../state/types';
 
 
-const Home: NextPage = ({ prices }: any) => {
-    const [scroll, setScroll] = useState(0);
-
-    useEffect(function onFirstMount() {
-        function onScroll() {
-            setScroll(window.scrollY);
-        }
-        window.addEventListener("scroll", onScroll, { passive: true });
-    }, []);
+const Swap: NextPage = () => {
+    const [ethToMGH, setEthtoMGH] = useState(true);
+    const network = useAppSelector(state => state.network.value)
 
     return (
         <>
             <Head>
-                <title>MetaGameHub DAO</title>
+                <title>MGH - Swap</title>
                 <meta name="description" content="Governance of metaverse related items, fair valuation and minting of NFT backed tokens and provision of metaverse market data." />
-                {/* <meta name="robots" content="noodp,noydir" /> */}
             </Head>
 
-            <svg width="0" height="0">
-                <linearGradient id="blue-gradient" x1="100%" y1="100%" x2="0%" y2="0%">
-                    <stop stopColor="#7a6ded" offset="0%" />
-                    <stop stopColor="#591885" offset="100%" />
-                </linearGradient>
-            </svg>
+            <div className="h-full w-full flex flex-row items-center justify-evenly">
+                <div className="flex flex-col items-center border-t border-l border-opacity-20 shadow-black rounded-xl p-10 w-full bg-grey-dark bg-opacity-30 max-w-4xl">
+                    <h3 className="pb-5 text-gray-300">Swap</h3>
 
+                    {ethToMGH ? (
+                        <>
+                            <TokenInput name={network === Network.ETHEREUM ? Tokens.ETH : Tokens.MMGH} logo={network === Network.ETHEREUM ? "/images/ethereum-eth-logo.png" : "/images/mgh_logo.png"} direction="From" />
+                            <div className="my-3 flex w-full max-w-lg items-center justify-between">
+                                <hr className="w-1/12 border-gray-500" />
+                                <IoSwapVertical onClick={() => setEthtoMGH(!ethToMGH)} className=" text-6xl text-gray-300 hover:text-pink-600 cursor-pointer transform hover:rotate-180 transition ease-in-out duration-300 bg-grey-dark bg-opacity-70 rounded-full p-2" />
+                                <hr className="w-9/12 border-gray-500" />
+                            </div>
+                            <TokenInput name={network === Network.ETHEREUM ? Tokens.MGH : Tokens.MGH_DATA} logo="/images/mgh_logo.png" direction="To" />
+                        </>
+                    ) : (
+                        <>
+                            <TokenInput name={network === Network.ETHEREUM ? Tokens.MGH : Tokens.MGH_DATA} logo="/images/mgh_logo.png" direction="From" />
+                            <div className="my-3 flex w-full max-w-lg items-center justify-between">
+                                <hr className="w-1/12 border-gray-500" />
+                                <IoSwapVertical onClick={() => setEthtoMGH(!ethToMGH)} className=" text-6xl text-gray-300 hover:text-pink-600 cursor-pointer transform hover:rotate-180 transition ease-in-out duration-300 bg-grey-dark bg-opacity-70 rounded-full p-2" />
+                                <hr className="w-9/12 border-gray-500" />
+                            </div>
+                            <TokenInput name={network === Network.ETHEREUM ? Tokens.ETH : Tokens.MMGH} logo={network === Network.ETHEREUM ? "/images/ethereum-eth-logo.png" : "/images/mgh_logo.png"} direction="To" />
+                        </>
+                    )}
 
-            <div className="flex w-full h-screen bg-grey-darkest">
-
-                <div className="h-screen w-1/6 flex flex-col items-start p-5">
-                    <a href="/" className="hover:scale-110 transition-all duration-500 ease-in-out self-center">
-                        <img src="/images/mgh_logo.png" className={`h-18 w-18 mt-5 mb-16 animate__animated animate__flip`} />
-                    </a>
-
-                    <li className="space-y-6 w-full">
-                        <a href="/" className="flex items-center space-x-4 text-gray-500 font-medium text-xl rounded-xl p-3 w-full">
-                            <RiHome6Line className="text-2xl" />
-                            <span className="pt-1.5">Home</span>
-                        </a>
-
-                        <a href="/swap" className="flex items-center space-x-4 text-gray-500 font-medium text-xl rounded-xl p-3 w-full">
-                            <IoIosSwap className="text-2xl" />
-                            <span className="pt-1.5">Swap</span>
-                        </a>
-
-                        <a href="/" className="flex items-center space-x-4 text-gray-500 font-medium text-xl rounded-xl p-3 w-full">
-                            <VscLock className="text-2xl" />
-                            <span className="pt-1.5">Liquidity</span>
-                        </a>
-
-                        <a href="/" className="flex items-center space-x-4 text-gray-500 font-medium text-xl rounded-xl p-3 w-full">
-                            <MdOutlineCollections className="text-2xl" />
-                            <span className="pt-1.5">NFT Pools</span>
-                        </a>
-
-
-                        <a href="/" className="relative overflow-hidden flex items-center text-gray-200 font-medium text-xl rounded-xl p-3 w-full  shadow-black">
-                            <div className="h-full w-full absolute bg-gradient-to-br from-grey-dark to-grey-darkest rounded-xl blur-xl" />
-                            <MdOutlineAttachMoney className="text-2xl text-pink-600 z-10 mr-4" />
-                            <span className="pt-1 z-10">LAND Valuation</span>
-                        </a>
-                    </li>
+                    <button className="relative flex justify-center items-center border border-opacity-0 hover:border-opacity-20 hover:shadow-button transition ease-in-out duration-500 shadow-black rounded-xl w-full max-w-sm py-4 text-gray-200 font-medium text-lg mt-10 overflow-hidden">
+                        <div className="h-full w-full absolute bg-gradient-to-br transition-all ease-in-out duration-300 from-pink-600 to-blue-500 rounded-xl blur-2xl group-hover:blur-xl" />
+                        <span className="pt-1 z-10">Execute Swap</span>
+                    </button>
 
                 </div>
 
-                <div className="flex flex-col w-5/6 justify-end h-screen">
-
-                    <div className="flex space-x-10 h-1/6 w-full items-center justify-end p-10">
-
-                        <div className="relative flex items-center  justify-evenly cursor-pointer text-gray-600 hover:text-gray-200 transition ease-in-out duration-300 font-medium text-xl rounded-xl p-3 bg-white bg-opacity-5 group shadow-black overflow-hidden">
-                            <div className="h-full w-full absolute bg-gradient-to-br from-grey-dark to-grey-darkest rounded-xl blur-xl" />
-                            <img src="/images/ethereum-eth-logo.png" className="h-8 w-8 z-10" />
-                            <span className="pt-1 z-10 text-gray-200 px-3 ">Ethereum</span>
-                            {/* <span className="pt-1 z-10 text-transparent bg-clip-text bg-gradient-to-br from-pink-600 to-blue-500 px-3">Ethereum</span> */}
-                            <IoIosArrowDown className="z-10 text-2xl mt-1 " />
-                        </div>
-
-                        <div className="relative flex items-center justify-center cursor-pointer text-gray-200 font-medium text-xl rounded-xl p-3 px-5 bg-white bg-opacity-5 group shadow-black hover:scale-105 overflow-hidden transition ease-in-out duration-500">
-                            <div className="h-full w-full absolute bg-gradient-to-br transition-all ease-in-out duration-300 from-pink-600 to-blue-500 rounded-xl blur-2xl group-hover:blur-xl" />
-                            <span className="pt-1 z-10">Connect Wallet</span>
-                        </div>
-
-
+                <div className="flex flex-col space-y-10">
+                    <div className="flex flex-col text-center text-gray-200 p-3 border-t border-l border-opacity-0 rounded-xl w-72 bg-grey-dark bg-opacity-30 max-w-4xl">
+                        <h3 className="mb-5">Acquire Data Tokens</h3>
+                        <p>Switch to the Polygon network, swap $mMGH against our Data Token and access key metaverse related data through the Ocean marketplace.</p>
                     </div>
-
-
-                    <div className="w-full h-5/6 animate__animated animate__slideInRight grid grid-cols-2 gap-10 border-l border-t border-opacity-10 rounded-tl-3xl self-end bg-gradient-to-br from-grey-dark to-grey-darkest shadow-black p-10">
-
-                        <div className="col-span-full flex flex-col items-start p-5 w-full bg-grey-darkest bg-opacity-30 border-t border-l border-opacity-20 rounded-3xl shadow-black">
-                            <h2 className="text-transparent bg-clip-text bg-gradient-to-b from-blue-500 via-green-400 to-green-500 pt-5">Swap</h2>
-                            <p className={`text-lg xl:text-xl font-medium text-gray-200 mt-5`}>Find the real value of The Sandbox LANDs with our machine learning pricing algorithm.</p>
-                        </div>
-
-                        <Valuation prices={prices} />
-
+                    <div className="flex flex-col text-center text-gray-200 p-3 border-t border-l border-opacity-0 rounded-xl w-72 bg-grey-dark bg-opacity-30 max-w-4xl">
+                        <h3 className="mb-5">Get $mMGH</h3>
+                        <p>Simply change your $MGH Tokens to $mMGH Tokens using the Polygon Bridge.</p>
+                        <a href="https://wallet.polygon.technology/bridge" target="_blank" className="mt-3 text-gray-400 font-medium text-lg hover:text-blue-400 transition ease-in-out duration-300">Learn more</a>
                     </div>
-
                 </div>
 
             </div>
@@ -116,15 +72,5 @@ const Home: NextPage = ({ prices }: any) => {
     )
 }
 
-export async function getStaticProps() {
-    const res = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=ethereum%2Cthe-sandbox&vs_currencies=usd")
-    const prices = await res.json();
 
-    return {
-        props: {
-            prices,
-        },
-    }
-}
-
-export default Home
+export default Swap

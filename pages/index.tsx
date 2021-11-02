@@ -9,7 +9,6 @@ import { VscLock } from "react-icons/vsc"
 import { MdOutlineCollections, MdOutlineAttachMoney } from "react-icons/md"
 import { BsQuestionCircle } from "react-icons/bs"
 import { HiOutlineSearch } from "react-icons/hi"
-import Valuation from '../components/Valuation';
 
 
 const Home: NextPage = ({ prices }: any) => {

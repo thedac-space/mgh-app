@@ -5,7 +5,7 @@ const PriceCard = ({ showCard, processing, name, imageLink, openseaLink, sandbox
 
 
 
-        <div className={`${showCard ? "animate__zoomIn animate__fast" : "hidden"} ${processing && "animate__zoomOut"} animate__animated w-72 h-full relative flex flex-col pt-4 pb-2 items-center `}>
+        <div className={`${showCard ? "animate__zoomIn animate__fast" : "hidden"} ${processing && "animate__zoomOut"} animate__animated w-72 h-full  flex flex-col pt-4 pb-2 items-center `}>
             {/* <div className=" text-center w-28 h-28">
                 <Image className="rounded-lg object-cover" src="/images/land.jpg" layout="fill" />
             </div> */}
