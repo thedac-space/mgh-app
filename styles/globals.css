@@ -99,8 +99,16 @@
 
 }
 
-.space-img {
-  --animate-duration: 5s;
+/* .logo {
+  transform: rotateY(180deg);
+} */
+
+.logo { 
+  animation: rotation 1.5s infinite linear; 
+}
+
+@keyframes rotation {
+  100%{ transform:rotatey(360deg) }
 }
 
 html {
