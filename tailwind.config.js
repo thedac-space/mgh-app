@@ -8,10 +8,6 @@ module.exports = {
       animation: {
         'spin-slow': 'spin 1.5s linear infinite',
       },
-      inset: {
-        '1/5': '20%',
-        '1/6': '10%'
-      },
       maxWidth: {
         '1/4': '25%',
         '1/2': '50%',
@@ -26,7 +22,11 @@ module.exports = {
         '31': '7.75rem',
         '33': '8.25rem',
         '34': '8.5rem',
-        '38': '9.5rem'
+        '38': '9.5rem',
+        '0.15': '15%',
+        '0.125': '12.5%',
+        '1/5': '20%',
+        '1/6': '10%'
       },
       height: {
         '15': '3.75rem',
@@ -40,6 +40,7 @@ module.exports = {
       width: {
         '18': '4.5rem',
         '30': '7.5rem',
+        '70': '17.5rem'
       },
       scale: {
         '55': '.55',

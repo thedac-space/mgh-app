@@ -14,7 +14,7 @@ const Stake: NextPage = () => {
             </Head>
 
             <div className="h-full w-full flex flex-row items-center justify-evenly">
-                <p className="neonText text-9xl font-medium py-3">Coming Soon!</p>
+                <p className="neonText text-4xl sm:text-7xl font-medium py-3">Coming Soon!</p>
             </div>
 
 

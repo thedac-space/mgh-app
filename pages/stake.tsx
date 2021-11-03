@@ -20,7 +20,7 @@ const Stake: NextPage = () => {
             </Head>
 
             <div className="h-full w-full flex flex-row items-center justify-evenly">
-                <div className="flex flex-col items-center border-t border-l border-opacity-20 shadow-black rounded-xl p-10 w-full bg-grey-dark bg-opacity-30 max-w-4xl">
+                <div className="flex flex-col items-center border-t border-l border-opacity-20 shadow-black rounded-xl p-5 w-full bg-grey-dark bg-opacity-30 max-w-4xl">
                     <h3 className="pb-5 text-gray-300">MGH/ETH Pool</h3>
 
                     <TokenInput name={Tokens.MGH} logo="/images/mgh_logo.png" />
