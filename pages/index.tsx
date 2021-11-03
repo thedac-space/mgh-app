@@ -22,7 +22,7 @@ const Home: NextPage = () => {
                         <p className={`text-base xs:text-lg xl:text-xl font-medium text-gray-200 pt-0 sm:pt-5`}>Swap your MGH, become a liquidity provider by staking your tokens and access our data ecosytem.</p>
                     </div>
 
-                    <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-5 xs:gap-2 sm:gap-5 lg:gap-10 w-full">
+                    <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-5 xs:gap-2 sm:gap-5 2xl:gap-10 w-full">
                         <HomeCard image="/images/swap.jpeg" link="/swap" text="Swap your mMGH to access curated datasets about land land valuations from The Sandbox and Decentraland."/>
                         <HomeCard image="/images/liquidity.jpeg" link="/stake" text="Provide liquidity to the MGH/ETH Pool."/>
                         <HomeCard image="/images/nft-pools.jpeg" link="/pools" text="Stake your NFTs and enter the world of MetaFi."/>

@@ -15,7 +15,7 @@ const SmallScreenToolbar = () => {
     return (
         <>
 
-            <div className="flex space-x-10 xl:hidden h-16 sm:h-20 md:h-24 w-full items-center justify-between p-5 z-20 fixed top-0 left-0 backdrop-filter backdrop-blur-3xl">
+            <div className="flex space-x-10 xl:hidden h-16 sm:h-20 md:h-24 w-full items-center justify-between p-5 z-30 fixed top-0 left-0 backdrop-filter backdrop-blur-3xl">
                 <a href="/" className="hover:scale-110 transition-all duration-500 ease-in-out backdrop-filter rounded-full">
                     <img src="/images/mgh_logo.png" className={`h-10 sm:h-12 w-10 sm:w-12`} />
                 </a>
@@ -31,7 +31,7 @@ const SmallScreenToolbar = () => {
 
             </div>
 
-            <nav className={`${openSidebar ? "animate__animated animate__fadeInRight" : "animate__animated animate__fadeOutUp hidden"} p-5 pt-20 md:pt-32 z-10 top-0 right-0 fixed h-screen backdrop-filter backdrop-blur-3xl bg-black bg-opacity-30 flex flex-col justify-between items-center`} >
+            <nav className={`${openSidebar ? "animate__animated animate__fadeInRight" : "animate__animated animate__fadeOutUp hidden"} p-5 pt-20 md:pt-32 z-20 top-0 right-0 fixed h-screen backdrop-filter backdrop-blur-3xl bg-black bg-opacity-30 flex flex-col justify-between items-center`} >
                 <div onClick={() => setOpenSidebar(!openSidebar)} className="space-y-1 md:space-y-4 flex flex-col w-full">
                     <NavItem text="Home" link="/" />
                     <NavItem text="Swap" link="/swap" />
