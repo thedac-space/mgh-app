@@ -58,10 +58,10 @@ const Swap: NextPage = () => {
                         <h3 className="mb-5">Acquire Data Tokens</h3>
                         <p>Switch to the Polygon network, swap $mMGH against our Data Token and access key metaverse related data through the Ocean marketplace.</p>
                     </div>
-                    <div className="flex flex-col text-center text-gray-200 p-3 border-t border-l border-opacity-0 rounded-xl w-72 bg-grey-dark bg-opacity-30 max-w-4xl">
+                    <div className="flex flex-col text-center items-center text-gray-200 p-3 border-t border-l border-opacity-0 rounded-xl w-72 bg-grey-dark bg-opacity-30 max-w-4xl">
                         <h3 className="mb-5">Get $mMGH</h3>
                         <p>Simply change your $MGH Tokens to $mMGH Tokens using the Polygon Bridge.</p>
-                        <a href="https://wallet.polygon.technology/bridge" target="_blank" className="mt-3 text-gray-400 font-medium text-lg hover:text-blue-400 transition ease-in-out duration-300">Learn more</a>
+                        <a href="https://wallet.polygon.technology/bridge" target="_blank" className="mt-3 text-gray-400 font-medium max-w-max text-lg hover:text-blue-400 transition ease-in-out duration-300">Learn more</a>
                     </div>
                 </div>
 
