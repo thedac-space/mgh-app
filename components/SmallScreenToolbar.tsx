@@ -31,7 +31,7 @@ const SmallScreenToolbar = () => {
 
             </div>
 
-            <nav className={`${openSidebar ? "animate__animated animate__fadeInRight" : "animate__animated animate__fadeOutUp hidden"} p-5 pt-20 md:pt-32 z-10 top-0 right-0 fixed h-screen backdrop-filter backdrop-blur-3xl bg-black bg-opacity-40 flex flex-col justify-between items-center`} >
+            <nav className={`${openSidebar ? "animate__animated animate__fadeInRight" : "animate__animated animate__fadeOutUp hidden"} p-5 pt-20 md:pt-32 z-10 top-0 right-0 fixed h-screen backdrop-filter backdrop-blur-3xl bg-black bg-opacity-30 flex flex-col justify-between items-center`} >
                 <div onClick={() => setOpenSidebar(!openSidebar)} className="space-y-1 md:space-y-4 flex flex-col w-full">
                     <NavItem text="Home" link="/" />
                     <NavItem text="Swap" link="/swap" />

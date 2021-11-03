@@ -23,10 +23,10 @@ const Home: NextPage = () => {
                     </div>
 
                     <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-5 xs:gap-2 sm:gap-5 lg:gap-10 w-full">
-                        <HomeCard image="/images/mgh_ocean.jpeg" link="/swap" text="Swap your mMGH to access curated datasets about land land valuations from The Sandbox and Decentraland."/>
-                        <HomeCard image="/images/mgh_ocean.jpeg" link="/swap" text="Provide liquidity to the MGH/ETH Pool."/>
-                        <HomeCard image="/images/mgh_ocean.jpeg" link="/swap" text="Stake your NFTs and enter the world of MetaFi."/>
-                        <HomeCard image="/images/mgh_ocean.jpeg" link="/swap" text="Evaluate your metaverse lands and look for undervalued parcels."/>
+                        <HomeCard image="/images/swap.jpeg" link="/swap" text="Swap your mMGH to access curated datasets about land land valuations from The Sandbox and Decentraland."/>
+                        <HomeCard image="/images/liquidity.jpeg" link="/stake" text="Provide liquidity to the MGH/ETH Pool."/>
+                        <HomeCard image="/images/nft-pools.jpeg" link="/pools" text="Stake your NFTs and enter the world of MetaFi."/>
+                        <HomeCard image="/images/land-valuation.jpeg" link="/valuation" text="Evaluate your metaverse lands and look for undervalued parcels."/>
                     </div>
                 </div>
             </div>
