@@ -22,7 +22,7 @@ const PriceCard = ({ showCard, processing, name, imageLink, openseaLink, sandbox
                         <p className="font-medium">Opensea</p>
                         <FiExternalLink className="mb-0.5" />
                     </a>
-                    <a href={openseaLink} target="_blank" className="flex items-center max-w-max space-x-1 text-gray-300 text-sm hover:text-blue-400 transition duration-300 ease-in-out" >
+                    <a href={sandboxLink} target="_blank" className="flex items-center max-w-max space-x-1 text-gray-300 text-sm hover:text-blue-400 transition duration-300 ease-in-out" >
                         <p className="font-medium">Sandbox</p>
                         <FiExternalLink className="mb-0.5" />
                     </a>
