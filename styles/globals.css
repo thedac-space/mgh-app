@@ -147,7 +147,7 @@ h1 {
 }
 
 h2 {
-  @apply text-4xl lg:text-5xl xl:text-6xl font-medium py-3;
+  @apply text-3xl xs:text-4xl lg:text-5xl xl:text-6xl font-medium pt-0 sm:pt-3 pb-3;
 }
 
 h3 {

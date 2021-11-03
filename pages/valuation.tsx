@@ -150,7 +150,7 @@ const ValuationPage: NextPage = ({ prices }: any) => {
                                 <div className="relative flex flex-wrap items-center mb-2 pl-2 text-left w-full max-w-sm">
                                     <p className="font-medium text-gray-300 pt-1">Find by Token ID</p>
                                     <BsQuestionCircle className="text-gray-300 cursor-pointer peer ml-3" />
-                                    <p className="absolute -top-7 left-0 pl-2 px-2 py-1 rounded-lg bg-black bg-opacity-10 backdrop-filter backdrop-blur font-medium text-xs text-gray-400 hidden peer-hover:block w-70">Find LAND on Opensea &gt; Details &gt; Token ID</p>
+                                    <p className="absolute -top-7 -left-6 xs:left-0 pl-2 px-2 py-1 rounded-lg bg-black bg-opacity-10 backdrop-filter backdrop-blur font-medium text-xs text-gray-400 hidden peer-hover:block w-70">Find LAND on Opensea &gt; Details &gt; Token ID</p>
                                 </div>
                                 <form onSubmit={handleIDSubmit} onInput={() => { setIdError(""); setCoordinatesError("") }} className="relative flex items-center w-full rounded-xl max-w-sm">
                                     <input required id="tokenID" type="text" placeholder="e.g. 72792" className={`bg-transparent w-full text-white font-medium p-4 focus:outline-none border ${idError ? "border-red-500 border-opacity-100" : "border-opacity-40 "} hover:border-opacity-100 focus:border-opacity-100 transition duration-300 ease-in-out rounded-xl placeholder-white placeholder-opacity-75`} />
