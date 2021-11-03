@@ -40,7 +40,7 @@ const SmallScreenToolbar = () => {
                     <NavItem text="LAND Valuation" link="/valuation" />
                 </div>
 
-                <div className="flex flex-col space-y-3 md:hidden mb-10">
+                <div className="flex flex-col space-y-3 md:hidden mb-12">
                     <NetworkButton />
                     <WalletButton />
                 </div>
