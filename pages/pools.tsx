@@ -1,10 +1,8 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import "animate.css"
 
 
-
-const Stake: NextPage = () => {
+const Pools: NextPage = () => {
 
     return (
         <>
@@ -23,4 +21,4 @@ const Stake: NextPage = () => {
 }
 
 
-export default Stake
+export default Pools

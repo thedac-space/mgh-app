@@ -1,8 +1,6 @@
-import React, { useState } from "react";
 import { NextPage } from "next";
 import Head from "next/head";
-import "animate.css"
-import Link from "next/link";
+
 import HomeCard from "../components/HomeCard";
 
 
@@ -11,8 +9,8 @@ const Home: NextPage = () => {
     return (
         <>
             <Head>
-                <title>MGH - LAND valuation</title>
-                <meta name="description" content="Governance of metaverse related items, fair valuation and minting of NFT backed tokens and provision of metaverse market data." />
+                <title>MGH - App</title>
+                <meta name="description" content="Swap your MGH, become a liquidity provider by staking your tokens and access our data ecosytem." />
             </Head>
             <div className="h-full w-full flex flex-row items-center justify-evenly">
                 <div className="w-full flex flex-col items-center justify-start space-y-10 max-w-7xl">

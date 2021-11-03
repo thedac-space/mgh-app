@@ -1,7 +1,3 @@
-import React, { useState } from "react";
-import { NextPage } from "next";
-import Head from "next/head";
-import "animate.css"
 import Link from "next/link";
 
 

@@ -1,12 +1,9 @@
-import { useState } from 'react';
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import "animate.css"
-import { IoSwapVertical } from "react-icons/io5"
 
 import TokenInput from '../components/TokenInput';
 import { useAppSelector } from '../state/hooks';
-import { Network, Tokens } from '../state/types';
+import { Tokens } from '../state/types';
 
 
 const Stake: NextPage = () => {

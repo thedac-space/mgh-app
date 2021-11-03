@@ -1,15 +1,9 @@
-import { useEffect, useState } from 'react';
-import type { NextPage } from 'next'
-import Head from 'next/head'
+import { useRouter } from 'next/dist/client/router';
 import Link from "next/link"
-import "animate.css"
-import { RiHome6Line, RiMoneyDollarCircleLine } from "react-icons/ri"
-import { IoIosSwap, IoIosArrowDown } from "react-icons/io"
+import { RiHome6Line } from "react-icons/ri"
+import { IoIosSwap } from "react-icons/io"
 import { VscLock } from "react-icons/vsc"
 import { MdOutlineCollections, MdOutlineAttachMoney } from "react-icons/md"
-import { BsQuestionCircle } from "react-icons/bs"
-import { HiOutlineSearch } from "react-icons/hi"
-import { useRouter } from 'next/dist/client/router';
 
 
 const NavItem = ({ text, link }: any) => {

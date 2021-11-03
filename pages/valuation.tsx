@@ -2,13 +2,9 @@ import React, { useState } from "react";
 import { NextPage } from "next";
 import Head from "next/head";
 import "animate.css"
-import Image from "next/image";
 import { HiOutlineSearch } from "react-icons/hi"
 import { BsQuestionCircle } from "react-icons/bs"
 
-
-import Footer from "../components/Footer";
-import Toolbar from "../components/Toolbar";
 import PriceCard from "../components/PriceCard";
 
 

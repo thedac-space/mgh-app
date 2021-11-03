@@ -1,13 +1,15 @@
-import '../styles/globals.css'
-import type { AppProps } from 'next/app'
 
-import Layout from '../components/Layout'
+import type { AppProps } from 'next/app'
 import { Router } from 'next/router';
 import NProgress from 'nprogress'; //nprogress module
-import '/styles/nprogress.css'; //styles of nprogress
+import { Provider } from 'react-redux'
 
 import store from '../state/store'
-import { Provider } from 'react-redux'
+import Layout from '../components/Layout'
+
+import '/styles/nprogress.css'; //styles of nprogress
+import '../styles/globals.css'
+
 
 NProgress.configure({ showSpinner: false });
 Router.events.on('routeChangeStart', () => NProgress.start());

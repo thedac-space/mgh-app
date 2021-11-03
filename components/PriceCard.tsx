@@ -2,9 +2,6 @@ import { FiExternalLink } from "react-icons/fi"
 
 const PriceCard = ({ showCard, processing, name, imageLink, openseaLink, sandboxLink, tokenID, ethPrice, sandPrice, usdPrice }: any) => {
     return (
-
-
-
         <div className={`${showCard ? "animate__fadeIn" : "hidden"} ${processing && "animate__fadeOut"} animate__animated relative w-full h-full space-x-0 lg:space-x-10 2xl:space-x-14 space-y-3 lg:space-y-0 flex flex-col lg:flex-row items-center`}>
             <div className="flex flex-col flex-grow 2xl:flex-none items-center lg:items-start">
                 <a href={sandboxLink} target="_blank" className="relative w-28 md:w-36 h-28 md:h-36 hover:shadow-black">

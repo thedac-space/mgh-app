@@ -1,15 +1,9 @@
 import "animate.css"
-import { useState } from "react";
 
 import NavItem from './NavItem';
 import NetworkButton from "./NetworkButton"
 import WalletButton from "./WalletButton"
 import SmallScreenToolbar from "./SmallScreenToolbar"
-
-import { HiMenuAlt4 } from "react-icons/hi"
-import { MdClose } from "react-icons/md"
-import { useDispatch, useSelector } from "react-redux";
-
 
 
 const Layout = ({ children }: any) => {

@@ -1,6 +1,3 @@
-import "animate.css"
-
-
 const WalletButton = () => {
 
     return (

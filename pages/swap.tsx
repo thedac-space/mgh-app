@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import "animate.css"
 import { IoSwapVertical } from "react-icons/io5"
 
 import TokenInput from '../components/TokenInput';
@@ -66,7 +65,6 @@ const Swap: NextPage = () => {
                 </div>
 
             </div>
-
 
         </>
     )
