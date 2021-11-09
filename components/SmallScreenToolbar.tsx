@@ -21,7 +21,7 @@ const SmallScreenToolbar = () => {
 
                 <div className="md:flex space-x-0 xl:space-x-10 hidden items-center flex-grow justify-end">
                     <NetworkButton />
-                    <WalletButton />
+                    {/* <WalletButton /> */}
                 </div>
 
                 <div className={`transform hover:scale-110 transition duration-300 ease-in-out text-gray-200 cursor-pointer backdrop-filter rounded-full`} onClick={() => setOpenSidebar(!openSidebar)}>
@@ -34,14 +34,15 @@ const SmallScreenToolbar = () => {
                 <div onClick={() => setOpenSidebar(!openSidebar)} className="space-y-1 md:space-y-4 flex flex-col w-full">
                     <NavItem text="Home" link="/" />
                     <NavItem text="Swap" link="/swap" />
-                    <NavItem text="Liquidity" link="/stake" />
+                    <NavItem text="Liquidity" link="/liquidity" />
+                    <NavItem text="Stake" link="/stake" />
                     <NavItem text="NFT Pools" link="/pools" />
                     <NavItem text="LAND Valuation" link="/valuation" />
                 </div>
 
                 <div className="flex flex-col space-y-3 md:hidden mb-12">
                     <NetworkButton />
-                    <WalletButton />
+                    {/* <WalletButton /> */}
                 </div>
             </nav>
 

@@ -10,7 +10,7 @@ const Layout = ({ children }: any) => {
 
     return (
         <>
-            <div className="flex flex-col w-screen h-full xl:h-screen pt-0 xl:pt-0 bg-grey-darkest overflow-hidden">
+            <div className="flex flex-col w-screen h-full min-h-screen xl:h-screen pt-0 xl:pt-0 bg-grey-darkest overflow-hidden">
 
                 <div className="h-72 w-72 rounded-full border bg-gradient-to-br from-blue-500 to-pink-600 blur-3xl fixed top-0 left-0 xl:top-20 xl:left-0.15 2xl:left-0.125 opacity-80"/>
 
@@ -26,7 +26,7 @@ const Layout = ({ children }: any) => {
 
                     <div className="flex space-x-10">
                         <NetworkButton />
-                        <WalletButton />
+                        {/* <WalletButton /> */}
                     </div>
                 </div>
 
@@ -36,7 +36,8 @@ const Layout = ({ children }: any) => {
                         <div className="space-y-6 flex flex-col w-full">
                             <NavItem text="Home" link="/" />
                             <NavItem text="Swap" link="/swap" />
-                            <NavItem text="Liquidity" link="/stake" />
+                            <NavItem text="Liquidity" link="/liquidity" />
+                            <NavItem text="Stake" link="/stake" />
                             <NavItem text="NFT Pools" link="/pools" />
                             <NavItem text="LAND Valuation" link="/valuation" />
                         </div>
