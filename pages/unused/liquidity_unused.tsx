@@ -1,9 +1,9 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 
-import TokenInput from '../components/TokenInput';
-import { useAppSelector } from '../state/hooks';
-import { Tokens } from '../state/types';
+import TokenInput from '../../components/TokenInput';
+import { useAppSelector } from '../../state/hooks';
+import { Tokens } from '../../state/types';
 
 
 const Stake: NextPage = () => {

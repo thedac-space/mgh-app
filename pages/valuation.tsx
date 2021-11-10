@@ -130,8 +130,8 @@ const ValuationPage: NextPage = ({ prices }: any) => {
                 <meta name="description" content="Governance of metaverse related items, fair valuation and minting of NFT backed tokens and provision of metaverse market data." />
             </Head>
 
-            <div className="h-full w-full flex flex-row items-center justify-evenly">
-                <div className="w-full flex flex-col items-center justify-start space-y-10 max-w-5xl">
+            {/* <div className="h-full w-full flex flex-row items-center justify-evenly mt-8 xl:mt-0"> */}
+                <div className="w-full flex flex-col items-center justify-start space-y-10 max-w-5xl mt-8 xl:mt-0">
 
                     <div className="flex flex-col items-start border-t border-l border-opacity-20 shadow-blck rounded-xl p-5 w-full bg-grey-dark bg-opacity-30 text-left">
                         <h2 className="text-transparent bg-clip-text bg-gradient-to-b from-blue-500 via-green-400 to-green-500">LAND Valuation</h2>
@@ -182,7 +182,7 @@ const ValuationPage: NextPage = ({ prices }: any) => {
                         </div>
                     </div>
                 </div>
-            </div>
+            {/* </div> */}
         </>
     )
 };

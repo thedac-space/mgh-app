@@ -4,6 +4,7 @@ import { RiHome6Line } from "react-icons/ri"
 import { IoIosSwap } from "react-icons/io"
 import { VscLock } from "react-icons/vsc"
 import { MdOutlineCollections, MdOutlineAttachMoney } from "react-icons/md"
+import {FaHandHoldingUsd} from "react-icons/fa"
 
 
 const NavItem = ({ text, link }: any) => {
@@ -21,7 +22,7 @@ const NavItem = ({ text, link }: any) => {
             case "/liquidity":
                 return <VscLock className={`text-2xl mr-4 z-10 ${focus && "text-pink-600"} group-hover:text-pink-600`} />
             case "/stake":
-                return <VscLock className={`text-2xl mr-4 z-10 ${focus && "text-pink-600"} group-hover:text-pink-600`} />
+                return <FaHandHoldingUsd className={`text-2xl mr-4 z-10 ${focus && "text-pink-600"} group-hover:text-pink-600`} />
             case "/pools":
                 return <MdOutlineCollections className={`text-2xl mr-4 z-10 ${focus && "text-pink-600"} group-hover:text-pink-600`} />
             case "/valuation":
