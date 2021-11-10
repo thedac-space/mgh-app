@@ -17,7 +17,7 @@ const Liquidity: NextPage = () => {
                     src="https://app.uniswap.org/#/add/v2/0x6B175474E89094C44Da98b954EedeAC495271d0F/0xdAC17F958D2ee523a2206206994597C13D831ec7/theme=dark"
                     height="700px"
                     width="100%"
-                    className="rounded-none xl:rounded-xl shadow-black opacity-80 w-screen h-screen xl:w-full xl:h-full bg-transparent"
+                    className="rounded-none xl:rounded-xl shadow-black opacity-80 w-screen h-screen xl:w-full xl:h-full bg-transparent overscroll-auto"
                 />
 
 
