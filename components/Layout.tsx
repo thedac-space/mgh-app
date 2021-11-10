@@ -43,7 +43,7 @@ const Layout = ({ children }: any) => {
                         </div>
                     </div>
 
-                    <main className="z-10 w-full h-full pt-16 xs:pt-16 sm:pt-20 md:pt-24 xl:pt-10 p-4 xs:p-6 sm:p-10 min-h-screen flex items-start justify-center xl:min-h-full flex-grow overflow-scroll overscroll-contai animate-none xl:animate__animated animate__slideInRight border-l border-t border-opacity-0 xl:border-opacity-20 rounded-none xl:rounded-tl-3xl self-end  bg-grey-dark bg-opacity-30 shadow-black ">
+                    <main className="z-10 w-full h-full pt-16 xs:pt-16 sm:pt-20 md:pt-24 xl:pt-10 p-4 xs:p-6 sm:p-10 min-h-screen flex items-start justify-center xl:min-h-full flex-grow overflow-scroll overscroll-contain animate-none xl:animate__animated animate__slideInRight border-l border-t border-opacity-0 xl:border-opacity-20 rounded-none xl:rounded-tl-3xl self-end  bg-grey-dark bg-opacity-30 shadow-black ">
                         {children}
                     </main>
 
