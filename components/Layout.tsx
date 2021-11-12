@@ -26,7 +26,7 @@ const Layout = ({ children }: any) => {
 
                     <div className="flex space-x-10">
                         {/* <NetworkButton /> */}
-                        {/* <WalletButton /> */}
+                        <WalletButton />
                     </div>
                 </div>
 
