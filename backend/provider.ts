@@ -1,15 +1,17 @@
 import Web3Modal from "web3modal";
 import { ethers } from "ethers";
 import WalletConnectProvider from "@walletconnect/web3-provider";
+import { useAppDispatch } from "../state/hooks";
+import { connect } from "../state/account";
 
 
 export const connectWallet = async () => {
+
   const providerOptions = {
     walletconnect: {
       package: WalletConnectProvider,
       options: {
-        // Mikko's test key - don't copy as your mileage may vary
-        infuraId: "8043bb2cf99347b1bfadfb233c5325c0",
+        infuraId: "03bfd7b76f3749c8bb9f2c91bdba37f3",
       }
     }
   };
@@ -21,27 +23,31 @@ export const connectWallet = async () => {
   });
 
   const provider = await web3Modal.connect();
-
-  // const provider = new ethers.providers.Web3Provider(modalProvider)
   console.log(provider)
 
+  const web3Provider = new ethers.providers.Web3Provider(provider)
+  console.log("provider: ", web3Provider)
+  const network = await web3Provider.getNetwork()
+  console.log("network: ", network)
+
   // Subscribe to accounts change
-  provider.on("accountsChanged", (accounts: string[]) => {
+  web3Provider.on("accountsChanged", (accounts: string[]) => {
     console.log(accounts);
   });
 
   // Subscribe to chainId change
-  provider.on("chainChanged", (chainId: number) => {
+  web3Provider.on("chainChanged", (chainId: number) => {
     console.log(chainId);
   });
 
   // Subscribe to provider connection
-  provider.on("connect", (info: { chainId: number }) => {
+  web3Provider.on("connect", (info: { chainId: number }) => {
     console.log(info);
   });
 
   // Subscribe to provider disconnection
-  provider.on("disconnect", (error: { code: number; message: string }) => {
+  web3Provider.on("disconnect", (error: { code: number; message: string }) => {
     console.log(error);
   });
+  return web3Provider
 }

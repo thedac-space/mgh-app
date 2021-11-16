@@ -1,10 +1,10 @@
 import supportedChains from './chains'
 import { IChainData } from './types'
 
-export function getChainData(chainId?: number): IChainData {
-  if (!chainId) {
-    return null
-  }
+export function getChainData(chainId: number): IChainData {
+  // if (!chainId) {
+  //   return null
+  // }
   const chainData = supportedChains.filter(
     (chain: any) => chain.chain_id === chainId
   )[0]
@@ -13,7 +13,7 @@ export function getChainData(chainId?: number): IChainData {
     throw new Error('ChainId missing or not supported')
   }
 
-  const API_KEY = '460f40a260564ac4a4f4b3fffb032dad'
+  const API_KEY = '03bfd7b76f3749c8bb9f2c91bdba37f3'
 
   if (
     chainData.rpc_url.includes('infura.io') &&

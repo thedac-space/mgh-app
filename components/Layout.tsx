@@ -8,6 +8,7 @@ import SmallScreenToolbar from "./SmallScreenToolbar"
 
 const Layout = ({ children }: any) => {
 
+
     return (
         <>
             <div className="flex flex-col w-screen h-full min-h-screen xl:h-screen pt-0 xl:pt-0 bg-grey-darkest overflow-hidden">

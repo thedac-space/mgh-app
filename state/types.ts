@@ -12,4 +12,9 @@ export enum Tokens {
 
 export interface NetworkState {
     value: Network
-  }
+}
+
+export interface AccountState {
+    connected: Boolean,
+    provider: any
+}

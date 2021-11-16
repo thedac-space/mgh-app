@@ -1,8 +1,12 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
+import useWeb3 from '../backend/useWeb3'
 
 
 const Swap: NextPage = () => {
+
+    const provider = useWeb3()
+    console.log("SWAP: ", provider)
 
     return (
         <>
