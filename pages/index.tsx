@@ -1,18 +1,26 @@
 import { NextPage } from "next";
 import Head from "next/head";
-import useWeb3 from "../backend/useWeb3";
-
+import useProvider from "../backend/provider";
 import HomeCard from "../components/HomeCard";
-import { connect, disconnect } from "../state/account";
+import { getLocal, removeLocal } from "../lib/local";
+import { setAddress, setChain, disconnect } from "../state/account";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
+import { Provider } from "../state/types";
 
 
 const Home: NextPage = () => {
-    const { connected } = useAppSelector(state => state.account)
+    const { address, chainId } = useAppSelector(state => state.account)
     const dispatch = useAppDispatch()
+    const provider = useProvider()
 
-    const provider = useWeb3()
-    console.log("HOME: ", provider)
+    const disconnectWallet = async() =>{
+        if (provider === Provider.WALLETCONNECT) {
+            await provider.disconnect()
+        }
+        removeLocal("provider")
+        dispatch(disconnect())
+    }
+
 
     return (
         <>
@@ -26,7 +34,7 @@ const Home: NextPage = () => {
                 <div className="flex flex-col items-start border-t border-l border-opacity-20 shadow-blck rounded-xl p-5 w-full bg-grey-dark bg-opacity-30 text-left">
                     <h2 className="text-transparent bg-clip-text bg-gradient-to-br from-pink-500 via-blue-400 to-blue-500">Leverage the MetaGameHub<br /> DeFi Ecosystem</h2>
                     <p className={`text-base xs:text-lg xl:text-xl font-medium text-gray-200 pt-0 sm:pt-5`}>Swap your MGH, become a liquidity provider and access our data ecosytem.</p>
-                    <p className="text-white">{connected ? "connected" : "disconnected"} - provider: { }</p>
+                    <p onClick={disconnectWallet} className="text-white cursor-pointer">Disconnect, {chainId}, {address}</p>
                 </div>
 
                 <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-5 xs:gap-2 sm:gap-5 w-full">

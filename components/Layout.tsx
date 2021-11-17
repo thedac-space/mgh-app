@@ -1,25 +1,48 @@
 import "animate.css"
 
 import NavItem from './NavItem';
-import NetworkButton from "./NetworkButton"
 import WalletButton from "./WalletButton"
 import SmallScreenToolbar from "./SmallScreenToolbar"
+import WalletModal from "./WalletModal";
+import { useEffect, useState } from "react";
+import useConnectWallet from "../backend/connectWallet";
+import { useAppDispatch } from "../state/hooks";
+import { setAddress, setChain } from "../state/account";
 
 
 const Layout = ({ children }: any) => {
+    const [openModal, setOpenModal] = useState(false)
+    const dispatch = useAppDispatch()
+    const { walletProvider, provider, getAddress, getChainId } = useConnectWallet();
+
+    useEffect(() => {
+
+        getAddress().then(res => {
+            if (res) {
+                dispatch(setAddress(res))
+            }
+        })
+        getChainId().then(res => {
+            if (res) {
+                dispatch(setChain(res))
+            }
+        })
+
+    }, [walletProvider, provider])
 
 
     return (
         <>
             <div className="flex flex-col w-screen h-full min-h-screen xl:h-screen pt-0 xl:pt-0 bg-grey-darkest overflow-hidden">
+                {openModal && <WalletModal onDismiss={() => setOpenModal(false)} />}
 
-                <div className="h-72 w-72 rounded-full border bg-gradient-to-br from-blue-500 to-pink-600 blur-3xl fixed top-0 left-0 xl:top-20 xl:left-0.15 2xl:left-0.125 opacity-80"/>
+                <div className="h-72 w-72 rounded-full border bg-gradient-to-br from-blue-500 to-pink-600 blur-3xl fixed top-0 left-0 xl:top-20 xl:left-0.15 2xl:left-0.125 opacity-80" />
 
-                <div className="h-72 w-72 rounded-tl-full border bg-gradient-to-br from-blue-500 to-pink-600 blur-3xl fixed bottom-0 right-0 opacity-50"/>
+                <div className="h-72 w-72 rounded-tl-full border bg-gradient-to-br from-blue-500 to-pink-600 blur-3xl fixed bottom-0 right-0 opacity-50" />
 
 
-                <SmallScreenToolbar />
-                
+                <SmallScreenToolbar onWalletClick={() => setOpenModal(true)} />
+
                 <div className="hidden xl:flex space-x-10 h-32 w-full items-center justify-between p-10">
                     <a href="/" className="hover:scale-110 transition-all duration-500 ease-in-out ">
                         <img src="/images/mgh_logo.png" className={` h-18 w-18`} />
@@ -27,7 +50,7 @@ const Layout = ({ children }: any) => {
 
                     <div className="flex space-x-10">
                         {/* <NetworkButton /> */}
-                        <WalletButton />
+                        <WalletButton onClick={() => setOpenModal(true)} />
                     </div>
                 </div>
 

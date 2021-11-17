@@ -31,7 +31,7 @@ export function getChainData(chainId: number): IChainData {
   return chainData
 }
 
-export function ellipseAddress(address = '', width = 10): string {
+export function ellipseAddress(address = '', width = 5): string {
   if (!address) {
     return ''
   }

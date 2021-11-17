@@ -15,6 +15,12 @@ export interface NetworkState {
 }
 
 export interface AccountState {
-    connected: Boolean,
-    provider: any
+    connected: boolean,
+    address: string | undefined,
+    chainId: string | undefined
+}
+
+export enum Provider {
+    METAMASK = "metamask",
+    WALLETCONNECT = "walletconnect"
 }
