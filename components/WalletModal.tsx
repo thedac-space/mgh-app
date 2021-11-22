@@ -10,27 +10,11 @@ const WalletModal = ({ onDismiss }: any) => {
     const mounted = useRef(true)
 
     useEffect(() => {
-        // detectEthereumProvider().then((res: any) => {
-        //     mounted.current && setProvider(res)
-        // })
-        if (window.ethereum) {
-            setProvider(window.ethereum)
-        } else {
-            window.addEventListener('ethereum#initialized', handleEthereum, {
-                once: true,
-            });
-
-            // If the event is not dispatched by the end of the timeout,
-            // the user probably doesn't have MetaMask installed.
-            setTimeout(handleEthereum, 3000); // 3 seconds
-        }
-
-        function handleEthereum() {
-            setProvider(window.ethereum)
-        }
+        detectEthereumProvider().then((res: any) => {
+            mounted.current && setProvider(res)
+        })
         return () => { mounted.current = false }
     }, [])
-
 
     return (
         <div className="absolute flex items-center justify-center h-screen w-screen z-50">
