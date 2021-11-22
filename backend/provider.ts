@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import WalletConnectProvider from "@walletconnect/web3-provider"
+import detectEthereumProvider from '@metamask/detect-provider';
 
 import { getLocal, removeLocal } from "../lib/local"
 import { Provider } from "../lib/enums"
@@ -12,13 +13,16 @@ const useProvider = () => {
     useEffect(() => {
 
         if (providerId === Provider.METAMASK) {
-            window.ethereum.enable()
-                .then(() => {
-                    setProvider(window.ethereum)
-                })
-                .catch(() => {
-                    removeLocal("provider")
-                })
+            detectEthereumProvider().then((windowEthereum: any) => {
+                windowEthereum.enable()
+                    .then(() => {
+                        setProvider(windowEthereum)
+                    })
+                    .catch(() => {
+                        removeLocal("provider")
+                    })
+            })
+
 
         } else if (providerId === Provider.WALLETCONNECT) {
             const walletConnect = new WalletConnectProvider({

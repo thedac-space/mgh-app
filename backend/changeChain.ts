@@ -12,7 +12,7 @@ const changeChain = async (provider: any) => {
         // if it is not, then install it into the user MetaMask
         if (error.code === 4902) {
             try {
-                await window.ethereum.request({
+                await provider.request({
                     method: 'wallet_addEthereumChain',
                     params: [
                         {
