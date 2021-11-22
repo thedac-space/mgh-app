@@ -1,5 +1,6 @@
 import { NextPage } from "next";
 import Head from "next/head";
+import useConnectWallet from "../backend/connectWallet";
 import useProvider from "../backend/provider";
 import HomeCard from "../components/HomeCard";
 import { getLocal, removeLocal } from "../lib/local";
@@ -8,18 +9,21 @@ import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { Provider } from "../state/types";
 
 
-const Home: NextPage = () => {
+const Home: NextPage = ({onDisconnect}:any) => {
     const { address, chainId } = useAppSelector(state => state.account)
-    const dispatch = useAppDispatch()
-    const provider = useProvider()
+    const { walletProvider, provider, getAddress, getChainId, disconnectWallet } = useConnectWallet();
+    // const dispatch = useAppDispatch()
+    // const provider = useProvider()
 
-    const disconnectWallet = async() =>{
-        if (provider === Provider.WALLETCONNECT) {
-            await provider.disconnect()
-        }
-        removeLocal("provider")
-        dispatch(disconnect())
-    }
+    // const disconnectWallet = async() =>{
+    //     if (provider === Provider.WALLETCONNECT) {
+    //         await provider.disconnect()
+    //     }
+    //     removeLocal("provider")
+    //     dispatch(disconnect())
+    // }
+
+    console.log("index address", address)
 
 
     return (

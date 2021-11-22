@@ -1,18 +1,21 @@
 import { ethers } from "ethers";
 import { useAppDispatch } from "../state/hooks";
-import { disconnect, setAddress } from "../state/account";
+import { disconnect, setAddress, setChain } from "../state/account";
 import { removeLocal } from "../lib/local";
 import { useEffect, useState } from "react";
 import { Web3Provider } from "@ethersproject/providers";
 import useProvider from "./provider";
+import { Provider } from "../state/types";
 
 
 export default function useConnectWallet() {
   const [walletProvider, setProvider] = useState<Web3Provider>()
   const dispatch = useAppDispatch()
   const provider = useProvider()
+  console.log("useConnectWallet", provider)
 
   useEffect(() => {
+    console.log("useEffect useConnectWallet", provider)
     if (!provider) {
       return
     }
@@ -30,8 +33,9 @@ export default function useConnectWallet() {
     provider.on("accountsChanged", (accounts: string[]) => {
       // dispatch(setAddress(accounts[0]))
       if (accounts.length === 0) {
-        removeLocal("provider")
-        dispatch(disconnect())
+        disconnectWallet()
+        // removeLocal("provider")
+        // dispatch(disconnect())
       }
       console.log("accountsChanged", accounts);
     });
@@ -45,7 +49,26 @@ export default function useConnectWallet() {
     provider.on("disconnect", (error: { code: number; message: string }) => {
       console.log(error);
     });
+
+    web3Provider.listAccounts().then(res=>{
+      console.log("address",res,res[0])
+      dispatch(setAddress(res[0]))
+    })
+
+    web3Provider.getNetwork().then(res=>{
+      console.log("chainId", res.chainId)
+      dispatch(setChain(res.chainId))
+    })
+    
   }, [provider])
+
+  const disconnectWallet = async () => {
+    if (provider === Provider.WALLETCONNECT) {
+      await provider.disconnect()
+    }
+    removeLocal("provider")
+    dispatch(disconnect())
+  }
 
   const getAddress = async () => {
     const address = await walletProvider?.listAccounts()
@@ -57,6 +80,6 @@ export default function useConnectWallet() {
     return network ? network.chainId : null
   }
 
-  return { walletProvider, provider, getAddress, getChainId }
+  return { walletProvider, provider, getAddress, getChainId, disconnectWallet }
 
 }

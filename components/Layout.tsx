@@ -17,16 +17,16 @@ const Layout = ({ children }: any) => {
 
     useEffect(() => {
 
-        getAddress().then(res => {
-            if (res) {
-                dispatch(setAddress(res))
-            }
-        })
-        getChainId().then(res => {
-            if (res) {
-                dispatch(setChain(res))
-            }
-        })
+        // getAddress().then(res => {
+        //     if (res) {
+        //         dispatch(setAddress(res))
+        //     }
+        // })
+        // getChainId().then(res => {
+        //     if (res) {
+        //         dispatch(setChain(res))
+        //     }
+        // })
 
     }, [walletProvider, provider])
 
