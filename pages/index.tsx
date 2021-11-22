@@ -1,29 +1,42 @@
 import { NextPage } from "next";
 import Head from "next/head";
+import { ethers } from "ethers";
+import { FormatTypes, Interface } from "@ethersproject/abi";
+
+import changeChain from "../backend/changeChain";
 import useConnectWallet from "../backend/connectWallet";
-import useProvider from "../backend/provider";
+import { useAppSelector } from "../state/hooks";
 import HomeCard from "../components/HomeCard";
-import { getLocal, removeLocal } from "../lib/local";
-import { setAddress, setChain, disconnect } from "../state/account";
-import { useAppDispatch, useAppSelector } from "../state/hooks";
-import { Provider } from "../state/types";
+
+import jsonAbi from "../backend/MetaNFTPortraits.json"
 
 
-const Home: NextPage = ({onDisconnect}:any) => {
+const Home: NextPage = () => {
     const { address, chainId } = useAppSelector(state => state.account)
-    const { walletProvider, provider, getAddress, getChainId, disconnectWallet } = useConnectWallet();
-    // const dispatch = useAppDispatch()
-    // const provider = useProvider()
+    const { walletProvider, provider, disconnectWallet } = useConnectWallet();
 
-    // const disconnectWallet = async() =>{
-    //     if (provider === Provider.WALLETCONNECT) {
-    //         await provider.disconnect()
-    //     }
-    //     removeLocal("provider")
-    //     dispatch(disconnect())
-    // }
+    const getBalance = async () => {
+        if (address) {
+            const signer = walletProvider?.getSigner()
+            const balance = await signer?.getGasPrice()
+            // const price = balance ? utils.formatUnits(balance, "gwei") : undefined
+            console.log(balance?.toString())
+            return balance
+        }
+    }
 
-    console.log("index address", address)
+    const ContractInteraction = () => {
+        const signer = walletProvider?.getSigner()
+        const contractAddress = "0x8765b1a0eb57ca49be7eacd35b24a574d0203656";
+        const iface = new Interface(jsonAbi);
+        console.log(iface.format(FormatTypes.full))
+
+        const contract = new ethers.Contract(
+            contractAddress,
+            iface,
+            signer
+        );
+    }
 
 
     return (
@@ -38,7 +51,10 @@ const Home: NextPage = ({onDisconnect}:any) => {
                 <div className="flex flex-col items-start border-t border-l border-opacity-20 shadow-blck rounded-xl p-5 w-full bg-grey-dark bg-opacity-30 text-left">
                     <h2 className="text-transparent bg-clip-text bg-gradient-to-br from-pink-500 via-blue-400 to-blue-500">Leverage the MetaGameHub<br /> DeFi Ecosystem</h2>
                     <p className={`text-base xs:text-lg xl:text-xl font-medium text-gray-200 pt-0 sm:pt-5`}>Swap your MGH, become a liquidity provider and access our data ecosytem.</p>
-                    <p onClick={disconnectWallet} className="text-white cursor-pointer">Disconnect, {chainId}, {address}</p>
+                    <p className="text-white mt-5">Chain-ID: {chainId}</p>
+                    <p className="text-white">Wallet Address: {address}</p>
+                    {chainId !== 1 && <p onClick={() => { provider && changeChain(provider) }} className="text-white cursor-pointer border rounded-xl p-2 my-2">Change to Ethereum Mainnet</p>}
+                    {address && <p onClick={disconnectWallet} className="text-white cursor-pointer border rounded-xl p-2">Disconnect</p>}
                 </div>
 
                 <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-5 xs:gap-2 sm:gap-5 w-full">

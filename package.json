@@ -24,8 +24,7 @@
     "react-icons": "^4.3.1",
     "react-redux": "^7.2.6",
     "react-use-scroll-direction": "^0.1.0",
-    "recharts": "^2.1.2",
-    "web3modal": "^1.9.4"
+    "recharts": "^2.1.2"
   },
   "devDependencies": {
     "@types/nprogress": "^0.2.0",

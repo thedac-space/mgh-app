@@ -1,5 +1,5 @@
 import { getLocal, removeLocal, setLocal } from "../../lib/local";
-import { Provider } from "../../state/types";
+import { Provider } from "../../lib/enums";
 
 export const connectMetaMask = async () => {
     if (!window.ethereum) {

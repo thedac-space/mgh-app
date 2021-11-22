@@ -3,7 +3,7 @@ import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io"
 
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { changeToEthereum, changeToPolygon } from "../state/network";
-import { Network } from "../state/types";
+import { Network } from "../lib/enums";
 
 
 const NetworkButton = () => {

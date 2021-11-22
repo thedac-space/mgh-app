@@ -1,11 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-import { Network, AccountState } from "./types";
+import { AccountState } from "../lib/types";
+
 
 const initialState: AccountState = { 
     connected: false, 
     address: undefined,
-    chainId: "1"
+    chainId: 1
 }
 
 export const accountSlice = createSlice({

@@ -1,35 +1,16 @@
 import "animate.css"
+import { useState } from "react";
 
+import useConnectWallet from "../backend/connectWallet";
 import NavItem from './NavItem';
 import WalletButton from "./WalletButton"
 import SmallScreenToolbar from "./SmallScreenToolbar"
 import WalletModal from "./WalletModal";
-import { useEffect, useState } from "react";
-import useConnectWallet from "../backend/connectWallet";
-import { useAppDispatch } from "../state/hooks";
-import { setAddress, setChain } from "../state/account";
 
 
 const Layout = ({ children }: any) => {
     const [openModal, setOpenModal] = useState(false)
-    const dispatch = useAppDispatch()
-    const { walletProvider, provider, getAddress, getChainId } = useConnectWallet();
-
-    useEffect(() => {
-
-        // getAddress().then(res => {
-        //     if (res) {
-        //         dispatch(setAddress(res))
-        //     }
-        // })
-        // getChainId().then(res => {
-        //     if (res) {
-        //         dispatch(setChain(res))
-        //     }
-        // })
-
-    }, [walletProvider, provider])
-
+    const {} = useConnectWallet();
 
     return (
         <>

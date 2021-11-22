@@ -1,5 +1,5 @@
 import { setLocal } from "../lib/local"
-import { Provider } from "../state/types"
+import { Provider } from "../lib/enums"
 
 
 const WalletModal = ({ onDismiss }: any) => {

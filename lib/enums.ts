@@ -10,16 +10,6 @@ export enum Tokens {
     MGH_DATA = "MGH Data"
 }
 
-export interface NetworkState {
-    value: Network
-}
-
-export interface AccountState {
-    connected: boolean,
-    address: string | undefined,
-    chainId: string | undefined
-}
-
 export enum Provider {
     METAMASK = "metamask",
     WALLETCONNECT = "walletconnect"

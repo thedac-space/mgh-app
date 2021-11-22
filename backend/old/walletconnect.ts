@@ -1,6 +1,6 @@
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import { removeLocal, setLocal } from "../../lib/local";
-import { Provider } from "../../state/types";
+import { Provider } from "../../lib/enums";
 
 
 export const connectWalletConnect = async () => {
