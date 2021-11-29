@@ -1,40 +1,33 @@
-const changeChain = async (provider: any) => {
-    // Check if MetaMask is installed
-    // MetaMask injects the global API into window.ethereum
+const switchNetworkMumbai = async (provider: any) => {
     try {
-        // check if the chain to connect to is installed
         await provider.request({
-            method: 'wallet_switchEthereumChain',
-            params: [{ chainId: '0x1' }], // chainId must be in hexadecimal numbers
+            method: "wallet_switchEthereumChain",
+            params: [{ chainId: "0x13881" }],
         });
     } catch (error: any) {
-        // This error code indicates that the chain has not been added to MetaMask
-        // if it is not, then install it into the user MetaMask
         if (error.code === 4902) {
             try {
                 await provider.request({
-                    method: 'wallet_addEthereumChain',
+                    method: "wallet_addEthereumChain",
                     params: [
                         {
-                            chainId: '0x89',
-                            chainName: "Matic Mainnet",
+                            chainId: "0x13881",
+                            chainName: "Mumbai",
+                            rpcUrls: ["https://rpc-mumbai.matic.today"],
                             nativeCurrency: {
-                                name: "Polygon",
-                                symbol: "MATIC", // 2-6 characters long
+                                name: "Matic",
+                                symbol: "Matic",
                                 decimals: 18,
-                              },
-                            rpcUrls: ['https://rpc-mainnet.maticvigil.com/'],
-                            blockExplorerUrls: ['https://explorer.matic.network/']
+                            },
+                            blockExplorerUrls: ["https://explorer-mumbai.maticvigil.com"],
                         },
                     ],
                 });
-            } catch (addError) {
-                console.error(addError);
+            } catch (error: any) {
+                alert(error.message);
             }
         }
-        console.error(error);
     }
-
 }
 
-export default changeChain
+export default switchNetworkMumbai

@@ -8,7 +8,7 @@ import useConnectWallet from "../backend/connectWallet";
 import { useAppSelector } from "../state/hooks";
 import HomeCard from "../components/HomeCard";
 
-import jsonAbi from "../backend/MetaNFTPortraits.json"
+import stakingAbi from "../backend/stakingAbi.json"
 
 
 const Home: NextPage = () => {
@@ -25,18 +25,25 @@ const Home: NextPage = () => {
         }
     }
 
-    const ContractInteraction = () => {
+    const ContractInteraction = async () => {
         const signer = walletProvider?.getSigner()
-        const contractAddress = "0x8765b1a0eb57ca49be7eacd35b24a574d0203656";
-        const iface = new Interface(jsonAbi);
-        console.log(iface.format(FormatTypes.full))
+        const contractAddress = "0x72CdE05CC256610083d14AEc8f7c875E5B53331B";
+        const iface = new Interface(stakingAbi);
+        // console.log(iface.format(FormatTypes.full))
 
         const contract = new ethers.Contract(
             contractAddress,
             iface,
             signer
         );
+
+        const balance = await contract.balanceOf("0xFca6b83AfBBB0d66A13a06Ec31fA8e27E5188ca8")
+        console.log(balance.toString())
+        // await contract.getReward()
+        // const dai = ethers.utils.parseUnits("1.0", 18);
+        // await contract.transfer("0xFca6b83AfBBB0d66A13a06Ec31fA8e27E5188ca8", dai);
     }
+
 
 
     return (

@@ -115,7 +115,7 @@ module.exports = {
       backgroundImage: ['hover'],
       grayscale: ['hover'],
       zIndex: ['hover'],
-      opactiy: ['last'],
+      opactiy: ['last', 'disabled'],
       backgroundColor: ['checked']
     },
   },
