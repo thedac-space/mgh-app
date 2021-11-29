@@ -94,12 +94,19 @@ export const calcReward = async (provider: providers.Web3Provider, address: stri
     return { staked, rewards }
 }
 
-export const getContractInfo = async (provider: providers.Web3Provider | undefined) => {
+export const getContractInfo = async (provider: providers.Web3Provider | undefined, chainId: number | undefined) => {
+
+    let contractProvider;
+    if (!provider || chainId !== 80001) {
+        contractProvider = new ethers.providers.InfuraProvider(80001, "03bfd7b76f3749c8bb9f2c91bdba37f3")
+    } else {
+        contractProvider = provider
+    }
 
     const contract = new ethers.Contract(
         StakingContract,
         StakingContractAbi,
-        provider ? provider : new ethers.providers.InfuraProvider(80001, "03bfd7b76f3749c8bb9f2c91bdba37f3")
+        contractProvider
     );
 
     const totalSupply = await contract.totalSupply()

@@ -23,17 +23,13 @@ export default function useStakingContract(walletProvider: ethers.providers.Web3
 
 
     useEffect(() => {
-        if (chainId !== 80001) {
-            return
-        }
-
         const setStates = async () => {
 
-            const { totalSupply, APY } = await getContractInfo(walletProvider)
+            const { totalSupply, APY } = await getContractInfo(walletProvider, chainId)
             setTotalSupply(formatEther(totalSupply))
             setAPY(APY)
 
-            if (walletProvider && address) {
+            if (walletProvider && address && chainId === 80001) {
                 console.log("useEffect")
                 const { staked, rewards } = await calcReward(walletProvider, address)
                 setTotalStaked(formatEther(staked))
