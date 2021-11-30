@@ -203,7 +203,7 @@ const Stake: NextPage = () => {
 
 
 
-                        <div className="flex flex-col justify-center space-y-5 items-center rounded-xl p-2 sm:p-5 w-full bg-grey-dark bg-opacity-30 xl:bg-opacity-20 max-w-4xl">
+                        <div className="flex flex-col justify-center space-y-5 items-center rounded-xl p-2 sm:p-5 w-full bg-grey-dark bg-opacity-30 shadow-black max-w-4xl">
                             <p className="text-gray-300 font-medium max-w-sm text-center text-sm sm:text-base pt-4 sm:pt-0">$MGH staking is on Polygon for you to save network fees. To stake your $MGH, you first have to bridge them using the Polygon Bridge.</p>
                             <Bridge />
                         </div>
