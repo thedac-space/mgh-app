@@ -12,14 +12,14 @@ const switchNetworkMumbai = async (provider: any) => {
                     params: [
                         {
                             chainId: "0x13881",
-                            chainName: "Mumbai",
-                            rpcUrls: ["https://rpc-mumbai.matic.today"],
+                            chainName: "Polygon Testnet Mumbai",
+                            rpcUrls: ["https://rpc-mumbai.maticvigil.com"],
                             nativeCurrency: {
-                                name: "Matic",
-                                symbol: "Matic",
+                                name: "MATIC",
+                                symbol: "MATIC",
                                 decimals: 18,
                             },
-                            blockExplorerUrls: ["https://explorer-mumbai.maticvigil.com"],
+                            blockExplorerUrls: ["https://mumbai.polygonscan.com"],
                         },
                     ],
                 });
