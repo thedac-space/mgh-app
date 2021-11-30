@@ -57,8 +57,8 @@ export const stakeMGH = async (provider: providers.Web3Provider | undefined, add
         signer
     );
 
-    const result = await contract.stake(amount)
-    return result
+    const transaction = await contract.stake(amount)
+    return transaction
 }
 
 export const unstakeMGH = async (provider: providers.Web3Provider | undefined, address: string | undefined, amount: BigNumber) => {
@@ -75,9 +75,7 @@ export const unstakeMGH = async (provider: providers.Web3Provider | undefined, a
     );
 
     const transaction = await contract.withdraw(amount)
-    console.log("transaction", transaction)
-    const result = await transaction.wait()
-    return result
+    return transaction
 }
 
 export const calcReward = async (provider: providers.Web3Provider, address: string) => {
