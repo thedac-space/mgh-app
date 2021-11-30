@@ -16,6 +16,7 @@ export default function useConnectWallet() {
 
   useEffect(() => {
     if (!provider) {
+      setProvider(undefined)
       return
     }
 

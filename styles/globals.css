@@ -162,7 +162,7 @@ h2 {
 }
 
 h3 {
-  @apply text-3xl 2xl:text-4xl font-medium py-3;
+  @apply text-2xl sm:text-4xl font-medium py-3;
 }
 
 h4 {

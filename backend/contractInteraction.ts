@@ -89,9 +89,9 @@ export const calcReward = async (provider: providers.Web3Provider, address: stri
     );
 
     const staked = await contract.balanceOf(address)
-    const rewards = await contract.earned(address)
+    const earned = await contract.earned(address)
 
-    return { staked, rewards }
+    return { staked, earned }
 }
 
 export const getContractInfo = async (provider: providers.Web3Provider | undefined, chainId: number | undefined) => {
@@ -111,9 +111,9 @@ export const getContractInfo = async (provider: providers.Web3Provider | undefin
 
     const totalSupply = await contract.totalSupply()
     const rewardRate = await contract.rewardRate()
-    const APY = (+ethers.utils.formatEther(rewardRate)) / (+ethers.utils.formatEther(totalSupply)) * 60 * 60 * 24 * 365
+    const APY = ((+ethers.utils.formatEther(rewardRate)) / (+ethers.utils.formatEther(totalSupply))*100) * 60 * 60 * 24 * 365
 
-    return { totalSupply, APY }
+    return { totalSupply, rewardRate, APY }
 }
 
 export const getReward = async (provider: providers.Web3Provider | undefined, address: string | undefined) => {
