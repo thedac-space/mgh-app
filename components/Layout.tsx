@@ -6,15 +6,17 @@ import NavItem from './NavItem';
 import WalletButton from "./WalletButton"
 import SmallScreenToolbar from "./SmallScreenToolbar"
 import WalletModal from "./WalletModal";
+import { useAppSelector } from "../state/hooks";
 
 
 const Layout = ({ children }: any) => {
     const [openModal, setOpenModal] = useState(false)
-    const {} = useConnectWallet();
+    const { disconnectWallet } = useConnectWallet();
+
 
     return (
         <>
-            <div className="flex flex-col w-screen h-full min-h-screen xl:h-screen pt-0 xl:pt-0 bg-grey-darkest overflow-auto">
+            <div className="flex flex-col w-screen h-full min-h-screen xl:h-screen pt-0 bg-grey-darkest overflow-auto">
                 {openModal && <WalletModal onDismiss={() => setOpenModal(false)} />}
 
                 <div className="h-72 w-72 rounded-full border bg-gradient-to-br from-blue-500 to-pink-600 blur-3xl fixed top-0 left-0 xl:top-20 xl:left-0.15 2xl:left-0.125 opacity-80" />
@@ -22,7 +24,7 @@ const Layout = ({ children }: any) => {
                 <div className="h-72 w-72 rounded-tl-full border bg-gradient-to-br from-blue-500 to-pink-600 blur-3xl fixed bottom-0 right-0 opacity-50" />
 
 
-                <SmallScreenToolbar onWalletClick={() => setOpenModal(true)} />
+                <SmallScreenToolbar onWalletClick={() => setOpenModal(true)} disconnectWallet={disconnectWallet} />
 
                 <div className="hidden xl:flex space-x-10 h-32 w-full items-center justify-between p-10">
                     <a href="/" className="hover:scale-110 transition-all duration-500 ease-in-out ">
@@ -30,8 +32,7 @@ const Layout = ({ children }: any) => {
                     </a>
 
                     <div className="flex space-x-10">
-                        {/* <NetworkButton /> */}
-                        <WalletButton onClick={() => setOpenModal(true)} />
+                        <WalletButton onClick={() => setOpenModal(true)} disconnectWallet={disconnectWallet}/>
                     </div>
                 </div>
 

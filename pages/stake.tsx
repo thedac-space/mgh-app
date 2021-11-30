@@ -84,9 +84,9 @@ const Stake: NextPage = () => {
                 <div className="flex flex-col lg:flex-row space-x-0 lg:space-x-10 space-y-5 lg:space-y-0 max-w-7xl w-full mt-8 xl:mt-0">
 
                     {transactionLoading && (
-                        <div className="absolute top-0 left-0 h-screen w-screen flex flex-col items-center justify-center space-y-10 bg-black bg-opacity-30 backdrop-filter backdrop-blur-sm z-40 ">
+                        <div className="fixed top-0 left-0 h-screen w-screen flex flex-col items-center justify-center space-y-10 bg-black bg-opacity-30 backdrop-filter backdrop-blur-sm z-40 ">
                             <img src="/images/mgh_logo.png" className={` h-24 w-24 logo`} />
-                            <p className="text-3xl text-blue-400 font-medium">Processing Transaction</p>
+                            <p className="text-3xl text-blue-400 font-medium text-center">Processing Transaction</p>
                         </div>
                     )}
 
@@ -142,9 +142,9 @@ const Stake: NextPage = () => {
                                     <span className="pt-1 z-10">Switch to Polygon</span>
                                 </button>
                             ) : (
-                                <button onClick={() => setOpenModal(true)} className="z-30 disabled:opacity-50 disabled:hover:shadow-black disabled:cursor-default mt-4 relative flex justify-center items-center border border-opacity-0 hover:border-opacity-20 hover:shadow-button transition ease-in-out duration-500 shadow-black rounded-xl w-full max-w-md py-3 sm:py-4 text-gray-200 font-medium text-lg overflow-hidden">
-                                    <div className="h-full w-full absolute bg-gradient-to-br transition-all ease-in-out duration-300 from-pink-600 to-blue-500 rounded-xl blur-2xl group-hover:blur-xl" />
-                                    <span className="pt-1 z-10">Connect Wallet</span>
+                                <button onClick={() => setOpenModal(true)} className="z-30 disabled:opacity-50 disabled:hover:shadow-black disabled:cursor-default mt-4 relative flex justify-center items-center  transition ease-in-out duration-500 shadow-black rounded-xl w-full max-w-md py-3 sm:py-4 group">
+                                    <div className="h-full w-full absolute bg-gradient-to-br transition-all ease-in-out duration-300 from-pink-600 to-blue-500 rounded-xl opacity-60 group-hover:opacity-80" />
+                                    <span className="pt-1 z-10 text-gray-200 font-medium text-lg sm:text-xl">Connect Wallet</span>
                                 </button>
                             )}
 
@@ -167,7 +167,7 @@ const Stake: NextPage = () => {
                                 </div>
 
                                 <div className="self-start flex items-center justify-between space-x-1 sm:space-x-3 w-full">
-                                    <p className={`text-gray-300 font-medium text-base sm:text-lg pt-1 flex-grow`}>Total Rewards / Second</p>
+                                    <p className={`text-gray-300 font-medium text-base sm:text-lg pt-1 flex-grow`}>Total Rewards/Second</p>
                                     <p className={`text-gray-400 font-medium text-base sm:text-lg pt-1 text-right`}>{(+rewardRate).toFixed(2)} <span className="text-sm sm:text-base font-normal">$MGH</span></p>
                                 </div>
 
