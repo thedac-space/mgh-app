@@ -1,4 +1,5 @@
 import { BigNumber, ethers, providers } from "ethers";
+import { Chains } from "../lib/chains";
 
 import { Contracts } from "../lib/contracts";
 
@@ -93,8 +94,8 @@ export const calcReward = async (provider: providers.Web3Provider, address: stri
 export const getContractInfo = async (provider: providers.Web3Provider | undefined, chainId: number | undefined) => {
 
     let contractProvider;
-    if (!provider || chainId !== 80001) {
-        contractProvider = new ethers.providers.InfuraProvider(80001, "03bfd7b76f3749c8bb9f2c91bdba37f3")
+    if (!provider || chainId !== Chains.MATIC_MAINNET.chainId) {
+        contractProvider = new ethers.providers.InfuraProvider(Chains.MATIC_MAINNET.chainId, "03bfd7b76f3749c8bb9f2c91bdba37f3")
     } else {
         contractProvider = provider
     }
