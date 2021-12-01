@@ -1,8 +1,18 @@
-const switchNetworkMumbai = async (provider: any) => {
+import { Web3Provider } from "@ethersproject/providers";
+import { getChainData } from "../lib/utilities";
+
+
+const changeChain = async (provider: any, newChain: number | undefined) => {
+    if (!newChain) {
+        return
+    }
+    
+    const chainData = getChainData(newChain)
+
     try {
         await provider.request({
             method: "wallet_switchEthereumChain",
-            params: [{ chainId: "0x13881" }],
+            params: [{ chainId: chainData?.chainIdHex }],
         });
     } catch (error: any) {
         if (error.code === 4902) {
@@ -11,23 +21,24 @@ const switchNetworkMumbai = async (provider: any) => {
                     method: "wallet_addEthereumChain",
                     params: [
                         {
-                            chainId: "0x13881",
-                            chainName: "Polygon Testnet Mumbai",
-                            rpcUrls: ["https://rpc-mumbai.maticvigil.com"],
+                            chainId: chainData?.chainIdHex,
+                            chainName: chainData?.name,
+                            rpcUrls: [chainData?.rpcUrl],
                             nativeCurrency: {
-                                name: "MATIC",
-                                symbol: "MATIC",
+                                name: chainData?.nativeCurrency.name,
+                                symbol: chainData?.nativeCurrency.symbol,
                                 decimals: 18,
                             },
-                            blockExplorerUrls: ["https://mumbai.polygonscan.com"],
+                            blockExplorerUrls: [chainData?.blockExplorer],
                         },
                     ],
                 });
             } catch (error: any) {
-                alert(error.message);
+                console.log(error.message);
             }
         }
     }
 }
 
-export default switchNetworkMumbai
+
+export default changeChain

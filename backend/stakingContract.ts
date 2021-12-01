@@ -3,6 +3,7 @@ import { ethers } from "ethers"
 import { formatEther } from "@ethersproject/units"
 
 import { calcReward, getContractInfo, getMGHAllowance, getMGHBalance } from "./contractInteraction"
+import { Chains } from "../lib/chains"
 
 
 export default function useStakingContract(web3Provider: ethers.providers.Web3Provider | undefined, address: string | undefined, chainId: number | undefined) {
@@ -36,7 +37,7 @@ export default function useStakingContract(web3Provider: ethers.providers.Web3Pr
             rewardRate = formatEther(contractInfo.rewardRate)
             APY = contractInfo.APY
 
-            if (web3Provider && address && chainId === 80001) {
+            if (web3Provider && address && chainId === Chains.MATIC_TESTNET.chainId) {
                 const reward = await calcReward(web3Provider, address)
                 totalStaked = formatEther(reward.staked)
                 earned = formatEther(reward.earned)

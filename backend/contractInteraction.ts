@@ -129,6 +129,23 @@ export const getReward = async (provider: providers.Web3Provider | undefined, ad
     return transaction
 }
 
+export const reinvestReward = async (provider: providers.Web3Provider | undefined, address: string | undefined) => {
+    if (!provider || !address) {
+        return
+    }
+
+    const signer = provider.getSigner()
+
+    const contract = new ethers.Contract(
+        StakingContract,
+        StakingContractAbi,
+        signer
+    );
+
+    const transaction = await contract.compound()
+    return transaction
+}
+
 export const getMGHAllowance = async (provider: providers.Web3Provider | undefined, address: string | undefined) => {
     if (!provider || !address) {
         return

@@ -8,13 +8,14 @@ import { Tokens } from '../lib/enums'
 import { Chains } from '../lib/chains';
 import { useAppSelector } from '../state/hooks';
 
-import { approveMGH, getReward, stakeMGH, unstakeMGH } from '../backend/contractInteraction';
-import switchNetworkMumbai from '../backend/changeChain';
+import { approveMGH, getReward, reinvestReward, stakeMGH, unstakeMGH } from '../backend/contractInteraction';
 import useStakingContract from '../backend/stakingContract';
+import addTokenToWallet from "../backend/addToken"
+import useConnectWeb3 from '../backend/connectWeb3';
+import changeChain from '../backend/changeChain';
 
 import WalletModal from "../components/WalletModal"
 import TransactionModal from '../components/TransactionModal';
-import useConnectWeb3 from '../backend/connectWeb3';
 
 
 const Bridge = dynamic(import('../components/Bridge'), { ssr: false });
@@ -42,25 +43,15 @@ const Stake: NextPage = () => {
     }, [web3Provider])
 
     if (!transactionModal && !transactionLoading) {
-        window.location.reload()
+        setTransactionModal(true)
     }
 
-    const approve = async () => {
-        const transaction = await approveMGH(web3Provider, address)
-        setTransactionLoading(true)
-        const result = await transaction.wait();
-        window.location.reload()
-    }
-
-    const stake = async () => {
-        const amount = ethers.utils.parseEther(stakeInput)
-        const transaction = await stakeMGH(web3Provider, address, amount)
+    const processTransaction = async (transaction: any) => {
         setHash(transaction.hash)
         setTransactionLoading(true)
         setTransactionModal(true)
-
         try {
-            const receipt = await transaction.wait();
+            await transaction.wait();
             setSuccess(true)
             setTransactionLoading(false)
         } catch (error: any) {
@@ -69,23 +60,33 @@ const Stake: NextPage = () => {
             setSuccess(false)
             setTransactionLoading(false)
         }
+    }
 
+    const approve = async () => {
+        const transaction = await approveMGH(web3Provider, address)
+        await processTransaction(transaction)
+    }
 
+    const stake = async () => {
+        const amount = ethers.utils.parseEther(stakeInput)
+        const transaction = await stakeMGH(web3Provider, address, amount)
+        await processTransaction(transaction)
     }
 
     const unstake = async () => {
         const amount = ethers.utils.parseEther(unstakeInput)
         const transaction = await unstakeMGH(web3Provider, address, amount)
-        setTransactionLoading(true)
-        const result = await transaction.wait();
-        window.location.reload()
+        await processTransaction(transaction)
     }
 
     const claimRewards = async () => {
         const transaction = await getReward(web3Provider, address)
-        setTransactionLoading(true)
-        const result = await transaction.wait();
-        window.location.reload()
+        await processTransaction(transaction)
+    }
+
+    const reinvest = async () => {
+        const transaction = await reinvestReward(web3Provider, address)
+        await processTransaction(transaction)
     }
 
 
@@ -147,28 +148,28 @@ const Stake: NextPage = () => {
                             </div>
 
 
-
-                            {web3Provider ? (+allowance) ? (
-                                <></>
-                            ) : chainId === 80001 ? (
-                                <button onClick={approve} className="z-30 disabled:opacity-50 disabled:hover:shadow-black disabled:cursor-default mt-4 relative flex justify-center items-center  transition ease-in-out duration-500 shadow-black rounded-xl w-full max-w-md py-3 sm:py-4 group">
-                                    <div className="h-full w-full absolute bg-gradient-to-br transition-all ease-in-out duration-300 from-pink-600 to-blue-500 rounded-xl opacity-60 group-hover:opacity-80" />
-                                    <span className="pt-1 z-10 text-gray-200 font-medium text-lg sm:text-xl">Approve MGH</span>
-                                </button>
-                            ) : (
-                                <button onClick={() => { switchNetworkMumbai(web3Provider.provider) }} className="z-30 disabled:opacity-50 disabled:hover:shadow-black disabled:cursor-default mt-4 relative flex justify-center items-center  transition ease-in-out duration-500 shadow-black rounded-xl w-full max-w-md py-3 sm:py-4 group">
-                                    <div className="h-full w-full absolute bg-gradient-to-br transition-all ease-in-out duration-300 from-pink-600 to-blue-500 rounded-xl opacity-60 group-hover:opacity-80" />
-                                    <span className="pt-1 z-10 text-gray-200 font-medium text-lg sm:text-xl">Switch to Polygon</span>v
-                                </button>
-                            ) : (
+                            {!web3Provider && (
                                 <button onClick={() => setOpenModal(true)} className="z-30 disabled:opacity-50 disabled:hover:shadow-black disabled:cursor-default mt-4 relative flex justify-center items-center  transition ease-in-out duration-500 shadow-black rounded-xl w-full max-w-md py-3 sm:py-4 group">
                                     <div className="h-full w-full absolute bg-gradient-to-br transition-all ease-in-out duration-300 from-pink-600 to-blue-500 rounded-xl opacity-60 group-hover:opacity-80" />
                                     <span className="pt-1 z-10 text-gray-200 font-medium text-lg sm:text-xl">Connect Wallet</span>
                                 </button>
                             )}
 
-                        </div>
+                            {web3Provider && !allowance && chainId === Chains.MATIC_MAINNET.chainId && (
+                                <button onClick={approve} className="z-30 disabled:opacity-50 disabled:hover:shadow-black disabled:cursor-default mt-4 relative flex justify-center items-center  transition ease-in-out duration-500 shadow-black rounded-xl w-full max-w-md py-3 sm:py-4 group">
+                                    <div className="h-full w-full absolute bg-gradient-to-br transition-all ease-in-out duration-300 from-pink-600 to-blue-500 rounded-xl opacity-60 group-hover:opacity-80" />
+                                    <span className="pt-1 z-10 text-gray-200 font-medium text-lg sm:text-xl">Approve MGH</span>
+                                </button>
+                            )}
 
+                            {web3Provider && chainId !== Chains.MATIC_MAINNET.chainId && (
+                                <button onClick={() => { changeChain(web3Provider.provider, Chains.MATIC_MAINNET.chainId) }} className="z-30 disabled:opacity-50 disabled:hover:shadow-black disabled:cursor-default mt-4 relative flex justify-center items-center  transition ease-in-out duration-500 shadow-black rounded-xl w-full max-w-md py-3 sm:py-4 group">
+                                    <div className="h-full w-full absolute bg-gradient-to-br transition-all ease-in-out duration-300 from-pink-600 to-blue-500 rounded-xl opacity-60 group-hover:opacity-80" />
+                                    <span className="pt-1 z-10 text-gray-200 font-medium text-lg sm:text-xl">Switch to Polygon</span>v
+                                </button>
+                            )}
+
+                        </div>
 
                     </div>
 
@@ -214,7 +215,7 @@ const Stake: NextPage = () => {
                                 <button disabled={(+earned) ? false : true} onClick={claimRewards} className={`disabled:opacity-20 disabled:hover:shadow-black disabled:cursor-default flex justify-center items-center border bg-blue-400 border-blue-400 shadow-black hover:shadow-button transition ease-in-out duration-500 rounded-xl w-full max-w-sm py-3 sm:py-4`}>
                                     <p className="pt-1 z-10 text-grey-darkest font-medium text-lg sm:text-xl">Claim</p>
                                 </button>
-                                <button disabled={(+earned) ? false : true} onClick={claimRewards} className={`disabled:opacity-20 disabled:hover:shadow-black disabled:cursor-default flex justify-center items-center border border-blue-400 shadow-black hover:shadow-button transition ease-in-out duration-500 rounded-xl w-full max-w-sm py-3 sm:py-4`}>
+                                <button disabled={(+earned) ? false : true} onClick={reinvest} className={`disabled:opacity-20 disabled:hover:shadow-black disabled:cursor-default flex justify-center items-center border border-blue-400 shadow-black hover:shadow-button transition ease-in-out duration-500 rounded-xl w-full max-w-sm py-3 sm:py-4`}>
                                     <p className="pt-1 z-10 text-blue-400 font-medium text-lg sm:text-xl">Reinvest</p>
                                 </button>
                             </div>
@@ -222,9 +223,10 @@ const Stake: NextPage = () => {
 
 
 
-                        <div className="flex flex-col justify-center space-y-5 items-center rounded-xl p-2 sm:p-5 w-full bg-grey-dark bg-opacity-30 shadow-black max-w-4xl">
-                            <p className="text-gray-300 font-medium max-w-sm text-center text-sm sm:text-base pt-4 sm:pt-0">$MGH staking is on Polygon for you to save network fees. To stake your $MGH, you first have to bridge them using the Polygon Bridge.</p>
+                        <div className="flex flex-col justify-center items-center rounded-xl p-2 sm:p-5 w-full bg-grey-dark bg-opacity-30 shadow-black max-w-4xl">
+                            <p className="mb-5 text-gray-300 font-medium max-w-sm text-center text-sm sm:text-base pt-4 sm:pt-0">$MGH staking is on Polygon for you to save network fees. To stake your $MGH, you first have to bridge them using the Polygon Bridge.</p>
                             <Bridge />
+                            {(web3Provider && chainId === Chains.MATIC_MAINNET.chainId) && <p onClick={() => addTokenToWallet(web3Provider.provider)} className="mt-3 pt-1 z-10 text-gray-400 hover:text-blue-400 transition ease-in-out duration-300 font-medium text-lg cursor-pointer">Add $MGH to your Wallet</p>}
                         </div>
                     </div>
 

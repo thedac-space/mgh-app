@@ -4,7 +4,7 @@ export const Chains = {
   ETHEREUM_MAINNET: {
       name: "Ethereum Mainnet",
       chainId: 1,
-      chainIdHex: "",
+      chainIdHex: "0x1",
       rpcUrl: "https://mainnet.infura.io/v3/03bfd7b76f3749c8bb9f2c91bdba37f3",
       nativeCurrency: {
           name: "Ethereum",
@@ -16,7 +16,7 @@ export const Chains = {
   ETHEREUM_ROPSTEN: {
       name: "Ethereum Ropsten",
       chainId: 3,
-      chainIdHex: "",
+      chainIdHex: "0x3",
       rpcUrl: "https://ropsten.infura.io/v3/03bfd7b76f3749c8bb9f2c91bdba37f3",
       nativeCurrency: {
           name: "Ethereum",
@@ -28,7 +28,7 @@ export const Chains = {
   MATIC_MAINNET: {
       name: "Matic Mainnet",
       chainId: 137,
-      chainIdHex: "",
+      chainIdHex: "0x89",
       rpcUrl: "https://rpc-mainnet.maticvigil.com/",
       nativeCurrency: {
           name: "Matic",
@@ -40,7 +40,7 @@ export const Chains = {
   MATIC_TESTNET: {
       name: "Matic Testnet Mumbai",
       chainId: 80001,
-      chainIdHex: "",
+      chainIdHex: "0x13881",
       rpcUrl: "https://rpc-mainnet.maticvigil.com/",
       nativeCurrency: {
           name: "Matic",
@@ -55,7 +55,7 @@ export const supportedChains: IChainData[] = [
   {
     name: "Ethereum Mainnet",
     chainId: 1,
-    chainIdHex: "",
+    chainIdHex: "0x1",
     rpcUrl: "https://mainnet.infura.io/v3/03bfd7b76f3749c8bb9f2c91bdba37f3",
     nativeCurrency: {
       name: "Ethereum",
@@ -67,7 +67,7 @@ export const supportedChains: IChainData[] = [
   {
     name: "Ethereum Ropsten",
     chainId: 3,
-    chainIdHex: "",
+    chainIdHex: "0x3",
     rpcUrl: "https://ropsten.infura.io/v3/03bfd7b76f3749c8bb9f2c91bdba37f3",
     nativeCurrency: {
       name: "Ethereum",
@@ -79,7 +79,7 @@ export const supportedChains: IChainData[] = [
   {
     name: "Matic Mainnet",
     chainId: 137,
-    chainIdHex: "",
+    chainIdHex: "0x89",
     rpcUrl: "https://rpc-mainnet.maticvigil.com/",
     nativeCurrency: {
       name: "Matic",
@@ -91,7 +91,7 @@ export const supportedChains: IChainData[] = [
   {
     name: "Matic Testnet Mumbai",
     chainId: 80001,
-    chainIdHex: "",
+    chainIdHex: "0x13881",
     rpcUrl: "https://rpc-mainnet.maticvigil.com/",
     nativeCurrency: {
       name: "Matic",
