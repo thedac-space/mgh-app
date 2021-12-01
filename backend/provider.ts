@@ -4,6 +4,7 @@ import detectEthereumProvider from '@metamask/detect-provider';
 
 import { getLocal, removeLocal } from "../lib/local"
 import { Provider } from "../lib/enums"
+import { Chains } from "../lib/chains";
 
 
 const useProvider = () => {
@@ -23,10 +24,12 @@ const useProvider = () => {
                     })
             })
 
-
         } else if (providerId === Provider.WALLETCONNECT) {
             const walletConnect = new WalletConnectProvider({
-                infuraId: "03bfd7b76f3749c8bb9f2c91bdba37f3"
+                infuraId: "03bfd7b76f3749c8bb9f2c91bdba37f3",
+                rpc: {
+                    137: Chains.MATIC_MAINNET.rpcUrl,
+                },
             })
             walletConnect.enable()
                 .then(() => {
