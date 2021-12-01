@@ -1,4 +1,4 @@
-import { Tokens } from "../state/types"
+import { Tokens } from "../lib/enums"
 
 const TokenInput = ({ name, logo, direction }: any) => {
 

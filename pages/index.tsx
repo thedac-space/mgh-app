@@ -15,7 +15,7 @@ const Home: NextPage = () => {
 
             <div className="w-full flex flex-col items-center justify-start space-y-10 max-w-7xl mt-8 xl:mt-0">
 
-                <div className="flex flex-col items-start border-t border-l border-opacity-20 shadow-blck rounded-xl p-5 w-full bg-grey-dark bg-opacity-30 text-left">
+                <div className="flex flex-col items-start border-t border-l border-opacity-10 shadow-blck rounded-xl p-5 w-full bg-grey-dark bg-opacity-30 text-left">
                     <h2 className="text-transparent bg-clip-text bg-gradient-to-br from-pink-500 via-blue-400 to-blue-500">Leverage the MetaGameHub<br /> DeFi Ecosystem</h2>
                     <p className={`text-base xs:text-lg xl:text-xl font-medium text-gray-200 pt-0 sm:pt-5`}>Swap your MGH, become a liquidity provider and access our data ecosystem.</p>
                 </div>

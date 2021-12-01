@@ -3,7 +3,7 @@ import Head from 'next/head'
 
 import TokenInput from '../../components/TokenInput';
 import { useAppSelector } from '../../state/hooks';
-import { Tokens } from '../../state/types';
+import { Tokens } from '../../lib/enums';
 
 
 const Stake: NextPage = () => {

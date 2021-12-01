@@ -142,6 +142,17 @@ html {
   -webkit-tap-highlight-color: transparent;
 }
 
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type='number'] {
+    -moz-appearance:textfield;
+}
+
+
 h1 {
   @apply text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-medium py-3;
 }
@@ -151,7 +162,7 @@ h2 {
 }
 
 h3 {
-  @apply text-3xl 2xl:text-4xl font-medium py-3;
+  @apply text-2xl sm:text-4xl font-medium py-3;
 }
 
 h4 {

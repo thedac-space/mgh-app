@@ -1,8 +1,16 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
+import { Chains } from '../lib/chains'
+import { Contracts } from '../lib/contracts'
+import { useAppSelector } from '../state/hooks'
 
 
 const Swap: NextPage = () => {
+    const { chainId } = useAppSelector(state => state.account)
+
+    const link = (chainId === Chains.MATIC_MAINNET.chainId) ? `https://quickswap.exchange/#/swap?inputCurrency=MATIC&outputCurrency=${Contracts.MGH_TOKEN.MATIC_MAINNET.address}&theme=dark` : `https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=${Contracts.MGH_TOKEN.ETHEREUM_MAINNET.address}&theme=dark`
+
+
 
     return (
         <>
@@ -14,7 +22,7 @@ const Swap: NextPage = () => {
             <div className="w-full -mb-4 xs:-mb-6 sm:-mb-10 xl:-mb-0 h-full flex flex-col items-center justify-center animate__animated animate__fadeIn animate__slow">
 
                 <iframe
-                    src="https://app.uniswap.org/#/swap?inputCurrency=0x8765b1a0eb57ca49be7eacd35b24a574d0203656&outputCurrency=ETH&theme=dark"
+                    src={link}
                     height="600px"
                     width="100%"
                     className="rounded-none xl:rounded-xl shadow-black opacity-80 w-screen h-screen xl:w-full xl:h-full bg-transparent"

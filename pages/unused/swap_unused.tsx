@@ -5,7 +5,7 @@ import { IoSwapVertical } from "react-icons/io5"
 
 import TokenInput from '../../components/TokenInput';
 import { useAppSelector } from '../../state/hooks';
-import { Network, Tokens } from '../../state/types';
+import { Network, Tokens } from '../../lib/enums';
 
 
 const Swap: NextPage = () => {

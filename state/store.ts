@@ -1,10 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit'
+
 import networkReducer from "./network"
-import { useDispatch } from 'react-redux'
+import accountReducer from "./account"
 
 const store =  configureStore({
   reducer: {
-    network: networkReducer
+    network: networkReducer,
+    account: accountReducer
   }
 })
 

@@ -1,32 +1,42 @@
 import "animate.css"
+import { useState } from "react";
+
+import useConnectWeb3 from "../backend/connectWeb3";
+import { useAppSelector } from "../state/hooks";
 
 import NavItem from './NavItem';
-import NetworkButton from "./NetworkButton"
 import WalletButton from "./WalletButton"
 import SmallScreenToolbar from "./SmallScreenToolbar"
+import WalletModal from "./WalletModal";
+import NetworkButton from "./NetworkButton";
 
 
 const Layout = ({ children }: any) => {
+    const [openModal, setOpenModal] = useState(false)
+    const { chainId } = useAppSelector(state => state.account)
+    const { web3Provider, disconnectWallet } = useConnectWeb3();
+
 
     return (
         <>
-            <div className="flex flex-col w-screen h-full min-h-screen xl:h-screen pt-0 xl:pt-0 bg-grey-darkest overflow-auto">
+            <div className="flex flex-col w-screen h-full min-h-screen xl:h-screen pt-0 bg-grey-darkest overflow-auto">
+                {openModal && <WalletModal onDismiss={() => setOpenModal(false)} />}
 
-                <div className="h-72 w-72 rounded-full border bg-gradient-to-br from-blue-500 to-pink-600 blur-3xl fixed top-0 left-0 xl:top-20 xl:left-0.15 2xl:left-0.125 opacity-80"/>
+                <div className="h-72 w-72 rounded-full border bg-gradient-to-br from-blue-500 to-pink-600 blur-3xl fixed top-0 left-0 xl:top-20 xl:left-0.15 2xl:left-0.125 opacity-80" />
 
-                <div className="h-72 w-72 rounded-tl-full border bg-gradient-to-br from-blue-500 to-pink-600 blur-3xl fixed bottom-0 right-0 opacity-50"/>
+                <div className="h-72 w-72 rounded-tl-full border bg-gradient-to-br from-blue-500 to-pink-600 blur-3xl fixed bottom-0 right-0 opacity-50" />
 
 
-                <SmallScreenToolbar />
-                
+                <SmallScreenToolbar onWalletClick={() => setOpenModal(true)} disconnectWallet={disconnectWallet} web3Provider={web3Provider} chainId={chainId} />
+
                 <div className="hidden xl:flex space-x-10 h-32 w-full items-center justify-between p-10">
                     <a href="/" className="hover:scale-110 transition-all duration-500 ease-in-out ">
                         <img src="/images/mgh_logo.png" className={` h-18 w-18`} />
                     </a>
 
-                    <div className="flex space-x-10">
-                        {/* <NetworkButton /> */}
-                        {/* <WalletButton /> */}
+                    <div className="flex space-x-5 items-stretch">
+                        {web3Provider && chainId && <NetworkButton provider={web3Provider.provider} chainId={chainId}/>}
+                        <WalletButton onClick={() => setOpenModal(true)} disconnectWallet={disconnectWallet}/>
                     </div>
                 </div>
 
