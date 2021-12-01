@@ -37,7 +37,7 @@ export default function useStakingContract(web3Provider: ethers.providers.Web3Pr
             rewardRate = formatEther(contractInfo.rewardRate)
             APY = contractInfo.APY
 
-            if (web3Provider && address && chainId === Chains.MATIC_TESTNET.chainId) {
+            if (web3Provider && address && chainId === Chains.MATIC_MAINNET.chainId) {
                 const reward = await calcReward(web3Provider, address)
                 totalStaked = formatEther(reward.staked)
                 earned = formatEther(reward.earned)
