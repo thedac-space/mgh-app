@@ -1,17 +1,17 @@
 import "animate.css"
 import { useState } from "react";
 
-import useConnectWallet from "../backend/connectWallet";
+import useConnectWeb3 from "../backend/connectWeb3";
+
 import NavItem from './NavItem';
 import WalletButton from "./WalletButton"
 import SmallScreenToolbar from "./SmallScreenToolbar"
 import WalletModal from "./WalletModal";
-import { useAppSelector } from "../state/hooks";
 
 
 const Layout = ({ children }: any) => {
     const [openModal, setOpenModal] = useState(false)
-    const { disconnectWallet } = useConnectWallet();
+    const { disconnectWallet } = useConnectWeb3();
 
 
     return (

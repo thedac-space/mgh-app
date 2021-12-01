@@ -2,12 +2,13 @@ import { BsCheckCircleFill, BsFillXCircleFill } from "react-icons/bs"
 import { MdOutlineContentCopy } from "react-icons/md"
 import { HiOutlineExternalLink } from "react-icons/hi"
 
-import { ellipseAddress } from "../lib/utilities"
+import { ellipseAddress, getChainData } from "../lib/utilities"
 
 
-const TransactionModal = ({ onDismiss, loading, success, hash }: any) => {
+const TransactionModal = ({ onDismiss, loading, success, hash, chainId }: any) => {
+    const blockExplorer = getChainData(chainId)
 
-    const link = "https://mumbai.polygonscan.com/tx/" + hash
+    const link = blockExplorer?.blockExplorer + "/tx/" + hash
 
     return (
         <div className="fixed top-0 left-0 flex items-center justify-center h-screen w-screen z-50">

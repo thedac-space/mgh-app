@@ -1,14 +1,11 @@
-import { useEffect, useRef, useState } from "react"
-import useConnectWallet from "./connectWallet"
-
-import { formatEther } from "@ethersproject/units"
-import { calcReward, getContractInfo, getMGHAllowance, getMGHBalance } from "./contractInteraction"
-import { useAppSelector } from "../state/hooks"
+import { useEffect, useState } from "react"
 import { ethers } from "ethers"
-import { Interface } from "@ethersproject/abi"
-import stakingAbi from "./stakingAbi.json"
+import { formatEther } from "@ethersproject/units"
 
-export default function useStakingContract(walletProvider: ethers.providers.Web3Provider | undefined, address: string | undefined, chainId: number | undefined) {
+import { calcReward, getContractInfo, getMGHAllowance, getMGHBalance } from "./contractInteraction"
+
+
+export default function useStakingContract(web3Provider: ethers.providers.Web3Provider | undefined, address: string | undefined, chainId: number | undefined) {
 
     const [MGHBalance, setMGHBalance] = useState("")
     const [allowance, setAllowance] = useState("")
@@ -34,26 +31,24 @@ export default function useStakingContract(walletProvider: ethers.providers.Web3
             let allowance = ""
             let balance = "";
 
-            const contractInfo  = await getContractInfo(walletProvider, chainId)
+            const contractInfo  = await getContractInfo(web3Provider, chainId)
             totalSupply = formatEther(contractInfo.totalSupply)
             rewardRate = formatEther(contractInfo.rewardRate)
             APY = contractInfo.APY
 
-            if (walletProvider && address && chainId === 80001) {
-                const reward = await calcReward(walletProvider, address)
+            if (web3Provider && address && chainId === 80001) {
+                const reward = await calcReward(web3Provider, address)
                 totalStaked = formatEther(reward.staked)
                 earned = formatEther(reward.earned)
 
-
-                allowance = formatEther(await getMGHAllowance(walletProvider, address))
+                allowance = formatEther(await getMGHAllowance(web3Provider, address))
 
                 if (+allowance) {
-                    balance = formatEther(await getMGHBalance(walletProvider, address))
+                    balance = formatEther(await getMGHBalance(web3Provider, address))
                 } 
             }
 
             return { totalSupply, rewardRate, APY, totalStaked, earned, allowance, balance }
-
         }
 
         setStates().then(({ totalSupply, rewardRate, APY, totalStaked, earned, allowance, balance }) => {
@@ -71,7 +66,7 @@ export default function useStakingContract(walletProvider: ethers.providers.Web3
 
         return () => { active = false; setLoading(true) }
 
-    }, [walletProvider, address, chainId])
+    }, [web3Provider, address, chainId])
 
 
     return { MGHBalance, allowance, totalStaked, earned, totalSupply, rewardRate, APY, loading }

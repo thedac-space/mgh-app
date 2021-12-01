@@ -1,15 +1,13 @@
-import { Interface } from "@ethersproject/abi";
 import { BigNumber, ethers, providers } from "ethers";
 
-import tokenAbi from "./tokenAbi.json"
-import stakingAbi from "./stakingAbi.json"
+import { Contracts } from "../lib/contracts";
 
 
-const MGHContract = "0xA26fcc9847F24C7D78f4e77Ba39A37B8A9eaFB02"
-const MGHContractAbi = new Interface(tokenAbi)
+const MGHContract = Contracts.MGH_TOKEN.MATIC_TESTNET.address
+const MGHContractAbi = Contracts.MGH_TOKEN.MATIC_TESTNET.abi
 
-const StakingContract = "0x7d267713502F979ffE3c49622fd0DC24d6D607D0"
-const StakingContractAbi = new Interface(stakingAbi)
+const StakingContract = Contracts.MGH_STAKING.MATIC_TESTNET.address
+const StakingContractAbi = Contracts.MGH_STAKING.MATIC_TESTNET.abi
 
 
 export const getMGHBalance = async (provider: providers.Web3Provider | undefined, address: string | undefined) => {

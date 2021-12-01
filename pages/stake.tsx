@@ -1,26 +1,29 @@
+import { useEffect, useState } from 'react';
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import dynamic from 'next/dynamic';
-
-import TokenInput from '../components/TokenInput'
-import TransactionModal from '../components/TransactionModal';
-import { Tokens } from '../lib/enums'
-import { approveMGH, calcReward, getMGHAllowance, getMGHBalance, getReward, stakeMGH, unstakeMGH } from '../backend/contractInteraction';
-import useConnectWallet from '../backend/connectWallet';
-import { useAppSelector } from '../state/hooks';
 import { ethers } from 'ethers';
-import { useEffect, useState } from 'react';
-import useStakingContract from '../backend/stakingContract';
-import WalletModal from "../components/WalletModal"
+
+import { Tokens } from '../lib/enums'
+import { Chains } from '../lib/chains';
+import { useAppSelector } from '../state/hooks';
+
+import { approveMGH, getReward, stakeMGH, unstakeMGH } from '../backend/contractInteraction';
 import switchNetworkMumbai from '../backend/changeChain';
+import useStakingContract from '../backend/stakingContract';
+
+import WalletModal from "../components/WalletModal"
+import TransactionModal from '../components/TransactionModal';
+import useConnectWeb3 from '../backend/connectWeb3';
+
 
 const Bridge = dynamic(import('../components/Bridge'), { ssr: false });
 
 
 const Stake: NextPage = () => {
     const { address, chainId } = useAppSelector(state => state.account)
-    const { walletProvider } = useConnectWallet()
-    const { MGHBalance, allowance, totalStaked, earned, totalSupply, rewardRate, APY, loading } = useStakingContract(walletProvider, address, chainId)
+    const { web3Provider } = useConnectWeb3()
+    const { MGHBalance, allowance, totalStaked, earned, totalSupply, rewardRate, APY, loading } = useStakingContract(web3Provider, address, chainId)
 
     const [stakeInput, setStakeInput] = useState("")
     const [unstakeInput, setUnstakeInput] = useState("")
@@ -32,19 +35,18 @@ const Stake: NextPage = () => {
     const [hash, setHash] = useState("")
 
     useEffect(() => {
-        if (!walletProvider) {
+        if (!web3Provider) {
             setStakeInput("")
             setUnstakeInput("")
         }
-    }, [walletProvider])
+    }, [web3Provider])
 
     if (!transactionModal && !transactionLoading) {
         window.location.reload()
     }
 
-
     const approve = async () => {
-        const transaction = await approveMGH(walletProvider, address)
+        const transaction = await approveMGH(web3Provider, address)
         setTransactionLoading(true)
         const result = await transaction.wait();
         window.location.reload()
@@ -52,7 +54,7 @@ const Stake: NextPage = () => {
 
     const stake = async () => {
         const amount = ethers.utils.parseEther(stakeInput)
-        const transaction = await stakeMGH(walletProvider, address, amount)
+        const transaction = await stakeMGH(web3Provider, address, amount)
         setHash(transaction.hash)
         setTransactionLoading(true)
         setTransactionModal(true)
@@ -62,7 +64,6 @@ const Stake: NextPage = () => {
             setSuccess(true)
             setTransactionLoading(false)
         } catch (error: any) {
-            console.log("error")
             console.log(error)
             setHash(error.receipt.transactionHash)
             setSuccess(false)
@@ -74,14 +75,14 @@ const Stake: NextPage = () => {
 
     const unstake = async () => {
         const amount = ethers.utils.parseEther(unstakeInput)
-        const transaction = await unstakeMGH(walletProvider, address, amount)
+        const transaction = await unstakeMGH(web3Provider, address, amount)
         setTransactionLoading(true)
         const result = await transaction.wait();
         window.location.reload()
     }
 
     const claimRewards = async () => {
-        const transaction = await getReward(walletProvider, address)
+        const transaction = await getReward(web3Provider, address)
         setTransactionLoading(true)
         const result = await transaction.wait();
         window.location.reload()
@@ -105,13 +106,13 @@ const Stake: NextPage = () => {
                 <div className="flex flex-col lg:flex-row space-x-0 lg:space-x-10 space-y-5 lg:space-y-0 max-w-7xl w-full mt-8 xl:mt-0">
 
                     {transactionModal && (
-                        <TransactionModal onDismiss={() => { setTransactionModal(false); !transactionLoading && window.location.reload() }} loading={transactionLoading} success={success} hash={hash} />
+                        <TransactionModal onDismiss={() => { setTransactionModal(false); !transactionLoading && window.location.reload() }} loading={transactionLoading} success={success} hash={hash} chainId={chainId} />
                     )}
 
                     <div className="flex flex-col space-y-5 w-full lg:w-7/12">
 
                         <div className="relative flex flex-col space-y-5 h-full items-center justify-between border-t border-l border-opacity-10 shadow-black rounded-xl p-2 sm:p-5 w-full bg-grey-dark bg-opacity-30">
-                            {(!walletProvider || !allowance || chainId !== 80001) && <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-0 backdrop-blur-sm rounded-xl z-20"></div>}
+                            {(!web3Provider || !allowance || chainId !== Chains.MATIC_TESTNET.chainId) && <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-0 backdrop-blur-sm rounded-xl z-20"></div>}
                             <div className="self-start flex items-center justify-center space-x-2 sm:space-x-4 w-full pr-2 mb-2 z-30">
                                 <img src="/images/mgh_logo.png" className="object-scale-down h-10 sm:h-14 p-1" />
                                 <h3 className="text-gray-300 pb-1.5">$MGH Staking</h3>
@@ -147,7 +148,7 @@ const Stake: NextPage = () => {
 
 
 
-                            {walletProvider ? (+allowance) ? (
+                            {web3Provider ? (+allowance) ? (
                                 <></>
                             ) : chainId === 80001 ? (
                                 <button onClick={approve} className="z-30 disabled:opacity-50 disabled:hover:shadow-black disabled:cursor-default mt-4 relative flex justify-center items-center  transition ease-in-out duration-500 shadow-black rounded-xl w-full max-w-md py-3 sm:py-4 group">
@@ -155,7 +156,7 @@ const Stake: NextPage = () => {
                                     <span className="pt-1 z-10 text-gray-200 font-medium text-lg sm:text-xl">Approve MGH</span>
                                 </button>
                             ) : (
-                                <button onClick={() => { switchNetworkMumbai(walletProvider.provider) }} className="z-30 disabled:opacity-50 disabled:hover:shadow-black disabled:cursor-default mt-4 relative flex justify-center items-center  transition ease-in-out duration-500 shadow-black rounded-xl w-full max-w-md py-3 sm:py-4 group">
+                                <button onClick={() => { switchNetworkMumbai(web3Provider.provider) }} className="z-30 disabled:opacity-50 disabled:hover:shadow-black disabled:cursor-default mt-4 relative flex justify-center items-center  transition ease-in-out duration-500 shadow-black rounded-xl w-full max-w-md py-3 sm:py-4 group">
                                     <div className="h-full w-full absolute bg-gradient-to-br transition-all ease-in-out duration-300 from-pink-600 to-blue-500 rounded-xl opacity-60 group-hover:opacity-80" />
                                     <span className="pt-1 z-10 text-gray-200 font-medium text-lg sm:text-xl">Switch to Polygon</span>v
                                 </button>
@@ -193,7 +194,7 @@ const Stake: NextPage = () => {
                                     <p className={`text-gray-300 font-medium text-base sm:text-lg pt-1 flex-grow`}>Current APR</p>
                                     <p className={`text-gray-400 font-medium text-base sm:text-lg pt-1 text-right`}>{APY.toFixed(2)}%</p>
                                 </div>
-                                <p className="text-gray-400 text-xs font-mediu self-start">APR is subject to continuos change</p>
+                                <p className="text-gray-400 text-xs font-mediu self-start">APR is subject to continuous change</p>
 
                                 <hr className="w-8/12 xs:w-9/12 border-gray-600 my-5" />
 

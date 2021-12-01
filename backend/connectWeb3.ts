@@ -1,33 +1,33 @@
 import { useEffect, useState } from "react";
 import { ethers } from "ethers";
-import { Web3Provider } from "@ethersproject/providers";
 
 import { Provider } from "../lib/enums";
+import { removeLocal } from "../lib/local";
 import { useAppDispatch } from "../state/hooks";
 import { disconnect, setAddress, setChain } from "../state/account";
-import { removeLocal } from "../lib/local";
+
 import useProvider from "./provider";
 
 
-export default function useConnectWallet() {
-  const [walletProvider, setProvider] = useState<Web3Provider>()
+export default function useConnectWeb3() {
+  const [web3Provider, setweb3Provider] = useState<ethers.providers.Web3Provider>()
   const dispatch = useAppDispatch()
   const provider = useProvider()
 
   useEffect(() => {
     if (!provider) {
-      setProvider(undefined)
+      setweb3Provider(undefined)
       return
     }
 
-    const web3Provider = new ethers.providers.Web3Provider(provider, "any");
-    setProvider(web3Provider)
+    const ethersWeb3Provider = new ethers.providers.Web3Provider(provider, "any");
+    setweb3Provider(ethersWeb3Provider)
 
-    web3Provider.listAccounts().then(res => {
+    ethersWeb3Provider.listAccounts().then(res => {
       dispatch(setAddress(res[0]))
     })
 
-    web3Provider.getNetwork().then(res => {
+    ethersWeb3Provider.getNetwork().then(res => {
       dispatch(setChain(res.chainId))
     })
 
@@ -74,6 +74,6 @@ export default function useConnectWallet() {
     dispatch(disconnect())
   }
 
-  return { walletProvider, provider, disconnectWallet }
+  return { web3Provider, disconnectWallet }
 
 }

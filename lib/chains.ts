@@ -1,54 +1,103 @@
 import { IChainData } from './types'
 
-const supportedChains: IChainData[] = [
+export const Chains = {
+  ETHEREUM_MAINNET: {
+      name: "Ethereum Mainnet",
+      chainId: 1,
+      chainIdHex: "",
+      rpcUrl: "https://mainnet.infura.io/v3/03bfd7b76f3749c8bb9f2c91bdba37f3",
+      nativeCurrency: {
+          name: "Ethereum",
+          symbol: "ETH",
+          decimals: 18,
+      },
+      blockExplorer: "https://etherscan.io",
+  },
+  ETHEREUM_ROPSTEN: {
+      name: "Ethereum Ropsten",
+      chainId: 3,
+      chainIdHex: "",
+      rpcUrl: "https://ropsten.infura.io/v3/03bfd7b76f3749c8bb9f2c91bdba37f3",
+      nativeCurrency: {
+          name: "Ethereum",
+          symbol: "ETH",
+          decimals: 18,
+      },
+      blockExplorer: "https://ropsten.etherscan.io",
+  },
+  MATIC_MAINNET: {
+      name: "Matic Mainnet",
+      chainId: 137,
+      chainIdHex: "",
+      rpcUrl: "https://rpc-mainnet.maticvigil.com/",
+      nativeCurrency: {
+          name: "Matic",
+          symbol: "MATIC",
+          decimals: 18,
+      },
+      blockExplorer: "https://polygonscan.com/",
+  },
+  MATIC_TESTNET: {
+      name: "Matic Testnet Mumbai",
+      chainId: 80001,
+      chainIdHex: "",
+      rpcUrl: "https://rpc-mainnet.maticvigil.com/",
+      nativeCurrency: {
+          name: "Matic",
+          symbol: "MATIC",
+          decimals: 18,
+      },
+      blockExplorer: "https://mumbai.polygonscan.com",
+  },
+}
+
+export const supportedChains: IChainData[] = [
   {
-    name: 'Ethereum Mainnet',
-    short_name: 'eth',
-    chain: 'ETH',
-    network: 'mainnet',
-    chain_id: 1,
-    network_id: 1,
-    rpc_url: 'https://mainnet.infura.io/v3/%API_KEY%',
-    native_currency: {
-      symbol: 'ETH',
-      name: 'Ethereum',
-      decimals: '18',
-      contractAddress: '',
-      balance: '',
+    name: "Ethereum Mainnet",
+    chainId: 1,
+    chainIdHex: "",
+    rpcUrl: "https://mainnet.infura.io/v3/03bfd7b76f3749c8bb9f2c91bdba37f3",
+    nativeCurrency: {
+      name: "Ethereum",
+      symbol: "ETH",
+      decimals: 18,
     },
+    blockExplorer: "https://etherscan.io",
   },
   {
-    name: 'Ethereum Ropsten',
-    short_name: 'rop',
-    chain: 'ETH',
-    network: 'ropsten',
-    chain_id: 3,
-    network_id: 3,
-    rpc_url: 'https://ropsten.infura.io/v3/%API_KEY%',
-    native_currency: {
-      symbol: 'ETH',
-      name: 'Ethereum',
-      decimals: '18',
-      contractAddress: '',
-      balance: '',
+    name: "Ethereum Ropsten",
+    chainId: 3,
+    chainIdHex: "",
+    rpcUrl: "https://ropsten.infura.io/v3/03bfd7b76f3749c8bb9f2c91bdba37f3",
+    nativeCurrency: {
+      name: "Ethereum",
+      symbol: "ETH",
+      decimals: 18,
     },
+    blockExplorer: "https://ropsten.etherscan.io",
   },
   {
-    name: 'Matic Mainnet',
-    short_name: 'matic',
-    chain: 'smartchain',
-    network: 'mainnet',
-    chain_id: 137,
-    network_id: 137,
-    rpc_url: 'https://rpc-mainnet.maticvigil.com/',
-    native_currency: {
-      symbol: 'MATIC',
-      name: 'MATIC',
-      decimals: '18',
-      contractAddress: '',
-      balance: '',
+    name: "Matic Mainnet",
+    chainId: 137,
+    chainIdHex: "",
+    rpcUrl: "https://rpc-mainnet.maticvigil.com/",
+    nativeCurrency: {
+      name: "Matic",
+      symbol: "MATIC",
+      decimals: 18,
     },
+    blockExplorer: "https://polygonscan.com/",
+  },
+  {
+    name: "Matic Testnet Mumbai",
+    chainId: 80001,
+    chainIdHex: "",
+    rpcUrl: "https://rpc-mainnet.maticvigil.com/",
+    nativeCurrency: {
+      name: "Matic",
+      symbol: "MATIC",
+      decimals: 18,
+    },
+    blockExplorer: "https://mumbai.polygonscan.com",
   },
 ]
-
-export default supportedChains

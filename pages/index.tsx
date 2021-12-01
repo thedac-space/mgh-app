@@ -1,14 +1,7 @@
 import { NextPage } from "next";
 import Head from "next/head";
-import { ethers } from "ethers";
-import { FormatTypes, Interface } from "@ethersproject/abi";
 
-import changeChain from "../backend/changeChain";
-import useConnectWallet from "../backend/connectWallet";
-import { useAppSelector } from "../state/hooks";
 import HomeCard from "../components/HomeCard";
-
-import stakingAbi from "../backend/stakingAbi.json"
 
 
 const Home: NextPage = () => {
