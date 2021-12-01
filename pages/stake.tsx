@@ -2,8 +2,8 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import dynamic from 'next/dynamic';
 
-
 import TokenInput from '../components/TokenInput'
+import TransactionModal from '../components/TransactionModal';
 import { Tokens } from '../lib/enums'
 import { approveMGH, calcReward, getMGHAllowance, getMGHBalance, getReward, stakeMGH, unstakeMGH } from '../backend/contractInteraction';
 import useConnectWallet from '../backend/connectWallet';
@@ -26,7 +26,10 @@ const Stake: NextPage = () => {
     const [unstakeInput, setUnstakeInput] = useState("")
 
     const [openModal, setOpenModal] = useState(false)
-    const [transactionLoading, setTransactionLoading] = useState(false)
+    const [transactionLoading, setTransactionLoading] = useState(true)
+    const [transactionModal, setTransactionModal] = useState(false)
+    const [success, setSuccess] = useState(true)
+    const [hash, setHash] = useState("")
 
     useEffect(() => {
         if (!walletProvider) {
@@ -34,6 +37,10 @@ const Stake: NextPage = () => {
             setUnstakeInput("")
         }
     }, [walletProvider])
+
+    if (!transactionModal && !transactionLoading) {
+        window.location.reload()
+    }
 
 
     const approve = async () => {
@@ -46,9 +53,23 @@ const Stake: NextPage = () => {
     const stake = async () => {
         const amount = ethers.utils.parseEther(stakeInput)
         const transaction = await stakeMGH(walletProvider, address, amount)
+        setHash(transaction.hash)
         setTransactionLoading(true)
-        const result = await transaction.wait();
-        window.location.reload()
+        setTransactionModal(true)
+
+        try {
+            const receipt = await transaction.wait();
+            setSuccess(true)
+            setTransactionLoading(false)
+        } catch (error: any) {
+            console.log("error")
+            console.log(error)
+            setHash(error.receipt.transactionHash)
+            setSuccess(false)
+            setTransactionLoading(false)
+        }
+
+
     }
 
     const unstake = async () => {
@@ -83,11 +104,8 @@ const Stake: NextPage = () => {
             ) : (
                 <div className="flex flex-col lg:flex-row space-x-0 lg:space-x-10 space-y-5 lg:space-y-0 max-w-7xl w-full mt-8 xl:mt-0">
 
-                    {transactionLoading && (
-                        <div className="fixed top-0 left-0 h-screen w-screen flex flex-col items-center justify-center space-y-10 bg-black bg-opacity-30 backdrop-filter backdrop-blur-sm z-40 ">
-                            <img src="/images/mgh_logo.png" className={` h-24 w-24 logo`} />
-                            <p className="text-3xl text-blue-400 font-medium text-center">Processing Transaction</p>
-                        </div>
+                    {transactionModal && (
+                        <TransactionModal onDismiss={() => { setTransactionModal(false); !transactionLoading && window.location.reload() }} loading={transactionLoading} success={success} hash={hash} />
                     )}
 
                     <div className="flex flex-col space-y-5 w-full lg:w-7/12">
@@ -106,9 +124,9 @@ const Stake: NextPage = () => {
                                         <p onClick={() => setStakeInput(MGHBalance)} className="text-gray-400 cursor-pointer font-medium hover:text-gray-300 transition ease-in-out duration-300">Max: {(+MGHBalance) ? (+MGHBalance).toFixed(1) : ""}</p>
                                     </div>
 
-                                    <input onChange={(e) => { setStakeInput(e.target.value) }} value={stakeInput} autoComplete="off" required id={Tokens.MGH} type="number" placeholder="0.0" className={`text-right w-full bg-grey-dark shadow-black hover:shadow-colorbottom focus:shadow-colorbottom bg-opacity-70 text-gray-200 font-medium text-2xl p-3 sm:p-4 pt-4 sm:pt-5 focus:outline-none border border-opacity-10 hover:border-opacity-30 focus:border-opacity-60 transition duration-300 ease-in-out rounded-xl placeholder-white placeholder-opacity-75`} />
+                                    <input onChange={(e) => { setStakeInput(e.target.value) }} value={stakeInput} autoComplete="off" required id={Tokens.MGH} type="number" placeholder="0.0" className={`text-right w-full bg-grey-dark shadow-black hover:shadow-colorbottom focus:shadow-colorbottom bg-opacity-70 text-gray-200 font-medium text-lg sm:text-xl p-3 sm:p-4 pt-4 sm:pt-5 focus:outline-none border border-opacity-10 hover:border-opacity-30 focus:border-opacity-60 transition duration-300 ease-in-out rounded-xl placeholder-white placeholder-opacity-75`} />
 
-                                    <button disabled={stakeInput ? false : true} onClick={stake} className={`disabled:opacity-30 disabled:hover:shadow-black disabled:cursor-default mt-2 sm:mt-4 flex justify-center items-center border border-pink-600 shadow-black hover:shadow-button transition ease-in-out duration-500 rounded-xl w-full py-3 sm:py-4`}>
+                                    <button disabled={stakeInput ? (+stakeInput > +MGHBalance ? true : false) : true} onClick={stake} className={`disabled:opacity-30 disabled:hover:shadow-black disabled:cursor-default mt-2 sm:mt-4 flex justify-center items-center border border-pink-600 shadow-black hover:shadow-button transition ease-in-out duration-500 rounded-xl w-full py-3 sm:py-4`}>
                                         <p className="pt-1 z-10 text-pink-600 font-medium text-lg sm:text-xl">Stake $MGH</p>
                                     </button>
                                 </div>
@@ -121,7 +139,7 @@ const Stake: NextPage = () => {
 
                                     <input onChange={(e) => { setUnstakeInput(e.target.value) }} value={unstakeInput} required id={Tokens.MGH} type="number" autoComplete="off" placeholder="0.0" className={`text-right w-full bg-grey-dark shadow-black hover:shadow-colorbottom focus:shadow-colorbottom bg-opacity-70 text-gray-200 font-medium text-lg sm:text-xl p-3 sm:p-4 pt-4 sm:pt-5 focus:outline-none border border-opacity-10 hover:border-opacity-30 focus:border-opacity-60 transition duration-300 ease-in-out rounded-xl placeholder-white placeholder-opacity-75`} />
 
-                                    <button disabled={unstakeInput ? false : true} onClick={unstake} className={`mt-2 sm:mt-4 disabled:opacity-30 disabled:hover:shadow-black disabled:cursor-default flex justify-center items-center border border-pink-600 shadow-black hover:shadow-button transition ease-in-out duration-500 rounded-xl w-full py-3 sm:py-4`}>
+                                    <button disabled={unstakeInput ? (+unstakeInput > +totalStaked ? true : false) : true} onClick={unstake} className={`mt-2 sm:mt-4 disabled:opacity-30 disabled:hover:shadow-black disabled:cursor-default flex justify-center items-center border border-pink-600 shadow-black hover:shadow-button transition ease-in-out duration-500 rounded-xl w-full py-3 sm:py-4`}>
                                         <p className="pt-1 z-10 text-pink-600 font-medium text-lg sm:text-xl">Unstake $MGH</p>
                                     </button>
                                 </div>
