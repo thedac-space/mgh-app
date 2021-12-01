@@ -3,11 +3,11 @@ import { BigNumber, ethers, providers } from "ethers";
 import { Contracts } from "../lib/contracts";
 
 
-const MGHContract = Contracts.MGH_TOKEN.MATIC_TESTNET.address
-const MGHContractAbi = Contracts.MGH_TOKEN.MATIC_TESTNET.abi
+const MGHContract = Contracts.MGH_TOKEN.MATIC_MAINNET.address
+const MGHContractAbi = Contracts.MGH_TOKEN.MATIC_MAINNET.abi
 
-const StakingContract = Contracts.MGH_STAKING.MATIC_TESTNET.address
-const StakingContractAbi = Contracts.MGH_STAKING.MATIC_TESTNET.abi
+const StakingContract = Contracts.MGH_STAKING.MATIC_MAINNET.address
+const StakingContractAbi = Contracts.MGH_STAKING.MATIC_MAINNET.abi
 
 
 export const getMGHBalance = async (provider: providers.Web3Provider | undefined, address: string | undefined) => {

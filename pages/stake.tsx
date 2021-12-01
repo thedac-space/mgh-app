@@ -113,7 +113,7 @@ const Stake: NextPage = () => {
                     <div className="flex flex-col space-y-5 w-full lg:w-7/12">
 
                         <div className="relative flex flex-col space-y-5 h-full items-center justify-between border-t border-l border-opacity-10 shadow-black rounded-xl p-2 sm:p-5 w-full bg-grey-dark bg-opacity-30">
-                            {(!web3Provider || !allowance || chainId !== Chains.MATIC_TESTNET.chainId) && <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-0 backdrop-blur-sm rounded-xl z-20"></div>}
+                            {(!web3Provider || !allowance || chainId !== Chains.MATIC_MAINNET.chainId) && <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-0 backdrop-blur-sm rounded-xl z-20"></div>}
                             <div className="self-start flex items-center justify-center space-x-2 sm:space-x-4 w-full pr-2 mb-2 z-30">
                                 <img src="/images/mgh_logo.png" className="object-scale-down h-10 sm:h-14 p-1" />
                                 <h3 className="text-gray-300 pb-1.5">$MGH Staking</h3>
