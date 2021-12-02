@@ -20,8 +20,10 @@ const changeChain = async (provider: any, newChain: number | undefined) => {
         });
     } catch (error: any) {
         alert(JSON.stringify(error))
+        alert(error.data.originalError.code)
         returnerror = error
         if (error.code === 4902 || error.data.originalError.code === 4902) {
+            alert(error.data.originalError.code)
             try {
                 await provider.request({
                     method: "wallet_addEthereumChain",
