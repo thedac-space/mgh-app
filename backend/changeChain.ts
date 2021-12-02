@@ -6,7 +6,7 @@ import { setError } from "../state/network";
 
 
 const changeChain = async (provider: any, newChain: number | undefined) => {
-    const dispatch = useAppDispatch()
+    let returnerror
     if (!newChain) {
         return
     }
@@ -19,7 +19,7 @@ const changeChain = async (provider: any, newChain: number | undefined) => {
             params: [{ chainId: chainData?.chainIdHex }],
         });
     } catch (error: any) {
-        dispatch(setError(error))
+        returnerror = error
         if (error.code === 4902) {
             try {
                 await provider.request({
@@ -39,11 +39,12 @@ const changeChain = async (provider: any, newChain: number | undefined) => {
                     ],
                 });
             } catch (error: any) {
-                dispatch(setError(error))
+                returnerror = error
                 console.log(error.message);
             }
         }
     }
+    return returnerror
 }
 
 

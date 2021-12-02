@@ -3,11 +3,20 @@ import { RiErrorWarningLine } from "react-icons/ri"
 
 import changeChain from "../backend/changeChain";
 import { Chains } from "../lib/chains";
+import { useAppDispatch } from "../state/hooks";
+import { setError } from "../state/network";
 
 
 
 const NetworkButton = ({ provider, chainId }: any) => {
     const [open, setOpen] = useState(false)
+    const dispatch = useAppDispatch()
+
+    const click = async ()=>{
+        const error = await changeChain(provider, Chains.MATIC_MAINNET.chainId); 
+        dispatch(setError(JSON.stringify(error)))
+        setOpen(false)
+    }
 
     return (
         <>
@@ -26,7 +35,7 @@ const NetworkButton = ({ provider, chainId }: any) => {
                             <span className="pt-1 z-10 text-gray-200 px-4 ">Ethereum</span>
                         </div>
 
-                        <div onClick={() => { changeChain(provider, Chains.MATIC_MAINNET.chainId); setOpen(false) }} className={`flex items-center cursor-pointer ${chainId === Chains.MATIC_MAINNET.chainId ? "opacity-100" : "opacity-70 hover:opacity-100"}`}>
+                        <div onClick={() => { click() }} className={`flex items-center cursor-pointer ${chainId === Chains.MATIC_MAINNET.chainId ? "opacity-100" : "opacity-70 hover:opacity-100"}`}>
                             <img src="/images/polygon-matic-logo.png" className="h-8 w-8 z-10" />
                             <span className="pt-1 z-10 text-gray-200 px-4 ">Polygon</span>
                         </div>
