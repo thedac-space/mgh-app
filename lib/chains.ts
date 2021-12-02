@@ -26,7 +26,7 @@ export const Chains = {
       blockExplorer: "https://ropsten.etherscan.io",
   },
   MATIC_MAINNET: {
-      name: "Matic Mainnet",
+      name: "Polygon Mainnet",
       chainId: 137,
       chainIdHex: "0x89",
       rpcUrl: "https://rpc-mainnet.maticvigil.com/",
@@ -38,7 +38,7 @@ export const Chains = {
       blockExplorer: "https://polygonscan.com/",
   },
   MATIC_TESTNET: {
-      name: "Matic Testnet Mumbai",
+      name: "Polygon Testnet Mumbai",
       chainId: 80001,
       chainIdHex: "0x13881",
       rpcUrl: "https://rpc-mainnet.maticvigil.com/",
@@ -77,7 +77,7 @@ export const supportedChains: IChainData[] = [
     blockExplorer: "https://ropsten.etherscan.io",
   },
   {
-    name: "Matic Mainnet",
+    name: "Polygon Mainnet",
     chainId: 137,
     chainIdHex: "0x89",
     rpcUrl: "https://rpc-mainnet.maticvigil.com/",
@@ -89,7 +89,7 @@ export const supportedChains: IChainData[] = [
     blockExplorer: "https://polygonscan.com/",
   },
   {
-    name: "Matic Testnet Mumbai",
+    name: "Polygon Testnet Mumbai",
     chainId: 80001,
     chainIdHex: "0x13881",
     rpcUrl: "https://rpc-mainnet.maticvigil.com/",
