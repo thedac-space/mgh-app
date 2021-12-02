@@ -1,12 +1,7 @@
-import { Web3Provider } from "@ethersproject/providers";
 import { getChainData } from "../lib/utilities";
-import { useAppDispatch } from "../state/hooks";
-import { setError } from "../state/network";
-
 
 
 const changeChain = async (provider: any, newChain: number | undefined) => {
-    let returnerror
     if (!newChain) {
         return
     }
@@ -19,12 +14,9 @@ const changeChain = async (provider: any, newChain: number | undefined) => {
             params: [{ chainId: chainData?.chainIdHex }],
         });
     } catch (error: any) {
-        alert(JSON.stringify(error))
-        returnerror = error
         if (error.code === 4902 || error.data.originalError.code === 4902) {
-            alert("adding chain")
             try {
-                const result = await provider.request({
+                await provider.request({
                     method: "wallet_addEthereumChain",
                     params: [
                         {
@@ -40,15 +32,11 @@ const changeChain = async (provider: any, newChain: number | undefined) => {
                         },
                     ],
                 });
-                alert(result)
             } catch (error: any) {
-                // returnerror = error
-                alert(error)
                 console.log(error.message);
             }
         }
     }
-    return returnerror
 }
 
 
