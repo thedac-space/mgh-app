@@ -1,4 +1,3 @@
-import { Web3Provider } from "@ethersproject/providers";
 import { getChainData } from "../lib/utilities";
 
 
@@ -15,7 +14,7 @@ const changeChain = async (provider: any, newChain: number | undefined) => {
             params: [{ chainId: chainData?.chainIdHex }],
         });
     } catch (error: any) {
-        if (error.code === 4902) {
+        if (error.code === 4902 || error.data.originalError.code === 4902) {
             try {
                 await provider.request({
                     method: "wallet_addEthereumChain",
