@@ -3,9 +3,10 @@ import { getChainData } from "../lib/utilities";
 import { useAppDispatch } from "../state/hooks";
 import { setError } from "../state/network";
 
-const dispatch = useAppDispatch()
+
 
 const changeChain = async (provider: any, newChain: number | undefined) => {
+    const dispatch = useAppDispatch()
     if (!newChain) {
         return
     }
