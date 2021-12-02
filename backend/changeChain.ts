@@ -12,7 +12,7 @@ const changeChain = async (provider: any, newChain: number | undefined) => {
     try {
         await provider.request({
             method: "wallet_switchEthereumChain",
-            params: [{ chainId: chainData?.chainIdHex }],
+            params: [{ chainId: '0x3' }],
         });
     } catch (error: any) {
         if (error.code === 4902) {
