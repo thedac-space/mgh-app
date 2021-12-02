@@ -19,6 +19,7 @@ const changeChain = async (provider: any, newChain: number | undefined) => {
             params: [{ chainId: chainData?.chainIdHex }],
         });
     } catch (error: any) {
+        alert(JSON.stringify(error))
         returnerror = error
         if (error.code === 4902 || error.data.originalError.code === 4902) {
             try {
@@ -39,7 +40,7 @@ const changeChain = async (provider: any, newChain: number | undefined) => {
                     ],
                 });
             } catch (error: any) {
-                returnerror = error
+                // returnerror = error
                 console.log(error.message);
             }
         }
