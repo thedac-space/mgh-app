@@ -22,9 +22,9 @@ const changeChain = async (provider: any, newChain: number | undefined) => {
         alert(JSON.stringify(error))
         returnerror = error
         if (error.code === 4902 || error.data.originalError.code === 4902) {
-            alert(error.data.originalError.code)
+            alert("adding chain")
             try {
-                await provider.request({
+                const result = await provider.request({
                     method: "wallet_addEthereumChain",
                     params: [
                         {
@@ -40,6 +40,7 @@ const changeChain = async (provider: any, newChain: number | undefined) => {
                         },
                     ],
                 });
+                alert(result)
             } catch (error: any) {
                 // returnerror = error
                 alert(error)
