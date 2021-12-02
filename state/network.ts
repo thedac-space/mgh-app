@@ -15,11 +15,14 @@ export const networkSlice = createSlice({
     },
     changeToEthereum: state => {
       state.value = Network.ETHEREUM
+    },
+    setError: (state, {payload}) => {
+      state.value = payload
     }
   }
 })
 
 // Action creators are generated for each case reducer function
-export const { changeToPolygon, changeToEthereum } = networkSlice.actions
+export const { changeToPolygon, changeToEthereum, setError } = networkSlice.actions
 
 export default networkSlice.reducer
