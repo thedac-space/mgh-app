@@ -20,7 +20,6 @@ const changeChain = async (provider: any, newChain: number | undefined) => {
         });
     } catch (error: any) {
         alert(JSON.stringify(error))
-        alert(error.data.originalError.code)
         returnerror = error
         if (error.code === 4902 || error.data.originalError.code === 4902) {
             alert(error.data.originalError.code)
@@ -43,6 +42,7 @@ const changeChain = async (provider: any, newChain: number | undefined) => {
                 });
             } catch (error: any) {
                 // returnerror = error
+                alert(error)
                 console.log(error.message);
             }
         }
