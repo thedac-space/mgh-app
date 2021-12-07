@@ -112,7 +112,7 @@ const Stake: NextPage = () => {
 
                     <div className="flex flex-col space-y-5 w-full lg:w-7/12">
 
-                        <div className="relative flex flex-col space-y-5 h-full items-center justify-between border-t border-l border-opacity-10 shadow-black rounded-xl p-2 sm:p-5 w-full bg-grey-dark bg-opacity-30">
+                        <div className="relative flex flex-col space-y-5 h-full items-center justify-between border-t border-l border-opacity-10 shadow-black rounded-xl p-2 pb-10 sm:p-5 sm:pb-12 w-full bg-grey-dark bg-opacity-30">
                             {(!web3Provider || !+allowance || chainId !== Chains.MATIC_MAINNET.chainId) && <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-0 backdrop-blur-sm rounded-xl z-20"></div>}
                             <div className="self-start flex items-center justify-center space-x-2 sm:space-x-4 w-full pr-2 mb-2 z-30">
                                 <img src="/images/mgh_logo.png" className="object-scale-down h-10 sm:h-14 p-1" />
@@ -168,7 +168,7 @@ const Stake: NextPage = () => {
                                     <span className="pt-1 z-10 text-gray-200 font-medium text-lg sm:text-xl">Switch to Polygon</span>v
                                 </button>
                             )}
-
+                            <a href="/docs/staking_agreement.pdf" target="_blank" className="absolute bottom-3 left-0 w-full text-center text-gray-300 text-sm z-30 hover:text-blue-400 transition ease-in-out duration-300">Staking Agreement</a>
                         </div>
 
                     </div>
@@ -228,6 +228,7 @@ const Stake: NextPage = () => {
                             <Bridge />
                             {(web3Provider && chainId === Chains.MATIC_MAINNET.chainId) && <p onClick={() => addTokenToWallet(web3Provider.provider)} className="mt-3 pt-1 z-10 text-gray-400 hover:text-blue-400 transition ease-in-out duration-300 font-medium text-lg cursor-pointer">Add $MGH to your Wallet</p>}
                         </div>
+
                     </div>
 
 

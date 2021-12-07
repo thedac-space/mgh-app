@@ -131,57 +131,60 @@ const ValuationPage: NextPage = ({ prices }: any) => {
             </Head>
 
             {/* <div className="h-full w-full flex flex-row items-center justify-evenly mt-8 xl:mt-0"> */}
-                <div className="w-full flex flex-col items-center justify-start space-y-10 max-w-5xl mt-8 xl:mt-0">
+            <div className="w-full flex flex-col items-center justify-start space-y-10 max-w-5xl mt-8 xl:mt-0">
 
-                    <div className="flex flex-col items-start border-t border-l border-opacity-20 shadow-blck rounded-xl p-5 w-full bg-grey-dark bg-opacity-30 text-left">
-                        <h2 className="text-transparent bg-clip-text bg-gradient-to-b from-blue-500 via-green-400 to-green-500">LAND Valuation</h2>
-                        <p className={`text-lg xl:text-xl font-medium text-gray-200 pt-0 sm:pt-5`}>Find the real value of The Sandbox LANDs with our machine learning pricing algorithm.</p>
-                    </div>
+                <div className="flex flex-col items-start border-t border-l border-opacity-20 shadow-black rounded-xl p-5 w-full bg-grey-dark bg-opacity-30 text-left">
+                    <h2 className="text-transparent bg-clip-text bg-gradient-to-b from-blue-500 via-green-400 to-green-500">LAND Valuation</h2>
+                    <p className={`text-lg xl:text-xl font-medium text-gray-200 pt-0 sm:pt-5`}>Find the real value of The Sandbox LANDs with our machine learning pricing algorithm.</p>
+                </div>
 
-                    <div className="flex flex-col sm:flex-row space-y-5 sm:space-y-0 space-x-0 sm:space-x-5 md:space-x-10 items-stretch justify-between w-full">
+                <div className="flex flex-col sm:flex-row space-y-5 sm:space-y-0 space-x-0 sm:space-x-5 md:space-x-10 items-stretch justify-between w-full">
 
-                        <div className="flex flex-col justify-start lg:justify-between max-w-full sm:max-w-md w-full space-y-5 md:space-y-10 lg:space-y-5">
-
-                            <div className="flex flex-col items-start border-t border-l border-opacity-20 shadow-blck rounded-xl p-5 w-full bg-grey-dark bg-opacity-30 text-left">
-                                <div className="relative flex flex-wrap items-center mb-2 pl-2 text-left w-full max-w-sm">
-                                    <p className="font-medium text-gray-300 pt-1">Find by Token ID</p>
-                                    <BsQuestionCircle className="text-gray-300 cursor-pointer peer ml-3" />
-                                    <p className="absolute -top-7 -left-6 xs:left-0 pl-2 px-2 py-1 rounded-lg bg-black bg-opacity-10 backdrop-filter backdrop-blur font-medium text-xs text-gray-400 hidden peer-hover:block w-70">Find LAND on Opensea &gt; Details &gt; Token ID</p>
-                                </div>
-                                <form onSubmit={handleIDSubmit} onInput={() => { setIdError(""); setCoordinatesError("") }} className="relative flex items-center w-full rounded-xl max-w-sm">
-                                    <input required id="tokenID" type="text" placeholder="e.g. 72792" className={`bg-transparent w-full text-white font-medium p-4 focus:outline-none border ${idError ? "border-red-500 border-opacity-100" : "border-opacity-40 "} hover:border-opacity-100 focus:border-opacity-100 transition duration-300 ease-in-out rounded-xl placeholder-white placeholder-opacity-75`} />
-
-                                    <button type="submit" className="absolute flex items-center justify-around bg-gray-200 hover:bg-white shadow-black hover:shadow-button transition ease-in-out duration-500 right-0 h-4/5 rounded-lg mr-1.5 w-12 xs:w-16 sm:w-12 lg:w-28">
-                                        <svg className={`${idProcessing ? "block" : "hidden"} animate-spin-slow h-6 w-6 border-4 border-t-gray-300 border-l-gray-300 border-gray-800 rounded-full " viewBox="0 0 24 24`} />
-                                        <span className="text-black font-medium pt-1 hidden lg:block">Search</span>
-                                        <HiOutlineSearch className={`${idProcessing ? "hidden" : "block"} lg:hidden text-2xl`} />
-                                    </button>
-                                </form>
-                                <p className="font-medium text-xs text-red-500 mt-1 pl-2 text-left w-full max-w-sm">{idError}</p>
-                            </div>
-
-
-                            <div className="flex flex-col items-start border-t border-l border-opacity-20 shadow-blak rounded-xl p-5 w-full bg-grey-dark bg-opacity-30 text-left">
-                                <p className="font-medium  text-gray-300 mb-2 pl-2 text-left w-full max-w-sm">Find by Coordinates</p>
-                                <form onSubmit={handleCoordinatesSubmit} onInput={() => { setIdError(""); setCoordinatesError("") }} className="relative flex items-stretch justify-between space-x-3 lg:space-x-5 w-full rounded-xl max-w-sm pr-2">
-                                    <input required id="X" type="text" placeholder="X" className={`bg-transparent w-full text-white font-medium p-4 focus:outline-none border ${coordinatesError ? "border-red-500 border-opacity-100" : "border-opacity-40 "} hover:border-opacity-100 focus:border-opacity-100 transition duration-300 ease-in-out rounded-xl placeholder-white placeholder-opacity-75`} />
-                                    <input required id="Y" type="text" placeholder="Y" className={`bg-transparent w-full text-white font-medium p-4 focus:outline-none border ${coordinatesError ? "border-red-500 border-opacity-100" : "border-opacity-40 "} hover:border-opacity-100 focus:border-opacity-100 transition duration-300 ease-in-out rounded-xl placeholder-white placeholder-opacity-75`} />
-
-                                    <button type="submit" className="flex flex-none items-center justify-around bg-gray-200 hover:bg-white transition ease-in-out duration-500 rounded-xl m-1 ml-2 lg:ml-1 shadow-black hover:shadow-button w-12 xs:w-16 sm:w-12 lg:w-28">
-                                        <svg className={`${coordinatesProcessing ? "block" : "hidden"} animate-spin-slow h-6 w-6 border-4 border-t-gray-300 border-l-gray-300 border-gray-800 rounded-full " viewBox="0 0 24 24`} />
-                                        <span className="text-black font-medium pt-1 hidden lg:block">Search</span>
-                                        <HiOutlineSearch className={`${coordinatesProcessing ? "hidden" : "block"} lg:hidden text-2xl`} />
-                                    </button>
-                                </form>
-                                <p className="font-medium text-xs text-red-500 mt-1 pl-2 text-left w-full max-w-sm">{coordinatesError}</p>
-                            </div>
-                        </div>
+                    <div className="flex flex-col justify-start lg:justify-between max-w-full sm:max-w-md w-full space-y-5 md:space-y-10 lg:space-y-5">
 
                         <div className="flex flex-col items-start border-t border-l border-opacity-20 shadow-black rounded-xl p-5 w-full bg-grey-dark bg-opacity-30 text-left">
-                            <PriceCard showCard={showCard} processing={idProcessing || coordinatesProcessing} name={name} imageLink={imageLink} openseaLink={openseaLink} sandboxLink={sandboxLink} tokenID={tokenID} ethPrice={ethPrice} sandPrice={sandPrice} usdPrice={usdPrice} />
+                            <div className="relative flex flex-wrap items-center mb-2 pl-2 text-left w-full max-w-sm">
+                                <p className="font-medium text-gray-300 pt-1">Find by Token ID</p>
+                                <BsQuestionCircle className="text-gray-300 cursor-pointer peer ml-3" />
+                                <p className="absolute -top-7 -left-6 xs:left-0 pl-2 px-2 py-1 rounded-lg bg-black bg-opacity-10 backdrop-filter backdrop-blur font-medium text-xs text-gray-400 hidden peer-hover:block w-70">Find LAND on Opensea &gt; Details &gt; Token ID</p>
+                            </div>
+                            <form onSubmit={handleIDSubmit} onInput={() => { setIdError(""); setCoordinatesError("") }} className="relative flex items-center w-full rounded-xl max-w-sm">
+                                <input required id="tokenID" type="text" placeholder="e.g. 72792" className={`bg-transparent w-full text-white font-medium p-4 focus:outline-none border ${idError ? "border-red-500 border-opacity-100" : "border-opacity-40 "} hover:border-opacity-100 focus:border-opacity-100 transition duration-300 ease-in-out rounded-xl placeholder-white placeholder-opacity-75`} />
+
+                                <button type="submit" className="absolute flex items-center justify-around bg-gray-200 hover:bg-white shadow-black hover:shadow-button transition ease-in-out duration-500 right-0 h-4/5 rounded-lg mr-1.5 w-12 xs:w-16 sm:w-12 lg:w-28">
+                                    <svg className={`${idProcessing ? "block" : "hidden"} animate-spin-slow h-6 w-6 border-4 border-t-gray-300 border-l-gray-300 border-gray-800 rounded-full " viewBox="0 0 24 24`} />
+                                    <span className="text-black font-medium pt-1 hidden lg:block">Search</span>
+                                    <HiOutlineSearch className={`${idProcessing ? "hidden" : "block"} lg:hidden text-2xl`} />
+                                </button>
+                            </form>
+                            <p className="font-medium text-xs text-red-500 mt-1 pl-2 text-left w-full max-w-sm">{idError}</p>
+                        </div>
+
+
+                        <div className="flex flex-col items-start border-t border-l border-opacity-20 shadow-black rounded-xl p-5 w-full bg-grey-dark bg-opacity-30 text-left">
+                            <p className="font-medium  text-gray-300 mb-2 pl-2 text-left w-full max-w-sm">Find by Coordinates</p>
+                            <form onSubmit={handleCoordinatesSubmit} onInput={() => { setIdError(""); setCoordinatesError("") }} className="relative flex items-stretch justify-between space-x-3 lg:space-x-5 w-full rounded-xl max-w-sm pr-2">
+                                <input required id="X" type="text" placeholder="X" className={`bg-transparent w-full text-white font-medium p-4 focus:outline-none border ${coordinatesError ? "border-red-500 border-opacity-100" : "border-opacity-40 "} hover:border-opacity-100 focus:border-opacity-100 transition duration-300 ease-in-out rounded-xl placeholder-white placeholder-opacity-75`} />
+                                <input required id="Y" type="text" placeholder="Y" className={`bg-transparent w-full text-white font-medium p-4 focus:outline-none border ${coordinatesError ? "border-red-500 border-opacity-100" : "border-opacity-40 "} hover:border-opacity-100 focus:border-opacity-100 transition duration-300 ease-in-out rounded-xl placeholder-white placeholder-opacity-75`} />
+
+                                <button type="submit" className="flex flex-none items-center justify-around bg-gray-200 hover:bg-white transition ease-in-out duration-500 rounded-xl m-1 ml-2 lg:ml-1 shadow-black hover:shadow-button w-12 xs:w-16 sm:w-12 lg:w-28">
+                                    <svg className={`${coordinatesProcessing ? "block" : "hidden"} animate-spin-slow h-6 w-6 border-4 border-t-gray-300 border-l-gray-300 border-gray-800 rounded-full " viewBox="0 0 24 24`} />
+                                    <span className="text-black font-medium pt-1 hidden lg:block">Search</span>
+                                    <HiOutlineSearch className={`${coordinatesProcessing ? "hidden" : "block"} lg:hidden text-2xl`} />
+                                </button>
+                            </form>
+                            <p className="font-medium text-xs text-red-500 mt-1 pl-2 text-left w-full max-w-sm">{coordinatesError}</p>
                         </div>
                     </div>
+
+                    <div className="flex flex-col items-start border-t border-l border-opacity-20 shadow-black rounded-xl p-5 w-full bg-grey-dark bg-opacity-30 text-left">
+                        <PriceCard showCard={showCard} processing={idProcessing || coordinatesProcessing} name={name} imageLink={imageLink} openseaLink={openseaLink} sandboxLink={sandboxLink} tokenID={tokenID} ethPrice={ethPrice} sandPrice={sandPrice} usdPrice={usdPrice} />
+                    </div>
                 </div>
+                <div className="flex flex-col items-start shadow-blck rounded-xl py-3 px-4 w-full bg-grey-dark bg-opacity-20 text-left">
+                    <p className={`text-xs sm:text-sm text-gray-400`}>The MGH DAO does not provide, personalized investment recommendations or advisory services. Any information provided through the land evaluation tool and others is not, and should not be, considered as advice of any kind and is for information purposes only. That land is “valuated” does not mean, that it is in any way approved, checked audited, and/or has a real or correct value. In no event shall the MGH DAO be liable for any special, indirect, or consequential damages, or any other damages of any kind, including but not limited to loss of use, loss of profits, or loss of data, arising out of or in any way connected with the use of or inability to use the Service, including without limitation any damages resulting from reliance by you on any information obtained from using the Service.</p>
+                </div>
+            </div>
             {/* </div> */}
         </>
     )
