@@ -115,7 +115,7 @@ const PolygonStaking = () => {
                             {(!web3Provider || !+allowance || chainId !== Chains.MATIC_MAINNET.chainId) && <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-0 backdrop-blur-sm rounded-xl z-20"></div>}
                             <div className="self-start flex items-center justify-center space-x-2 sm:space-x-4 w-full pr-2 mb-2 z-30">
                                 <img src="/images/mgh_logo.png" className="object-scale-down h-10 sm:h-14 p-1" />
-                                <h3 className="text-gray-300 pb-1.5">$MGH Staking (Polyon)</h3>
+                                <h3 className="text-gray-300 pb-1.5">$MGH Staking</h3>
                             </div>
 
                             <div className="flex flex-col flex-grow w-full items-stretch justify-center space-y-10 sm:space-y-10 max-w-md">

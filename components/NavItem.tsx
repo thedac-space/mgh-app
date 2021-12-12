@@ -10,7 +10,12 @@ import {FaHandHoldingUsd} from "react-icons/fa"
 const NavItem = ({ text, link }: any) => {
     const router = useRouter()
 
-    const focus = router.pathname === link
+    let focus = router.pathname === link
+    if (router.pathname === "/stake-ethereum" || router.pathname === "/stake-polygon") {
+        if (link === "/stake") {
+            focus = true
+        }
+    }
 
     function getIcon(link: any) {
 
@@ -21,7 +26,7 @@ const NavItem = ({ text, link }: any) => {
                 return <IoIosSwap className={`text-2xl mr-4 z-10 ${focus && "text-pink-600"} group-hover:text-pink-600`} />
             case "/liquidity":
                 return <VscLock className={`text-2xl mr-4 z-10 ${focus && "text-pink-600"} group-hover:text-pink-600`} />
-            case "/stake":
+            case "/stake": case "/stake-ethereum": case "stake-polygon":
                 return <FaHandHoldingUsd className={`text-2xl mr-4 z-10 ${focus && "text-pink-600"} group-hover:text-pink-600`} />
             case "/pools":
                 return <MdOutlineCollections className={`text-2xl mr-4 z-10 ${focus && "text-pink-600"} group-hover:text-pink-600`} />

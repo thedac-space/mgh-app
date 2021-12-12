@@ -37,3 +37,10 @@ export interface IChainData {
     nativeCurrency: IAssetData,
     blockExplorer: string,
 }
+
+export interface IPoolData {
+    id: number;
+    name: string;
+    APY: number;
+    lockingMonth: number;
+}
