@@ -133,7 +133,7 @@ const ValuationPage: NextPage = ({ prices }: any) => {
             {/* <div className="h-full w-full flex flex-row items-center justify-evenly mt-8 xl:mt-0"> */}
             <div className="w-full flex flex-col items-center justify-start space-y-10 max-w-5xl mt-8 xl:mt-0">
 
-                <div className="flex flex-col items-start border-t border-l border-opacity-20 shadow-black rounded-xl p-5 w-full bg-grey-dark bg-opacity-30 text-left">
+                <div className="flex flex-col items-start border-t border-l border-opacity-20 shadow-dark rounded-xl p-5 w-full bg-grey-dark bg-opacity-30 text-left">
                     <h2 className="text-transparent bg-clip-text bg-gradient-to-b from-blue-500 via-green-400 to-green-500">LAND Valuation</h2>
                     <p className={`text-lg xl:text-xl font-medium text-gray-200 pt-0 sm:pt-5`}>Find the real value of The Sandbox LANDs with our machine learning pricing algorithm.</p>
                 </div>
@@ -142,7 +142,7 @@ const ValuationPage: NextPage = ({ prices }: any) => {
 
                     <div className="flex flex-col justify-start lg:justify-between max-w-full sm:max-w-md w-full space-y-5 md:space-y-10 lg:space-y-5">
 
-                        <div className="flex flex-col items-start border-t border-l border-opacity-20 shadow-black rounded-xl p-5 w-full bg-grey-dark bg-opacity-30 text-left">
+                        <div className="flex flex-col items-start border-t border-l border-opacity-20 shadow-dark rounded-xl p-5 w-full bg-grey-dark bg-opacity-30 text-left">
                             <div className="relative flex flex-wrap items-center mb-2 pl-2 text-left w-full max-w-sm">
                                 <p className="font-medium text-gray-300 pt-1">Find by Token ID</p>
                                 <BsQuestionCircle className="text-gray-300 cursor-pointer peer ml-3" />
@@ -151,7 +151,7 @@ const ValuationPage: NextPage = ({ prices }: any) => {
                             <form onSubmit={handleIDSubmit} onInput={() => { setIdError(""); setCoordinatesError("") }} className="relative flex items-center w-full rounded-xl max-w-sm">
                                 <input required id="tokenID" type="text" placeholder="e.g. 72792" className={`bg-transparent w-full text-white font-medium p-4 focus:outline-none border ${idError ? "border-red-500 border-opacity-100" : "border-opacity-40 "} hover:border-opacity-100 focus:border-opacity-100 transition duration-300 ease-in-out rounded-xl placeholder-white placeholder-opacity-75`} />
 
-                                <button type="submit" className="absolute flex items-center justify-around bg-gray-200 hover:bg-white shadow-black hover:shadow-button transition ease-in-out duration-500 right-0 h-4/5 rounded-lg mr-1.5 w-12 xs:w-16 sm:w-12 lg:w-28">
+                                <button type="submit" className="absolute flex items-center justify-around bg-gray-200 hover:bg-white shadow-dark hover:shadow-button transition ease-in-out duration-500 right-0 h-4/5 rounded-lg mr-1.5 w-12 xs:w-16 sm:w-12 lg:w-28">
                                     <svg className={`${idProcessing ? "block" : "hidden"} animate-spin-slow h-6 w-6 border-4 border-t-gray-300 border-l-gray-300 border-gray-800 rounded-full " viewBox="0 0 24 24`} />
                                     <span className="text-black font-medium pt-1 hidden lg:block">Search</span>
                                     <HiOutlineSearch className={`${idProcessing ? "hidden" : "block"} lg:hidden text-2xl`} />
@@ -161,13 +161,13 @@ const ValuationPage: NextPage = ({ prices }: any) => {
                         </div>
 
 
-                        <div className="flex flex-col items-start border-t border-l border-opacity-20 shadow-black rounded-xl p-5 w-full bg-grey-dark bg-opacity-30 text-left">
+                        <div className="flex flex-col items-start border-t border-l border-opacity-20 shadow-dark rounded-xl p-5 w-full bg-grey-dark bg-opacity-30 text-left">
                             <p className="font-medium  text-gray-300 mb-2 pl-2 text-left w-full max-w-sm">Find by Coordinates</p>
                             <form onSubmit={handleCoordinatesSubmit} onInput={() => { setIdError(""); setCoordinatesError("") }} className="relative flex items-stretch justify-between space-x-3 lg:space-x-5 w-full rounded-xl max-w-sm pr-2">
                                 <input required id="X" type="text" placeholder="X" className={`bg-transparent w-full text-white font-medium p-4 focus:outline-none border ${coordinatesError ? "border-red-500 border-opacity-100" : "border-opacity-40 "} hover:border-opacity-100 focus:border-opacity-100 transition duration-300 ease-in-out rounded-xl placeholder-white placeholder-opacity-75`} />
                                 <input required id="Y" type="text" placeholder="Y" className={`bg-transparent w-full text-white font-medium p-4 focus:outline-none border ${coordinatesError ? "border-red-500 border-opacity-100" : "border-opacity-40 "} hover:border-opacity-100 focus:border-opacity-100 transition duration-300 ease-in-out rounded-xl placeholder-white placeholder-opacity-75`} />
 
-                                <button type="submit" className="flex flex-none items-center justify-around bg-gray-200 hover:bg-white transition ease-in-out duration-500 rounded-xl m-1 ml-2 lg:ml-1 shadow-black hover:shadow-button w-12 xs:w-16 sm:w-12 lg:w-28">
+                                <button type="submit" className="flex flex-none items-center justify-around bg-gray-200 hover:bg-white transition ease-in-out duration-500 rounded-xl m-1 ml-2 lg:ml-1 shadow-dark hover:shadow-button w-12 xs:w-16 sm:w-12 lg:w-28">
                                     <svg className={`${coordinatesProcessing ? "block" : "hidden"} animate-spin-slow h-6 w-6 border-4 border-t-gray-300 border-l-gray-300 border-gray-800 rounded-full " viewBox="0 0 24 24`} />
                                     <span className="text-black font-medium pt-1 hidden lg:block">Search</span>
                                     <HiOutlineSearch className={`${coordinatesProcessing ? "hidden" : "block"} lg:hidden text-2xl`} />
@@ -177,7 +177,7 @@ const ValuationPage: NextPage = ({ prices }: any) => {
                         </div>
                     </div>
 
-                    <div className="flex flex-col items-start border-t border-l border-opacity-20 shadow-black rounded-xl p-5 w-full bg-grey-dark bg-opacity-30 text-left">
+                    <div className="flex flex-col items-start border-t border-l border-opacity-20 shadow-dark rounded-xl p-5 w-full bg-grey-dark bg-opacity-30 text-left">
                         <PriceCard showCard={showCard} processing={idProcessing || coordinatesProcessing} name={name} imageLink={imageLink} openseaLink={openseaLink} sandboxLink={sandboxLink} tokenID={tokenID} ethPrice={ethPrice} sandPrice={sandPrice} usdPrice={usdPrice} />
                     </div>
                 </div>
