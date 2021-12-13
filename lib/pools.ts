@@ -20,7 +20,7 @@ export const stakingPools = [
     {
         id: 3,
         name: "Hong Long",
-        APY: 125,
+        APY: "?",
         lockingMonth: 24
     },
 ]

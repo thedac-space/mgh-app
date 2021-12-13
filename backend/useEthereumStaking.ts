@@ -21,15 +21,22 @@ export default function useEthereumStaking(web3Provider: ethers.providers.Web3Pr
     const calcDepositDuration = (startOfDeposit: number) => {
         const endOfDeposit = startOfDeposit + 604800 // 7 days
         const timestampNow = new Date().getTime() / 1000
-        const despositDuration = Math.floor((endOfDeposit - timestampNow) / 3600)
-        return despositDuration
+        const hourDuration = (endOfDeposit - timestampNow) / 3600
+        if (hourDuration < 1) {
+            return Math.round(hourDuration * 10) / 10
+        } else {
+            return Math.floor(hourDuration)
+        }
     }
 
     const calcTimeUntilDeposit = (startOfDeposit: number) => {
-        //if depositDuration < 1: countdown in minutes
         const timestampNow = new Date().getTime() / 1000
-        const despositDuration = Math.floor((startOfDeposit - timestampNow) / (3600 * 24))
-        return despositDuration
+        const dayDuration = (startOfDeposit - timestampNow) / (3600 * 24)
+        if (dayDuration < 1) {
+            return Math.round(dayDuration * 10) / 10
+        } else {
+            return Math.floor(dayDuration)
+        }
     }
 
     useEffect(() => {
