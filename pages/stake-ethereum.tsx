@@ -50,9 +50,8 @@ const EthereumStaking = () => {
     }
 
     const unstake = async (unstakeInput: string, maxUnstake: string, poolId: number) => {
-        console.log(unstakeInput, maxUnstake)
         let max;
-        unstakeInput === maxUnstake ? max = true : false
+        +unstakeInput === +maxUnstake ? max = true : false
         const transaction = await unstakeMGH(web3Provider, address, unstakeInput, poolId, max)
         await processTransaction(transaction)
     }

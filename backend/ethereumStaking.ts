@@ -85,7 +85,9 @@ export const stakeMGH = async (provider: providers.Web3Provider | undefined, add
         signer
     );
 
-    const transaction = await contract.approveAndCall(StakingContract, amount, poolId)
+    const poolIdHex = ethers.utils.hexZeroPad(ethers.utils.hexValue(poolId), 32)
+
+    const transaction = await contract.approveAndCall(StakingContract, amount, poolIdHex)
     return transaction
 }
 
