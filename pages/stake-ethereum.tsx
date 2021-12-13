@@ -102,9 +102,8 @@ const EthereumStaking = () => {
                         </button>
                     )} */}
 
-                <div className="flex flex-col items-start shadow-blck rounded-xl py-3 px-4 w-full bg-grey-dark bg-opacity-20 text-left mt-20">
-                    <p className={`text-xs sm:text-sm text-gray-400`}>In bonded staking, your tokens are locked for the duration of an epoch. The first 7 days of each era are the deposit / withdrawal window. During these 7 days you can deposit and withdraw tokens from the previous epoch and the newly started one. No rewards are accumulated during this time. After 7 days, all tokens committed to the pools are locked for the rest of the epoch and rewards are accumulated, which can either be withdrawn in the first 7 days of the following epoch or automatically roll over to the following epochs. <a href="/docs/staking_agreement.pdf" target="_blank" className="hover:text-blue-400 font-medium transition ease-in-out duration-300">Staking Agreement</a>
-</p>
+                <div className="flex flex-col items-start shadow-blck rounded-xl py-3 px-4 w-full bg-grey-dark bg-opacity-20 text-left mt-20 max-w-7xl">
+                    <p className={`text-xs sm:text-sm text-gray-400`}>In bonded staking, your tokens are locked for the duration of an epoch. The first 7 days of each era are the deposit / withdrawal window. During these 7 days you can deposit and withdraw tokens from the previous epoch and the newly started one. No rewards are accumulated during this time. After 7 days, all tokens committed to the pools are locked for the rest of the epoch and rewards are accumulated, which can either be withdrawn in the first 7 days of the following epoch or automatically roll over to the following epochs. <a href="/docs/staking_agreement.pdf" target="_blank" className="hover:text-blue-400 font-medium transition ease-in-out duration-300">Staking Agreement</a></p>
                 </div>
             </div>
 

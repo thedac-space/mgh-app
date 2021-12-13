@@ -76,12 +76,12 @@ const StakingPool = ({ poolId, web3Provider, stake, unstake, color }: any) => {
                                         </button>
                                     </div>
                                 </div>
-                                {depositDuration && <p className={`text-gray-500 font-medium pb-2`}>Deposit closes in {depositDuration}h</p>}
+                                {(depositDuration && depositDuration > 0) ? (<p className={`text-gray-500 font-medium pb-2`}>Deposit closes in {depositDuration}h</p>) : (depositDuration === 0 && <p className={`text-gray-500 font-medium pb-2`}>Deposit closes soon!</p>)}
                             </>
                         ) : (
                             <div className="flex flex-col p-5 items-center text-center">
                                 <p className="text-gray-200 text-2xl font-medium mt-1">Pool locked</p>
-                                {timeUntilDeposit && (<p className="text-gray-400 font-medium pt-2">Next Deposit in {timeUntilDeposit} days</p>)}
+                                {(timeUntilDeposit && timeUntilDeposit > 0) ? (<p className="text-gray-400 font-medium pt-2">Next Deposit in {timeUntilDeposit} days</p>) : (timeUntilDeposit === 0 && <p className="text-gray-400 font-medium pt-2">Deposit opens soon!</p>)}
                             </div >
                         )}
                     </>
