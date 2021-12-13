@@ -19,7 +19,7 @@ const Stake: NextPage = () => {
                     <a className="flex flex-col w-1/2 items-center justify-center space-y-2 hover:bg-grey-darkest hover:bg-opacity-20 rounded-xl">
                         <img src="/images/ethereum-eth-logo.png" className="h-24 w-auto mb-8" />
                         <p className="text-gray-200 text-3xl font-medium">Ethereum Staking</p>
-                        <p className="text-gray-400 text-xl">4 different Pools, bounded staking, fixed APY</p>
+                        <p className="text-gray-400 text-xl">bonded staking, fixed APY, 4 different Pools</p>
                     </a>
                 </Link>
 
@@ -29,7 +29,7 @@ const Stake: NextPage = () => {
                     <a className="flex flex-col w-1/2 items-center justify-center space-y-2 hover:bg-grey-darkest hover:bg-opacity-20 rounded-xl">
                         <img src="/images/polygon-matic-logo.png" className="h-24 w-auto mb-8" />
                         <p className="text-gray-200 text-3xl font-medium">Polygon Staking</p>
-                        <p className="text-gray-400 text-xl">unbounded staking, variable APY</p>
+                        <p className="text-gray-400 text-xl">unbonded staking, variable APY</p>
                     </a>
                 </Link>
             </div>

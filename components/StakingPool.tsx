@@ -24,7 +24,7 @@ const StakingPool = ({ poolId, web3Provider, stake, unstake, color }: any) => {
 
     return (<>
         {loading ? (
-            <div className="animate-pulse h-96 w-full min-w-max max-w-md rounded-xl bg-grey-dark bg-opacity-30" />
+            <div className="animate-pulse h-60 w-full min-w-max max-w-md rounded-xl bg-grey-dark bg-opacity-30" />
         ) : (
             <div className="relative flex flex-col flex-grow min-w-max max-w-md w-full items-center justify-between shadow-dark rounded-xl bg-grey-dark bg-opacity-30">
                 <div className={`flex flex-col w-full ${web3Provider ? "rounded-t-xl" : "rounded-xl"} p-3 ${color}`}>

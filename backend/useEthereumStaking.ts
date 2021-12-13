@@ -26,6 +26,7 @@ export default function useEthereumStaking(web3Provider: ethers.providers.Web3Pr
     }
 
     const calcTimeUntilDeposit = (startOfDeposit: number) => {
+        //if depositDuration < 1: countdown in minutes
         const timestampNow = new Date().getTime() / 1000
         const despositDuration = Math.floor((startOfDeposit - timestampNow) / (3600 * 24))
         return despositDuration
@@ -40,7 +41,8 @@ export default function useEthereumStaking(web3Provider: ethers.providers.Web3Pr
             let depositDuration;
             let timeUntilDeposit;
 
-            const { isTransferPhase, startOfDeposit } = await getPeriodInfo(poolId)
+            const { isTransferPhase, startOfDeposit } = await getPeriodInfo(web3Provider, chainId, poolId)
+
 
             if (isTransferPhase) {
                 depositDuration = calcDepositDuration(startOfDeposit)

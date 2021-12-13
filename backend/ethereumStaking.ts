@@ -47,20 +47,28 @@ export const getStakeAmount = async (provider: providers.Web3Provider | undefine
     return staked
 }
 
-export const getPeriodInfo = async (poolId: number) => {
+export const getPeriodInfo = async (provider: providers.Web3Provider | undefined, chainId: number | undefined, poolId: number) => {
 
-    const provider = new ethers.providers.InfuraProvider(Chains.ETHEREUM_RINKEBY.chainId, "03bfd7b76f3749c8bb9f2c91bdba37f3")
+    let contractProvider;
+    if (!provider || chainId !== Chains.ETHEREUM_RINKEBY.chainId) {
+        contractProvider = new ethers.providers.InfuraProvider(Chains.ETHEREUM_RINKEBY.chainId, "03bfd7b76f3749c8bb9f2c91bdba37f3")
+    } else {
+        contractProvider = provider
+    }
 
     const contract = new ethers.Contract(
         StakingContract,
         StakingContractAbi,
-        provider
+        contractProvider
     );
 
-    const isTransferPhase = await contract.isTransferPhase(poolId)
-    const result = await contract.getPoolInfo(poolId)
-    const startOfDeposit = result[1][3].toNumber()
-    // const [isTransferPhase, startOfDeposit] = await contract.getDepositInfo(poolId)
+    // const isTransferPhase = await contract.isTransferPhase(poolId)
+    // const result = await contract.getPoolInfo(poolId)
+    // const startOfDeposit = result[1][3].toNumber()
+
+    const [isTransferPhase, startOfDeposithex] = await contract.getPoolInfo(poolId)
+    const startOfDeposit = startOfDeposithex.toNumber()
+
     return { isTransferPhase, startOfDeposit }
 }
 

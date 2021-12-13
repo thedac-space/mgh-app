@@ -38,7 +38,7 @@ export const Contracts = {
             abi: new Interface(stakingAbiMaticMainnet)
         },
         ETHEREUM_RINKEBY: {
-            address: "0xBEA94EC0CaF1ed413faEF4e9CDBFe588C32f2384",
+            address: "0x23D2CeEb18486057AC642050fB09AE37F3C5AA58",
             abi: new Interface(stakingAbiETHRinkeby)
         }
     }
