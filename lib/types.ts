@@ -41,6 +41,6 @@ export interface IChainData {
 export interface IPoolData {
     id: number;
     name: string;
-    APY: number;
+    APY: number | string;
     lockingMonth: number;
 }
