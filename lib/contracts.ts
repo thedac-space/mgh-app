@@ -43,7 +43,7 @@ export const Contracts = {
             abi: new Interface(stakingAbiETHRinkeby)
         },
         ETHEREUM_MAINNET: {
-            address: undefined,
+            address: "0x4b945f3fCbC1De8310D14d826DD5052e8f9375C2",
             abi: new Interface(stakingAbiETHRinkeby)
         }
     }
