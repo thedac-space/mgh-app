@@ -14,7 +14,7 @@ const TokenInput = ({ name, logo, direction }: any) => {
                     </div>
                 </div>
 
-                <input required id={name} type="numeric" placeholder="0.0" className={`text-right sm:mr-0 flex-initial w-full md:w-min max-w-xs bg-grey-dark shadow-black hover:shadow-colorbottom focus:shadow-colorbottom bg-opacity-70 text-gray-200 font-medium text-2xl p-3 sm:p-4 pt-4 sm:pt-5 focus:outline-none border border-opacity-10 hover:border-opacity-30 focus:border-opacity-60 transition duration-300 ease-in-out rounded-xl placeholder-white placeholder-opacity-75`} />
+                <input required id={name} type="numeric" placeholder="0.0" className={`text-right sm:mr-0 flex-initial w-full md:w-min max-w-xs bg-grey-dark shadow-dark hover:shadow-colorbottom focus:shadow-colorbottom bg-opacity-70 text-gray-200 font-medium text-2xl p-3 sm:p-4 pt-4 sm:pt-5 focus:outline-none border border-opacity-10 hover:border-opacity-30 focus:border-opacity-60 transition duration-300 ease-in-out rounded-xl placeholder-white placeholder-opacity-75`} />
             </div>
 
         </>

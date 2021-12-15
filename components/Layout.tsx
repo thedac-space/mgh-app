@@ -29,9 +29,9 @@ const Layout = ({ children }: any) => {
 
                 <SmallScreenToolbar onWalletClick={() => setOpenModal(true)} disconnectWallet={disconnectWallet} web3Provider={web3Provider} chainId={chainId} />
 
-                <div className="hidden xl:flex space-x-10 h-32 w-full items-center justify-between p-10">
+                <div className="hidden xl:flex space-x-10 h-32 w-full items-center justify-between px-5">
                     <a href="/" className="hover:scale-110 transition-all duration-500 ease-in-out ">
-                        <img src="/images/mgh_logo.png" className={` h-18 w-18`} />
+                        <img src="/images/mgh_logo.png" className={` h-16 w-16`} />
                     </a>
 
                     <div className="flex space-x-5 items-stretch">
@@ -53,7 +53,7 @@ const Layout = ({ children }: any) => {
                         </div>
                     </div>
 
-                    <main className="z-10 w-full h-full pt-16 xs:pt-16 sm:pt-20 md:pt-24 xl:pt-10 p-4 xs:p-6 sm:p-10 min-h-screen flex items-start justify-center xl:min-h-full flex-grow overflow-auto overscroll-auto animate-none xl:animate__animated animate__slideInRight border-l border-t border-opacity-0 xl:border-opacity-20 rounded-none xl:rounded-tl-3xl self-end  bg-grey-dark bg-opacity-30 shadow-black ">
+                    <main className="z-10 w-full h-full pt-16 xs:pt-16 sm:pt-20 md:pt-24 xl:pt-10 p-4 xs:p-6 sm:p-10 min-h-screen flex items-start justify-center xl:min-h-full flex-grow overflow-auto overscroll-auto animate-none xl:animate__animated animate__slideInRight border-l border-t border-opacity-0 xl:border-opacity-20 rounded-none xl:rounded-tl-3xl self-end  bg-grey-dark bg-opacity-30 shadow-dark ">
                         {children}
                     </main>
 

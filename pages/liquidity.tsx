@@ -24,7 +24,7 @@ const Liquidity: NextPage = () => {
                     src={link}
                     height="700px"
                     width="100%"
-                    className="rounded-none xl:rounded-xl shadow-black opacity-80 w-screen h-screen xl:w-full xl:h-full bg-transparent"
+                    className="rounded-none xl:rounded-xl shadow-dark opacity-80 w-screen h-screen xl:w-full xl:h-full bg-transparent"
                 />
 
 

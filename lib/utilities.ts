@@ -1,5 +1,6 @@
 import { supportedChains } from './chains'
-import { IChainData } from './types'
+import { stakingPools } from './pools'
+import { IChainData, IPoolData } from './types'
 
 
 export function getChainData(chainId: number | undefined): IChainData | undefined {
@@ -19,4 +20,13 @@ export function ellipseAddress(address = '', width = 5): string {
     return ''
   }
   return `${address.slice(0, width)}...${address.slice(-width)}`
+}
+
+export function getPoolData(poolId: number | undefined): IPoolData {
+
+  const poolData = stakingPools.filter(
+    (pool) => pool.id === poolId
+  )[0]
+
+  return poolData
 }

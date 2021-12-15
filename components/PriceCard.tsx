@@ -5,7 +5,7 @@ const PriceCard = ({ showCard, processing, name, imageLink, openseaLink, sandbox
         <div className={`${showCard ? "animate__fadeIn" : "hidden"} ${processing && "animate__fadeOut animate__fast"} animate__animated relative w-full h-full space-x-0 lg:space-x-10 2xl:space-x-14 space-y-3 lg:space-y-0 flex flex-col lg:flex-row items-center`}>
             
             <div className="flex flex-col flex-grow min-w-max 2xl:flex-none items-center lg:items-start">
-                <a href={sandboxLink} target="_blank" className="relative w-28 md:w-36 h-28 md:h-36 hover:shadow-black">
+                <a href={sandboxLink} target="_blank" className="relative w-28 md:w-36 h-28 md:h-36 hover:shadow-dark">
                     <img src={imageLink} className="rounded-md object-cover" />
                     <FiExternalLink className="absolute top-0 right-0 text-white text-xs backdrop-filter backdrop-blur-sm rounded-xl w-6 h-6 p-1" />
                 </a>

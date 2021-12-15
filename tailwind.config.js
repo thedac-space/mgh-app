@@ -1,12 +1,15 @@
 module.exports = {
-  purge: ['./pages/**/*.{js,ts,jsx,tsx}', './components/**/*.{js,ts,jsx,tsx}'],
+  content: ['./pages/**/*.{js,ts,jsx,tsx}', './components/**/*.{js,ts,jsx,tsx}'],
   mode: 'jit',
-  darkMode: false, // or 'media' or 'class'
+  darkMode: 'class', // or 'media' or 'class'
   important: true,
   theme: {
     extend: {
       animation: {
         'spin-slow': 'spin 1.5s linear infinite',
+      },
+      borderWidth: {
+        '0.5': '0.5px'
       },
       maxWidth: {
         '1/4': '25%',
@@ -42,7 +45,7 @@ module.exports = {
         '30': '7.5rem',
         '70': '17.5rem'
       },
-      scale: {
+      scale: {
         '55': '.55',
         '60': '.6',
         '65': '.65',
@@ -68,7 +71,7 @@ module.exports = {
         color: '0 0px 20px 0px rgba(250, 250, 250, 0.5)',
         colorbottom: '0 0px 40px 0px rgba(250, 250, 250, 0.1)',
         button: '0 0px 8px 0px rgba(250, 250, 250, 0.4)',
-        black: '0 0px 40px 0px rgba(0, 0, 0, 0.1)',
+        dark: '0 0px 40px 0px rgba(0, 0, 0, 0.1)',
         white: "rgba(250, 250, 250, 0.25) 10px 10px 50px"
       },
       fontFamily: {
@@ -87,7 +90,7 @@ module.exports = {
       padding: {
         full: '100%'
       },
-      backgroundImage:  {
+      backgroundImage: {
         'hero-pattern': "url('/public/images/pool_punk.png')",
       },
       colors: {

@@ -2,11 +2,11 @@ import { useEffect, useState } from "react"
 import { ethers } from "ethers"
 import { formatEther } from "@ethersproject/units"
 
-import { calcReward, getContractInfo, getMGHAllowance, getMGHBalance } from "./contractInteraction"
+import { calcReward, getContractInfo, getMGHAllowance, getMGHBalance } from "./polygonStaking"
 import { Chains } from "../lib/chains"
 
 
-export default function useStakingContract(web3Provider: ethers.providers.Web3Provider | undefined, address: string | undefined, chainId: number | undefined) {
+export default function usePolygonStaking(web3Provider: ethers.providers.Web3Provider | undefined, address: string | undefined, chainId: number | undefined) {
 
     const [MGHBalance, setMGHBalance] = useState("")
     const [allowance, setAllowance] = useState("")

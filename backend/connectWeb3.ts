@@ -40,7 +40,7 @@ export default function useConnectWeb3() {
 
     const handleChainChanged = (newChainId: string) => {
       window.location.reload();
-      console.log("chainChanged", newChainId);
+      console.log("chainChanged", parseInt(newChainId));
     }
 
     const handleConnect = (info: { chainId: number }) => {
