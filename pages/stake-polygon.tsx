@@ -24,7 +24,7 @@ import Loader from '../components/Loader';
 const Bridge = dynamic(import('../components/Bridge'), { ssr: false });
 
 
-const PolygonStaking = () => {
+const PolygonStaking: NextPage = () => {
     const { web3Provider } = useConnectWeb3()
     const { address, chainId } = useAppSelector(state => state.account)
     const { MGHBalance, allowance, totalStaked, earned, totalSupply, rewardRate, APY, loading } = usePolygonStaking(web3Provider, address, chainId)

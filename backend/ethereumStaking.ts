@@ -4,11 +4,11 @@ import { Chains } from "../lib/chains";
 import { Contracts } from "../lib/contracts";
 
 
-const MGHContract = Contracts.MGH_TOKEN.ETHEREUM_RINKEBY.address
-const MGHContractAbi = Contracts.MGH_TOKEN.ETHEREUM_RINKEBY.abi
+const MGHContract = Contracts.MGH_TOKEN.ETHEREUM_MAINNET.address
+const MGHContractAbi = Contracts.MGH_TOKEN.ETHEREUM_MAINNET.abi
 
-const StakingContract = Contracts.MGH_STAKING.ETHEREUM_RINKEBY.address
-const StakingContractAbi = Contracts.MGH_STAKING.ETHEREUM_RINKEBY.abi
+const StakingContract = Contracts.MGH_STAKING.ETHEREUM_MAINNET.address
+const StakingContractAbi = Contracts.MGH_STAKING.ETHEREUM_MAINNET.abi
 
 
 export const getMGHBalance = async (provider: providers.Web3Provider | undefined, address: string | undefined) => {
@@ -50,8 +50,8 @@ export const getStakeAmount = async (provider: providers.Web3Provider | undefine
 export const getPeriodInfo = async (provider: providers.Web3Provider | undefined, chainId: number | undefined, poolId: number) => {
 
     let contractProvider;
-    if (!provider || chainId !== Chains.ETHEREUM_RINKEBY.chainId) {
-        contractProvider = new ethers.providers.InfuraProvider(Chains.ETHEREUM_RINKEBY.chainId, "03bfd7b76f3749c8bb9f2c91bdba37f3")
+    if (!provider || chainId !== Chains.ETHEREUM_MAINNET.chainId) {
+        contractProvider = new ethers.providers.InfuraProvider(Chains.ETHEREUM_MAINNET.chainId, "03bfd7b76f3749c8bb9f2c91bdba37f3")
     } else {
         contractProvider = provider
     }

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Head from 'next/head'
+import { NextPage } from 'next';
 import { ethers } from 'ethers';
 
 import { Chains } from '../lib/chains';
@@ -13,7 +14,7 @@ import TransactionModal from '../components/TransactionModal';
 import StakingPool from '../components/StakingPool';
 
 
-const EthereumStaking = () => {
+const EthereumStaking: NextPage = () => {
     const { web3Provider } = useConnectWeb3()
     const { address, chainId } = useAppSelector(state => state.account)
 
@@ -88,19 +89,12 @@ const EthereumStaking = () => {
                     </button>
                 )}
 
-                {web3Provider && chainId !== Chains.ETHEREUM_RINKEBY.chainId && (
-                    <button onClick={() => { changeChain(web3Provider.provider, Chains.ETHEREUM_RINKEBY.chainId) }} className="mt-10 z-30 disabled:opacity-50 disabled:hover:shadow-dark disabled:cursor-default relative flex justify-center items-center  transition ease-in-out duration-500 shadow-dark rounded-xl w-full max-w-sm py-3 sm:py-4 group">
+                {web3Provider && chainId !== Chains.ETHEREUM_MAINNET.chainId && (
+                    <button onClick={() => { changeChain(web3Provider.provider, Chains.ETHEREUM_MAINNET.chainId) }} className="mt-10 z-30 disabled:opacity-50 disabled:hover:shadow-dark disabled:cursor-default relative flex justify-center items-center  transition ease-in-out duration-500 shadow-dark rounded-xl w-full max-w-sm py-3 sm:py-4 group">
                         <div className="h-full w-full absolute bg-gradient-to-br transition-all ease-in-out duration-300 from-pink-600 to-blue-500 rounded-xl opacity-60 group-hover:opacity-80" />
                         <span className="pt-1 z-10 text-gray-200 font-medium text-lg sm:text-xl">Switch to Ethereum</span>v
                     </button>
                 )}
-
-                {/* {web3Provider && chainId === Chains.ETHEREUM_RINKEBY.chainId && (
-                        <button onClick={() => { changeChain(web3Provider.provider, Chains.MATIC_MAINNET.chainId) }} className="z-30 disabled:opacity-50 disabled:hover:shadow-dark disabled:cursor-default mt-4 relative flex justify-center items-center  transition ease-in-out duration-500 shadow-dark rounded-xl w-full max-w-sm py-3 sm:py-4 group">
-                            <div className="h-full w-full absolute bg-gradient-to-br transition-all ease-in-out duration-300 from-pink-600 to-blue-500 rounded-xl opacity-60 group-hover:opacity-80" />
-                            <span className="pt-1 z-10 text-gray-200 font-medium text-lg sm:text-xl"></span>
-                        </button>
-                    )} */}
 
                 <div className="flex flex-col items-start shadow-blck rounded-xl py-3 px-4 w-full bg-grey-dark bg-opacity-20 text-left mt-20 max-w-7xl">
                     <p className={`text-xs sm:text-sm text-gray-400`}>In bonded staking, your tokens are locked for the duration of an epoch. The first 7 days of each era are the deposit / withdrawal window. During these 7 days you can deposit and withdraw tokens from the previous epoch and the newly started one. No rewards are accumulated during this time. After 7 days, all tokens committed to the pools are locked for the rest of the epoch and rewards are accumulated, which can either be withdrawn in the first 7 days of the following epoch or automatically roll over to the following epochs. <a href="/docs/staking_agreement.pdf" target="_blank" className="hover:text-blue-400 font-medium transition ease-in-out duration-300">Staking Agreement</a></p>

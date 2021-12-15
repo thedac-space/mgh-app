@@ -57,7 +57,7 @@ export default function useEthereumStaking(web3Provider: ethers.providers.Web3Pr
                 timeUntilDeposit = calcTimeUntilDeposit(startOfDeposit)
             }
 
-            if (web3Provider && address && chainId === Chains.ETHEREUM_RINKEBY.chainId) {
+            if (web3Provider && address && chainId === Chains.ETHEREUM_MAINNET.chainId) {
                 balance = formatEther(await getMGHBalance(web3Provider, address))
                 totalStaked = formatEther(await getStakeAmount(web3Provider, address, poolId, isTransferPhase))
             }

@@ -7,6 +7,7 @@ import tokenAbiMaticMainnet from "../backend/abi/tokenAbiMaticMainnet.json"
 
 import tokenAbiETHRinkeby from "../backend/abi/tokenAbiETHRinkeby.json"
 import stakingAbiETHRinkeby from "../backend/abi/stakingAbiETHRinkeby.json"
+import tokenAbiETHMainnet from "../backend/abi/tokenAbiETHMainnet.json"
 
 
 export const Contracts = {
@@ -19,13 +20,13 @@ export const Contracts = {
             address: "0xc3C604F1943B8C619c5D65cd11A876e9C8eDCF10",
             abi: new Interface(tokenAbiMaticMainnet)
         },
-        ETHEREUM_MAINNET: {
-            address: "0x8765b1a0eb57ca49be7eacd35b24a574d0203656",
-            abi: undefined
-        },
         ETHEREUM_RINKEBY: {
             address: "0xe72bcCFCAbc7B62548d774D8F0208d1673454aC1",
             abi: new Interface(tokenAbiETHRinkeby)
+        },
+        ETHEREUM_MAINNET: {
+            address: "0x8765b1a0eb57ca49be7eacd35b24a574d0203656",
+            abi: new Interface(tokenAbiETHMainnet)
         }
     },
     MGH_STAKING: {
@@ -39,6 +40,10 @@ export const Contracts = {
         },
         ETHEREUM_RINKEBY: {
             address: "0x328475d10EC94310497F8796A990D3b04024ad82",
+            abi: new Interface(stakingAbiETHRinkeby)
+        },
+        ETHEREUM_MAINNET: {
+            address: undefined,
             abi: new Interface(stakingAbiETHRinkeby)
         }
     }
