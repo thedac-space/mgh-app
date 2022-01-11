@@ -25,9 +25,9 @@ const NavItem = ({ text, link }: any) => {
             case "/swap":
                 return <IoIosSwap className={`text-2xl mr-4 z-10 ${focus && "text-pink-600"} group-hover:text-pink-600`} />
             case "/liquidity":
-                return <VscLock className={`text-2xl mr-4 z-10 ${focus && "text-pink-600"} group-hover:text-pink-600`} />
-            case "/stake": case "/stake-ethereum": case "stake-polygon":
                 return <FaHandHoldingUsd className={`text-2xl mr-4 z-10 ${focus && "text-pink-600"} group-hover:text-pink-600`} />
+            case "/stake": case "/stake-ethereum": case "stake-polygon":
+                return <VscLock className={`text-2xl mr-4 z-10 ${focus && "text-pink-600"} group-hover:text-pink-600`} />
             case "/pools":
                 return <MdOutlineCollections className={`text-2xl mr-4 z-10 ${focus && "text-pink-600"} group-hover:text-pink-600`} />
             case "/valuation":
