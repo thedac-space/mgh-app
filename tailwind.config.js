@@ -5,8 +5,20 @@ module.exports = {
   important: true,
   theme: {
     extend: {
+      keyframes: {
+        'fade-in': {
+          '0%': {
+            opacity: '0',
+          },
+          '100%': {
+            opacity: '1',
+          },
+        }
+      },
       animation: {
         'spin-slow': 'spin 1.5s linear infinite',
+        'spin-slower': 'spin 2.5s linear infinite',
+        'fade-in-slow': 'fade-in 0.8s ease'
       },
       borderWidth: {
         '0.5': '0.5px'

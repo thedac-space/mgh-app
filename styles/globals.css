@@ -249,3 +249,10 @@ h6 {
   100% {padding:10px 12px 8px;}
 }
 
+.hoverlift {
+  transition: all 0.3s ease;
+}
+
+.hoverlift:hover {
+  transform: translateY(-4px);
+}
