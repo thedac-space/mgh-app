@@ -170,85 +170,6 @@ h6 {
   @apply text-3xl xs:text-4xl  sm:text-5xl lg:text-6xl font-lighters py-2;
 }
 
-
-.progress-ring__circle {
-  stroke-dashoffset: 250;
-  stroke-dasharray: 500 500;
-}
-
-
-
-/****Commentary Box Styling****/
-.like-button i{
-    cursor:pointer;
-    padding:10px 12px 8px;
-    background:#fff;
-    border-radius:50%;
-    display:inline-block;
-    margin:0 0 15px;
-    color:#aaa;
-    transition:.2s;
-}
-.like-button i{
-  cursor:pointer;
-  padding:10px 12px 8px;
-  background:#fff;
-  border-radius:50%;
-  display:inline-block;
-  margin:0 0 15px;
-  color:#aaa;
-  transition:.2s;
-}
-
-
-.like-button i:hover {
-  color:#666;
-}
-
-.like-button i:before {
-  font-family: fontawesome;
-  content:'\f004';
-  font-style:normal;
-}
-
-.like-button span {
-  position: absolute;
-  bottom:70px;
-  left:0;
-  right:0;
-  visibility: hidden;
-  transition:.6s;
-  z-index:-2;
-  font-size:2px;
-  color:transparent;
-  font-weight:400;
-}
-
-.like-button i.press {
-  animation: size .4s;
-  color:#e23b3b;
-}
-
-.like-button span.press {
-  bottom:120px;
-  font-size:14px;
-  visibility:visible;
-  animation: fade 1s;
-}
-
-@keyframes fade {
-  0% {color: transparent;}
-  50% {color:#e23b3b;}
-  100% {color:transparent;}
-}
-
-@keyframes size {
-  0% {padding:10px 12px 8px;}
-  50% {padding:14px 16px 12px;  
-    margin-top:-4px;}
-  100% {padding:10px 12px 8px;}
-}
-
 .hoverlift {
   transition: all 0.3s ease;
 }
@@ -256,3 +177,300 @@ h6 {
 .hoverlift:hover {
   transform: translateY(-4px);
 }
+
+.progress-ring__circle {
+  stroke-dashoffset: 250;
+  stroke-dasharray: 500 500;
+}
+
+.fa-thumbs-down{
+  color: #AAB8C2
+}
+.fa-thumbs-down:hover{
+  color: purple
+}
+.fa-thumbs-down i:hover{
+  color: greenyellow
+}
+.fa-thumbs-down i before:hover{
+  color: greenyellow
+}
+
+
+
+/****Commentary Box Styling****/ 
+.like-button .heartbox {
+     position: absolute;
+     top: 50%;
+     left: 50%;
+     transform: translate(-50%, -50%)
+}
+
+
+.like-button svg {
+     cursor: pointer;
+     overflow: visible;
+     width: 2.5rem;
+     margin: 5px
+}
+
+.like-button:hover {
+  fill: #E2264D !important;
+  color: #E2264D !important;
+}
+
+.like-button svg:hover {
+  fill: #E2264D !important;
+  color: #E2264D !important;
+}
+
+ .like-button svg #heart {
+     transform-origin: center;
+     animation: animateHeartOut .3s linear forwards
+ }
+
+ .like-button svg #main-circ {
+     transform-origin: 29.5px 29.5px
+ }
+
+ .like-button .checkbox {
+     display: none
+ }
+
+ .like-button .checkbox:checked+label svg #heart {
+     transform: scale(0.2);
+     fill: #E2264D;
+     animation: animateHeart .3s linear forwards .25s
+ }
+
+ .like-button .checkbox:checked+label svg #main-circ {
+     transition: all 2s;
+     animation: animateCircle .3s linear forwards;
+     opacity: 1
+ }
+
+ .like-button .checkbox:checked+label svg #heartgroup1 {
+     opacity: 1;
+     transition: .1s all .3s
+ }
+
+ .like-button .checkbox:checked+label svg #heartgroup1 #heart1 {
+     transform: scale(0) translate(0, -30px);
+     transform-origin: 0 0 0;
+     transition: .5s transform .3s
+ }
+
+ .like-button .checkbox:checked+label svg #heartgroup1 #heart2 {
+     transform: scale(0) translate(10px, -50px);
+     transform-origin: 0 0 0;
+     transition: 1.5s transform .3s
+ }
+
+ .like-button .checkbox:checked+label svg #heartgroup2 {
+     opacity: 1;
+     transition: .1s all .3s
+ }
+
+ .like-button .checkbox:checked+label svg #heartgroup2 #heart1 {
+     transform: scale(0) translate(30px, -15px);
+     transform-origin: 0 0 0;
+     transition: .5s transform .3s
+ }
+
+ .like-button .checkbox:checked+label svg #heartgroup2 #heart2 {
+     transform: scale(0) translate(60px, -15px);
+     transform-origin: 0 0 0;
+     transition: 1.5s transform .3s
+ }
+
+ .like-button .checkbox:checked+label svg #heartgroup3 {
+     opacity: 1;
+     transition: .1s all .3s
+ }
+
+ .like-button .checkbox:checked+label svg #heartgroup3 #heart1 {
+     transform: scale(0) translate(30px, 0px);
+     transform-origin: 0 0 0;
+     transition: .5s transform .3s
+ }
+
+ .like-button .checkbox:checked+label svg #heartgroup3 #heart2 {
+     transform: scale(0) translate(60px, 10px);
+     transform-origin: 0 0 0;
+     transition: 1.5s transform .3s
+ }
+
+ .like-button .checkbox:checked+label svg #heartgroup4 {
+     opacity: 1;
+     transition: .1s all .3s
+ }
+
+ .like-button .checkbox:checked+label svg #heartgroup4 #heart1 {
+     transform: scale(0) translate(30px, 15px);
+     transform-origin: 0 0 0;
+     transition: .5s transform .3s
+ }
+
+ .like-button .checkbox:checked+label svg #heartgroup4 #heart2 {
+     transform: scale(0) translate(40px, 50px);
+     transform-origin: 0 0 0;
+     transition: 1.5s transform .3s
+ }
+
+ .like-button .checkbox:checked+label svg #heartgroup5 {
+     opacity: 1;
+     transition: .1s all .3s
+ }
+
+ .like-button .checkbox:checked+label svg #heartgroup5 #heart1 {
+     transform: scale(0) translate(-10px, 20px);
+     transform-origin: 0 0 0;
+     transition: .5s transform .3s
+ }
+
+ .like-button .checkbox:checked+label svg #heartgroup5 #heart2 {
+     transform: scale(0) translate(-60px, 30px);
+     transform-origin: 0 0 0;
+     transition: 1.5s transform .3s
+ }
+
+ .like-button .checkbox:checked+label svg #heartgroup6 {
+     opacity: 1;
+     transition: .1s all .3s
+ }
+
+ .like-button .checkbox:checked+label svg #heartgroup6 #heart1 {
+     transform: scale(0) translate(-30px, 0px);
+     transform-origin: 0 0 0;
+     transition: .5s transform .3s
+ }
+
+ .like-button .checkbox:checked+label svg #heartgroup6 #heart2 {
+     transform: scale(0) translate(-60px, -5px);
+     transform-origin: 0 0 0;
+     transition: 1.5s transform .3s
+ }
+
+ .like-button .checkbox:checked+label svg #heartgroup7 {
+     opacity: 1;
+     transition: .1s all .3s
+ }
+
+ .like-button .checkbox:checked+label svg #heartgroup7 #heart1 {
+     transform: scale(0) translate(-30px, -15px);
+     transform-origin: 0 0 0;
+     transition: .5s transform .3s
+ }
+
+ .like-button .checkbox:checked+label svg #heartgroup7 #heart2 {
+     transform: scale(0) translate(-55px, -30px);
+     transform-origin: 0 0 0;
+     transition: 1.5s transform .3s
+ }
+
+ .like-button .checkbox:checked+label svg #heartgroup2 {
+     opacity: 1;
+     transition: .1s opacity .3s
+ }
+
+ .like-button .checkbox:checked+label svg #heartgroup3 {
+     opacity: 1;
+     transition: .1s opacity .3s
+ }
+
+ .like-button .checkbox:checked+label svg #heartgroup4 {
+     opacity: 1;
+     transition: .1s opacity .3s
+ }
+
+ .like-button .checkbox:checked+label svg #heartgroup5 {
+     opacity: 1;
+     transition: .1s opacity .3s
+ }
+
+ .like-button .checkbox:checked+label svg #heartgroup6 {
+     opacity: 1;
+     transition: .1s opacity .3s
+ }
+
+ .like-button .checkbox:checked+label svg #heartgroup7 {
+     opacity: 1;
+     transition: .1s opacity .3s
+ }
+
+ @keyframes animateCircle {
+     40% {
+         transform: scale(10);
+         opacity: 1;
+         fill: #DD4688
+     }
+
+     55% {
+         transform: scale(11);
+         opacity: 1;
+         fill: #D46ABF
+     }
+
+     65% {
+         transform: scale(12);
+         opacity: 1;
+         fill: #CC8EF5
+     }
+
+     75% {
+         transform: scale(13);
+         opacity: 1;
+         fill: transparent;
+         stroke: #CC8EF5;
+         stroke-width: .5
+     }
+
+     85% {
+         transform: scale(17);
+         opacity: 1;
+         fill: transparent;
+         stroke: #CC8EF5;
+         stroke-width: .2
+     }
+
+     95% {
+         transform: scale(18);
+         opacity: 1;
+         fill: transparent;
+         stroke: #CC8EF5;
+         stroke-width: .1
+     }
+
+     100% {
+         transform: scale(19);
+         opacity: 1;
+         fill: transparent;
+         stroke: #CC8EF5;
+         stroke-width: 0
+     }
+ }
+
+ @keyframes animateHeart {
+     0% {
+         transform: scale(0.2)
+     }
+
+     40% {
+         transform: scale(1.2)
+     }
+
+     100% {
+         transform: scale(1)
+     }
+ }
+
+ @keyframes animateHeartOut {
+     0% {
+         transform: scale(1.4)
+     }
+
+     100% {
+         transform: scale(1)
+     }
+ }
+ 

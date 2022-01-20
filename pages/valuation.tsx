@@ -12,6 +12,8 @@ import FloorPriceTracker from "../components/Valuation/FloorPriceTracker";
 import SalesVolumeDaily from "../components/Valuation/SalesVolumeDaily";
 import ScoreBox from "../components/General/ScoreBox";
 import { MostUnderValuedLand } from "../components/Valuation";
+import CommentaryBox from "../components/General/CommentaryBox";
+
 
 
 const ValuationPage: NextPage = ({ prices }: any) => {
@@ -146,11 +148,12 @@ const ValuationPage: NextPage = ({ prices }: any) => {
 
                 <div className="flex flex-col sm:flex-row space-y-5 sm:space-y-0 space-x-0 sm:space-x-5 md:space-x-10 items-stretch justify-between w-full">
                     <SalesVolumeDaily volume={null} nftID={1}></SalesVolumeDaily>
-                    <ScoreBox></ScoreBox>
+                    
                     <div className="flex flex-col justify-between w-full space-y-5 md:space-y-10 lg:space-y-5">
                         {/* <div className="flex flex-col items-start border-t border-l border-opacity-20 shadow-dark rounded-xl p-5 w-full bg-grey-dark bg-opacity-30 text-left">
                             <p className="font-medium text-gray-300 mb-3 pl-1">Choose Metaverse</p>
                         </div> */}
+                        <CommentaryBox></CommentaryBox>
                     </div>
                 </div>
                 
