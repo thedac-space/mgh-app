@@ -5,30 +5,26 @@ const CommentaryBox = ()=>{
     return (
         <>
 
-            <div className="flex flex-col items-start border-t border-l border-opacity-20 shadow-dark rounded-xl p-5 w-full bg-grey-dark bg-opacity-30 text-left">
+            <div className="flex items-start border-t border-l border-opacity-20 shadow-dark rounded-xl p-5 w-full bg-grey-dark bg-opacity-30 text-left">
 
-                <div>
-                        <div className="relative flex flex-wrap items-center mb-3 pl-1 text-left w-full max-w-sm">
+                <div className="container">
+                        <div className="flex row relative flex flex-wrap items-center mb-3 pl-1 text-left w-full max-w-sm">
                             <p className="font-medium text-gray-300">How happy are you with this valuation?</p>
                         </div>
                         
-                        <div className="flex row items-center justify-around gap-9">
-                            <div className="col">
+                        <div className="flex row items-center justify-around gap-8">
+                            <div className="col-xs-8 col-sm-8 col-md-8 col-lg-8">
                                 <input required id="commentInput" type="text" placeholder="Tell us what you think" className={`bg-transparent w-full text-white font-medium p-4 focus:outline-none border hover:border-opacity-100 focus:border-opacity-100 transition duration-300 ease-in-out rounded-xl placeholder-white placeholder-opacity-75`} />
                             </div>
                             
 
-                            <div className="col">
+                            <div className="col-xs-4 col-sm-4 col-md-4 col-lg-4">
                                 <div className="flex row items-center gap-5">
-                                    {/* <button className="col items-center justify-around bg-gray-200 hover:bg-white transition ease-in-out duration-500 rounded-xl m-1 ml-2 lg:ml-1 shadow-dark hover:shadow-button w-12 xs:w-16 sm:w-12 lg:w-28">
-                                            <i className="fa fa-thumbs-up hover:text-white"></i>
-                                    </button> */}
-
-                                    <div className="like-button col">
+                                    {/* <div className="like-button col">
                                         <input type="checkbox" className="checkbox" id="checkbox" />
                                         <label htmlFor="checkbox"> 
                                             <svg id="heart-svg" viewBox="467 392 58 57" xmlns="http://www.w3.org/2000/svg">
-                                                <g id="Group" fill="none" fill-rule="evenodd" transform="translate(467 392)">
+                                                <g id="Group" fill="none" fillRule="evenodd" transform="translate(467 392)">
                                                     <path d="M29.144 20.773c-.063-.13-4.227-8.67-11.44-2.59C7.63 28.795 28.94 43.256 29.143 43.394c.204-.138 21.513-14.6 11.44-25.213-7.214-6.08-11.377 2.46-11.44 2.59z" id="heart" fill="#AAB8C2" />
                                                     <circle id="main-circ" fill="#E2264D" opacity="0" cx="29.5" cy="29.5" r="1.5" />
                                                     <g id="heartgroup7" opacity="0" transform="translate(7 6)">
@@ -61,16 +57,31 @@ const CommentaryBox = ()=>{
                                                     </g>
                                                 </g>
                                             </svg> 
-                                        </label>
-                                                                
-                                    </div>
+                                        </label>         
+                                    </div> */}
                             
-                                    <button className="col">
-                                        <i className="fa fa-thumbs-down text-2xl"></i>
-                                    </button>  
+                                    {/* <button className="like-button col">
+                                        <i className="fa fa-thumbs-down fa-spin text-2xl"></i>
+                                    </button> */} 
+
+                                    <div className="button-container">
+  
+                                        <div className="glass-btn blue-btn">
+                                            <img src="https://i.postimg.cc/DwbWDQTx/facebook.png" alt="facebook"/>
+                                        </div>
+
+                                        <div className="glass-btn red-btn">
+                                            <img src="https://i.postimg.cc/LstJ4Hhf/youtube.png" alt="youtube"/>
+                                        </div>
+                                        
+                                        <div className="glass-btn amber-btn">
+                                            <img src="https://i.postimg.cc/tgQ1H1Rp/soundcloud.png" alt="soundcloud"/>
+                                        </div>
+
+                                    </div> 
                                 </div>
                                 <div className="row">
-                                    <button type="submit" className="col items-center justify-around bg-gray-200 hover:bg-white transition ease-in-out duration-500 rounded-xl m-1 ml-2 lg:ml-1 shadow-dark hover:shadow-button w-12 xs:w-16 sm:w-12 lg:w-28">Send</button>
+                                    <button type="submit" className="w-full items-center justify-around bg-gray-200 hover:bg-white transition ease-in-out duration-500 rounded-xl m-1 ml-2 lg:ml-1 shadow-dark hover:shadow-button ">Send</button>
                                 </div>
                             </div>
                            
