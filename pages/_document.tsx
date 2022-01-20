@@ -9,6 +9,7 @@ class MyDocument extends Document {
         return (
             <Html>
                 <Head>
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
                     <script
                         async
                         src={`https://www.googletagmanager.com/gtag/js?id==UA-183649821-6`}

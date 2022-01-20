@@ -1,6 +1,6 @@
 import { useState } from "react";
-const ScoreBox = ()=>{
 
+const ScoreBox = ()=>{
     return (
         <>
             <div className="flex flex-col items-start border-t border-l border-opacity-20 shadow-dark rounded-xl p-5 w-full bg-grey-dark bg-opacity-30 text-left">
