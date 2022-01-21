@@ -28,7 +28,6 @@ const ValuationPage: NextPage = ({ prices }: any) => {
 
     const [metaverse, setMetaverse] = useState<Metaverse>(Metaverse.SANDBOX)
 
-
     const convertETHPrediction = (ethPrediction: number) => {
         const ethUSD = prices.ethereum.usd;
         const sandUSD = prices["the-sandbox"].usd;
@@ -219,13 +218,28 @@ const ValuationPage: NextPage = ({ prices }: any) => {
                 <div className="flex flex-col items-start border-t border-l border-opacity-20 shadow-dark rounded-xl p-5 w-full bg-grey-dark bg-opacity-30 text-left">
                     <p className={`text-lg xl:text-xl font-medium text-gray-300`}>You can also buy the full dataset containing detailed raw data about The Sandbox LANDs NFTs on the <a href="https://market.oceanprotocol.com/asset/did:op:8331D69bF312604542D5f5f41D859dA27568B7cd" target="_blank" className="hover:underline text-pink-600">Ocean Marketplace</a>.</p>
                 </div>
+
+                {/* Tier 1 - Buttons */}
+                <div className="flex gap-5">
+
+                  {/* Tier 1 - Portfolio */}
+                  <Link href={'/portfolio'}>
+                    <button className='hoverlift text-white p-4 rounded-xl bg-gradient-to-br transition-all duration-300 from-pink-600 to-blue-500'>
+                      Explore your portfolio
+                    </button>
+                  </Link>
+
+                  {/* Tier 1 - Watchlist */}
+                  <Link href={'/watchlist'}>
+                    <button className='hoverlift text-white p-4 rounded-xl bg-gradient-to-br transition-all duration-300 from-pink-600 to-blue-500'>
+                      Go to Watchlist
+                    </button>
+                  </Link>
+            
+                </div>
                 
-                {/* Tier 1 element Watchlist */}
-                <Link href={'/watchlist'}>
-                  <button className='hoverlift text-white p-4 rounded-xl bg-gradient-to-br transition-all duration-300 from-pink-600 to-blue-500'>
-                    Go to Watchlist
-                  </button>
-                </Link>
+                {/* Tier 1 - Most Undervalued Land */}
+                <MostUnderValuedLand />
 
                 <FloorPriceTracker price={floorPrice} priceHistory={floorPriceHistory} nftID={1}/>
                 

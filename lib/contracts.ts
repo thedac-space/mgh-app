@@ -46,6 +46,10 @@ export const Contracts = {
             address: "0x4b945f3fCbC1De8310D14d826DD5052e8f9375C2",
             abi: new Interface(stakingAbiETHRinkeby)
         }
+    },
+    LAND: {
+      ETHEREUM_MAINNET: {
+        address: "0x50f5474724e0Ee42D9a4e711ccFB275809Fd6d4a",
+      }
     }
-
 }

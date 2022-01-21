@@ -3,7 +3,7 @@ import { Metaverse } from "../lib/enums"
 import { IAPIData, IPredictions } from "../lib/types";
 import { ellipseAddress } from "../lib/utilities";
 
-interface PriceCardProps {
+export interface PriceCardProps {
     showCard: boolean;
     processing: boolean;
     apiData: IAPIData | undefined;
