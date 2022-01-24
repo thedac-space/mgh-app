@@ -69,9 +69,7 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
         <div className='flex gap-8'>
           <h3>Total LANDS Owned: {formattedAssets.length}</h3>
           <h3>Total Value Worth: </h3>
-          {totalWorth && (
-            <PriceList metaverse={Metaverse.SANDBOX} predictions={totalWorth} />
-          )}
+          {totalWorth && <PriceList predictions={totalWorth} />}
         </div>
       </hgroup>
 
