@@ -178,6 +178,17 @@ h6 {
   transform: translateY(-4px);
 }
 
+.gray-box {
+  @apply border-t border-l border-opacity-20 shadow-dark rounded-xl p-5 w-full bg-grey-dark bg-opacity-30;
+}
+
+.text-gradient {
+  @apply text-transparent bg-clip-text bg-gradient-to-br from-pink-500 via-blue-400 to-blue-500;
+}
+.reverse-text-gradient {
+  @apply text-transparent bg-clip-text bg-gradient-to-br from-blue-500 via-pink-500 to-pink-500;
+}
+
 .progress-ring__circle {
   stroke-dashoffset: 250;
   stroke-dasharray: 500 500;

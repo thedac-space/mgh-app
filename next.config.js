@@ -14,5 +14,8 @@ module.exports = {
         permanent: true,
       }
     ]
+  },
+  images: {
+    domains: ['api.sandbox.game']
   }
 };

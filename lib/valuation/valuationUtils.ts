@@ -1,4 +1,5 @@
 import { Metaverse } from '../enums'
+import { ellipseAddress } from '../utilities'
 import { ICoinPrices, IPriceCard } from './valuationTypes'
 
 export const convertETHPrediction = (
@@ -46,7 +47,8 @@ export const getLandPricePredictions = async (
   }
 }
 
-// Formatting a Land Asset received from OpenSea into our Cards
+/* Formatting a Land Asset received from OpenSea into our Cards.
+ The asset: any comes from the OpenSea API*/
 export const formatLandAsset = async (asset: any, coinPrices: ICoinPrices) => {
   const formattedAsset = {
     apiData: {
@@ -79,12 +81,20 @@ export const fetchAssets = async (wallet: string, assetContract: string) => {
       {
         headers: {
           'Content-Type': 'application/json',
-          'X-API-KEY': '64aa1996f0fa46fcaf35a21f24f2525a',
+          'X-API-KEY': process.env.NEXT_PUBLIC_OPENSEA!,
         },
       }
     )
     return await res.json()
   } catch (e) {
     console.error(e)
+  }
+}
+
+export const handleTokenID = (tokenID: number) => {
+  if (tokenID.toString().length > 6) {
+    return ellipseAddress(tokenID.toString(), 3)
+  } else {
+    return tokenID
   }
 }
