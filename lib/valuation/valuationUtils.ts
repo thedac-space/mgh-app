@@ -73,24 +73,6 @@ export const formatLandAsset = async (asset: any, coinPrices: ICoinPrices) => {
   return formattedAsset as IPriceCard
 }
 
-// Fetch Assets from OpenSea. So Far Open Sea returns up to 50 results
-export const fetchAssets = async (wallet: string, assetContract: string) => {
-  try {
-    const res = await fetch(
-      `https://api.opensea.io/api/v1/assets?owner=${wallet}&asset_contract_address=${assetContract}&order_direction=desc&offset=0&limit=50`,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          'X-API-KEY': process.env.NEXT_PUBLIC_OPENSEA!,
-        },
-      }
-    )
-    return await res.json()
-  } catch (e) {
-    console.error(e)
-  }
-}
-
 export const handleTokenID = (tokenID: number) => {
   if (tokenID.toString().length > 6) {
     return ellipseAddress(tokenID.toString(), 3)

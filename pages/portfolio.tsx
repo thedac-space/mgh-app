@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import { NextPage } from 'next'
 import { useEffect, useState } from 'react'
-import { fetchAssets, formatLandAsset } from '../lib/valuation/valuationUtils'
+import { formatLandAsset } from '../lib/valuation/valuationUtils'
 import { ICoinPrices, IPriceCard } from '../lib/valuation/valuationTypes'
 import {
   ExternalLink,
@@ -14,13 +14,11 @@ import { Contracts } from '../lib/contracts'
 import { useRouter } from 'next/router'
 import { ellipseAddress } from '../lib/utilities'
 import Loader from '../components/Loader'
-import useConnectWeb3 from '../backend/connectWeb3'
 import WalletModal from '../components/WalletModal'
 
 const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   const [openModal, setOpenModal] = useState(false)
-  const { web3Provider, disconnectWallet } = useConnectWeb3()
-  const { query, push, reload } = useRouter()
+  const { query, push } = useRouter()
   const LAND_CONTRACT_ADDRESS = Contracts.LAND.ETHEREUM_MAINNET.address
   const initialWorth = {
     ethPrediction: 0,
@@ -79,37 +77,48 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
     // Requesting and Formatting Assets
     const setPortfolioAssets = async () => {
       resetState()
-      // OpenSea API Call
-      const { assets: rawAssets } = await fetchAssets(
-        (externalWallet as string) ?? address,
-        LAND_CONTRACT_ADDRESS
-      )
 
-      // Formatting Assets to fit into the Cards
-      rawAssets &&
-        (await Promise.all(
-          rawAssets.map(async (asset: any) => {
-            const formattedAsset = await formatLandAsset(asset, prices)
-            setFormattedAssets((previousState) => [
-              ...previousState,
-              formattedAsset,
-            ])
-            // Adding the worth of each asset into the totalWorth
-            setTotalWorth((previousWorth) => ({
-              ethPrediction:
-                previousWorth.ethPrediction +
-                formattedAsset.predictions!.ethPrediction,
-              usdPrediction:
-                previousWorth.usdPrediction +
-                formattedAsset.predictions!.usdPrediction,
-              sandPrediction:
-                previousWorth.sandPrediction! +
-                formattedAsset.predictions!.sandPrediction!,
-            }))
-            // }
-          })
-        ))
-      setLoading(false)
+      // OpenSea API Call
+      try {
+        const res = await fetch('/api/fetchAssets', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            wallet: (externalWallet as string) ?? address,
+            assetContract: LAND_CONTRACT_ADDRESS,
+          }),
+        })
+        const rawAssets = await res.json()
+        // Formatting Assets to fit into the Cards
+        rawAssets &&
+          (await Promise.all(
+            rawAssets.assets.map(async (asset: any) => {
+              const formattedAsset = await formatLandAsset(asset, prices)
+              setFormattedAssets((previousState) => [
+                ...previousState,
+                formattedAsset,
+              ])
+              // Adding the worth of each asset into the totalWorth
+              setTotalWorth((previousWorth) => ({
+                ethPrediction:
+                  previousWorth.ethPrediction +
+                  formattedAsset.predictions!.ethPrediction,
+                usdPrediction:
+                  previousWorth.usdPrediction +
+                  formattedAsset.predictions!.usdPrediction,
+                sandPrediction:
+                  previousWorth.sandPrediction! +
+                  formattedAsset.predictions!.sandPrediction!,
+              }))
+              // }
+            })
+          ))
+        setLoading(false)
+      } catch (err) {
+        console.log(err)
+      }
     }
 
     setPortfolioAssets()
