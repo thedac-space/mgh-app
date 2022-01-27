@@ -142,7 +142,7 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
           <div className='sm:gray-box mb-8 sm:mb-12'>
             {externalWallet ? (
               <>
-                <h1 className='text-gradient'>Portfolio</h1>
+                <h1 className='green-text-gradient'>Portfolio</h1>
                 <ExternalLink
                   className='m-auto text-center sm:text-lg md:text-xl'
                   text={ellipseAddress(externalWallet as string)}
@@ -150,7 +150,7 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                 />
               </>
             ) : (
-              <h1 className='text-gradient'>Your Portfolio</h1>
+              <h1 className='green-text-gradient'>Your Portfolio</h1>
             )}
           </div>
           {/* Total Lands and Total Worth Container */}
