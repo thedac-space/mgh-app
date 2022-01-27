@@ -1,8 +1,52 @@
-const MostUnderValuedLand = () => {
+import { Metaverse } from '../../lib/enums'
+import { IPriceCard } from '../../lib/valuation/valuationTypes'
+import { HorizontalPriceCard } from '../General'
+
+const MostUnderValuedLand = ({
+  apiData,
+  showCard,
+  predictions,
+  processing,
+  verticalUnder,
+}: IPriceCard) => {
+  const mockApiData = {
+    external_link:
+      'https://www.sandbox.game/en/lands/919eda05-50f0-497b-bb0f-0c600b82dbf8/',
+    images: {
+      image_url:
+        'https://api.sandbox.game/lands/919eda05-50f0-497b-bb0f-0c600b82dbf8/preview-500px-x-500px.jpg',
+    },
+    metaverse: Metaverse.SANDBOX,
+    name: 'LAND (136, 4)',
+    opensea_link:
+      'https://opensea.io/assets/0x50f5474724e0ee42d9a4e711ccfb275809fd6d4a/85204',
+    tokenId: 85204,
+  }
+
+  const mockPredictions = {
+    ethPrediction: 100.213,
+    usdPrediction: 10.421,
+    sandPrediction: 10.213,
+    // manaPrediction: 10,
+  }
+
   return (
-    <div className='flex flex-col items-start shadow-blck rounded-xl py-3 px-4 w-full bg-grey-dark bg-opacity-20 text-left'>
-      Most Undervalued land
-    </div>
+    <article>
+      {/* Title */}
+      <h3 className='text-2xl green-text-gradient mb-4'>
+        Most Undervalued LAND of the day:
+      </h3>
+      {/* Land Card */}
+      <div className='flex flex-col items-center m-auto gray-box p-4 sm:px-8 sm:w-max text-left'>
+        <HorizontalPriceCard
+          apiData={mockApiData}
+          showCard={showCard}
+          verticalUnder={verticalUnder}
+          predictions={mockPredictions}
+          processing={processing}
+        />
+      </div>
+    </article>
   )
 }
 

@@ -207,6 +207,7 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                   className='w-75vw sm:w-full gray-box'
                 >
                   <HorizontalPriceCard
+                    verticalUnder='lg'
                     apiData={apiData}
                     showCard={showCard}
                     predictions={predictions}

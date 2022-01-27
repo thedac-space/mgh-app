@@ -11,4 +11,5 @@ export interface IPriceCard {
   processing: boolean
   apiData: IAPIData | undefined
   predictions: IPredictions | undefined
+  verticalUnder: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 }

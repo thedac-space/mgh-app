@@ -239,7 +239,7 @@ const ValuationPage: NextPage = ({ prices }: any) => {
                 </div>
                 
                 {/* Tier 1 - Most Undervalued Land */}
-                <MostUnderValuedLand />
+                <MostUnderValuedLand verticalUnder="sm" predictions={undefined} processing={false} showCard={true} apiData={undefined} />
 
                 <FloorPriceTracker price={floorPrice} priceHistory={floorPriceHistory} nftID={1}/>
                 

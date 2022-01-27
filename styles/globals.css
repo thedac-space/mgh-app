@@ -189,6 +189,9 @@ h6 {
   @apply text-transparent bg-clip-text bg-gradient-to-br from-blue-500 via-pink-500 to-pink-500;
 }
 
+.green-text-gradient {
+  @apply text-transparent bg-clip-text bg-gradient-to-b from-blue-500 via-green-400 to-green-500
+}
 .progress-ring__circle {
   stroke-dashoffset: 250;
   stroke-dasharray: 500 500;
