@@ -66,17 +66,21 @@ const CommentaryBox = ()=>{
 
                                     <div className="button-container">
   
-                                        <div className="glass-btn blue-btn">
-                                            <img src="https://i.postimg.cc/DwbWDQTx/facebook.png" alt="facebook"/>
+                                        <div className="glass-btn red-btn">
+                                            {/* <img src="https://i.postimg.cc/DwbWDQTx/facebook.png" alt="facebook"/> */}
+                                            <img src="https://img.icons8.com/cotton/50/000000/like--v3.png" alt="heart"/>
+                                            
                                         </div>
 
-                                        <div className="glass-btn red-btn">
-                                            <img src="https://i.postimg.cc/LstJ4Hhf/youtube.png" alt="youtube"/>
+                                        <div className="glass-btn blue-btn">
+                                            {/* <img src="https://i.postimg.cc/LstJ4Hhf/youtube.png" alt="youtube"/> */}
+                                            {/* <img src="https://img.icons8.com/carbon-copy/100/000000/poor-quality.png" alt="unlike"/> */}
+                                            <img src="https://img.icons8.com/nolan/64/thumbs-down.png"/>
                                         </div>
                                         
-                                        <div className="glass-btn amber-btn">
+                                        {/* <div className="glass-btn amber-btn">
                                             <img src="https://i.postimg.cc/tgQ1H1Rp/soundcloud.png" alt="soundcloud"/>
-                                        </div>
+                                        </div> */}
 
                                     </div> 
                                 </div>
