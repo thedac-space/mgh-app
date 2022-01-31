@@ -176,6 +176,10 @@ const ValuationPage: NextPage = ({ prices }: any) => {
                         </div>
 
                         <div className="flex flex-col items-start border-t border-l border-opacity-20 shadow-dark rounded-xl p-5 w-full bg-grey-dark bg-opacity-30 text-left">
+                            <ScoreBox showCard={showCard}></ScoreBox>
+                        </div>
+
+                        <div className="flex flex-col items-start border-t border-l border-opacity-20 shadow-dark rounded-xl p-5 w-full bg-grey-dark bg-opacity-30 text-left">
                             <div className="relative flex flex-wrap items-center mb-3 pl-1 text-left w-full max-w-sm">
                                 <p className="font-medium text-gray-300">Find by Token ID</p>
                                 <BsQuestionCircle className="text-gray-300 cursor-pointer peer ml-3 -mt-1" />
@@ -210,10 +214,12 @@ const ValuationPage: NextPage = ({ prices }: any) => {
 
                     <div className="flex flex-col items-start border-t border-l border-opacity-20 shadow-dark rounded-xl p-5 w-full max-w-full sm:max-w-sm bg-grey-dark bg-opacity-30 text-left">
                         <PriceCard showCard={showCard} processing={idProcessing || coordinatesProcessing} apiData={apiData} predictions={predictions} />
+                        <CommentaryBox showCard={showCard}></CommentaryBox>
                     </div>
+
                 </div>
 
-                <CommentaryBox></CommentaryBox>
+                
 
                 <div className="flex flex-col items-start border-t border-l border-opacity-20 shadow-dark rounded-xl p-5 w-full bg-grey-dark bg-opacity-30 text-left">
                     <p className={`text-lg xl:text-xl font-medium text-gray-300`}>You can also buy the full dataset containing detailed raw data about The Sandbox LANDs NFTs on the <a href="https://market.oceanprotocol.com/asset/did:op:8331D69bF312604542D5f5f41D859dA27568B7cd" target="_blank" className="hover:underline text-pink-600">Ocean Marketplace</a>.</p>
