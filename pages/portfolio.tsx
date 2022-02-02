@@ -185,7 +185,7 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 
             {/* Total Worth */}
             <div className='flex flex-col w-full sm:w-2/3 transition-all justify-between text-center gray-box'>
-              <h3 className='text-xl md:text-3xl xl:text-4xl'>
+              <h3 className='text-xl md:text-3xl xl:text-4xl mb-4'>
                 Total Value Worth
               </h3>
               {loading ? (

@@ -33,7 +33,7 @@ const MostUnderValuedLand = ({
   return (
     <article>
       {/* Title */}
-      <h3 className='text-2xl green-text-gradient mb-4'>
+      <h3 className='text-2xl green-text-gradient'>
         Most Undervalued LAND of the day:
       </h3>
       {/* Land Card */}

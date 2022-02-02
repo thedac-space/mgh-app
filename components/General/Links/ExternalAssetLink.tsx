@@ -1,6 +1,6 @@
-import Image from 'next/image'
 import { FiExternalLink } from 'react-icons/fi'
 import { ExternalLink } from '.'
+import { OptimizedImage } from '..'
 import { IAPIData } from '../../../lib/types'
 import { handleTokenID } from '../../../lib/valuation/valuationUtils'
 interface Props {
@@ -18,17 +18,14 @@ const ExternalAssetLink = ({ apiData, width, height, layout }: Props) => {
         target='_blank'
         className='hover:shadow-dark'
       >
-        <Image
-          placeholder='blur'
-          blurDataURL={apiData.images.image_url}
+        <OptimizedImage
           src={apiData.images.image_url}
-          width={width || 150}
+          rounded='lg'
           layout={layout}
+          width={width || 150}
           height={height || 150}
-          loading='lazy'
-          objectFit='cover'
-          className='rounded-lg'
         />
+
         <FiExternalLink className='absolute top-0 right-0 text-white text-xs backdrop-filter backdrop-blur-sm rounded-xl w-6 h-6 p-1' />
       </a>
       {/* Asset Name */}

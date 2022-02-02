@@ -23,7 +23,7 @@ const HorizontalPriceCard = ({
       <ExternalAssetLink apiData={apiData} layout='responsive' />
       {/* RIGHT/BOTTOM - PriceList */}
       <div className='w-full'>
-        <h4 className='border-none text-white'>Price Estimation:</h4>
+        <h4 className='border-none text-white mb-4'>Price Estimation:</h4>
         <PriceList predictions={predictions} />
       </div>
     </div>

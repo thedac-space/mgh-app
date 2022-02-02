@@ -85,7 +85,8 @@ module.exports = {
         colorbottom: '0 0px 40px 0px rgba(250, 250, 250, 0.1)',
         button: '0 0px 8px 0px rgba(250, 250, 250, 0.4)',
         dark: '0 0px 40px 0px rgba(0, 0, 0, 0.1)',
-        white: "rgba(250, 250, 250, 0.25) 10px 10px 50px"
+        white: "rgba(250, 250, 250, 0.25) 10px 10px 50px",
+        subtleWhite: '0 1px 7px 0px rgba(250, 250, 250, 0.2)',
       },
       fontFamily: {
         // 'sans': ['Quicksand', 'sans-serif'],

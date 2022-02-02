@@ -1,3 +1,4 @@
+import { OptimizedImage } from '.'
 import { IPredictions } from '../../lib/types'
 
 const COINS = {
@@ -25,15 +26,20 @@ type coinKey =
   | 'usdPrediction'
   | 'ethPrediction'
 
-const PriceList = ({ predictions }: { predictions: IPredictions }) => {
+interface Props {
+  predictions: Partial<IPredictions>
+  className?: string
+}
+
+const PriceList = ({ predictions, className }: Props) => {
   const keys = Object.keys(predictions) as coinKey[]
   return (
-    <ul className='animate-fade-in-slow flex flex-col flex-grow min-w-max pt-2'>
-      {/* Iterating through each Coin */}
+    <ul className={'flex flex-col flex-grow min-w-max gap-4 ' + className}>
+      {/* Iterating through each Coin.  */}
       {keys.map((key) => (
         <li
           key={COINS[key].name}
-          className='flex gap-4 items-center w-full justify-start py-2 h-full'
+          className='animate-fade-in-slow flex gap-4 items-center w-full justify-start h-full'
         >
           {/* Coin Image */}
           <img
