@@ -17,6 +17,8 @@ import {
 import { IoWarningOutline } from 'react-icons/io5'
 import { useAppSelector } from '../state/hooks'
 import { Contracts } from '../lib/contracts'
+import { HiViewGridAdd } from 'react-icons/hi'
+import { MdAddLocationAlt } from 'react-icons/md'
 
 interface IWatchListCard extends IPriceCard {
   currentPrice?: number
@@ -94,7 +96,7 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                 const landData = await getLandData(land, Metaverse.SANDBOX)
                 // Retrieving data from OpenSea (Comes in ETH)
                 const res = await fetch(
-                  `/api/fetchSingleAsset/${Contracts.LAND.ETHEREUM_MAINNET}/${landData.tokenId}`
+                  `/api/fetchSingleAsset/${Contracts.LAND.ETHEREUM_MAINNET.newAddress}/${landData.tokenId}`
                 )
 
                 // Retrieving Latest Orders for each Asset
@@ -149,7 +151,7 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
       </div>
       {/* Add Land Form */}
       <form
-        className='gray-box bg-opacity-10 w-fit mb-8'
+        className='gray-box bg-opacity-10 transition-all w-fit mb-8'
         onSubmit={(e) => addToWatchList(e)}
       >
         <p className='mb-1'>Token ID</p>
@@ -162,7 +164,7 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
             value={landId}
             onChange={(e) => setLandId(e.target.value)}
             placeholder='142671'
-            className={`bg-transparent disabled:opacity-20 text-white font-medium p-2 focus:outline-none border ${
+            className={`bg-transparent disabled:opacity-20 text-white w-1/2 font-medium p-2 focus:outline-none border ${
               // Giving Feedback to User on Good and Bad Queries
               state === 'badQuery'
                 ? 'border-red-500 border-opacity-100 '
@@ -174,27 +176,31 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
           {/* Add land Button */}
           <button
             disabled={state === 'noWallet' || lands.length === 10}
-            className='text-center transition-all flex gap-2 ease-in hover:shadow-subtleWhite z-10 p-2 rounded-xl bg-gradient-to-br from-pink-600 to-blue-500'
+            className='items-center justify-center text-center transition-all flex grow gap-2 ease-in hover:shadow-subtleWhite z-10 p-2 rounded-xl bg-gradient-to-br from-pink-600 to-blue-500'
           >
             {/* Loading Icon */}
-
             {state?.includes('loading') && (
               <svg className='animate-spin-slow h-6 w-6 border-4 border-t-gray-300 border-l-gray-300 border-gray-800 rounded-full' />
             )}
+            {/* Land Limit Icon */}
             {lands.length === 10 && <IoWarningOutline className='h-5 w-5' />}
+            {/* Add Land Icon */}
+            {state === 'loaded' && lands.length !== 10 && (
+              <MdAddLocationAlt className='h-5 w-5 relative bottom-[0.2rem]' />
+            )}
             {/* Button Text */}
             <span>
               {lands.length === 10
                 ? 'Limit Reached'
                 : state === 'loading'
-                ? 'Fetching Land Data'
+                ? 'Fetching Data'
                 : state === 'loadingQuery'
                 ? 'Verifying Land'
                 : state === 'noWallet'
                 ? 'No Wallet Detected'
                 : state === 'success'
                 ? 'Success!'
-                : 'Add Land to Watchlist'}
+                : 'Add Land'}
             </span>
           </button>
         </div>
@@ -207,7 +213,7 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
       </form>
       {/* Lands List */}
       {lands.length > 0 && (
-        <ul className='w-full flex flex-col gap-4'>
+        <ul className='w-full flex lg:flex-col flex-wrap justify-center gap-4'>
           {lands.map((land) => (
             <LandItem
               remove={removeFromWatchList}

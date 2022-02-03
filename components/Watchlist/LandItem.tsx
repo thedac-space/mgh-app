@@ -15,25 +15,39 @@ const LandItem = ({
   currentPrice,
   remove,
 }: IWatchListCard) => {
-  const [expanded, setExpanded] = useState(false)
-  console.log('land')
+  const mobile = window.innerWidth < 640
+  const [expanded, setExpanded] = useState(mobile)
+  const imgSize = mobile ? 170 : expanded ? 170 : 70
   const [prices, setPrices] = useState<Partial<IPredictions>>({
     usdPrediction: predictions.usdPrediction,
   })
+
+  const handleExpanded = () => {
+    window.innerWidth < 640 ? setExpanded(true) : setExpanded(!expanded)
+  }
+
   useEffect(() => {
     if (expanded) {
       setPrices(predictions)
     } else {
       setPrices({ usdPrediction: predictions.usdPrediction })
     }
+    const setSizes = () => {
+      const mobile = window.innerWidth < 640
+      setExpanded(mobile)
+    }
+    window.addEventListener('resize', setSizes)
+
+    return () => window.removeEventListener('resize', setSizes)
   }, [expanded])
+
   return (
     <li
-      onClick={() => setExpanded(!expanded)}
-      className='gray-box p-4 hoverlift hover:bg-opacity-20 flex sm:flex-row flex-col cursor-pointer text-white items-start relative justify-between w-full '
+      onClick={handleExpanded}
+      className='gray-box p-4 hoverlift hover:bg-opacity-20 flex xs:w-[22rem] sm:w-full sm:flex-row flex-col cursor-pointer text-white items-start relative justify-between gap-4 sm:gap-0 '
     >
       {/* LEFT */}
-      <div className='flex gap-4 transition-all'>
+      <div className='flex flex-row sm:justify-start gap-4 sm:w-fit w-full  transition-all'>
         {/* Image Link */}
         <a
           href={apiData?.external_link}
@@ -41,8 +55,8 @@ const LandItem = ({
           className='hover:shadow-dark relative flex'
         >
           <OptimizedImage
-            height={expanded ? 170 : 70}
-            width={expanded ? 170 : 70}
+            height={imgSize}
+            width={imgSize}
             src={apiData.images.image_url}
             rounded='lg'
           />
@@ -51,8 +65,9 @@ const LandItem = ({
         {/* Main Land Info */}
         <div className='flex flex-col justify-between'>
           <div>
-            <p className='text-2xl'>{apiData?.name}</p>
-            <p className='text-md text-gray-400'>ID: {apiData?.tokenId}</p>
+            {/* <h3 className='text-base sm:text-2xl p-0 leading-4'>{apiData?.name}</h3> */}
+            <p className='sm:text-2xl'>{apiData?.name}</p>
+            <p className='text-gray-400'>ID: {apiData?.tokenId}</p>
           </div>
           {expanded && (
             <>
@@ -77,11 +92,11 @@ const LandItem = ({
         </div>
       </div>
       {/* RIGHT */}
-      <div className='transition-all'>
+      <div className='transition-all sm:relative static bottom-1'>
         {/* Price List */}
-        <PriceList predictions={prices} className='' />
+        <PriceList predictions={prices} />
         {/* Current Listing Price */}
-        <p className='text-md text-gray-400 text-right'>
+        <p className='text-md text-gray-400 sm:text-right pt-2 sm:pt-0'>
           {isNaN(currentPrice!) ? 'Not Listed' : `Listed: ${currentPrice} USDC`}
         </p>
       </div>

@@ -49,7 +49,8 @@ export const Contracts = {
     },
     LAND: {
       ETHEREUM_MAINNET: {
-        address: "0x50f5474724e0Ee42D9a4e711ccFB275809Fd6d4a",
+        oldAddress: "0x50f5474724e0Ee42D9a4e711ccFB275809Fd6d4a",
+        newAddress: '0x5cc5b05a8a13e3fbdb0bb9fccd98d38e50f90c38'
       }
     }
 }
