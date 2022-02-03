@@ -37,7 +37,11 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
     navigator.clipboard.writeText(
       'https://app.metagamehub.io/valuation?wallet=' + address
     )
+    // Display Feedback Text
     setCopiedText(true)
+    setTimeout(() => {
+      setCopiedText(false)
+    }, 1100)
   }
 
   /* When coming from a shared link. We can see our own portfolio 
