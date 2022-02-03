@@ -1,7 +1,6 @@
 import { NextPage } from 'next'
-// import { flushSync } from 'react-dom'
 import { LandItem } from '../components/Watchlist'
-import { FormEvent, useEffect, useState } from 'react'
+import { FormEvent, useCallback, useEffect, useState } from 'react'
 import { ICoinPrices, IPriceCard } from '../lib/valuation/valuationTypes'
 import {
   convertETHPrediction,
@@ -9,46 +8,63 @@ import {
   getLandData,
 } from '../lib/valuation/valuationUtils'
 import { Metaverse } from '../lib/enums'
-// import { ethers } from 'ethers'
 import {
   addLandToWatchList,
   createUser,
   getUserInfo,
   removeLandFromWatchList,
 } from '../lib/FirebaseUtilities'
+import { IoWarningOutline } from 'react-icons/io5'
+import { useAppSelector } from '../state/hooks'
+import { Contracts } from '../lib/contracts'
 
 interface IWatchListCard extends IPriceCard {
   currentPrice?: number
 }
 
-const LAND_CONTRACT = '0x50f5474724e0Ee42D9a4e711ccFB275809Fd6d4a'
-// const wallet = '0x7812B090d1a3Ead77B5D8F470D3faCA900A6ccB9'
-const wallet = '0x7812B090d1a3Ead77B5D8F470D3faCA900A6ccB8'
-
 const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
+  type State =
+    | 'loading'
+    | 'loaded'
+    | 'badQuery'
+    | 'loadingQuery'
+    | 'noWallet'
+    | 'success'
   const [landId, setLandId] = useState('')
   const [reFetch, setRefetch] = useState(false)
+  const [state, setState] = useState<State>()
   const [lands, setLands] = useState<IWatchListCard[]>([])
   const [ids, setIds] = useState<number[]>([])
+  const { address } = useAppSelector((state) => state.account)
 
   const addToWatchList = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    const id = Number(landId)
-    const landData = await getLandData(id, Metaverse.SANDBOX)
-    // Only if Land returns a result from our API
-    if (landData.name) {
-      // Adding Land to Database
-      await addLandToWatchList(id, wallet)
-      // Resetting Input
-      setLandId('')
-      // Retrigger useEffect
-      setRefetch(!reFetch)
+    if (lands.length < 10 && address) {
+      setState('loadingQuery')
+      const id = Number(landId)
+      // Checking whether land exists
+      const landData = await getLandData(id, Metaverse.SANDBOX)
+      // If Land returns a result from our API
+      if (landData.name) {
+        // Adding Land to Database
+        await addLandToWatchList(id, address)
+        // Giving Feedback to user of Good Query
+        setState('success')
+        setTimeout(() => {
+          // Resetting Input
+          setLandId('')
+          // Retrigger useEffect
+          setRefetch(!reFetch)
+        }, 1100)
+      } else {
+        setState('badQuery')
+      }
     }
   }
 
-  const removeFromWatchList = async (landId: number) => {
+  const removeFromWatchList = useCallback(async (landId: number) => {
     // Removing Land from Database
-    await removeLandFromWatchList(landId, wallet)
+    await removeLandFromWatchList(landId, address!)
     let filteredLands = lands.filter((land) => {
       return Number(land.apiData.tokenId) !== landId
     })
@@ -56,28 +72,26 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
     setLands(filteredLands)
     // Updating Ids
     setIds(filteredLands.map((land) => Number(land.apiData.tokenId)))
-  }
+  }, [])
+
   useEffect(() => {
-    console.log(ids)
     const getLands = async () => {
       try {
         // getting user watchlist data
-        const userData = await getUserInfo(wallet)
+        const userData = await getUserInfo(address!)
         // If no User Data but user is logged in create them a watchlist
-        if (!userData && wallet) return await createUser(wallet)
+        if (!userData) return await createUser(address!)
         userData &&
           (await Promise.all(
             // Mapping through all Assets in Watchlist from User
             userData['sandbox-watchlist'].map(async (land: any) => {
               // If we already fetched Item, do not refetch it
-              console.log({ ids })
-              console.log(typeof ids[0], typeof land)
               if (!ids.includes(land)) {
                 // Retrieving Data from our API for each Asset
                 const landData = await getLandData(land, Metaverse.SANDBOX)
                 // Retrieving data from OpenSea (Comes in ETH)
                 const res = await fetch(
-                  `/api/fetchSingleAsset/${LAND_CONTRACT}/${landData.tokenId}`
+                  `/api/fetchSingleAsset/${Contracts.LAND.ETHEREUM_MAINNET}/${landData.tokenId}`
                 )
 
                 // Retrieving Latest Orders for each Asset
@@ -108,40 +122,85 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
               }
             })
           ))
+        setState('loaded')
       } catch (e) {
         console.log(e)
       }
     }
 
-    getLands()
-  }, [reFetch])
+    if (address) {
+      setState('loading')
+      getLands()
+    } else {
+      setLands([])
+      setIds([])
+      setState('noWallet')
+    }
+  }, [reFetch, address])
 
   return (
-    <section className='pt-12 xl:pt-0 animate-fade-in-slow flex flex-col items-center max-w-2xl text-white w-full'>
+    <section className='pt-12 xl:pt-0 animate-fade-in-slow flex flex-col items-center max-w-3xl text-white w-full'>
       {/* Title */}
-      <h1 className='green-text-gradient mb-8'>Your Watchlist</h1>
+      <div className='sm:gray-box mb-8'>
+        <h1 className='text-center green-text-gradient'>Your Watchlist</h1>
+      </div>
       {/* Add Land Form */}
       <form
-        className='gray-box w-fit mb-16'
+        className='gray-box bg-opacity-10 w-fit mb-8'
         onSubmit={(e) => addToWatchList(e)}
       >
         <p className='mb-1'>Token ID</p>
         <div className='flex gap-4'>
           {/* TokenID Input */}
           <input
+            disabled={state === 'noWallet' || lands.length === 10}
+            required
             type='number'
             value={landId}
             onChange={(e) => setLandId(e.target.value)}
             placeholder='142671'
-            className={`bg-transparent text-white font-medium p-2 focus:outline-none border ${
-              false ? 'border-red-500 border-opacity-100' : 'border-opacity-40 '
+            className={`bg-transparent disabled:opacity-20 text-white font-medium p-2 focus:outline-none border ${
+              // Giving Feedback to User on Good and Bad Queries
+              state === 'badQuery'
+                ? 'border-red-500 border-opacity-100 '
+                : state === 'success'
+                ? 'border-green-500 border-opacity-100 '
+                : 'border-opacity-40 '
             } hover:border-opacity-100 focus:border-opacity-100 transition duration-300 ease-in-out rounded-xl placeholder-white placeholder-opacity-75`}
           />
           {/* Add land Button */}
-          <button className='text-center transition-all ease-in hover:shadow-subtleWhite z-10 p-2 rounded-xl bg-gradient-to-br from-pink-600 to-blue-500'>
-            Add Land to Watchlist
+          <button
+            disabled={state === 'noWallet' || lands.length === 10}
+            className='text-center transition-all flex gap-2 ease-in hover:shadow-subtleWhite z-10 p-2 rounded-xl bg-gradient-to-br from-pink-600 to-blue-500'
+          >
+            {/* Loading Icon */}
+
+            {state?.includes('loading') && (
+              <svg className='animate-spin-slow h-6 w-6 border-4 border-t-gray-300 border-l-gray-300 border-gray-800 rounded-full' />
+            )}
+            {lands.length === 10 && <IoWarningOutline className='h-5 w-5' />}
+            {/* Button Text */}
+            <span>
+              {lands.length === 10
+                ? 'Limit Reached'
+                : state === 'loading'
+                ? 'Fetching Land Data'
+                : state === 'loadingQuery'
+                ? 'Verifying Land'
+                : state === 'noWallet'
+                ? 'No Wallet Detected'
+                : state === 'success'
+                ? 'Success!'
+                : 'Add Land to Watchlist'}
+            </span>
           </button>
         </div>
+        {/* Warning Text */}
+        {state === 'badQuery' && (
+          <p className='font-medium text-xs text-red-500 mt-1 pl-2 text-left w-full max-w-sm'>
+            LAND doesn't exist
+          </p>
+        )}
       </form>
       {/* Lands List */}
       {lands.length > 0 && (

@@ -13,8 +13,7 @@ import { useAppSelector } from '../state/hooks'
 import { Contracts } from '../lib/contracts'
 import { useRouter } from 'next/router'
 import { ellipseAddress } from '../lib/utilities'
-import Loader from '../components/Loader'
-import WalletModal from '../components/WalletModal'
+import { Loader, WalletModal } from '../components'
 
 const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   const [openModal, setOpenModal] = useState(false)
@@ -65,12 +64,6 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
       return
     }
 
-    /* Had to add this clause because 
-    because when coming from a shared link while logged in
-    our wallet address starts as undefined and 1 milisecond 
-    later it retrieves the correct address, therefore retriggering
-    the useEffect(). setPortfolioAssets() gets async called again
-    while the first one is still retrieving data and all assets get duplicated */
     if (externalWallet && alreadyFetched) return
     setAlreadyFetched(true)
 
