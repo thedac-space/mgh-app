@@ -16,6 +16,7 @@ const LandItem = ({
   remove,
 }: IWatchListCard) => {
   const [expanded, setExpanded] = useState(false)
+  console.log('land')
   const [prices, setPrices] = useState<Partial<IPredictions>>({
     usdPrediction: predictions.usdPrediction,
   })

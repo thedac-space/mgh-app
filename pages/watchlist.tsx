@@ -62,17 +62,20 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
     }
   }
 
-  const removeFromWatchList = useCallback(async (landId: number) => {
-    // Removing Land from Database
-    await removeLandFromWatchList(landId, address!)
-    let filteredLands = lands.filter((land) => {
-      return Number(land.apiData.tokenId) !== landId
-    })
-    // Updating Lands
-    setLands(filteredLands)
-    // Updating Ids
-    setIds(filteredLands.map((land) => Number(land.apiData.tokenId)))
-  }, [])
+  const removeFromWatchList = useCallback(
+    async (landId: number) => {
+      // Removing Land from Database
+      await removeLandFromWatchList(landId, address!)
+      let filteredLands = lands.filter((land) => {
+        return Number(land.apiData.tokenId) !== landId
+      })
+      // Updating Lands
+      setLands(filteredLands)
+      // Updating Ids
+      setIds(filteredLands.map((land) => Number(land.apiData.tokenId)))
+    },
+    [lands]
+  )
 
   useEffect(() => {
     const getLands = async () => {
