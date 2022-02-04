@@ -44,7 +44,7 @@ const PriceList = ({ predictions, className }: Props) => {
           {/* Coin Image */}
           <img
             src={COINS[key].src}
-            className='rounded-full  h-9 md:h-10 w-9 md:w-10 p-1 shadow-button'
+            className='rounded-full  h-9 xl:h-10 w-9 xl:w-10 p-1 shadow-button'
             loading='lazy'
           />
           {/* Coin Prediction Number */}

@@ -25,6 +25,7 @@ const LandItem = ({
   const handleExpanded = () => {
     window.innerWidth < 640 ? setExpanded(true) : setExpanded(!expanded)
   }
+  const notListed = isNaN(currentPrice!)
 
   useEffect(() => {
     if (expanded) {
@@ -34,7 +35,8 @@ const LandItem = ({
     }
     const setSizes = () => {
       const mobile = window.innerWidth < 640
-      setExpanded(mobile)
+      const between = window.innerWidth < 700
+      setExpanded(mobile ? true : between ? false : expanded)
     }
     window.addEventListener('resize', setSizes)
 
@@ -65,8 +67,10 @@ const LandItem = ({
         {/* Main Land Info */}
         <div className='flex flex-col justify-between'>
           <div>
-            {/* <h3 className='text-base sm:text-2xl p-0 leading-4'>{apiData?.name}</h3> */}
-            <p className='sm:text-2xl'>{apiData?.name}</p>
+            <h3 className='text-base sm:text-xl font-normal md:text-2xl p-0 leading-4'>
+              {apiData?.name}
+            </h3>
+            {/* <p className='sm:text-2xl'>{apiData?.name}</p> */}
             <p className='text-gray-400'>ID: {apiData?.tokenId}</p>
           </div>
           {expanded && (
@@ -96,8 +100,14 @@ const LandItem = ({
         {/* Price List */}
         <PriceList predictions={prices} />
         {/* Current Listing Price */}
-        <p className='text-md text-gray-400 sm:text-right pt-2 sm:pt-0'>
-          {isNaN(currentPrice!) ? 'Not Listed' : `Listed: ${currentPrice} USDC`}
+        <p
+          className={`text-md sm:text-right pt-2 sm:pt-0 ${
+            !notListed
+              ? 'relative top-1.5 font-medium text-green-500'
+              : 'text-gray-400'
+          }`}
+        >
+          {notListed ? 'Not Listed' : `Listed: ${currentPrice} USDC`}
         </p>
       </div>
     </li>

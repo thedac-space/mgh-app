@@ -14,11 +14,13 @@ import { Contracts } from '../lib/contracts'
 import { useRouter } from 'next/router'
 import { ellipseAddress } from '../lib/utilities'
 import { Loader, WalletModal } from '../components'
+import { Fade } from 'react-awesome-reveal'
 
 const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   const [openModal, setOpenModal] = useState(false)
   const { query, push } = useRouter()
-  const LAND_CONTRACT_ADDRESS = Contracts.LAND.ETHEREUM_MAINNET.address
+  // This contract address will have to be changed once Sandbox && OpenSea finish migration
+  const LAND_CONTRACT_ADDRESS = Contracts.LAND.ETHEREUM_MAINNET.oldAddress
   const initialWorth = {
     ethPrediction: 0,
     usdPrediction: 0,
@@ -197,22 +199,28 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
         {/* Lands Grid */}
         {formattedAssets.length > 0 && (
           <ul className='grid gap-4 md:gap-12 sm:grid-cols-2'>
-            {formattedAssets.map(
-              ({ apiData, showCard, predictions, processing }) => (
-                <li
-                  key={apiData?.tokenId}
-                  className='w-75vw sm:w-full gray-box'
-                >
-                  <HorizontalPriceCard
-                    verticalUnder='lg'
-                    apiData={apiData}
-                    showCard={showCard}
-                    predictions={predictions}
-                    processing={processing}
-                  />
-                </li>
-              )
-            )}
+            <Fade
+              duration={400}
+              className='w-full flex justify-center'
+              triggerOnce
+            >
+              {formattedAssets.map(
+                ({ apiData, showCard, predictions, processing }) => (
+                  <li
+                    key={apiData?.tokenId}
+                    className='w-75vw sm:w-full gray-box'
+                  >
+                    <HorizontalPriceCard
+                      verticalUnder='lg'
+                      apiData={apiData}
+                      showCard={showCard}
+                      predictions={predictions}
+                      processing={processing}
+                    />
+                  </li>
+                )
+              )}
+            </Fade>
           </ul>
         )}
       </section>
