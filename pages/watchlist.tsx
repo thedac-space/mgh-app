@@ -17,7 +17,7 @@ import {
 import { IoWarningOutline } from 'react-icons/io5'
 import { useAppSelector } from '../state/hooks'
 import { Contracts } from '../lib/contracts'
-import { HiViewGridAdd } from 'react-icons/hi'
+import { Fade } from 'react-awesome-reveal'
 import { MdAddLocationAlt } from 'react-icons/md'
 
 interface IWatchListCard extends IPriceCard {
@@ -26,6 +26,7 @@ interface IWatchListCard extends IPriceCard {
 
 const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   type State =
+    | 'loadingFirst'
     | 'loading'
     | 'loaded'
     | 'badQuery'
@@ -34,7 +35,7 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
     | 'success'
   const [landId, setLandId] = useState('')
   const [reFetch, setRefetch] = useState(false)
-  const [state, setState] = useState<State>()
+  const [state, setState] = useState<State>('loadingFirst')
   const [lands, setLands] = useState<IWatchListCard[]>([])
   const [ids, setIds] = useState<number[]>([])
   const { address } = useAppSelector((state) => state.account)
@@ -134,7 +135,11 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
     }
 
     if (address) {
-      setState('loading')
+      if (state === 'noWallet') {
+        setState('loadingFirst')
+      } else if (state !== 'loadingFirst') {
+        setState('loading')
+      }
       getLands()
     } else {
       setLands([])
@@ -192,7 +197,7 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
             <span>
               {lands.length === 10
                 ? 'Limit Reached'
-                : state === 'loading'
+                : state === 'loading' || state === 'loadingFirst'
                 ? 'Fetching Data'
                 : state === 'loadingQuery'
                 ? 'Verifying Land'
@@ -212,17 +217,19 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
         )}
       </form>
       {/* Lands List */}
-      {lands.length > 0 && (
+      {lands.length > 0 && state !== 'loadingFirst' && (
         <ul className='w-full flex lg:flex-col flex-wrap justify-center gap-4'>
-          {lands.map((land) => (
-            <LandItem
-              remove={removeFromWatchList}
-              apiData={land.apiData}
-              predictions={land.predictions}
-              key={land.apiData?.tokenId}
-              currentPrice={land.currentPrice}
-            />
-          ))}
+          <Fade duration={550} className='w-full flex justify-center'>
+            {lands.map((land) => (
+              <LandItem
+                remove={removeFromWatchList}
+                apiData={land.apiData}
+                predictions={land.predictions}
+                key={land.apiData?.tokenId}
+                currentPrice={land.currentPrice}
+              />
+            ))}
+          </Fade>
         </ul>
       )}
     </section>
