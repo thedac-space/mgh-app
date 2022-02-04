@@ -17,7 +17,7 @@ const HorizontalPriceCard = ({
     <div
       className={`${showCard ? 'animate__fadeIn' : 'hidden'} ${
         processing && 'animate__fadeOut animate__fast'
-      } animate__animated flex gap-8 flex-col w-full ${verticalUnder}:flex-row justify-between `}
+      } animate__animated flex gap-6 flex-col w-full ${verticalUnder}:flex-row justify-between `}
     >
       {/* LEFT/TOP */}
       <ExternalAssetLink apiData={apiData} layout='responsive' />
