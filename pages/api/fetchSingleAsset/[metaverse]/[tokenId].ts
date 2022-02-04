@@ -18,8 +18,6 @@ export default async function handler(
       }
     )
     const data = await response.json()
-    console.log('data success: ', data.success)
-    // This return should be expanded as needed
     res.status(200).json(data)
   } catch (err) {
     res.status(400).json(err)
