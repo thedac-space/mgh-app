@@ -85,7 +85,7 @@ const LandItem = ({
               </nav>
               {/* Remove Button */}
               <button
-                className='relative hover:text-red-600 transition font-medium ease-in-out rounded-b-xl flex gap-1 text-sm text-white z-20'
+                className='relative transition font-medium  ease-in-out flex gap-1 text-sm text-red-600 z-20'
                 onClick={() => remove(Number(apiData.tokenId))}
               >
                 <span>Remove</span>
@@ -101,10 +101,10 @@ const LandItem = ({
         <PriceList predictions={prices} />
         {/* Current Listing Price */}
         <p
-          className={`text-md sm:text-right pt-2 sm:pt-0 ${
+          className={`text-md text-left sm:text-right pt-2 sm:pt-0  relative left-1 sm:left-0 ${
             !notListed
-              ? 'relative top-1.5 font-medium text-green-500'
-              : 'text-gray-400'
+              ? 'relative top-2 font-medium text-green-500'
+              : 'text-gray-400 sm:static'
           }`}
         >
           {notListed ? 'Not Listed' : `Listed: ${currentPrice} USDC`}
