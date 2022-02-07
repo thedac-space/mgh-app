@@ -73,8 +73,7 @@ export async function removeLandFromWatchList(
 export async function getValuationScores(landId: string) {
   let landRef, score;
   try {
-    landRef = doc(db, 'lands', landId)
-    console.log("land ref", landRef);
+    landRef = doc(db, 'lands', '45');
     score = await getDoc(landRef)
     return score.data()
   } catch (error) {
