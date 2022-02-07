@@ -65,3 +65,69 @@ export async function removeLandFromWatchList(
   const updatedData = await getUserInfo(walletAddress)
   return updatedData
 }
+
+/* Commentaries and valuation scores  */
+
+
+//get valuation scores
+export async function getValuationScores(landId: string) {
+  let landRef, score;
+  try {
+    landRef = doc(db, 'lands', landId)
+    console.log("land ref", landRef);
+    score = await getDoc(landRef)
+    return score.data()
+  } catch (error) {
+    console.log("forcing collection creation", error, landRef, score);
+    const createdScore = await createValuationScore(landId);
+    console.log("created score", createdScore);
+    return {
+      'liked-count': 0,
+      'disliked-count': 0
+    };
+  }
+  
+}
+
+// Creating a valuation score
+export async function createValuationScore(landId: string) {
+  const land = collection(db, 'lands')
+  await setDoc(doc(land, landId), {
+    'liked-count': 0,
+    'disliked-count': 0,
+    'commentaries': []
+  })
+}
+
+// Add commentary about valuation from user
+
+export async function addCommentaryToLand(
+  landId: number,
+  walletAddress: string,
+  commentary: string,
+  likeStatus: string
+) {
+
+  const landRef = doc(db, 'lands', ''+landId);
+  const land = await getDoc(landRef);
+  const landData = land.data();
+  const likedCount = (landData)? parseInt(landData['liked-count']) : 0;
+  const dislikedCount = (landData)? parseInt(landData['disliked-count']) : 0;
+
+  if(likeStatus) {
+    await updateDoc(landRef, {
+      'liked-count': '' + (likedCount + 1),
+      'disliked-count': ''+ dislikedCount,
+      'commentaries' : arrayUnion(commentary)
+    })
+  } else {
+    await updateDoc(landRef, {
+      'liked-count': '' + likedCount,
+      'disliked-count': '' + (dislikedCount + 1),
+      'commentaries' : arrayUnion(commentary)
+    })
+  }
+  
+  const updatedData = await getValuationScores(walletAddress)
+  return updatedData
+}
