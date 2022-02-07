@@ -37,7 +37,7 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   // Copying portfolio link for sharing
   const sharePortfolio = () => {
     navigator.clipboard.writeText(
-      'https://app.metagamehub.io/valuation?wallet=' + address
+      'https://app.metagamehub.io/portfolio?wallet=' + address
     )
     // Display Feedback Text
     setCopiedText(true)

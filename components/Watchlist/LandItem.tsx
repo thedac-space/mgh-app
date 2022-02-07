@@ -85,7 +85,7 @@ const LandItem = ({
               </nav>
               {/* Remove Button */}
               <button
-                className='relative transition font-medium  ease-in-out flex gap-1 text-sm text-red-600 z-20'
+                className='relative transition font-medium  ease-in-out flex gap-1 text-sm hover:text-red-500 text-red-600 z-20'
                 onClick={() => remove(Number(apiData.tokenId))}
               >
                 <span>Remove</span>
