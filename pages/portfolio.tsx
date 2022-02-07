@@ -20,7 +20,7 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   const [openModal, setOpenModal] = useState(false)
   const { query, push } = useRouter()
   // This contract address will have to be changed once Sandbox && OpenSea finish migration
-  const LAND_CONTRACT_ADDRESS = Contracts.LAND.ETHEREUM_MAINNET.oldAddress
+  const LAND_CONTRACT_ADDRESS = Contracts.LAND.ETHEREUM_MAINNET.newAddress
   const initialWorth = {
     ethPrediction: 0,
     usdPrediction: 0,
