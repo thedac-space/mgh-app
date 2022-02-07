@@ -5,8 +5,20 @@ module.exports = {
   important: true,
   theme: {
     extend: {
+      keyframes: {
+        'fade-in': {
+          '0%': {
+            opacity: '0',
+          },
+          '100%': {
+            opacity: '1',
+          },
+        }
+      },
       animation: {
         'spin-slow': 'spin 1.5s linear infinite',
+        'spin-slower': 'spin 2.5s linear infinite',
+        'fade-in-slow': 'fade-in 0.8s ease'
       },
       borderWidth: {
         '0.5': '0.5px'
@@ -17,6 +29,7 @@ module.exports = {
         '3/4': '75%',
       },
       inset: {
+        '005': '0.05rem',
         '15': '3.75rem',
         '18': '4.5rem',
         '22': '5.5rem',
@@ -43,7 +56,8 @@ module.exports = {
       width: {
         '18': '4.5rem',
         '30': '7.5rem',
-        '70': '17.5rem'
+        '70': '17.5rem',
+        '75vw': '75vw'
       },
       scale: {
         '55': '.55',
@@ -72,7 +86,8 @@ module.exports = {
         colorbottom: '0 0px 40px 0px rgba(250, 250, 250, 0.1)',
         button: '0 0px 8px 0px rgba(250, 250, 250, 0.4)',
         dark: '0 0px 40px 0px rgba(0, 0, 0, 0.1)',
-        white: "rgba(250, 250, 250, 0.25) 10px 10px 50px"
+        white: "rgba(250, 250, 250, 0.25) 10px 10px 50px",
+        subtleWhite: '0 1px 7px 0px rgba(250, 250, 250, 0.2)',
       },
       fontFamily: {
         // 'sans': ['Quicksand', 'sans-serif'],

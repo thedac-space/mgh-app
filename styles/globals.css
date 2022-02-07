@@ -170,7 +170,28 @@ h6 {
   @apply text-3xl xs:text-4xl  sm:text-5xl lg:text-6xl font-lighters py-2;
 }
 
+.hoverlift {
+  transition: all 0.3s ease;
+}
 
+.hoverlift:hover {
+  transform: translateY(-4px);
+}
+
+.gray-box {
+  @apply border-t border-l border-opacity-20 shadow-dark rounded-xl p-5 w-full bg-grey-dark bg-opacity-30;
+}
+
+.text-gradient {
+  @apply text-transparent bg-clip-text bg-gradient-to-br from-pink-500 via-blue-400 to-blue-500;
+}
+.reverse-text-gradient {
+  @apply text-transparent bg-clip-text bg-gradient-to-br from-blue-500 via-pink-500 to-pink-500;
+}
+
+.green-text-gradient {
+  @apply text-transparent bg-clip-text bg-gradient-to-b from-blue-500 via-green-400 to-green-500
+}
 .progress-ring__circle {
   stroke-dashoffset: 250;
   stroke-dasharray: 500 500;
@@ -198,6 +219,7 @@ h6 {
      left: 50%;
      transform: translate(-50%, -50%)
 }
+
 
 .like-button svg {
      cursor: pointer;
@@ -578,3 +600,4 @@ svg:hover {
   transform: translateY(-5px);
   transition: all 0.3s;
 }
+ 

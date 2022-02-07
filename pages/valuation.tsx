@@ -4,14 +4,16 @@ import Head from "next/head";
 import "animate.css"
 import { HiOutlineSearch } from "react-icons/hi"
 import { BsQuestionCircle } from "react-icons/bs"
-
+import Link from 'next/link'
 import PriceCard from "../components/PriceCard";
 import { Metaverse } from "../lib/enums";
 import { IAPIData, IPredictions } from "../lib/types";
 import FloorPriceTracker from "../components/Valuation/FloorPriceTracker";
 import SalesVolumeDaily from "../components/Valuation/SalesVolumeDaily";
 import ScoreBox from "../components/General/ScoreBox";
+import { MostUnderValuedLand } from "../components/Valuation";
 import CommentaryBox from "../components/General/CommentaryBox";
+
 
 
 const ValuationPage: NextPage = ({ prices }: any) => {
@@ -25,7 +27,6 @@ const ValuationPage: NextPage = ({ prices }: any) => {
     const [coordinatesError, setCoordinatesError] = useState("");
 
     const [metaverse, setMetaverse] = useState<Metaverse>(Metaverse.SANDBOX)
-
 
     const convertETHPrediction = (ethPrediction: number) => {
         const ethUSD = prices.ethereum.usd;
@@ -225,6 +226,29 @@ const ValuationPage: NextPage = ({ prices }: any) => {
                     <p className={`text-lg xl:text-xl font-medium text-gray-300`}>You can also buy the full dataset containing detailed raw data about The Sandbox LANDs NFTs on the <a href="https://market.oceanprotocol.com/asset/did:op:8331D69bF312604542D5f5f41D859dA27568B7cd" target="_blank" className="hover:underline text-pink-600">Ocean Marketplace</a>.</p>
                 </div>
 
+                {/* Tier 1 - Buttons */}
+                <div className="flex gap-5">
+
+                  {/* Tier 1 - Portfolio */}
+                  <Link href={'/portfolio'}>
+                    <button className='hoverlift text-white p-4 rounded-xl bg-gradient-to-br transition-all duration-300 from-pink-600 to-blue-500'>
+                      Explore your portfolio
+                    </button>
+                  </Link>
+
+                  {/* Tier 1 - Watchlist */}
+                  <Link href={'/watchlist'}>
+                    <button className='hoverlift text-white p-4 rounded-xl bg-gradient-to-br transition-all duration-300 from-pink-600 to-blue-500'>
+                      Go to Watchlist
+                    </button>
+                  </Link>
+            
+                </div>
+                
+                {/* Tier 1 - Most Undervalued Land */}
+                <MostUnderValuedLand verticalUnder="sm" predictions={undefined} processing={false} showCard={true} apiData={undefined} />
+
+                <FloorPriceTracker price={floorPrice} priceHistory={floorPriceHistory} nftID={1}/>
                 
                 <div className="flex flex-col items-start shadow-blck rounded-xl py-3 px-4 w-full bg-grey-dark bg-opacity-20 text-left">
                     <p className={`text-xs sm:text-sm text-gray-400`}>The MGH DAO does not provide, personalized investment recommendations or advisory services. Any information provided through the land evaluation tool and others is not, and should not be, considered as advice of any kind and is for information purposes only. That land is “valuated” does not mean, that it is in any way approved, checked audited, and/or has a real or correct value. In no event shall the MGH DAO be liable for any special, indirect, or consequential damages, or any other damages of any kind, including but not limited to loss of use, loss of profits, or loss of data, arising out of or in any way connected with the use of or inability to use the Service, including without limitation any damages resulting from reliance by you on any information obtained from using the Service.</p>
