@@ -9,7 +9,7 @@ export interface ICoinPrices {
 export interface IPriceCard {
   showCard?: boolean
   processing?: boolean
-  apiData: IAPIData
-  predictions: IPredictions
+  apiData?: IAPIData
+  predictions?: IPredictions
   verticalUnder?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 }

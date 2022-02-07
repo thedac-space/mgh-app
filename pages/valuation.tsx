@@ -176,8 +176,8 @@ const ValuationPage: NextPage = ({ prices }: any) => {
                             </div>
                         </div>
 
-                        <div className="flex flex-col items-start border-t border-l border-opacity-20 shadow-dark rounded-xl p-5 w-full bg-grey-dark bg-opacity-30 text-left">
-                            <ScoreBox showCard={showCard}></ScoreBox>
+                        <div className={`${showCard ? "animate__fadeIn" : "hidden"} flex flex-col items-start border-t border-l border-opacity-20 shadow-dark rounded-xl p-5 w-full bg-grey-dark bg-opacity-30 text-left`} >
+                            <ScoreBox showCard={showCard} landId={idProcessing}></ScoreBox>
                         </div>
 
                         <div className="flex flex-col items-start border-t border-l border-opacity-20 shadow-dark rounded-xl p-5 w-full bg-grey-dark bg-opacity-30 text-left">
@@ -247,8 +247,6 @@ const ValuationPage: NextPage = ({ prices }: any) => {
                 
                 {/* Tier 1 - Most Undervalued Land */}
                 <MostUnderValuedLand verticalUnder="sm" predictions={undefined} processing={false} showCard={true} apiData={undefined} />
-
-                <FloorPriceTracker price={floorPrice} priceHistory={floorPriceHistory} nftID={1}/>
                 
                 <div className="flex flex-col items-start shadow-blck rounded-xl py-3 px-4 w-full bg-grey-dark bg-opacity-20 text-left">
                     <p className={`text-xs sm:text-sm text-gray-400`}>The MGH DAO does not provide, personalized investment recommendations or advisory services. Any information provided through the land evaluation tool and others is not, and should not be, considered as advice of any kind and is for information purposes only. That land is “valuated” does not mean, that it is in any way approved, checked audited, and/or has a real or correct value. In no event shall the MGH DAO be liable for any special, indirect, or consequential damages, or any other damages of any kind, including but not limited to loss of use, loss of profits, or loss of data, arising out of or in any way connected with the use of or inability to use the Service, including without limitation any damages resulting from reliance by you on any information obtained from using the Service.</p>
