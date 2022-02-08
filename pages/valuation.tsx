@@ -25,6 +25,7 @@ const ValuationPage: NextPage = ({ prices }: any) => {
     const [showCard, setShowCard] = useState(false);
     const [idError, setIdError] = useState("");
     const [coordinatesError, setCoordinatesError] = useState("");
+    const [tokenId, setTokenId ] = useState("0");
 
     const [metaverse, setMetaverse] = useState<Metaverse>(Metaverse.SANDBOX)
 
@@ -177,7 +178,7 @@ const ValuationPage: NextPage = ({ prices }: any) => {
                         </div>
 
                         <div className={`${showCard ? "animate__fadeIn" : "hidden"} flex flex-col items-start border-t border-l border-opacity-20 shadow-dark rounded-xl p-5 w-full bg-grey-dark bg-opacity-30 text-left`} >
-                            <ScoreBox showCard={showCard} landId={idProcessing}></ScoreBox>
+                            <ScoreBox showCard={showCard} landId={tokenId}></ScoreBox>
                         </div>
 
                         <div className="flex flex-col items-start border-t border-l border-opacity-20 shadow-dark rounded-xl p-5 w-full bg-grey-dark bg-opacity-30 text-left">
@@ -187,7 +188,7 @@ const ValuationPage: NextPage = ({ prices }: any) => {
                                 <p className="absolute -top-7 -left-6 xs:left-0 pl-2 px-2 py-1 rounded-lg bg-black bg-opacity-10 backdrop-filter backdrop-blur font-medium text-xs text-gray-400 hidden peer-hover:block w-70">Find LAND on Opensea &gt; Details &gt; Token ID</p>
                             </div>
                             <form onSubmit={handleIDSubmit} onInput={() => { setIdError(""); setCoordinatesError("") }} className="relative flex items-stretch justify-between space-x-3 lg:space-x-5 w-full rounded-xl max-w-sm">
-                                <input required id="tokenID" type="text" placeholder="e.g. 72792" className={`bg-transparent w-full text-white font-medium p-4 focus:outline-none border ${idError ? "border-red-500 border-opacity-100" : "border-opacity-40 "} hover:border-opacity-100 focus:border-opacity-100 transition duration-300 ease-in-out rounded-xl placeholder-white placeholder-opacity-75`} />
+                                <input required id="tokenID" value={tokenId} onChange={(e) => setTokenId(e.target.value)} type="text" placeholder="e.g. 72792" className={`bg-transparent w-full text-white font-medium p-4 focus:outline-none border ${idError ? "border-red-500 border-opacity-100" : "border-opacity-40 "} hover:border-opacity-100 focus:border-opacity-100 transition duration-300 ease-in-out rounded-xl placeholder-white placeholder-opacity-75`} />
 
                                 <button type="submit" className="flex flex-none items-center justify-around bg-gray-200 hover:bg-white transition ease-in-out duration-500 rounded-xl m-1 ml-2 lg:ml-1 shadow-dark hover:shadow-button w-12 xs:w-16 sm:w-12 lg:w-28">
                                     <svg className={`${idProcessing ? "block" : "hidden"} animate-spin-slow h-6 w-6 border-4 border-t-gray-300 border-l-gray-300 border-gray-800 rounded-full " viewBox="0 0 24 24`} />
@@ -215,7 +216,7 @@ const ValuationPage: NextPage = ({ prices }: any) => {
 
                     <div className="flex flex-col items-start border-t border-l border-opacity-20 shadow-dark rounded-xl p-5 w-full max-w-full sm:max-w-sm bg-grey-dark bg-opacity-30 text-left">
                         <PriceCard showCard={showCard} processing={idProcessing || coordinatesProcessing} apiData={apiData} predictions={predictions} />
-                        <CommentaryBox showCard={showCard}></CommentaryBox>
+                        <CommentaryBox showCard={showCard} landId={tokenId}></CommentaryBox>
                     </div>
 
                 </div>

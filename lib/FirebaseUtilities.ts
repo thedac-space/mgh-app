@@ -73,18 +73,12 @@ export async function removeLandFromWatchList(
 export async function getValuationScores(landId: string) {
   let landRef, score;
   try {
-    landRef = doc(db, 'lands', landId)
-    console.log("land ref", landRef);
+    landRef = doc(db, 'lands', landId);
     score = await getDoc(landRef)
     return score.data()
   } catch (error) {
-    console.log("forcing collection creation", error, landRef, score);
     const createdScore = await createValuationScore(landId);
-    console.log("created score", createdScore);
-    return {
-      'liked-count': 0,
-      'disliked-count': 0
-    };
+    return createdScore;
   }
   
 }
@@ -105,25 +99,25 @@ export async function addCommentaryToLand(
   landId: number,
   walletAddress: string,
   commentary: string,
-  likeStatus: string
+  likeStatus: boolean
 ) {
 
   const landRef = doc(db, 'lands', ''+landId);
   const land = await getDoc(landRef);
   const landData = land.data();
-  const likedCount = (landData)? parseInt(landData['liked-count']) : 0;
-  const dislikedCount = (landData)? parseInt(landData['disliked-count']) : 0;
+  const likedCount = (landData)? landData['liked-count'] : 0;
+  const dislikedCount = (landData)? landData['disliked-count'] : 0;
 
   if(likeStatus) {
     await updateDoc(landRef, {
-      'liked-count': '' + (likedCount + 1),
-      'disliked-count': ''+ dislikedCount,
+      'liked-count': likedCount + 1,
+      'disliked-count': dislikedCount,
       'commentaries' : arrayUnion(commentary)
     })
   } else {
     await updateDoc(landRef, {
-      'liked-count': '' + likedCount,
-      'disliked-count': '' + (dislikedCount + 1),
+      'liked-count': likedCount,
+      'disliked-count': dislikedCount + 1,
       'commentaries' : arrayUnion(commentary)
     })
   }
