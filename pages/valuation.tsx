@@ -216,7 +216,7 @@ const ValuationPage: NextPage = ({ prices }: any) => {
 
                     <div className="flex flex-col items-start border-t border-l border-opacity-20 shadow-dark rounded-xl p-5 w-full max-w-full sm:max-w-sm bg-grey-dark bg-opacity-30 text-left">
                         <PriceCard showCard={showCard} processing={idProcessing || coordinatesProcessing} apiData={apiData} predictions={predictions} />
-                        <CommentaryBox showCard={showCard}></CommentaryBox>
+                        <CommentaryBox showCard={showCard} landId={tokenId}></CommentaryBox>
                     </div>
 
                 </div>

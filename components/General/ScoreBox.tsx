@@ -22,9 +22,8 @@ class ScoreBox extends React.Component<ScoreBoxProps, ScoreBoxState> {
         }    
     }
 
-    async componentDidUpdate(prevProps:any) {
+    async componentDidUpdate() {
         this.scores = await getValuationScores(this.props.landId);
-        console.log("got scores", this.scores);
     }
 
     render() { 

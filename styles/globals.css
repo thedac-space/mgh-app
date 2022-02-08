@@ -591,6 +591,7 @@ h6 {
   -webkit-text-fill-color: transparent;
   text-shadow: 0px 10px 37px rgba(255, 94, 16, 0.7);
 }
+
 .glass-btn:hover {
   background-color: #f5f5f5;
   transform: translateY(-5px);
