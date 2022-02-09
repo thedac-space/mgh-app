@@ -12,10 +12,10 @@ export const SocialMediaOptions = (
   const mghLink = `https://app.metagamehub.io/valuation`
   // Text for Portfolio
   const portfolioText =
-    'Checkout%20my%20LANDS%20portfolio%20from%20@MGH_DAO!%0A%0A&url=https://app.metagamehub.io/portfolio?wallet='
+    'Here%20is%20my%20Metaverse%20collection!%20%23MyNFTs%20%23MGHDAO%0A%0A&url=https://app.metagamehub.io/portfolio?wallet='
 
   // Text for Card Valuation
-  const valuationText = `Check%20out%20this%20LAND%20valuation%20from%20@MGH_DAO!%0A%0A**************%0A${predictions?.ethPrediction.toFixed(
+  const valuationText = `Check%20out%20this%20LAND%20valuation%20in%20the%20Metaverse!%20%23MyNFTs%20%23MGHDAO%0A%0A**************%0A${predictions?.ethPrediction.toFixed(
     2
   )}%20ETH%0A${predictions?.usdPrediction.toFixed(
     2
@@ -23,10 +23,10 @@ export const SocialMediaOptions = (
 
   // Whatsapp Text for Portfolio
   const whatsappPortfolioText =
-    'Checkout%20my%20LANDS%20portfolio%20from%20@MGH_DAO!%0A%0Ahttps://app.metagamehub.io/portfolio?wallet='
+    'Here%20is%20my%20Metaverse%20collection!%20%23MyNFTs%20%23MGHDAO%0A%0Ahttps://app.metagamehub.io/portfolio?wallet='
 
   // Whatsapp Text for Card Valuation
-  const whatsappValuationText = `Check%20out%20this%20LAND%20valuation%20from%20@MGH_DAO!%0A%0A**************%0A${predictions?.ethPrediction.toFixed(
+  const whatsappValuationText = `Check%20out%20this%20LAND%20valuation%20in%20the%20Metaverse!%20%23MyNFTs%20%23MGHDAO%0A%0A**************%0A${predictions?.ethPrediction.toFixed(
     2
   )}%20ETH%0A${predictions?.usdPrediction.toFixed(
     2
