@@ -54,6 +54,7 @@ export interface IAPIData {
         image_url: string;
     };
     tokenId: number;
+    prices?: { predicted_price: number }
 }
 
 export interface IPredictions {
