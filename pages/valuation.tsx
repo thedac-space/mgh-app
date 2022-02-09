@@ -98,7 +98,6 @@ const ValuationPage: NextPage = ({ prices }: any) => {
 
     const handleIDSubmit = async (ev: any) => {
         ev.preventDefault();
-
         const tokenID = (document.getElementById('tokenID') as HTMLInputElement).value
 
         setIdProcessing(true);

@@ -7,6 +7,7 @@ import {
   ExternalLink,
   HorizontalPriceCard,
   PriceList,
+  SharePopup,
 } from '../components/General'
 import { IPredictions } from '../lib/types'
 import { useAppSelector } from '../state/hooks'
@@ -15,6 +16,7 @@ import { useRouter } from 'next/router'
 import { ellipseAddress } from '../lib/utilities'
 import { Loader, WalletModal } from '../components'
 import { Fade } from 'react-awesome-reveal'
+import { useVisible } from '../lib/hooks'
 
 const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   const [openModal, setOpenModal] = useState(false)
@@ -28,22 +30,33 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   }
   const { address } = useAppSelector((state) => state.account)
   const [copiedText, setCopiedText] = useState<Boolean>(false)
+
+  const {
+    ref,
+    isVisible: showPopup,
+    setIsVisible: setShowPopup,
+  } = useVisible(false)
+
   const [totalWorth, setTotalWorth] = useState<IPredictions>(initialWorth)
   const [alreadyFetched, setAlreadyFetched] = useState(false)
   const [formattedAssets, setFormattedAssets] = useState<IPriceCard[]>([])
   const [loading, setLoading] = useState(true)
   const externalWallet = query.wallet
 
-  // Copying portfolio link for sharing
-  const sharePortfolio = () => {
-    navigator.clipboard.writeText(
-      'https://app.metagamehub.io/portfolio?wallet=' + address
-    )
-    // Display Feedback Text
-    setCopiedText(true)
-    setTimeout(() => {
-      setCopiedText(false)
-    }, 1100)
+  const onPopupSelect = (copy: boolean) => {
+    if (copy) {
+      navigator.clipboard.writeText(
+        'https://app.metagamehub.io/portfolio?wallet=' + address
+      )
+      // Display Feedback Text
+      setShowPopup(!showPopup)
+      setCopiedText(true)
+      setTimeout(() => {
+        setCopiedText(false)
+      }, 1100)
+    } else {
+      setShowPopup(!showPopup)
+    }
   }
 
   /* When coming from a shared link. We can see our own portfolio 
@@ -53,7 +66,7 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
     push('/portfolio')
   }
   const onClick = () => {
-    externalWallet || !address ? seeOwnPortfolio() : sharePortfolio()
+    externalWallet || !address ? seeOwnPortfolio() : setShowPopup(true)
   }
 
   // Resetting state when Wallet Changes
@@ -155,7 +168,7 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
           {/* Total Lands and Total Worth Container */}
           <div className='flex flex-col sm:flex-row gap-4 md:gap-12 mb-8 sm:mb-12'>
             {/* Total Lands */}
-            <div className='flex flex-col justify-between gap-4 sm:gap-0 text-center transition-all gray-box'>
+            <div className='flex flex-col justify-between gap-4 sm:gap-0 text-center transition-all gray-box relative'>
               <h3 className='text-xl md:text-3xl xl:text-4xl'>
                 Total LANDS Owned
               </h3>
@@ -178,6 +191,17 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                       ? 'Link Copied to Clipboard!'
                       : 'Share this Portfolio'}
                   </button>
+                  {/* Had to add this div to have a non-dissapearing ref */}
+                  <div className='contents' ref={ref}>
+                    {showPopup && (
+                      <Fade className='z-10 absolute -bottom-3 left-1/2 -translate-x-2/4'>
+                        <SharePopup
+                          sharing='portfolio'
+                          onPopupSelect={onPopupSelect}
+                        />
+                      </Fade>
+                    )}
+                  </div>
                 </>
               )}
             </div>
