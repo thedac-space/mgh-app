@@ -13,14 +13,12 @@ const useVisible = (initialIsVisible: boolean) => {
   }
 
   const handleClickOutside = (event: Event) => {
-    console.log(ref)
     if (ref.current && !ref.current.contains(event.target as Node)) {
       setIsVisible(false)
     }
   }
 
   useEffect(() => {
-    console.log('use', ref)
     document.addEventListener('keydown', handleHideDropdown, true)
     document.addEventListener('click', handleClickOutside, true)
     return () => {

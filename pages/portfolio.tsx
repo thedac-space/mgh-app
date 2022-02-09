@@ -17,16 +17,23 @@ import { ellipseAddress } from '../lib/utilities'
 import { Loader, WalletModal } from '../components'
 import { Fade } from 'react-awesome-reveal'
 import { useVisible } from '../lib/hooks'
+import { Metaverse } from '../lib/enums'
+
+type ContractsKey = 'sandbox' | 'decentraland'
 
 const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   const [openModal, setOpenModal] = useState(false)
   const { query, push } = useRouter()
-  // This contract address will have to be changed once Sandbox && OpenSea finish migration
-  const LAND_CONTRACT_ADDRESS = Contracts.LAND.ETHEREUM_MAINNET.newAddress
+
+  const contracts = {
+    // LAND contract address might have to be changed once Sandbox && OpenSea finish migration
+    sandbox: Contracts.LAND.ETHEREUM_MAINNET.newAddress,
+    decentraland: Contracts.PARCEL.ETHEREUM_MAINNET.address,
+  }
+
   const initialWorth = {
     ethPrediction: 0,
     usdPrediction: 0,
-    sandPrediction: 0,
   }
   const { address } = useAppSelector((state) => state.account)
   const [copiedText, setCopiedText] = useState<Boolean>(false)
@@ -92,41 +99,45 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 
       // OpenSea API Call
       try {
-        const res = await fetch('/api/fetchAssets', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            wallet: (externalWallet as string) ?? address,
-            assetContract: LAND_CONTRACT_ADDRESS,
-          }),
-        })
-        const rawAssets = await res.json()
-        // Formatting Assets to fit into the Cards
-        rawAssets &&
-          (await Promise.all(
-            rawAssets.assets.map(async (asset: any) => {
-              const formattedAsset = await formatLandAsset(asset, prices)
-              setFormattedAssets((previousState) => [
-                ...previousState,
-                formattedAsset,
-              ])
-              // Adding the worth of each asset into the totalWorth
-              setTotalWorth((previousWorth) => ({
-                ethPrediction:
-                  previousWorth.ethPrediction +
-                  formattedAsset.predictions!.ethPrediction,
-                usdPrediction:
-                  previousWorth.usdPrediction +
-                  formattedAsset.predictions!.usdPrediction,
-                sandPrediction:
-                  previousWorth.sandPrediction! +
-                  formattedAsset.predictions!.sandPrediction!,
-              }))
-              // }
-            })
-          ))
+        const options = Object.keys(contracts) as ContractsKey[]
+        for (const option in options) {
+          const res = await fetch('/api/fetchAssets', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              wallet: (externalWallet as string) ?? address,
+              assetContract: contracts[options[option]],
+            }),
+          })
+          const rawAssets = await res.json()
+          // Formatting Assets to fit into the Cards
+          rawAssets &&
+            (await Promise.all(
+              rawAssets.assets.map(async (asset: any) => {
+                const formattedAsset = await formatLandAsset(
+                  asset.token_id,
+                  prices,
+                  options[option] as Metaverse
+                )
+
+                setFormattedAssets((previousState) => [
+                  ...previousState,
+                  formattedAsset,
+                ])
+                // Adding the worth of each asset into the totalWorth
+                setTotalWorth((previousWorth) => ({
+                  ethPrediction:
+                    previousWorth.ethPrediction +
+                    formattedAsset.predictions!.ethPrediction,
+                  usdPrediction:
+                    previousWorth.usdPrediction +
+                    formattedAsset.predictions!.usdPrediction,
+                }))
+              })
+            ))
+        }
         setLoading(false)
       } catch (err) {
         console.log(err)
@@ -181,7 +192,7 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                   </p>
                   <button
                     onClick={onClick}
-                    className='hoverlift animate-fade-in-slow text-white p-4 rounded-xl bg-gradient-to-br transition-all duration-300 from-pink-600 to-blue-500'
+                    className='min-w-fit w-1/2 mx-auto hoverlift animate-fade-in-slow text-white py-3 px-4 rounded-xl bg-gradient-to-br transition-all duration-300 from-pink-600 to-blue-500'
                   >
                     {/* Changing button if we come from a shared link 
                       if not then we change if we copied our own link to share to others */}

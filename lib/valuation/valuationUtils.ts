@@ -1,4 +1,5 @@
 import { Metaverse } from '../enums'
+import { IAPIData } from '../types'
 import { ellipseAddress } from '../utilities'
 import { ICoinPrices, IPriceCard } from './valuationTypes'
 
@@ -24,7 +25,7 @@ export const convertMANAPrediction = (
   return { ethPrediction, usdPrediction, manaPrediction }
 }
 
-// Get Price Predictions for Single Land Asset
+// Get Data for Single Land Asset
 export const getLandData = async (tokenID: number, metaverse: Metaverse) => {
   try {
     const predictionRes = await fetch('/api/getLandData', {
@@ -46,27 +47,27 @@ export const getLandData = async (tokenID: number, metaverse: Metaverse) => {
 
 /* Formatting a Land Asset received from OpenSea into our Cards.
  The asset: any comes from the OpenSea API*/
-export const formatLandAsset = async (asset: any, coinPrices: ICoinPrices) => {
+export const formatLandAsset = async (
+  assetId: any,
+  coinPrices: ICoinPrices,
+  metaverse: Metaverse
+) => {
+  const apiData: IAPIData = await getLandData(assetId, metaverse)
   const formattedAsset = {
-    apiData: {
-      metaverse: Metaverse.SANDBOX,
-      name: asset.name,
-      opensea_link: asset.permalink,
-      external_link: asset.external_link,
-      images: { image_url: asset.image_original_url },
-      tokenId: asset.token_id,
-    },
+    apiData: apiData,
     showCard: true,
     processing: false,
   }
-  const predictions = await getLandData(
-    formattedAsset.apiData.tokenId,
-    formattedAsset.apiData.metaverse
-  )
 
-  Object.defineProperty(formattedAsset, 'predictions', {
-    value: convertETHPrediction(coinPrices, predictions.prices.predicted_price),
-  })
+  if (metaverse === 'sandbox') {
+    Object.defineProperty(formattedAsset, 'predictions', {
+      value: convertETHPrediction(coinPrices, apiData.prices!.predicted_price),
+    })
+  } else if (metaverse === 'decentraland') {
+    Object.defineProperty(formattedAsset, 'predictions', {
+      value: convertMANAPrediction(coinPrices, apiData.prices!.predicted_price),
+    })
+  }
   return formattedAsset as IPriceCard
 }
 
