@@ -171,11 +171,11 @@ h6 {
 }
 
 .hoverlift {
-  transition: all 0.3s ease;
+  transition: all 0.3s ease !important;
 }
 
 .hoverlift:hover {
-  transform: translateY(-4px);
+  transform: translateY(-4px) !important;
 }
 
 .gray-box {

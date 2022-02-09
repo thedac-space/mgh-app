@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
-import { ExternalLink, OptimizedImage, PriceList } from '../General'
+import { ExternalLink, OptimizedImage, PriceList, SharePopup } from '../General'
 import { IPredictions } from '../../lib/types'
-import { FiExternalLink } from 'react-icons/fi'
+import { FiExternalLink, FiShare2 } from 'react-icons/fi'
 import { IPriceCard } from '../../lib/valuation/valuationTypes'
 import React from 'react'
 import { FaTrash } from 'react-icons/fa'
+import { Fade } from 'react-awesome-reveal'
+import { useVisible } from '../../lib/hooks'
 interface IWatchListCard extends IPriceCard {
   currentPrice?: number
   remove: (arg: number) => void
@@ -19,20 +21,24 @@ const LandItem = ({
   const [expanded, setExpanded] = useState(mobile)
   const imgSize = mobile ? 170 : expanded ? 170 : 70
   const [prices, setPrices] = useState<Partial<IPredictions>>({
-    usdPrediction: predictions.usdPrediction,
+    usdPrediction: predictions?.usdPrediction,
   })
 
+  const { ref, isVisible: showPopup, setIsVisible } = useVisible(false)
+  // Mobile view is always expanded
   const handleExpanded = () => {
     window.innerWidth < 640 ? setExpanded(true) : setExpanded(!expanded)
   }
   const notListed = isNaN(currentPrice!)
 
   useEffect(() => {
+    // Changing the ammount of prices shown depending of expanded state
     if (expanded) {
-      setPrices(predictions)
+      setPrices(predictions!)
     } else {
-      setPrices({ usdPrediction: predictions.usdPrediction })
+      setPrices({ usdPrediction: predictions?.usdPrediction })
     }
+    // Img sizes
     const setSizes = () => {
       const mobile = window.innerWidth < 640
       const between = window.innerWidth < 700
@@ -59,7 +65,7 @@ const LandItem = ({
           <OptimizedImage
             height={imgSize}
             width={imgSize}
-            src={apiData.images.image_url}
+            src={apiData!.images.image_url}
             rounded='lg'
           />
           <FiExternalLink className='absolute top-0 right-0 text-white text-xs backdrop-filter backdrop-blur-sm rounded-xl w-6 h-6 p-1' />
@@ -71,22 +77,29 @@ const LandItem = ({
               {apiData?.name}
             </h3>
             {/* <p className='sm:text-2xl'>{apiData?.name}</p> */}
-            <p className='text-gray-400'>ID: {apiData?.tokenId}</p>
+            <p className='text-gray-400'>
+              ID: {apiData?.tokenId}{' '}
+              <FiShare2
+                title='Share Valuation'
+                onClick={() => setIsVisible(true)}
+                className=' hidden sm:inline-block relative bottom-005  h-4 w-4 z-50 text-gray-200 hover:text-blue-400 transition ease-in-out duration-300 cursor-pointer'
+              />{' '}
+            </p>
           </div>
           {expanded && (
             <>
               {/* External Links */}
               <nav className='flex flex-col gap-2'>
-                <ExternalLink href={apiData.opensea_link} text='OpenSea' />
+                <ExternalLink href={apiData!.opensea_link} text='OpenSea' />
                 <ExternalLink
-                  href={apiData.external_link}
-                  text={apiData.metaverse}
+                  href={apiData!.external_link}
+                  text={apiData!.metaverse}
                 />
               </nav>
               {/* Remove Button */}
               <button
                 className='relative transition font-medium  ease-in-out flex gap-1 text-sm hover:text-red-500 text-red-600 z-20'
-                onClick={() => remove(Number(apiData.tokenId))}
+                onClick={() => remove(Number(apiData!.tokenId))}
               >
                 <span>Remove</span>
                 <FaTrash className='relative -bottom-005' />
@@ -109,6 +122,24 @@ const LandItem = ({
         >
           {notListed ? 'Not Listed' : `Listed: ${currentPrice} USDC`}
         </p>
+      </div>
+
+      <FiShare2
+        title='Share Valuation'
+        onClick={() => setIsVisible(true)}
+        className='absolute sm:hidden h-5 w-5 z-30 bottom-4 right-4 text-gray-200 hover:text-blue-400 transition ease-in-out duration-300 cursor-pointer'
+      />
+      <div className='contents' ref={ref}>
+        {showPopup && (
+          <Fade className='z-30 absolute -bottom-3 left-1/2 -translate-x-2/4'>
+            <SharePopup
+              apiData={apiData}
+              sharing='valuation'
+              predictions={predictions}
+              onPopupSelect={() => setIsVisible(false)}
+            />
+          </Fade>
+        )}
       </div>
     </li>
   )
