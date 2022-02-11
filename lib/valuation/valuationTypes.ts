@@ -13,3 +13,9 @@ export interface IPriceCard {
   predictions?: IPredictions
   verticalUnder?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 }
+
+export type LandsKey = 'sandbox' | 'decentraland'
+
+export interface IWatchListCard extends IPriceCard {
+  currentPrice?: number
+}

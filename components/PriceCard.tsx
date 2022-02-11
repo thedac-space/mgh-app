@@ -16,7 +16,7 @@ const PriceCard = ({ showCard, processing, apiData, predictions }: PriceCardProp
         return (<></>)
     }
 
-    const handleTokenID = (tokenID: number) => {
+    const handleTokenID = (tokenID: string) => {
         if (tokenID.toString().length > 6 ) {
             return ellipseAddress(tokenID.toString(), 3)
         } else {

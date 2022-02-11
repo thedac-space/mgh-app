@@ -7,9 +7,11 @@ import React from 'react'
 import { FaTrash } from 'react-icons/fa'
 import { Fade } from 'react-awesome-reveal'
 import { useVisible } from '../../lib/hooks'
+import { Metaverse } from '../../lib/enums'
+import { handleTokenID } from '../../lib/valuation/valuationUtils'
 interface IWatchListCard extends IPriceCard {
   currentPrice?: number
-  remove: (arg: number) => void
+  remove: (landId: string, metaverse: Metaverse) => Promise<void>
 }
 const LandItem = ({
   apiData,
@@ -24,6 +26,7 @@ const LandItem = ({
     usdPrediction: predictions?.usdPrediction,
   })
 
+  // Hook for Popup
   const { ref, isVisible: showPopup, setIsVisible } = useVisible(false)
   // Mobile view is always expanded
   const handleExpanded = () => {
@@ -78,7 +81,7 @@ const LandItem = ({
             </h3>
             {/* <p className='sm:text-2xl'>{apiData?.name}</p> */}
             <p className='text-gray-400'>
-              ID: {apiData?.tokenId}{' '}
+              ID: {handleTokenID(apiData!.tokenId)}{' '}
               <FiShare2
                 title='Share Valuation'
                 onClick={() => setIsVisible(true)}
@@ -99,7 +102,7 @@ const LandItem = ({
               {/* Remove Button */}
               <button
                 className='relative transition font-medium  ease-in-out flex gap-1 text-sm hover:text-red-500 text-red-600 z-20'
-                onClick={() => remove(Number(apiData!.tokenId))}
+                onClick={() => remove(apiData!.tokenId, apiData!.metaverse)}
               >
                 <span>Remove</span>
                 <FaTrash className='relative -bottom-005' />
@@ -124,11 +127,13 @@ const LandItem = ({
         </p>
       </div>
 
+      {/* Share Button */}
       <FiShare2
         title='Share Valuation'
         onClick={() => setIsVisible(true)}
         className='absolute sm:hidden h-5 w-5 z-30 bottom-4 right-4 text-gray-200 hover:text-blue-400 transition ease-in-out duration-300 cursor-pointer'
       />
+      {/* Share Popup */}
       <div className='contents' ref={ref}>
         {showPopup && (
           <Fade className='z-30 absolute -bottom-3 left-1/2 -translate-x-2/4'>

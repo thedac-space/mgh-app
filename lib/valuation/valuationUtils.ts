@@ -26,7 +26,11 @@ export const convertMANAPrediction = (
 }
 
 // Get Data for Single Land Asset
-export const getLandData = async (tokenID: number, metaverse: Metaverse) => {
+export const getLandData = async (
+  metaverse: Metaverse,
+  tokenID?: string,
+  coordinates?: { X: string; Y: string }
+) => {
   try {
     const predictionRes = await fetch('/api/getLandData', {
       method: 'POST',
@@ -35,6 +39,8 @@ export const getLandData = async (tokenID: number, metaverse: Metaverse) => {
       },
       body: JSON.stringify({
         tokenID: tokenID,
+        X: coordinates?.X,
+        Y: coordinates?.Y,
         metaverse: metaverse,
       }),
     })
@@ -52,7 +58,7 @@ export const formatLandAsset = async (
   coinPrices: ICoinPrices,
   metaverse: Metaverse
 ) => {
-  const apiData: IAPIData = await getLandData(assetId, metaverse)
+  const apiData: IAPIData = await getLandData(metaverse, assetId)
   const formattedAsset = {
     apiData: apiData,
     showCard: true,
@@ -72,7 +78,7 @@ export const formatLandAsset = async (
 }
 
 // Formatting Token Id if its too long
-export const handleTokenID = (tokenID: number) => {
+export const handleTokenID = (tokenID: string) => {
   if (tokenID.toString().length > 6) {
     return ellipseAddress(tokenID.toString(), 3)
   } else {
