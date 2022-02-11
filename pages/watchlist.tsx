@@ -229,7 +229,7 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
             landOptions[key].landList.length > 0 && (
               <article key={key} className='mb-8 w-full'>
                 <Fade>
-                  <h3 className='text-center gray-box md:text-left w-fit green-text-gradient mb-4'>
+                  <h3 className='gray-box xs:w-[22rem] sm:w-fit mx-auto  sm:ml-0 green-text-gradient mb-4'>
                     {key.toUpperCase()}
                   </h3>
                 </Fade>
