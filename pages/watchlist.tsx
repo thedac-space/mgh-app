@@ -1,4 +1,5 @@
 import { NextPage } from 'next'
+import Head from 'next/head'
 import { AddLandForm, LandList } from '../components/Watchlist'
 import { useCallback, useEffect, useState } from 'react'
 import {
@@ -209,38 +210,47 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   }, [reFetch, address])
 
   return (
-    <section className='pt-12 xl:pt-0 animate-fade-in-slow flex flex-col items-center max-w-3xl text-white w-full'>
-      {/* Title */}
-      <div className='sm:gray-box mb-8'>
-        <h1 className='text-center green-text-gradient'>Your Watchlist</h1>
-      </div>
-      {/* Add Land Form */}
-      <AddLandForm
-        landKeys={landKeys}
-        ids={ids}
-        state={state}
-        addToWatchList={addToWatchList}
-      />
-      {/* Lands List */}
-      {ids.length > 0 &&
-        state !== 'loadingFirst' &&
-        landKeys.map(
-          (key) =>
-            landOptions[key].landList.length > 0 && (
-              <article key={key} className='mb-8 w-full'>
-                <Fade>
-                  <h3 className='text-center gray-box md:text-left w-fit green-text-gradient mb-4'>
-                    {key.toUpperCase()}
-                  </h3>
-                </Fade>
-                <LandList
-                  lands={landOptions[key].landList}
-                  removeFromWatchList={removeFromWatchList}
-                />
-              </article>
-            )
-        )}
-    </section>
+    <>
+      <Head>
+        <title>MGH - Watchlist</title>
+        <meta
+          name='description'
+          content='Governance of metaverse related items, fair valuation and minting of NFT backed tokens and provision of metaverse market data.'
+        />
+      </Head>
+      <section className='pt-12 xl:pt-0 animate-fade-in-slow flex flex-col items-center max-w-3xl text-white w-full'>
+        {/* Title */}
+        <div className='sm:gray-box mb-8'>
+          <h1 className='text-center green-text-gradient'>Your Watchlist</h1>
+        </div>
+        {/* Add Land Form */}
+        <AddLandForm
+          landKeys={landKeys}
+          ids={ids}
+          state={state}
+          addToWatchList={addToWatchList}
+        />
+        {/* Lands List */}
+        {ids.length > 0 &&
+          state !== 'loadingFirst' &&
+          landKeys.map(
+            (key) =>
+              landOptions[key].landList.length > 0 && (
+                <article key={key} className='mb-8 w-full'>
+                  <Fade>
+                    <h3 className='gray-box xs:w-[22rem] sm:w-fit mx-auto  sm:ml-0 green-text-gradient mb-4'>
+                      {key.toUpperCase()}
+                    </h3>
+                  </Fade>
+                  <LandList
+                    lands={landOptions[key].landList}
+                    removeFromWatchList={removeFromWatchList}
+                  />
+                </article>
+              )
+          )}
+      </section>
+    </>
   )
 }
 
