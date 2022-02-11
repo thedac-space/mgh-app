@@ -53,7 +53,7 @@ export interface IAPIData {
     images: {
         image_url: string;
     };
-    tokenId: number;
+    tokenId: string; // changed this cause the API returns a string
     prices?: { predicted_price: number }
 }
 

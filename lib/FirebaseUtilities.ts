@@ -9,6 +9,7 @@ import {
   collection,
   setDoc,
 } from 'firebase/firestore/lite'
+import { Metaverse } from './enums'
 
 // Firebase Init
 const firebaseConfig = {
@@ -41,27 +42,40 @@ export async function createUser(walletAddress: string) {
 
 // Add Land to User's WatchList
 export async function addLandToWatchList(
-  landId: number,
-  walletAddress: string
+  landId: string,
+  walletAddress: string,
+  metaverse: Metaverse
 ) {
   const user = doc(db, 'users', walletAddress)
-
-  await updateDoc(user, {
-    'sandbox-watchlist': arrayUnion(landId),
-  })
+  if (metaverse == 'sandbox') {
+    await updateDoc(user, {
+      'sandbox-watchlist': arrayUnion(landId),
+    })
+  } else if (metaverse == 'decentraland') {
+    await updateDoc(user, {
+      'decentraland-watchlist': arrayUnion(landId),
+    })
+  }
   const updatedData = await getUserInfo(walletAddress)
   return updatedData
 }
 
 // Remove Land from User's WatchList
 export async function removeLandFromWatchList(
-  landId: number,
-  walletAddress: string
+  landId: string,
+  walletAddress: string,
+  metaverse: Metaverse
 ) {
   const user = doc(db, 'users', walletAddress)
-  await updateDoc(user, {
-    'sandbox-watchlist': arrayRemove(landId),
-  })
+  if (metaverse == 'sandbox') {
+    await updateDoc(user, {
+      'sandbox-watchlist': arrayRemove(landId),
+    })
+  } else if (metaverse == 'decentraland') {
+    await updateDoc(user, {
+      'decentraland-watchlist': arrayRemove(landId),
+    })
+  }
   const updatedData = await getUserInfo(walletAddress)
   return updatedData
 }
