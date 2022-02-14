@@ -8,6 +8,8 @@ import tokenAbiMaticMainnet from '../backend/abi/tokenAbiMaticMainnet.json'
 import tokenAbiETHRinkeby from '../backend/abi/tokenAbiETHRinkeby.json'
 import stakingAbiETHRinkeby from '../backend/abi/stakingAbiETHRinkeby.json'
 import tokenAbiETHMainnet from '../backend/abi/tokenAbiETHMainnet.json'
+import IMetaverseStaking from '../backend/abi/IMetaverseStaking.json'
+import SandToken from '../backend/abi/SandToken.json'
 
 export const Contracts = {
   MGH_TOKEN: {
@@ -44,6 +46,18 @@ export const Contracts = {
     ETHEREUM_MAINNET: {
       address: '0x4b945f3fCbC1De8310D14d826DD5052e8f9375C2',
       abi: new Interface(stakingAbiETHRinkeby),
+    },
+  },
+  MV_STAKING: {
+    ETHEREUM_RINKEBY: {
+      address: '103021',
+      abi: new Interface(IMetaverseStaking.abi),
+    },
+  },
+  SAND_TOKEN: {
+    ETHEREUM_MAINNET: {
+      address: '0x3845badAde8e6dFF049820680d1F14bD3903a5d0',
+      interface: new Interface(SandToken),
     },
   },
   // Sandbox
