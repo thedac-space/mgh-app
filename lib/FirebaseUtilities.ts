@@ -8,6 +8,7 @@ import {
   arrayRemove,
   collection,
   setDoc,
+  getDocs,
 } from 'firebase/firestore/lite'
 import { Metaverse } from './enums'
 
@@ -135,4 +136,19 @@ export async function addCommentaryToLand(
 
   const updatedData = await getValuationScores(walletAddress)
   return updatedData
+}
+
+// Get TVL History
+
+export async function getTVLHistory() {
+  const tvlDocs = await getDocs(collection(db, 'MV-TVL'))
+  let logs: Array<{ date: Date; tvl: number }> = []
+  tvlDocs.forEach((doc) => {
+    logs.push({
+      date: new Date(doc.get('time')),
+      tvl: doc.get('tvl'),
+    })
+  })
+  logs.sort((a, b) => a.date.valueOf() - b.date.valueOf())
+  return logs
 }

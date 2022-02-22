@@ -11,6 +11,11 @@ import type {
 
 const _abi = [
   {
+    inputs: [],
+    stateMutability: "nonpayable",
+    type: "constructor",
+  },
+  {
     anonymous: false,
     inputs: [
       {
@@ -147,6 +152,25 @@ const _abi = [
     inputs: [
       {
         indexed: true,
+        internalType: "address",
+        name: "previousOwner",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "newOwner",
+        type: "address",
+      },
+    ],
+    name: "OwnershipTransferred",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
         internalType: "uint256",
         name: "tokenId",
         type: "uint256",
@@ -262,30 +286,37 @@ const _abi = [
     type: "event",
   },
   {
-    anonymous: false,
-    inputs: [
+    inputs: [],
+    name: "MGH_TOKEN",
+    outputs: [
       {
-        indexed: true,
         internalType: "address",
-        name: "account",
+        name: "",
         type: "address",
       },
     ],
-    name: "botAdded",
-    type: "event",
+    stateMutability: "view",
+    type: "function",
   },
   {
-    anonymous: false,
     inputs: [
       {
-        indexed: true,
         internalType: "address",
         name: "account",
         type: "address",
       },
     ],
-    name: "botRemoved",
-    type: "event",
+    name: "addBot",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "applyNewRewardRate",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
   },
   {
     inputs: [
@@ -311,6 +342,11 @@ const _abi = [
         internalType: "address",
         name: "_sender",
         type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
       },
       {
         internalType: "uint256",
@@ -358,7 +394,43 @@ const _abi = [
     outputs: [
       {
         internalType: "uint256",
-        name: "balance",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "currency",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "currentEpoche",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "start",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "end",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "lastEnd",
         type: "uint256",
       },
     ],
@@ -368,14 +440,56 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: "uint104",
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
         name: "amount",
-        type: "uint104",
+        type: "uint256",
       },
     ],
     name: "deposit",
     outputs: [],
     stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "bot",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+    ],
+    name: "depositFromBot",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
+    ],
+    name: "getAmount",
+    outputs: [
+      {
+        internalType: "uint104",
+        name: "",
+        type: "uint104",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
   },
   {
@@ -390,7 +504,7 @@ const _abi = [
     outputs: [
       {
         internalType: "address",
-        name: "operator",
+        name: "",
         type: "address",
       },
     ],
@@ -399,7 +513,33 @@ const _abi = [
   },
   {
     inputs: [],
+    name: "getCurrentWithdrawPercentage",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
     name: "getEpocheNumber",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getMaximumAmountStaked",
     outputs: [
       {
         internalType: "uint256",
@@ -434,6 +574,25 @@ const _abi = [
     name: "getRewards",
     outputs: [],
     stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
+    ],
+    name: "getRewardsDue",
+    outputs: [
+      {
+        internalType: "uint104",
+        name: "",
+        type: "uint104",
+      },
+    ],
+    stateMutability: "view",
     type: "function",
   },
   {
@@ -495,12 +654,77 @@ const _abi = [
         type: "uint256",
       },
       {
-        internalType: "uint104",
+        internalType: "uint256",
         name: "amount",
-        type: "uint104",
+        type: "uint256",
       },
     ],
     name: "increasePosition",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "mghToken",
+        type: "address",
+      },
+      {
+        internalType: "address",
+        name: "_currency",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "_firstEpocheStart",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "_firstEpocheLength",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "__withdrawPeriod",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "__rewardPerTokenAndYear",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "__maximumAmountStaked",
+        type: "uint256",
+      },
+      {
+        components: [
+          {
+            internalType: "string",
+            name: "name",
+            type: "string",
+          },
+          {
+            internalType: "string",
+            name: "symbol",
+            type: "string",
+          },
+          {
+            internalType: "string",
+            name: "baseUri",
+            type: "string",
+          },
+        ],
+        internalType: "struct MetaverseStaking.initNftMetadata",
+        name: "nftMetaData",
+        type: "tuple",
+      },
+    ],
+    name: "initialize",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -543,6 +767,50 @@ const _abi = [
     type: "function",
   },
   {
+    inputs: [],
+    name: "name",
+    outputs: [
+      {
+        internalType: "string",
+        name: "",
+        type: "string",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_pedingRewardRate",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "length",
+        type: "uint256",
+      },
+    ],
+    name: "nextEpoche",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "owner",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [
       {
         internalType: "uint256",
@@ -554,11 +822,51 @@ const _abi = [
     outputs: [
       {
         internalType: "address",
-        name: "owner",
+        name: "",
         type: "address",
       },
     ],
     stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "registerAsBot",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "account",
+        type: "address",
+      },
+    ],
+    name: "removeBot",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "renounceOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "token",
+        type: "address",
+      },
+    ],
+    name: "rescueToken",
+    outputs: [],
+    stateMutability: "nonpayable",
     type: "function",
   },
   {
@@ -603,7 +911,7 @@ const _abi = [
       },
       {
         internalType: "bytes",
-        name: "data",
+        name: "_data",
         type: "bytes",
       },
     ],
@@ -621,11 +929,37 @@ const _abi = [
       },
       {
         internalType: "bool",
-        name: "_approved",
+        name: "approved",
         type: "bool",
       },
     ],
     name: "setApprovalForAll",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "string",
+        name: "newUri",
+        type: "string",
+      },
+    ],
+    name: "setBaseUri",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "amountInEther",
+        type: "uint256",
+      },
+    ],
+    name: "setMaximumAmount",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -650,6 +984,38 @@ const _abi = [
     type: "function",
   },
   {
+    inputs: [],
+    name: "symbol",
+    outputs: [
+      {
+        internalType: "string",
+        name: "",
+        type: "string",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
+    ],
+    name: "tokenURI",
+    outputs: [
+      {
+        internalType: "string",
+        name: "",
+        type: "string",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [
       {
         internalType: "address",
@@ -668,6 +1034,26 @@ const _abi = [
       },
     ],
     name: "transferFrom",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "newOwner",
+        type: "address",
+      },
+    ],
+    name: "transferOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "updateWithdrawPercentageManually",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -720,6 +1106,24 @@ const _abi = [
       },
     ],
     name: "withdraw",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "recipient",
+        type: "address",
+      },
+      {
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+    ],
+    name: "withdrawLiquidityToBot",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",

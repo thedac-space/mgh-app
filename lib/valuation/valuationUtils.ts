@@ -112,10 +112,14 @@ export function getBoundaryPrices(orders: any[]) {
   }
   return result
 }
-function getPrice(order: any) {
+export function getPrice(order: any) {
   if (order.payment_token_contract.symbol === 'USDC')
     return (order.current_price / 1e6) * order.payment_token_contract.eth_price
   if (order.payment_token_contract.symbol === 'SAND')
+    return (
+      (order.current_price / 1e18) * 3 * order.payment_token_contract.eth_price
+    )
+  if (order.payment_token_contract.symbol === 'WETH')
     return (
       (order.current_price / 1e18) * 3 * order.payment_token_contract.eth_price
     )

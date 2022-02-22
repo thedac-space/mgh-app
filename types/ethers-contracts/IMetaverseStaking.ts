@@ -17,48 +17,106 @@ import { FunctionFragment, Result, EventFragment } from "@ethersproject/abi";
 import { Listener, Provider } from "@ethersproject/providers";
 import { TypedEventFilter, TypedEvent, TypedListener, OnEvent } from "./common";
 
+export declare namespace MetaverseStaking {
+  export type InitNftMetadataStruct = {
+    name: string;
+    symbol: string;
+    baseUri: string;
+  };
+
+  export type InitNftMetadataStructOutput = [string, string, string] & {
+    name: string;
+    symbol: string;
+    baseUri: string;
+  };
+}
+
 export interface IMetaverseStakingInterface extends utils.Interface {
   contractName: "IMetaverseStaking";
   functions: {
+    "MGH_TOKEN()": FunctionFragment;
+    "addBot(address)": FunctionFragment;
+    "applyNewRewardRate()": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
-    "approveAndCallHandlerDeposit(address,uint256)": FunctionFragment;
+    "approveAndCallHandlerDeposit(address,uint256,uint256)": FunctionFragment;
     "approveAndCallHandlerIncrease(address,uint256,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
-    "deposit(uint104)": FunctionFragment;
+    "currency()": FunctionFragment;
+    "currentEpoche()": FunctionFragment;
+    "deposit(uint256,uint256)": FunctionFragment;
+    "depositFromBot(address,uint256)": FunctionFragment;
+    "getAmount(uint256)": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
+    "getCurrentWithdrawPercentage()": FunctionFragment;
     "getEpocheNumber()": FunctionFragment;
+    "getMaximumAmountStaked()": FunctionFragment;
     "getRewardRate()": FunctionFragment;
     "getRewards(uint256)": FunctionFragment;
+    "getRewardsDue(uint256)": FunctionFragment;
     "getTotalAmountStaked()": FunctionFragment;
     "getUpdatedRewardsDue(uint256)": FunctionFragment;
     "getWithdrawableAmount(uint256)": FunctionFragment;
-    "increasePosition(uint256,uint104)": FunctionFragment;
+    "increasePosition(uint256,uint256)": FunctionFragment;
+    "initialize(address,address,uint256,uint256,uint256,uint256,uint256,(string,string,string))": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
     "isWithdrawPhase()": FunctionFragment;
+    "name()": FunctionFragment;
+    "nextEpoche(uint256,uint256)": FunctionFragment;
+    "owner()": FunctionFragment;
     "ownerOf(uint256)": FunctionFragment;
+    "registerAsBot()": FunctionFragment;
+    "removeBot(address)": FunctionFragment;
+    "renounceOwnership()": FunctionFragment;
+    "rescueToken(address)": FunctionFragment;
     "safeTransferFrom(address,address,uint256)": FunctionFragment;
     "setApprovalForAll(address,bool)": FunctionFragment;
+    "setBaseUri(string)": FunctionFragment;
+    "setMaximumAmount(uint256)": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
+    "symbol()": FunctionFragment;
+    "tokenURI(uint256)": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
+    "transferOwnership(address)": FunctionFragment;
+    "updateWithdrawPercentageManually()": FunctionFragment;
     "viewNftStats(uint256)": FunctionFragment;
     "withdraw(uint256,uint256)": FunctionFragment;
+    "withdrawLiquidityToBot(address,uint256)": FunctionFragment;
   };
 
+  encodeFunctionData(functionFragment: "MGH_TOKEN", values?: undefined): string;
+  encodeFunctionData(functionFragment: "addBot", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "applyNewRewardRate",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "approve",
     values: [string, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "approveAndCallHandlerDeposit",
-    values: [string, BigNumberish]
+    values: [string, BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
     functionFragment: "approveAndCallHandlerIncrease",
     values: [string, BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
+  encodeFunctionData(functionFragment: "currency", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "currentEpoche",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "deposit",
+    values: [BigNumberish, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "depositFromBot",
+    values: [string, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getAmount",
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
@@ -66,7 +124,15 @@ export interface IMetaverseStakingInterface extends utils.Interface {
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "getCurrentWithdrawPercentage",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "getEpocheNumber",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getMaximumAmountStaked",
     values?: undefined
   ): string;
   encodeFunctionData(
@@ -78,6 +144,10 @@ export interface IMetaverseStakingInterface extends utils.Interface {
     values: [BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "getRewardsDue",
+    values: [BigNumberish]
+  ): string;
+  encodeFunctionData(
     functionFragment: "getTotalAmountStaked",
     values?: undefined
   ): string;
@@ -94,6 +164,19 @@ export interface IMetaverseStakingInterface extends utils.Interface {
     values: [BigNumberish, BigNumberish]
   ): string;
   encodeFunctionData(
+    functionFragment: "initialize",
+    values: [
+      string,
+      string,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      BigNumberish,
+      MetaverseStaking.InitNftMetadataStruct
+    ]
+  ): string;
+  encodeFunctionData(
     functionFragment: "isApprovedForAll",
     values: [string, string]
   ): string;
@@ -101,10 +184,26 @@ export interface IMetaverseStakingInterface extends utils.Interface {
     functionFragment: "isWithdrawPhase",
     values?: undefined
   ): string;
+  encodeFunctionData(functionFragment: "name", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "nextEpoche",
+    values: [BigNumberish, BigNumberish]
+  ): string;
+  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "ownerOf",
     values: [BigNumberish]
   ): string;
+  encodeFunctionData(
+    functionFragment: "registerAsBot",
+    values?: undefined
+  ): string;
+  encodeFunctionData(functionFragment: "removeBot", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "renounceOwnership",
+    values?: undefined
+  ): string;
+  encodeFunctionData(functionFragment: "rescueToken", values: [string]): string;
   encodeFunctionData(
     functionFragment: "safeTransferFrom",
     values: [string, string, BigNumberish]
@@ -113,13 +212,31 @@ export interface IMetaverseStakingInterface extends utils.Interface {
     functionFragment: "setApprovalForAll",
     values: [string, boolean]
   ): string;
+  encodeFunctionData(functionFragment: "setBaseUri", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "setMaximumAmount",
+    values: [BigNumberish]
+  ): string;
   encodeFunctionData(
     functionFragment: "supportsInterface",
     values: [BytesLike]
   ): string;
+  encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "tokenURI",
+    values: [BigNumberish]
+  ): string;
   encodeFunctionData(
     functionFragment: "transferFrom",
     values: [string, string, BigNumberish]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "transferOwnership",
+    values: [string]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "updateWithdrawPercentageManually",
+    values?: undefined
   ): string;
   encodeFunctionData(
     functionFragment: "viewNftStats",
@@ -129,7 +246,17 @@ export interface IMetaverseStakingInterface extends utils.Interface {
     functionFragment: "withdraw",
     values: [BigNumberish, BigNumberish]
   ): string;
+  encodeFunctionData(
+    functionFragment: "withdrawLiquidityToBot",
+    values: [string, BigNumberish]
+  ): string;
 
+  decodeFunctionResult(functionFragment: "MGH_TOKEN", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "addBot", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "applyNewRewardRate",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "approveAndCallHandlerDeposit",
@@ -140,9 +267,23 @@ export interface IMetaverseStakingInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "currency", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "currentEpoche",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "deposit", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "depositFromBot",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "getAmount", data: BytesLike): Result;
+  decodeFunctionResult(
     functionFragment: "getApproved",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "getCurrentWithdrawPercentage",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -150,10 +291,18 @@ export interface IMetaverseStakingInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "getMaximumAmountStaked",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "getRewardRate",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "getRewards", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "getRewardsDue",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "getTotalAmountStaked",
     data: BytesLike
@@ -170,6 +319,7 @@ export interface IMetaverseStakingInterface extends utils.Interface {
     functionFragment: "increasePosition",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "isApprovedForAll",
     data: BytesLike
@@ -178,7 +328,23 @@ export interface IMetaverseStakingInterface extends utils.Interface {
     functionFragment: "isWithdrawPhase",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "nextEpoche", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "ownerOf", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "registerAsBot",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "removeBot", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "renounceOwnership",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "rescueToken",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "safeTransferFrom",
     data: BytesLike
@@ -187,12 +353,27 @@ export interface IMetaverseStakingInterface extends utils.Interface {
     functionFragment: "setApprovalForAll",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "setBaseUri", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "setMaximumAmount",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(
     functionFragment: "supportsInterface",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "tokenURI", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "transferFrom",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "transferOwnership",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "updateWithdrawPercentageManually",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -200,6 +381,10 @@ export interface IMetaverseStakingInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "withdrawLiquidityToBot",
+    data: BytesLike
+  ): Result;
 
   events: {
     "Approval(address,address,uint256)": EventFragment;
@@ -208,13 +393,12 @@ export interface IMetaverseStakingInterface extends utils.Interface {
     "Deposit(uint256,address,uint256)": EventFragment;
     "DepositFromBot(address,uint256)": EventFragment;
     "NewEpoche(uint256,uint256,uint256)": EventFragment;
+    "OwnershipTransferred(address,address)": EventFragment;
     "PositionIncreased(uint256,address,uint256)": EventFragment;
     "RewardPaid(uint256,address,uint256)": EventFragment;
     "Transfer(address,address,uint256)": EventFragment;
     "WithdrawToBot(address,uint256)": EventFragment;
     "Withdrawn(uint256,address,uint256)": EventFragment;
-    "botAdded(address)": EventFragment;
-    "botRemoved(address)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
@@ -223,13 +407,12 @@ export interface IMetaverseStakingInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: "Deposit"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "DepositFromBot"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "NewEpoche"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "PositionIncreased"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "RewardPaid"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "WithdrawToBot"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Withdrawn"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "botAdded"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "botRemoved"): EventFragment;
 }
 
 export type ApprovalEvent = TypedEvent<
@@ -271,6 +454,14 @@ export type NewEpocheEvent = TypedEvent<
 
 export type NewEpocheEventFilter = TypedEventFilter<NewEpocheEvent>;
 
+export type OwnershipTransferredEvent = TypedEvent<
+  [string, string],
+  { previousOwner: string; newOwner: string }
+>;
+
+export type OwnershipTransferredEventFilter =
+  TypedEventFilter<OwnershipTransferredEvent>;
+
 export type PositionIncreasedEvent = TypedEvent<
   [BigNumber, string, BigNumber],
   { tokenId: BigNumber; staker: string; amount: BigNumber }
@@ -307,14 +498,6 @@ export type WithdrawnEvent = TypedEvent<
 
 export type WithdrawnEventFilter = TypedEventFilter<WithdrawnEvent>;
 
-export type botAddedEvent = TypedEvent<[string], { account: string }>;
-
-export type botAddedEventFilter = TypedEventFilter<botAddedEvent>;
-
-export type botRemovedEvent = TypedEvent<[string], { account: string }>;
-
-export type botRemovedEventFilter = TypedEventFilter<botRemovedEvent>;
-
 export interface IMetaverseStaking extends BaseContract {
   contractName: "IMetaverseStaking";
   connect(signerOrProvider: Signer | Provider | string): this;
@@ -343,6 +526,17 @@ export interface IMetaverseStaking extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
+    MGH_TOKEN(overrides?: CallOverrides): Promise<[string]>;
+
+    addBot(
+      account: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    applyNewRewardRate(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     approve(
       to: string,
       tokenId: BigNumberish,
@@ -351,6 +545,7 @@ export interface IMetaverseStaking extends BaseContract {
 
     approveAndCallHandlerDeposit(
       _sender: string,
+      tokenId: BigNumberish,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
@@ -362,22 +557,49 @@ export interface IMetaverseStaking extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
-    balanceOf(
-      owner: string,
+    balanceOf(owner: string, overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    currency(overrides?: CallOverrides): Promise<[string]>;
+
+    currentEpoche(
       overrides?: CallOverrides
-    ): Promise<[BigNumber] & { balance: BigNumber }>;
+    ): Promise<
+      [BigNumber, BigNumber, BigNumber] & {
+        start: BigNumber;
+        end: BigNumber;
+        lastEnd: BigNumber;
+      }
+    >;
 
     deposit(
+      tokenId: BigNumberish,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    depositFromBot(
+      bot: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    getAmount(
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
+
     getApproved(
       tokenId: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[string] & { operator: string }>;
+    ): Promise<[string]>;
+
+    getCurrentWithdrawPercentage(
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
     getEpocheNumber(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    getMaximumAmountStaked(overrides?: CallOverrides): Promise<[BigNumber]>;
 
     getRewardRate(overrides?: CallOverrides): Promise<[BigNumber]>;
 
@@ -385,6 +607,11 @@ export interface IMetaverseStaking extends BaseContract {
       tokenId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
+
+    getRewardsDue(
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[BigNumber]>;
 
     getTotalAmountStaked(overrides?: CallOverrides): Promise<[BigNumber]>;
 
@@ -404,6 +631,18 @@ export interface IMetaverseStaking extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
+    initialize(
+      mghToken: string,
+      _currency: string,
+      _firstEpocheStart: BigNumberish,
+      _firstEpocheLength: BigNumberish,
+      __withdrawPeriod: BigNumberish,
+      __rewardPerTokenAndYear: BigNumberish,
+      __maximumAmountStaked: BigNumberish,
+      nftMetaData: MetaverseStaking.InitNftMetadataStruct,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
     isApprovedForAll(
       owner: string,
       operator: string,
@@ -412,10 +651,38 @@ export interface IMetaverseStaking extends BaseContract {
 
     isWithdrawPhase(overrides?: CallOverrides): Promise<[boolean]>;
 
+    name(overrides?: CallOverrides): Promise<[string]>;
+
+    nextEpoche(
+      _pedingRewardRate: BigNumberish,
+      length: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    owner(overrides?: CallOverrides): Promise<[string]>;
+
     ownerOf(
       tokenId: BigNumberish,
       overrides?: CallOverrides
-    ): Promise<[string] & { owner: string }>;
+    ): Promise<[string]>;
+
+    registerAsBot(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    removeBot(
+      account: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    renounceOwnership(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    rescueToken(
+      token: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
 
     "safeTransferFrom(address,address,uint256)"(
       from: string,
@@ -428,13 +695,23 @@ export interface IMetaverseStaking extends BaseContract {
       from: string,
       to: string,
       tokenId: BigNumberish,
-      data: BytesLike,
+      _data: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
     setApprovalForAll(
       operator: string,
-      _approved: boolean,
+      approved: boolean,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    setBaseUri(
+      newUri: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    setMaximumAmount(
+      amountInEther: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -443,10 +720,26 @@ export interface IMetaverseStaking extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
+    symbol(overrides?: CallOverrides): Promise<[string]>;
+
+    tokenURI(
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
     transferFrom(
       from: string,
       to: string,
       tokenId: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    transferOwnership(
+      newOwner: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
+
+    updateWithdrawPercentageManually(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
 
@@ -467,7 +760,24 @@ export interface IMetaverseStaking extends BaseContract {
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<ContractTransaction>;
+
+    withdrawLiquidityToBot(
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<ContractTransaction>;
   };
+
+  MGH_TOKEN(overrides?: CallOverrides): Promise<string>;
+
+  addBot(
+    account: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  applyNewRewardRate(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   approve(
     to: string,
@@ -477,6 +787,7 @@ export interface IMetaverseStaking extends BaseContract {
 
   approveAndCallHandlerDeposit(
     _sender: string,
+    tokenId: BigNumberish,
     amount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
@@ -490,17 +801,45 @@ export interface IMetaverseStaking extends BaseContract {
 
   balanceOf(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+  currency(overrides?: CallOverrides): Promise<string>;
+
+  currentEpoche(
+    overrides?: CallOverrides
+  ): Promise<
+    [BigNumber, BigNumber, BigNumber] & {
+      start: BigNumber;
+      end: BigNumber;
+      lastEnd: BigNumber;
+    }
+  >;
+
   deposit(
+    tokenId: BigNumberish,
     amount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
+
+  depositFromBot(
+    bot: string,
+    amount: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  getAmount(
+    tokenId: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   getApproved(
     tokenId: BigNumberish,
     overrides?: CallOverrides
   ): Promise<string>;
 
+  getCurrentWithdrawPercentage(overrides?: CallOverrides): Promise<BigNumber>;
+
   getEpocheNumber(overrides?: CallOverrides): Promise<BigNumber>;
+
+  getMaximumAmountStaked(overrides?: CallOverrides): Promise<BigNumber>;
 
   getRewardRate(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -508,6 +847,11 @@ export interface IMetaverseStaking extends BaseContract {
     tokenId: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
+
+  getRewardsDue(
+    tokenId: BigNumberish,
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
 
   getTotalAmountStaked(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -527,6 +871,18 @@ export interface IMetaverseStaking extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  initialize(
+    mghToken: string,
+    _currency: string,
+    _firstEpocheStart: BigNumberish,
+    _firstEpocheLength: BigNumberish,
+    __withdrawPeriod: BigNumberish,
+    __rewardPerTokenAndYear: BigNumberish,
+    __maximumAmountStaked: BigNumberish,
+    nftMetaData: MetaverseStaking.InitNftMetadataStruct,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   isApprovedForAll(
     owner: string,
     operator: string,
@@ -535,7 +891,35 @@ export interface IMetaverseStaking extends BaseContract {
 
   isWithdrawPhase(overrides?: CallOverrides): Promise<boolean>;
 
+  name(overrides?: CallOverrides): Promise<string>;
+
+  nextEpoche(
+    _pedingRewardRate: BigNumberish,
+    length: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  owner(overrides?: CallOverrides): Promise<string>;
+
   ownerOf(tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>;
+
+  registerAsBot(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  removeBot(
+    account: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  renounceOwnership(
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  rescueToken(
+    token: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
 
   "safeTransferFrom(address,address,uint256)"(
     from: string,
@@ -548,13 +932,23 @@ export interface IMetaverseStaking extends BaseContract {
     from: string,
     to: string,
     tokenId: BigNumberish,
-    data: BytesLike,
+    _data: BytesLike,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
   setApprovalForAll(
     operator: string,
-    _approved: boolean,
+    approved: boolean,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  setBaseUri(
+    newUri: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  setMaximumAmount(
+    amountInEther: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -563,10 +957,23 @@ export interface IMetaverseStaking extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
+  symbol(overrides?: CallOverrides): Promise<string>;
+
+  tokenURI(tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>;
+
   transferFrom(
     from: string,
     to: string,
     tokenId: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  transferOwnership(
+    newOwner: string,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
+  updateWithdrawPercentageManually(
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
@@ -588,7 +995,19 @@ export interface IMetaverseStaking extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> }
   ): Promise<ContractTransaction>;
 
+  withdrawLiquidityToBot(
+    recipient: string,
+    amount: BigNumberish,
+    overrides?: Overrides & { from?: string | Promise<string> }
+  ): Promise<ContractTransaction>;
+
   callStatic: {
+    MGH_TOKEN(overrides?: CallOverrides): Promise<string>;
+
+    addBot(account: string, overrides?: CallOverrides): Promise<void>;
+
+    applyNewRewardRate(overrides?: CallOverrides): Promise<void>;
+
     approve(
       to: string,
       tokenId: BigNumberish,
@@ -597,6 +1016,7 @@ export interface IMetaverseStaking extends BaseContract {
 
     approveAndCallHandlerDeposit(
       _sender: string,
+      tokenId: BigNumberish,
       amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
@@ -610,18 +1030,54 @@ export interface IMetaverseStaking extends BaseContract {
 
     balanceOf(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    deposit(amount: BigNumberish, overrides?: CallOverrides): Promise<void>;
+    currency(overrides?: CallOverrides): Promise<string>;
+
+    currentEpoche(
+      overrides?: CallOverrides
+    ): Promise<
+      [BigNumber, BigNumber, BigNumber] & {
+        start: BigNumber;
+        end: BigNumber;
+        lastEnd: BigNumber;
+      }
+    >;
+
+    deposit(
+      tokenId: BigNumberish,
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    depositFromBot(
+      bot: string,
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    getAmount(
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     getApproved(
       tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<string>;
 
+    getCurrentWithdrawPercentage(overrides?: CallOverrides): Promise<BigNumber>;
+
     getEpocheNumber(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getMaximumAmountStaked(overrides?: CallOverrides): Promise<BigNumber>;
 
     getRewardRate(overrides?: CallOverrides): Promise<BigNumber>;
 
     getRewards(tokenId: BigNumberish, overrides?: CallOverrides): Promise<void>;
+
+    getRewardsDue(
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     getTotalAmountStaked(overrides?: CallOverrides): Promise<BigNumber>;
 
@@ -641,6 +1097,18 @@ export interface IMetaverseStaking extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
+    initialize(
+      mghToken: string,
+      _currency: string,
+      _firstEpocheStart: BigNumberish,
+      _firstEpocheLength: BigNumberish,
+      __withdrawPeriod: BigNumberish,
+      __rewardPerTokenAndYear: BigNumberish,
+      __maximumAmountStaked: BigNumberish,
+      nftMetaData: MetaverseStaking.InitNftMetadataStruct,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
     isApprovedForAll(
       owner: string,
       operator: string,
@@ -649,7 +1117,25 @@ export interface IMetaverseStaking extends BaseContract {
 
     isWithdrawPhase(overrides?: CallOverrides): Promise<boolean>;
 
+    name(overrides?: CallOverrides): Promise<string>;
+
+    nextEpoche(
+      _pedingRewardRate: BigNumberish,
+      length: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    owner(overrides?: CallOverrides): Promise<string>;
+
     ownerOf(tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>;
+
+    registerAsBot(overrides?: CallOverrides): Promise<void>;
+
+    removeBot(account: string, overrides?: CallOverrides): Promise<void>;
+
+    renounceOwnership(overrides?: CallOverrides): Promise<void>;
+
+    rescueToken(token: string, overrides?: CallOverrides): Promise<void>;
 
     "safeTransferFrom(address,address,uint256)"(
       from: string,
@@ -662,13 +1148,20 @@ export interface IMetaverseStaking extends BaseContract {
       from: string,
       to: string,
       tokenId: BigNumberish,
-      data: BytesLike,
+      _data: BytesLike,
       overrides?: CallOverrides
     ): Promise<void>;
 
     setApprovalForAll(
       operator: string,
-      _approved: boolean,
+      approved: boolean,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    setBaseUri(newUri: string, overrides?: CallOverrides): Promise<void>;
+
+    setMaximumAmount(
+      amountInEther: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -677,12 +1170,23 @@ export interface IMetaverseStaking extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    symbol(overrides?: CallOverrides): Promise<string>;
+
+    tokenURI(tokenId: BigNumberish, overrides?: CallOverrides): Promise<string>;
+
     transferFrom(
       from: string,
       to: string,
       tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    transferOwnership(
+      newOwner: string,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    updateWithdrawPercentageManually(overrides?: CallOverrides): Promise<void>;
 
     viewNftStats(
       tokenId: BigNumberish,
@@ -698,6 +1202,12 @@ export interface IMetaverseStaking extends BaseContract {
 
     withdraw(
       tokenId: BigNumberish,
+      amount: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    withdrawLiquidityToBot(
+      recipient: string,
       amount: BigNumberish,
       overrides?: CallOverrides
     ): Promise<void>;
@@ -760,6 +1270,15 @@ export interface IMetaverseStaking extends BaseContract {
       pendingRewardRate?: null
     ): NewEpocheEventFilter;
 
+    "OwnershipTransferred(address,address)"(
+      previousOwner?: string | null,
+      newOwner?: string | null
+    ): OwnershipTransferredEventFilter;
+    OwnershipTransferred(
+      previousOwner?: string | null,
+      newOwner?: string | null
+    ): OwnershipTransferredEventFilter;
+
     "PositionIncreased(uint256,address,uint256)"(
       tokenId?: BigNumberish | null,
       staker?: string | null,
@@ -812,15 +1331,20 @@ export interface IMetaverseStaking extends BaseContract {
       recipient?: string | null,
       amount?: null
     ): WithdrawnEventFilter;
-
-    "botAdded(address)"(account?: string | null): botAddedEventFilter;
-    botAdded(account?: string | null): botAddedEventFilter;
-
-    "botRemoved(address)"(account?: string | null): botRemovedEventFilter;
-    botRemoved(account?: string | null): botRemovedEventFilter;
   };
 
   estimateGas: {
+    MGH_TOKEN(overrides?: CallOverrides): Promise<BigNumber>;
+
+    addBot(
+      account: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    applyNewRewardRate(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     approve(
       to: string,
       tokenId: BigNumberish,
@@ -829,6 +1353,7 @@ export interface IMetaverseStaking extends BaseContract {
 
     approveAndCallHandlerDeposit(
       _sender: string,
+      tokenId: BigNumberish,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
@@ -842,9 +1367,25 @@ export interface IMetaverseStaking extends BaseContract {
 
     balanceOf(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
 
+    currency(overrides?: CallOverrides): Promise<BigNumber>;
+
+    currentEpoche(overrides?: CallOverrides): Promise<BigNumber>;
+
     deposit(
+      tokenId: BigNumberish,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    depositFromBot(
+      bot: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    getAmount(
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     getApproved(
@@ -852,13 +1393,22 @@ export interface IMetaverseStaking extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    getCurrentWithdrawPercentage(overrides?: CallOverrides): Promise<BigNumber>;
+
     getEpocheNumber(overrides?: CallOverrides): Promise<BigNumber>;
+
+    getMaximumAmountStaked(overrides?: CallOverrides): Promise<BigNumber>;
 
     getRewardRate(overrides?: CallOverrides): Promise<BigNumber>;
 
     getRewards(
       tokenId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    getRewardsDue(
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     getTotalAmountStaked(overrides?: CallOverrides): Promise<BigNumber>;
@@ -879,6 +1429,18 @@ export interface IMetaverseStaking extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
+    initialize(
+      mghToken: string,
+      _currency: string,
+      _firstEpocheStart: BigNumberish,
+      _firstEpocheLength: BigNumberish,
+      __withdrawPeriod: BigNumberish,
+      __rewardPerTokenAndYear: BigNumberish,
+      __maximumAmountStaked: BigNumberish,
+      nftMetaData: MetaverseStaking.InitNftMetadataStruct,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
     isApprovedForAll(
       owner: string,
       operator: string,
@@ -887,9 +1449,37 @@ export interface IMetaverseStaking extends BaseContract {
 
     isWithdrawPhase(overrides?: CallOverrides): Promise<BigNumber>;
 
+    name(overrides?: CallOverrides): Promise<BigNumber>;
+
+    nextEpoche(
+      _pedingRewardRate: BigNumberish,
+      length: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    owner(overrides?: CallOverrides): Promise<BigNumber>;
+
     ownerOf(
       tokenId: BigNumberish,
       overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    registerAsBot(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    removeBot(
+      account: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    renounceOwnership(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    rescueToken(
+      token: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     "safeTransferFrom(address,address,uint256)"(
@@ -903,13 +1493,23 @@ export interface IMetaverseStaking extends BaseContract {
       from: string,
       to: string,
       tokenId: BigNumberish,
-      data: BytesLike,
+      _data: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
     setApprovalForAll(
       operator: string,
-      _approved: boolean,
+      approved: boolean,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    setBaseUri(
+      newUri: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    setMaximumAmount(
+      amountInEther: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -918,10 +1518,26 @@ export interface IMetaverseStaking extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    symbol(overrides?: CallOverrides): Promise<BigNumber>;
+
+    tokenURI(
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     transferFrom(
       from: string,
       to: string,
       tokenId: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    transferOwnership(
+      newOwner: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
+
+    updateWithdrawPercentageManually(
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
 
@@ -935,9 +1551,26 @@ export interface IMetaverseStaking extends BaseContract {
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<BigNumber>;
+
+    withdrawLiquidityToBot(
+      recipient: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
+    MGH_TOKEN(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    addBot(
+      account: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    applyNewRewardRate(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     approve(
       to: string,
       tokenId: BigNumberish,
@@ -946,6 +1579,7 @@ export interface IMetaverseStaking extends BaseContract {
 
     approveAndCallHandlerDeposit(
       _sender: string,
+      tokenId: BigNumberish,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
@@ -962,9 +1596,25 @@ export interface IMetaverseStaking extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    currency(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    currentEpoche(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     deposit(
+      tokenId: BigNumberish,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    depositFromBot(
+      bot: string,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    getAmount(
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getApproved(
@@ -972,13 +1622,26 @@ export interface IMetaverseStaking extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    getCurrentWithdrawPercentage(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     getEpocheNumber(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    getMaximumAmountStaked(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     getRewardRate(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     getRewards(
       tokenId: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    getRewardsDue(
+      tokenId: BigNumberish,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getTotalAmountStaked(
@@ -1001,6 +1664,18 @@ export interface IMetaverseStaking extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    initialize(
+      mghToken: string,
+      _currency: string,
+      _firstEpocheStart: BigNumberish,
+      _firstEpocheLength: BigNumberish,
+      __withdrawPeriod: BigNumberish,
+      __rewardPerTokenAndYear: BigNumberish,
+      __maximumAmountStaked: BigNumberish,
+      nftMetaData: MetaverseStaking.InitNftMetadataStruct,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     isApprovedForAll(
       owner: string,
       operator: string,
@@ -1009,9 +1684,37 @@ export interface IMetaverseStaking extends BaseContract {
 
     isWithdrawPhase(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
+    name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    nextEpoche(
+      _pedingRewardRate: BigNumberish,
+      length: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     ownerOf(
       tokenId: BigNumberish,
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    registerAsBot(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    removeBot(
+      account: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    renounceOwnership(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    rescueToken(
+      token: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     "safeTransferFrom(address,address,uint256)"(
@@ -1025,18 +1728,35 @@ export interface IMetaverseStaking extends BaseContract {
       from: string,
       to: string,
       tokenId: BigNumberish,
-      data: BytesLike,
+      _data: BytesLike,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     setApprovalForAll(
       operator: string,
-      _approved: boolean,
+      approved: boolean,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setBaseUri(
+      newUri: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setMaximumAmount(
+      amountInEther: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
     supportsInterface(
       interfaceId: BytesLike,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    tokenURI(
+      tokenId: BigNumberish,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1047,6 +1767,15 @@ export interface IMetaverseStaking extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;
 
+    transferOwnership(
+      newOwner: string,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    updateWithdrawPercentageManually(
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
     viewNftStats(
       tokenId: BigNumberish,
       overrides?: CallOverrides
@@ -1054,6 +1783,12 @@ export interface IMetaverseStaking extends BaseContract {
 
     withdraw(
       tokenId: BigNumberish,
+      amount: BigNumberish,
+      overrides?: Overrides & { from?: string | Promise<string> }
+    ): Promise<PopulatedTransaction>;
+
+    withdrawLiquidityToBot(
+      recipient: string,
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> }
     ): Promise<PopulatedTransaction>;

@@ -1,9 +1,27 @@
-import React from 'react'
+import { ethers } from 'ethers'
+import React, { useEffect, useState } from 'react'
+import useConnectWeb3 from '../../backend/connectWeb3'
+import { getPrice, handleTokenID } from '../../lib/valuation/valuationUtils'
+import { Wallets } from '../../lib/wallets'
+import { useAppSelector } from '../../state/hooks'
 
 const MvInfoTable = () => {
+  const { address } = useAppSelector((state) => state.account)
+  const { web3Provider } = useConnectWeb3()
+  const [orders, setOrders] = useState<any[]>()
+  useEffect(() => {
+    const fetchOrders = async () => {
+      const res = await fetch(`/api/fetchOrders/${Wallets.BOT}`)
+      const { orders } = await res.json()
+      console.log((orders as any[])?.slice(0, 3))
+      setOrders(orders?.slice(0, 3))
+    }
+    fetchOrders()
+  }, [address, web3Provider])
   return (
-    <div className='gray-box'>
+    <div className='gray-box bg-opacity-10'>
       <table className='w-full text-left'>
+        {/* TABLE HEAD */}
         <thead>
           <tr>
             <th>Date</th>
@@ -15,30 +33,25 @@ const MvInfoTable = () => {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>15.97</td>
-            <td>OpenSea</td>
-            <td>1847261</td>
-            <td>15 ETH</td>
-            <td>Buy</td>
-            <td>www.etherscan.io/tx</td>
-          </tr>
-          <tr>
-            <td>15.97</td>
-            <td>OpenSea</td>
-            <td>1847261</td>
-            <td>15 ETH</td>
-            <td>Buy</td>
-            <td>www.etherscan.io/tx</td>
-          </tr>
-          <tr>
-            <td>15.97</td>
-            <td>OpenSea</td>
-            <td>1847261</td>
-            <td>15 ETH</td>
-            <td>Buy</td>
-            <td>www.etherscan.io/tx</td>
-          </tr>
+          {/* ORDERS */}
+          {orders &&
+            orders?.map((order: any) => (
+              <tr key={order.id}>
+                <td>{new Date(order?.closing_date).toDateString()}</td>
+                <td>OpenSea</td>
+                <td>{handleTokenID(order?.metadata?.asset.id)}</td>
+                <td>{getPrice(order).toFixed(2)} ETH</td>
+                <td>Buy</td>
+                <td>
+                  <a
+                    href={'ether'}
+                    className='cursor-pointer'
+                    target='_blank'
+                  ></a>{' '}
+                  www.etherscan.io/tx
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>
     </div>

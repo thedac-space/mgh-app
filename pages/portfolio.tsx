@@ -121,16 +121,11 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
       try {
         await Promise.all(
           options.map(async (option) => {
-            const res = await fetch('/api/fetchAssets', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                wallet: (externalWallet as string) ?? address,
-                assetContract: landOptions[option].contract,
-              }),
-            })
+            const res = await fetch(
+              `/api/fetchAssets/${externalWallet ?? address}/${
+                landOptions[option].contract
+              }`
+            )
             const rawAssets = await res.json()
             // Formatting Assets to fit into the Cards
             rawAssets.assets.length > 0 &&

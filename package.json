@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "gen:types": "typechain --target=ethers-v5 ./backend/abi/*.json"
   },
   "dependencies": {
     "@mailchimp/mailchimp_marketing": "^3.0.69",
@@ -17,7 +18,10 @@
     "animate.css": "^4.1.1",
     "ethers": "^5.5.1",
     "firebase": "^9.6.5",
+    "firebase-admin": "^10.0.2",
+    "firebase-functions": "^3.18.1",
     "fortmatic": "^2.2.1",
+    "lightweight-charts": "^3.8.0",
     "next": "11.1.2",
     "nprogress": "^0.2.0",
     "react": "17.0.2",
@@ -26,7 +30,7 @@
     "react-icons": "^4.3.1",
     "react-redux": "^7.2.6",
     "react-use-scroll-direction": "^0.1.0",
-    "recharts": "^2.1.2"
+    "recharts": "^2.1.9"
   },
   "devDependencies": {
     "@typechain/ethers-v5": "^9.0.0",

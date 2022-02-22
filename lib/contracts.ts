@@ -50,11 +50,15 @@ export const Contracts = {
   },
   MV_STAKING: {
     ETHEREUM_RINKEBY: {
-      address: '103021',
-      abi: new Interface(IMetaverseStaking.abi),
+      address: '0x9b7B8FFA98d857fB00724babE9FE7774db48c22D',
+      abi: new Interface(IMetaverseStaking as unknown as string[]),
     },
   },
   SAND_TOKEN: {
+    MOCK_RINKEBY: {
+      address: '0x8D9284b81B862d78b456fb60D64f2C220e2089eB',
+      interface: new Interface(SandToken),
+    },
     ETHEREUM_MAINNET: {
       address: '0x3845badAde8e6dFF049820680d1F14bD3903a5d0',
       interface: new Interface(SandToken),

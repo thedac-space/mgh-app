@@ -110,6 +110,7 @@ module.exports = {
       },
       colors: {
         grey: {
+          border: '#5b5c571a',
           darker: '#24292e',
           other: '#333e4a',
           darkest: '#101010',

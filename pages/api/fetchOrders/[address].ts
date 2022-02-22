@@ -1,15 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-// Fetch Assets from OpenSea. So Far Open Sea returns up to 50 results per request
+// Fetch Single Asset from Open Sea.
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const wallet = req.body.wallet
-  const assetContract = req.body.assetContract
+  const address = req.query.address
   try {
     const response = await fetch(
-      `https://api.opensea.io/api/v1/assets?owner=${wallet}&asset_contract_address=${assetContract}&order_direction=desc&offset=0&limit=50`,
+      `https://api.opensea.io/wyvern/v1/orders?taker=${address}&bundled=false&include_bundled=false&limit=50&offset=0&order_by=created_date&order_direction=desc`,
       {
         headers: {
           'Content-Type': 'application/json',
