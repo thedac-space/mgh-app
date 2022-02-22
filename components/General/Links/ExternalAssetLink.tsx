@@ -39,7 +39,12 @@ const ExternalAssetLink = ({ apiData, width, height, layout }: Props) => {
       {/* External Links */}
       <nav className='flex space-x-5 items-center'>
         <ExternalLink href={apiData.opensea_link} text='OpenSea' />
-        <ExternalLink href={apiData.external_link} text={apiData.metaverse} />
+        <ExternalLink
+          href={apiData.external_link}
+          text={
+            apiData.metaverse[0].toUpperCase() + apiData.metaverse.substring(1)
+          }
+        />
       </nav>
     </div>
   )

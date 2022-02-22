@@ -28,12 +28,17 @@ export type WatchListState =
   | 'loadingFirst'
   | 'loading'
   | 'loaded'
-  | 'badQuery'
-  | 'limitSandbox'
-  | 'limitDecentraland'
-  | 'loadingQuery'
+  | 'badQueryId'
+  | 'badQueryCoordinates'
+  | 'limitIdSandbox'
+  | 'limitCoordinatesSandbox'
+  | 'limitIdDecentraland'
+  | 'limitCoordinatesDecentraland'
+  | 'loadingQueryId'
+  | 'loadingQueryCoordinates'
   | 'noWallet'
-  | 'success'
+  | 'successId'
+  | 'successCoordinates'
 
 const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   const [reFetch, setRefetch] = useState(false)
@@ -53,7 +58,8 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
       firebase: 'sandbox-watchlist',
       landList: sandboxLands,
       setList: setSandboxLands,
-      limitState: 'limitSandbox',
+      limitIdState: 'limitIdSandbox',
+      limitCoordinatesState: 'limitCoordinatesSandbox',
       convert: convertETHPrediction,
     },
     decentraland: {
@@ -61,7 +67,8 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
       firebase: 'decentraland-watchlist',
       landList: decentralandLands,
       setList: setDecentralandLands,
-      limitState: 'limitDecentraland',
+      limitIdState: 'limitIdDecentraland',
+      limitCoordinatesState: 'limitCoordinatesDecentraland',
       convert: convertMANAPrediction,
     },
   }
@@ -76,7 +83,9 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   ) => {
     // If Sandbox or Decentraland limit give Feedback to user
     if (landOptions[metaverse].landList.length === 10) {
-      setState(landOptions[metaverse].limitState as WatchListState)
+      landId && setState(landOptions[metaverse].limitIdState as WatchListState)
+      coordinates &&
+        setState(landOptions[metaverse].limitCoordinatesState as WatchListState)
       return setTimeout(() => {
         // Retrigger useEffect
         setState('loaded')
@@ -84,7 +93,8 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
     }
 
     if (address) {
-      setState('loadingQuery')
+      landId && setState('loadingQueryId')
+      coordinates && setState('loadingQueryCoordinates')
       // Checking whether land exists
       const landData = await getLandData(metaverse, landId, coordinates)
       // If Land returns a result from our API
@@ -92,13 +102,15 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
         // Adding Land to Database
         await addLandToWatchList(landData.tokenId, address, metaverse)
         // Giving Feedback to user for Good Query
-        setState('success')
+        landId && setState('successId')
+        coordinates && setState('successCoordinates')
         setTimeout(() => {
           // Retrigger useEffect
           setRefetch(!reFetch)
         }, 1100)
       } else {
-        setState('badQuery')
+        landId && setState('badQueryId')
+        coordinates && setState('badQueryCoordinates')
         return setTimeout(() => {
           // Retrigger useEffect
           setState('loaded')
