@@ -9,6 +9,8 @@ import { Fade } from 'react-awesome-reveal'
 import { useVisible } from '../../lib/hooks'
 import { Metaverse } from '../../lib/enums'
 import { handleTokenID } from '../../lib/valuation/valuationUtils'
+import { BsTwitter } from 'react-icons/bs'
+import { SocialMediaOptions } from '../../lib/socialMediaOptions'
 interface IWatchListCard extends IPriceCard {
   currentPrice?: number
   remove: (landId: string, metaverse: Metaverse) => Promise<void>
@@ -25,6 +27,9 @@ const LandItem = ({
   const [prices, setPrices] = useState<Partial<IPredictions>>({
     usdPrediction: predictions?.usdPrediction,
   })
+
+  // SocialMediaOptions contains all options with their texts, icons, etc..
+  const options = SocialMediaOptions(apiData, predictions)
 
   // Hook for Popup
   const { ref, isVisible: showPopup, setIsVisible } = useVisible(false)
@@ -79,24 +84,26 @@ const LandItem = ({
             <h3 className='text-base sm:text-xl font-normal md:text-2xl p-0 leading-4'>
               {apiData?.name}
             </h3>
-            {/* <p className='sm:text-2xl'>{apiData?.name}</p> */}
             <p className='text-gray-400'>
               ID: {handleTokenID(apiData!.tokenId)}{' '}
-              <FiShare2
+              <BsTwitter
                 title='Share Valuation'
-                onClick={() => setIsVisible(true)}
-                className=' hidden sm:inline-block relative bottom-005  h-4 w-4 z-50 text-gray-200 hover:text-blue-400 transition ease-in-out duration-300 cursor-pointer'
+                onClick={() => window.open(options.twitter.valuationLink)}
+                className=' hidden sm:inline-block relative bottom-[0.17rem] left-1  h-4 w-4 z-50 text-gray-200 hover:text-blue-400 transition ease-in-out duration-300 cursor-pointer'
               />{' '}
             </p>
           </div>
           {expanded && (
             <>
               {/* External Links */}
-              <nav className='flex flex-col gap-2'>
+              <nav className='flex flex-col md:gap-4 gap-[1.40rem]'>
                 <ExternalLink href={apiData!.opensea_link} text='OpenSea' />
                 <ExternalLink
                   href={apiData!.external_link}
-                  text={apiData!.metaverse}
+                  text={
+                    apiData!.metaverse[0].toUpperCase() +
+                    apiData!.metaverse.substring(1)
+                  }
                 />
               </nav>
               {/* Remove Button */}
@@ -128,13 +135,13 @@ const LandItem = ({
       </div>
 
       {/* Share Button */}
-      <FiShare2
+      <BsTwitter
         title='Share Valuation'
-        onClick={() => setIsVisible(true)}
-        className='absolute sm:hidden h-5 w-5 z-30 bottom-4 right-4 text-gray-200 hover:text-blue-400 transition ease-in-out duration-300 cursor-pointer'
+        onClick={() => window.open(options.twitter.valuationLink)}
+        className='absolute sm:hidden h-5 w-5 z-30 bottom-6 right-4 text-gray-200 hover:text-blue-400 transition ease-in-out duration-300 cursor-pointer'
       />
-      {/* Share Popup */}
-      <div className='contents' ref={ref}>
+      {/* Share Popup, commented out. Using Twitter only for now */}
+      {/* <div className='contents' ref={ref}>
         {showPopup && (
           <Fade className='z-30 absolute -bottom-3 left-1/2 -translate-x-2/4'>
             <SharePopup
@@ -145,7 +152,7 @@ const LandItem = ({
             />
           </Fade>
         )}
-      </div>
+      </div> */}
     </li>
   )
 }
