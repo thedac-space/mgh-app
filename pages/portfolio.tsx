@@ -128,7 +128,7 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
             })
             const rawAssets = await res.json()
             // Formatting Assets to fit into the Cards
-            rawAssets.assets.length > 0 &&
+           rawAssets.assets && rawAssets.assets.length > 0 &&
               (await Promise.all(
                 rawAssets.assets.map(async (asset: any) => {
                   const formattedAsset = await formatLandAsset(
@@ -157,7 +157,6 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
         setLoading(false)
       } catch (err) {
         console.log(err)
-        setLoading(false)
       }
     }
 
