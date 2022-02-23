@@ -1,8 +1,5 @@
-import React, { FormEvent, useState } from 'react'
-import { BsArrowLeft, BsEmojiSunglasses, BsStar } from 'react-icons/bs'
-import { IoWarningOutline } from 'react-icons/io5'
-import { MdAddLocationAlt, MdLandscape } from 'react-icons/md'
-import { RiLandscapeLine } from 'react-icons/ri'
+import React, { useState } from 'react'
+import { BsQuestionCircle } from 'react-icons/bs'
 import { AddLandButton } from '.'
 import { Metaverse } from '../../lib/enums'
 import { LandsKey } from '../../lib/valuation/valuationTypes'
@@ -82,14 +79,21 @@ const AddLandForm = ({ state, addToWatchList, ids, landKeys }: Props) => {
       </div>
       {/* Add by Token Id */}
       <form onSubmit={(e) => addById(e)}>
-        <p
-          className={
-            'font-medium mb-2 text-xs md:text-sm pt-1 ' +
-            (state === 'successId' && 'text-green-500')
-          }
-        >
-          Add by Token ID
-        </p>
+        <div className='flex gap-2 relative items-center'>
+          <p
+            className={
+              'font-medium mb-2 text-xs md:text-sm pt-1 ' +
+              (state === 'successId' && 'text-green-500')
+            }
+          >
+            Add by Token ID
+          </p>
+
+          <BsQuestionCircle className='text-gray-300 cursor-pointer peer relative bottom-1' />
+          <p className='absolute -top-7 border border-gray-500 -left-6 xs:left-0 pl-2 p-2 rounded-lg bg-black bg-opacity-10 backdrop-filter backdrop-blur font-medium text-xs text-gray-400 hidden peer-hover:block w-70'>
+            Find LAND on Opensea &gt; Details &gt; Token ID
+          </p>
+        </div>
         <div className='flex gap-4 relative'>
           <input
             required

@@ -7,12 +7,12 @@ import { IAPIData, IPredictions } from './types'
  */
 export const SocialMediaOptions = (
   apiData?: IAPIData,
-  predictions?: IPredictions
+  predictions?: IPredictions,
+  wallet?: string
 ) => {
   const mghLink = `https://app.metagamehub.io/valuation`
   // Text for Portfolio
-  const portfolioText =
-    'Here%20is%20my%20Metaverse%20collection!%20%23MyNFTs%20%23MGHDAO%0A%0A&url=https://app.metagamehub.io/portfolio?wallet='
+  const portfolioText = `Here%20is%20my%20Metaverse%20collection!%20%23MyNFTs%20%23MGHDAO%0A%0A&url=https://app.metagamehub.io/portfolio?wallet=${wallet}`
 
   // Text for Card Valuation
   const valuationText = `Check%20out%20this%20LAND%20valuation%20in%20the%20Metaverse!%20%23MyNFTs%20%23MGHDAO%0A%0A**************%0A${predictions?.ethPrediction.toFixed(
@@ -22,8 +22,7 @@ export const SocialMediaOptions = (
   )}%20USDC%0A**************%0A%0A${apiData?.opensea_link}&url=${mghLink}`
 
   // Whatsapp Text for Portfolio
-  const whatsappPortfolioText =
-    'Here%20is%20my%20Metaverse%20collection!%20%23MyNFTs%20%23MGHDAO%0A%0Ahttps://app.metagamehub.io/portfolio?wallet='
+  const whatsappPortfolioText = `Here%20is%20my%20Metaverse%20collection!%20%23MyNFTs%20%23MGHDAO%0A%0Ahttps://app.metagamehub.io/portfolio?wallet=${wallet}`
 
   // Whatsapp Text for Card Valuation
   const whatsappValuationText = `Check%20out%20this%20LAND%20valuation%20in%20the%20Metaverse!%20%23MyNFTs%20%23MGHDAO%0A%0A**************%0A${predictions?.ethPrediction.toFixed(

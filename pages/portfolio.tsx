@@ -7,25 +7,21 @@ import {
   IPriceCard,
   LandsKey,
 } from '../lib/valuation/valuationTypes'
-import {
-  ExternalLink,
-  HorizontalPriceCard,
-  PriceList,
-  SharePopup,
-} from '../components/General'
+import { ExternalLink, PriceList } from '../components/General'
 import { IPredictions } from '../lib/types'
 import { useAppSelector } from '../state/hooks'
 import { Contracts } from '../lib/contracts'
 import { useRouter } from 'next/router'
 import { ellipseAddress } from '../lib/utilities'
-import { Loader, WalletModal } from '../components'
+import { Loader } from '../components'
 import { Fade } from 'react-awesome-reveal'
-import { useVisible } from '../lib/hooks'
 import { Metaverse } from '../lib/enums'
 import PortfolioList from '../components/Portfolio/PortfolioList'
+import { BsTwitter } from 'react-icons/bs'
+import { FiCopy } from 'react-icons/fi'
+import { SocialMediaOptions } from '../lib/socialMediaOptions'
 
 const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
-  const [openModal, setOpenModal] = useState(false)
   const { query, push } = useRouter()
 
   const initialWorth = {
@@ -44,13 +40,8 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   const [formattedDecentralandAssets, setFormattedDecentralandAssets] =
     useState<IPriceCard[]>([])
   const [loading, setLoading] = useState(true)
+  const socialMedia = SocialMediaOptions(undefined, undefined, address)
   const externalWallet = query.wallet
-
-  const {
-    ref,
-    isVisible: showPopup,
-    setIsVisible: setShowPopup,
-  } = useVisible(false)
 
   const landOptions = {
     // LAND contract address might have to be changed once Sandbox && OpenSea finish migration
@@ -68,20 +59,32 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 
   const options = Object.keys(landOptions) as LandsKey[]
 
-  const onPopupSelect = (copy: boolean) => {
-    if (copy) {
-      navigator.clipboard.writeText(
-        'https://app.metagamehub.io/portfolio?wallet=' + address
-      )
-      // Display Feedback Text
-      setShowPopup(!showPopup)
-      setCopiedText(true)
-      setTimeout(() => {
-        setCopiedText(false)
-      }, 1100)
-    } else {
-      setShowPopup(!showPopup)
-    }
+  // const onPopupSelect = (copy: boolean) => {
+  //   if (copy) {
+  //     navigator.clipboard.writeText(
+  //       'https://app.metagamehub.io/portfolio?wallet=' + address
+  //     )
+  //     // Display Feedback Text
+  //     setShowPopup(!showPopup)
+  //     setCopiedText(true)
+  //     setTimeout(() => {
+  //       setCopiedText(false)
+  //     }, 1100)
+  //   } else {
+  //     setShowPopup(!showPopup)
+  //   }
+  // }
+
+  const copyLink = () => {
+    navigator.clipboard.writeText(
+      'https://app.metagamehub.io/portfolio?wallet=' + address
+    )
+    // Display Feedback Text
+
+    setCopiedText(true)
+    setTimeout(() => {
+      setCopiedText(false)
+    }, 1100)
   }
 
   /* When coming from a shared link. We can see our own portfolio 
@@ -89,9 +92,6 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   const seeOwnPortfolio = () => {
     resetState()
     push('/portfolio')
-  }
-  const onClick = () => {
-    externalWallet || !address ? seeOwnPortfolio() : setShowPopup(true)
   }
 
   // Resetting state when Wallet Changes
@@ -106,11 +106,6 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   }
 
   useEffect(() => {
-    if (!externalWallet && !address) {
-      setOpenModal(true)
-      return
-    }
-
     if (externalWallet && alreadyFetched) return
     setAlreadyFetched(true)
 
@@ -179,7 +174,6 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
       </Head>
 
       <section className='w-75vw sm:w-full max-w-7xl pt-12 xl:pt-0'>
-        {openModal && <WalletModal onDismiss={() => setOpenModal(false)} />}
         {/* Headers */}
         <hgroup className='text-white text-center'>
           {/* Change Title if there's a query on the uri */}
@@ -197,59 +191,78 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
               <h1 className='green-text-gradient'>Your Portfolio</h1>
             )}
           </div>
-          {/* Total Lands and Total Worth Container */}
-          <div className='flex flex-col sm:flex-row gap-4 md:gap-12 mb-8 sm:mb-12'>
-            {/* Total Lands */}
-            <div className='flex flex-col justify-between gap-4 sm:gap-0 text-center transition-all gray-box relative'>
-              <h3 className='text-xl md:text-3xl xl:text-4xl'>
-                Total LANDS Owned
-              </h3>
-              {loading ? (
-                <Loader />
-              ) : (
-                <>
-                  <p className='text-4xl animate-fade-in-slow  reverse-text-gradient font-bold'>
-                    {totalAssets}
-                  </p>
-                  <button
-                    onClick={onClick}
-                    className='min-w-fit w-1/2 mx-auto hoverlift animate-fade-in-slow text-white py-3 px-4 rounded-xl bg-gradient-to-br transition-all duration-300 from-pink-600 to-blue-500'
-                  >
-                    {/* Changing button if we come from a shared link 
-                      if not then we change if we copied our own link to share to others */}
-                    {externalWallet || !address
-                      ? 'See your Own Portfolio'
-                      : copiedText
-                      ? 'Link Copied to Clipboard!'
-                      : 'Share this Portfolio'}
-                  </button>
-                  {/* Had to add this div to have a non-dissapearing ref */}
-                  <div className='contents' ref={ref}>
-                    {showPopup && (
-                      <Fade className='z-10 absolute -bottom-3 left-1/2 -translate-x-2/4'>
-                        <SharePopup
-                          sharing='portfolio'
-                          onPopupSelect={onPopupSelect}
-                        />
-                      </Fade>
+          {!externalWallet && !address ? (
+            <button className='items-center justify-center font-medium text-center transition-all ease-in cursor-default z-10 p-4 rounded-xl bg-gradient-to-br from-pink-600 to-blue-500'>
+              No Wallet Detected
+            </button>
+          ) : (
+            // Total Lands and Total Worth Container
+            <div className='flex flex-col sm:flex-row gap-4 md:gap-12 mb-0 sm:mb-12'>
+              {/* Total Lands */}
+              <div className='flex flex-col justify-between gap-4 text-center transition-all gray-box relative'>
+                <h3 className='text-xl md:text-3xl xl:text-4xl'>
+                  Total LANDS Owned
+                </h3>
+                {loading ? (
+                  <Loader />
+                ) : (
+                  <>
+                    <p className='text-4xl animate-fade-in-slow reverse-text-gradient mb-2 font-bold'>
+                      {totalAssets}
+                    </p>
+                    {externalWallet && (
+                      <button
+                        onClick={seeOwnPortfolio}
+                        className='min-w-fit w-1/2 mx-auto animate-fade-in-slow font-medium text-white py-3 px-4 rounded-xl bg-gradient-to-br transition-all duration-300 from-pink-600 to-blue-500'
+                      >
+                        See your Own Portfolio
+                      </button>
                     )}
-                  </div>
-                </>
-              )}
-            </div>
+                    {/* Share Icons */}
+                    {!externalWallet && address && (
+                      <div className='flex gap-2 justify-center'>
+                        {/* Twitter */}
+                        <button
+                          onClick={() =>
+                            window.open(socialMedia.twitter.portfolioLink)
+                          }
+                          className='animate-fade-in-slow text-white p-4 rounded-xl bg-gradient-to-br transition-all duration-300 from-pink-600 to-blue-500'
+                        >
+                          <BsTwitter className='block w-6 h-6 m-auto transition ease-in-out duration-300 hover:scale-105' />
+                        </button>
+                        {/* Copy Link */}
+                        <button
+                          onClick={copyLink}
+                          className='relative animate-fade-in-slow text-white p-4 rounded-xl bg-gradient-to-br transition-all duration-300 from-pink-600 to-blue-500'
+                        >
+                          <FiCopy className='block w-6 h-6 m-auto transition ease-in-out duration-300 hover:scale-105' />
+                          {copiedText && (
+                            <Fade direction='bottom-right' duration={500}>
+                              <span className='font-medium absolute w-fit p-4 rounded-xl -top-1/2 bg-gradient-to-br transition-all duration-300 from-pink-600 to-blue-500'>
+                                Link Copied!
+                              </span>
+                            </Fade>
+                          )}
+                        </button>
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
 
-            {/* Total Worth */}
-            <div className='flex flex-col w-full sm:w-2/3 transition-all justify-between text-center gray-box'>
-              <h3 className='text-xl md:text-3xl xl:text-4xl mb-4'>
-                Total Value Worth
-              </h3>
-              {loading ? (
-                <Loader />
-              ) : (
-                totalWorth && <PriceList predictions={totalWorth} />
-              )}
+              {/* Total Worth */}
+              <div className='flex flex-col w-full sm:w-2/3 transition-all justify-between text-center mb-8 sm:mb-0 gray-box'>
+                <h3 className='text-xl md:text-3xl xl:text-4xl mb-4'>
+                  Total Value Worth
+                </h3>
+                {loading ? (
+                  <Loader />
+                ) : (
+                  totalWorth && <PriceList predictions={totalWorth} />
+                )}
+              </div>
             </div>
-          </div>
+          )}
         </hgroup>
 
         {/* Lands Grid */}
