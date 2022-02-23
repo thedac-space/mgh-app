@@ -157,6 +157,7 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
         setLoading(false)
       } catch (err) {
         console.log(err)
+        setLoading(false)
       }
     }
 
