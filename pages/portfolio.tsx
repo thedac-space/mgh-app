@@ -59,22 +59,6 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 
   const options = Object.keys(landOptions) as LandsKey[]
 
-  // const onPopupSelect = (copy: boolean) => {
-  //   if (copy) {
-  //     navigator.clipboard.writeText(
-  //       'https://app.metagamehub.io/portfolio?wallet=' + address
-  //     )
-  //     // Display Feedback Text
-  //     setShowPopup(!showPopup)
-  //     setCopiedText(true)
-  //     setTimeout(() => {
-  //       setCopiedText(false)
-  //     }, 1100)
-  //   } else {
-  //     setShowPopup(!showPopup)
-  //   }
-  // }
-
   const copyLink = () => {
     navigator.clipboard.writeText(
       'https://app.metagamehub.io/portfolio?wallet=' + address
