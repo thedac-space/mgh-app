@@ -32,34 +32,45 @@ const PriceCard = ({ showCard, processing, apiData, predictions }: PriceCardProp
     return (
         <div className={`${showCard ? "animate__fadeIn" : "hidden"} ${processing && "animate__fadeOut animate__fast"} animate__animated relative w-full h-full space-y-3 flex flex-col items-center`}>
 
-            <div className="flex flex-col w-full flex-grow 2xl:flex-none">
-              {/* Image and Likes Wrapper */}
-              <div className="w-full flex md:gap-10 sm:gap-4 justify-between md:justify-start items-center">
-                {/* Image */}
-                <a href={apiData.external_link} target="_blank" className="relative hover:shadow-dark">
-                    <img src={apiData.images.image_url} className="rounded-md object-cover w-36 h-36" />
-                    <FiExternalLink className="absolute top-0 left-0 text-white text-xs backdrop-filter backdrop-blur-sm rounded-xl w-6 h-6 p-1" />
-                </a>
-                {/* Likes */}
-                <LandLikeBox landId={apiData.tokenId} metaverse={apiData.metaverse} />
-              </div>
-                <p className="text-xl 2xl:text-2xl font-bold text-gray-200 pt-3">
-                    {apiData.name}
-                </p>
-                <p className="text-xs text-gray-400 pb-3">
-                    Token ID: {handleTokenID(apiData.tokenId)}
-                </p>
-                <div className="flex space-x-5 items-center">
-                    <a href={apiData.opensea_link} target="_blank" className="flex items-center max-w-max space-x-1 text-gray-200 text-sm hover:text-blue-400 transition duration-300 ease-in-out" >
-                        <p className="font-medium">Opensea</p>
-                        <FiExternalLink className="mb-0.5" />
-                    </a>
-                    <a href={apiData.external_link} target="_blank" className="flex items-center max-w-max space-x-1 text-gray-300 text-sm hover:text-blue-400 transition duration-300 ease-in-out" >
-                        <p className="font-medium capitalize">{apiData.metaverse}</p>
-                        <FiExternalLink className="mb-0.5" />
-                    </a>
+            {/* Image and Name + Links Wrapper */}
+            <div className="w-full justify-center flex gap-4">
+              {/* Image */}
+              <a href={apiData.external_link} target="_blank" className="w-full  relative hover:shadow-dark">
+                  <img src={apiData.images.image_url} className="rounded-md object-cover w-full h-full" />
+                  <FiExternalLink className="absolute top-0 left-0 text-white text-xs backdrop-filter backdrop-blur-sm rounded-xl w-6 h-6 p-1" />
+              </a>
+              {/* Text Wrapper  */}
+              <div className="w-full flex flex-col justify-between">
+                {/* Land Name & Id */}
+                <div>
+                  {/* Land Name */}
+                  <p className="text-lg 2xl:text-xl mb-2 font-semibold text-gray-200">
+                      {apiData.name}
+                  </p>
+                  {/* Token Id */}
+                  <p className="text-xs text-gray-400 flex gap-2 pb-3">
+                      Token ID: {handleTokenID(apiData.tokenId)}
+                      <BsTwitter
+                        title='Share Valuation'
+                        onClick={() => window.open(options.twitter.valuationLink)}
+                        className='h-4 w-4 relative bottom-[0.1rem] text-gray-200 hover:text-blue-400 transition ease-in-out duration-300 cursor-pointer'
+                        />
+                  </p>
                 </div>
-
+                {/* Links */}
+                <div className="flex flex-col gap-4 justify-center">
+                  {/* Open Sea Link */}
+                  <a href={apiData.opensea_link} target="_blank" className="flex items-center max-w-max space-x-1 text-gray-200 text-sm hover:text-blue-400 transition duration-300 ease-in-out" >
+                      <p className="font-medium">Opensea</p>
+                      <FiExternalLink className="mb-0.5" />
+                  </a>
+                  {/* Metaverse Link */}
+                  <a href={apiData.external_link} target="_blank" className="flex items-center max-w-max space-x-1 text-gray-300 text-sm hover:text-blue-400 transition duration-300 ease-in-out" >
+                    <p className="font-medium capitalize">{apiData.metaverse}</p>
+                    <FiExternalLink className="mb-0.5" />
+                  </a>
+                </div>
+              </div>
             </div>
 
             <hr className="block border-gray-500 w-5/6" />
@@ -101,11 +112,11 @@ const PriceCard = ({ showCard, processing, apiData, predictions }: PriceCardProp
                     </div>
                 )}
             </div>
-            <BsTwitter
-              title='Share Valuation'
-              onClick={() => window.open(options.twitter.valuationLink)}
-              className='absolute h-6 w-6 bottom-3.5 sm:bottom-5 right-0 text-gray-200 hover:text-blue-400 transition ease-in-out duration-300 cursor-pointer'
-            />
+            
+            {/* Likes */}
+            <div className="flex flex-start">
+              <LandLikeBox landId={apiData.tokenId} metaverse={apiData.metaverse} />
+            </div>
         </div>
     )
 }

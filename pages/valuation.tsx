@@ -237,7 +237,7 @@ const ValuationPage: NextPage = ({ prices }: any) => {
                     </div>
 
                     {/* Price Card */}
-                    <div className="flex flex-col items-start border-[#5b5c571a] border-t border-l border-opacity-20 shadow-dark rounded-xl py-5 px-10 w-full max-w-full sm:max-w-sm bg-grey-dark bg-opacity-30 text-left">
+                    <div className="flex flex-col items-start border-[#5b5c571a] border-t border-l border-opacity-20 shadow-dark rounded-xl py-5 px-6 w-full max-w-full sm:max-w-sm bg-grey-dark bg-opacity-30 text-left">
                         <PriceCard showCard={showCard} processing={idProcessing || coordinatesProcessing} apiData={apiData} predictions={predictions} />
                     </div>
 

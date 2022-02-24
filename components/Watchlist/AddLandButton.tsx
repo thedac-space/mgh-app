@@ -35,7 +35,12 @@ const AddLandButton = ({ limitReached, state, addBy }: Props) => {
   return (
     <button
       disabled={limitReached || state === 'noWallet'}
-      className='items-center justify-center font-medium text-center transition-all flex grow gap-2 ease-in hover:shadow-subtleWhite z-10 p-2 rounded-xl bg-gradient-to-br from-pink-600 to-blue-500'
+      className={
+        (state === options[addBy].success
+          ? 'bg-green-500 text-white'
+          : 'bg-gray-200  text-gray-800') +
+        ' items-center justify-center font-medium text-center transition-all flex grow gap-2 ease-in hover:shadow-subtleWhite z-10 p-2 rounded-xl hover:bg-white'
+      }
     >
       {/* Loading Icon */}
       {loadingIconBoolean && (
