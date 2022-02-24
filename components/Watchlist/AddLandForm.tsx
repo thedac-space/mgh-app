@@ -4,6 +4,7 @@ import { AddLandButton } from '.'
 import { Metaverse } from '../../lib/enums'
 import { LandsKey } from '../../lib/valuation/valuationTypes'
 import { WatchListState } from '../../pages/watchlist'
+import { OptimizedImage } from '../General'
 
 interface Props {
   state: WatchListState
@@ -26,6 +27,11 @@ const AddLandForm = ({ state, addToWatchList, ids, landKeys }: Props) => {
     Y: '',
   })
   const [metaverse, setMetaverse] = useState<Metaverse>()
+
+  const mvOptions = {
+    sandbox: { logo: '/images/the-sandbox-sand-logo.png' },
+    decentraland: { logo: '/images/decentraland-mana-logo.png' },
+  }
 
   const addById = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -51,156 +57,171 @@ const AddLandForm = ({ state, addToWatchList, ids, landKeys }: Props) => {
       No Wallet Detected
     </button>
   ) : (
-    <div className='gray-box bg-opacity-10 transition-all w-fit mb-8 flex flex-col gap-6'>
+    <div className='gray-box bg-opacity-10 transition-all w-fit mb-14 flex flex-col md:flex-row gap-6'>
       {/* Metaverse Options */}
       <div>
         <p className='font-medium mb-2 text-xs md:text-sm pt-1'>
           Choose Metaverse
         </p>
-        <div className='flex gap-2'>
+        <div className='flex items-stretch gap-2'>
+          {/* Mapping Through Options */}
           {landKeys.map((landKey) => (
             <button
               disabled={limitReached}
               key={landKey}
               onClick={() => setMetaverse(landKey as Metaverse)}
-              className={
-                (metaverse === landKey
-                  ? 'text-gray-100 border-gray-500 bg-gradient-to-br from-pink-600 to-blue-500'
-                  : 'text-gray-400 border-gray-500') +
-                ' flex flex-col disabled:bg-transparent p-3  hover:text-gray-100 hover:border-gray-300 items-center justify-center space-y-2 rounded-xl cursor-pointer group focus:outline-none border transition duration-300 ease-in-out'
-              }
+              className={`flex flex-col items-center justify-center space-y-2 rounded-xl cursor-pointer p-2 px-3 pt-4 md:w-30 md:h-[9.7rem] w-24 h-24 group focus:outline-none ${
+                metaverse === landKey
+                  ? 'border-opacity-100 text-gray-200'
+                  : 'border-opacity-40 hover:border-opacity-100 text-gray-400 hover:text-gray-200'
+              } border border-gray-400 focus:border-opacity-100 transition duration-300 ease-in-out`}
             >
-              <p className='font-medium pt-1'>
+              <OptimizedImage
+                src={mvOptions[landKey].logo}
+                height={80}
+                width={80}
+                objectFit='contain'
+                className={`w-10 ${
+                  metaverse === landKey ? 'grayscale-0' : 'grayscale'
+                } group-hover:grayscale-0 transition duration-300 ease-in-out`}
+              />
+              <p className='font-medium text-xs md:text-sm pt-1'>
                 {landKey[0].toUpperCase() + landKey.substring(1)}
               </p>
             </button>
           ))}
         </div>
       </div>
-      {/* Add by Token Id */}
-      <form onSubmit={(e) => addById(e)}>
-        <div className='flex gap-2 relative items-center'>
+      {/* Add By Wrapper */}
+      <div className='flex flex-col gap-6'>
+        {/* Add by Token Id */}
+        <form onSubmit={(e) => addById(e)}>
+          <div className='flex gap-2 relative items-center'>
+            <p
+              className={
+                'font-medium mb-2 text-xs md:text-sm pt-1 ' +
+                (state === 'successId' && 'text-green-500')
+              }
+            >
+              Add by Token ID
+            </p>
+
+            <BsQuestionCircle className='text-gray-300 cursor-pointer peer relative bottom-1' />
+            <p className='absolute -top-7 border border-gray-500 -left-6 xs:left-0 pl-2 p-2 rounded-lg bg-black bg-opacity-10 backdrop-filter backdrop-blur font-medium text-xs text-gray-400 hidden peer-hover:block w-70'>
+              Find LAND on Opensea &gt; Details &gt; Token ID
+            </p>
+          </div>
+          <div className='flex gap-4 relative'>
+            <input
+              required
+              disabled={limitReached}
+              type='number'
+              onChange={(e) => setLandId(e.target.value)}
+              value={landId}
+              placeholder='14271'
+              className={
+                (state === 'successId'
+                  ? 'border-green-500 placeholder-green-500'
+                  : 'border-gray-300 placeholder-gray-300') +
+                ' bg-transparent block w-[8.5rem] text-white p-3 focus:outline-none border border-opacity-40 hover:border-opacity-100 focus:border-opacity-100 transition duration-300 ease-in-out rounded-xl placeholder-opacity-75'
+              }
+            />
+            {/* Add land Button */}
+            <AddLandButton
+              addBy='id'
+              state={state}
+              limitReached={limitReached}
+            />
+
+            {/* Warning Texts */}
+
+            {/* Bad Land Query */}
+            {state === 'badQueryId' && (
+              <p className='font-medium text-xs absolute -bottom-5  text-red-500 mt-1 pl-2 text-left w-full max-w-sm'>
+                LAND doesn't exist
+              </p>
+            )}
+            {/* Limit of any lands */}
+            {state.includes('limitId') && (
+              <p className='font-medium text-xs absolute -bottom-5  text-red-500 mt-1 pl-2 text-left w-full max-w-sm'>
+                {state === 'limitIdSandbox'
+                  ? 'Sandbox Limit Reached'
+                  : 'Decentraland Limit Reached'}
+              </p>
+            )}
+          </div>
+        </form>
+        {/* Add by Coordinates */}
+        <form onSubmit={(e) => addByCoordinates(e)}>
           <p
             className={
-              'font-medium mb-2 text-xs md:text-sm pt-1 ' +
-              (state === 'successId' && 'text-green-500')
+              'mb-2 font-medium text-xs md:text-sm pt-1 ' +
+              (state === 'successCoordinates' && 'text-green-500')
             }
           >
-            Add by Token ID
+            Add by Coordinates
           </p>
-
-          <BsQuestionCircle className='text-gray-300 cursor-pointer peer relative bottom-1' />
-          <p className='absolute -top-7 border border-gray-500 -left-6 xs:left-0 pl-2 p-2 rounded-lg bg-black bg-opacity-10 backdrop-filter backdrop-blur font-medium text-xs text-gray-400 hidden peer-hover:block w-70'>
-            Find LAND on Opensea &gt; Details &gt; Token ID
-          </p>
-        </div>
-        <div className='flex gap-4 relative'>
-          <input
-            required
-            disabled={limitReached}
-            type='number'
-            onChange={(e) => setLandId(e.target.value)}
-            value={landId}
-            placeholder='14271'
-            className={
-              (state === 'successId'
-                ? 'border-green-500 placeholder-green-500'
-                : 'border-gray-300 placeholder-gray-300') +
-              ' bg-transparent block w-[8.5rem] text-white p-3 focus:outline-none border border-opacity-40 hover:border-opacity-100 focus:border-opacity-100 transition duration-300 ease-in-out rounded-xl placeholder-opacity-75'
-            }
-          />
-          {/* Add land Button */}
-          <AddLandButton addBy='id' state={state} limitReached={limitReached} />
-
-          {/* Warning Texts */}
-
-          {/* Bad Land Query */}
-          {state === 'badQueryId' && (
-            <p className='font-medium text-xs absolute -bottom-5  text-red-500 mt-1 pl-2 text-left w-full max-w-sm'>
-              LAND doesn't exist
-            </p>
-          )}
-          {/* Limit of any lands */}
-          {state.includes('limitId') && (
-            <p className='font-medium text-xs absolute -bottom-5  text-red-500 mt-1 pl-2 text-left w-full max-w-sm'>
-              {state === 'limitIdSandbox'
-                ? 'Sandbox Limit Reached'
-                : 'Decentraland Limit Reached'}
-            </p>
-          )}
-        </div>
-      </form>
-      {/* Add by Coordinates */}
-
-      <form onSubmit={(e) => addByCoordinates(e)}>
-        <p
-          className={
-            'mb-2 font-medium text-xs md:text-sm pt-1 ' +
-            (state === 'successCoordinates' && 'text-green-500')
-          }
-        >
-          Add by Coordinates
-        </p>
-        <div className='flex gap-4 relative'>
-          <div className='flex gap-2'>
-            <input
-              required
-              disabled={limitReached}
-              type='number'
-              onChange={(e) =>
-                setCoordinates({ ...coordinates, X: e.target.value })
-              }
-              value={coordinates?.X}
-              placeholder='X'
-              className={
-                (state === 'successCoordinates'
-                  ? 'border-green-500 placeholder-green-500'
-                  : 'border-gray-300 placeholder-gray-300') +
-                ' bg-transparent block w-16  text-white p-3 focus:outline-none border border-opacity-40 hover:border-opacity-100 focus:border-opacity-100 transition duration-300 ease-in-out rounded-xl placeholder-opacity-75'
-              }
+          <div className='flex gap-4 relative'>
+            <div className='flex gap-2'>
+              <input
+                required
+                disabled={limitReached}
+                type='number'
+                onChange={(e) =>
+                  setCoordinates({ ...coordinates, X: e.target.value })
+                }
+                value={coordinates?.X}
+                placeholder='X'
+                className={
+                  (state === 'successCoordinates'
+                    ? 'border-green-500 placeholder-green-500'
+                    : 'border-gray-300 placeholder-gray-300') +
+                  ' bg-transparent block w-16  text-white p-3 focus:outline-none border border-opacity-40 hover:border-opacity-100 focus:border-opacity-100 transition duration-300 ease-in-out rounded-xl placeholder-opacity-75'
+                }
+              />
+              <input
+                required
+                disabled={limitReached}
+                value={coordinates?.Y}
+                onChange={(e) =>
+                  setCoordinates({ ...coordinates, Y: e.target.value })
+                }
+                type='number'
+                placeholder='Y'
+                className={
+                  (state === 'successCoordinates'
+                    ? 'border-green-500 placeholder-green-500'
+                    : 'border-gray-300 placeholder-gray-300') +
+                  ' bg-transparent block w-16  text-white p-3 focus:outline-none border border-opacity-40 hover:border-opacity-100 focus:border-opacity-100 transition duration-300 ease-in-out rounded-xl placeholder-opacity-75'
+                }
+              />
+            </div>
+            {/* Add land Button */}
+            <AddLandButton
+              addBy='coordinates'
+              state={state}
+              limitReached={limitReached}
             />
-            <input
-              required
-              disabled={limitReached}
-              value={coordinates?.Y}
-              onChange={(e) =>
-                setCoordinates({ ...coordinates, Y: e.target.value })
-              }
-              type='number'
-              placeholder='Y'
-              className={
-                (state === 'successCoordinates'
-                  ? 'border-green-500 placeholder-green-500'
-                  : 'border-gray-300 placeholder-gray-300') +
-                ' bg-transparent block w-16  text-white p-3 focus:outline-none border border-opacity-40 hover:border-opacity-100 focus:border-opacity-100 transition duration-300 ease-in-out rounded-xl placeholder-opacity-75'
-              }
-            />
+
+            {/* Warning Texts */}
+
+            {/* Bad Land Query */}
+            {state === 'badQueryCoordinates' && (
+              <p className='font-medium text-xs absolute -bottom-5  text-red-500 mt-1 pl-2 text-left w-full max-w-sm'>
+                LAND doesn't exist
+              </p>
+            )}
+            {/* Limit of any lands */}
+            {state.includes('limitCoordinates') && (
+              <p className='font-medium text-xs absolute -bottom-5  text-red-500 mt-1 pl-2 text-left w-full max-w-sm'>
+                {state === 'limitCoordinatesSandbox'
+                  ? 'Sandbox Limit Reached'
+                  : 'Decentraland Limit Reached'}
+              </p>
+            )}
           </div>
-          {/* Add land Button */}
-          <AddLandButton
-            addBy='coordinates'
-            state={state}
-            limitReached={limitReached}
-          />
-
-          {/* Warning Texts */}
-
-          {/* Bad Land Query */}
-          {state === 'badQueryCoordinates' && (
-            <p className='font-medium text-xs absolute -bottom-5  text-red-500 mt-1 pl-2 text-left w-full max-w-sm'>
-              LAND doesn't exist
-            </p>
-          )}
-          {/* Limit of any lands */}
-          {state.includes('limitCoordinates') && (
-            <p className='font-medium text-xs absolute -bottom-5  text-red-500 mt-1 pl-2 text-left w-full max-w-sm'>
-              {state === 'limitCoordinatesSandbox'
-                ? 'Sandbox Limit Reached'
-                : 'Decentraland Limit Reached'}
-            </p>
-          )}
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   )
 }
