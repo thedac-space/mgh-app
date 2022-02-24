@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { NextPage } from "next";
 import Head from "next/head";
 import "animate.css"
@@ -10,13 +10,14 @@ import { Metaverse } from "../lib/enums";
 import { IAPIData, IPredictions } from "../lib/types";
 import FloorPriceTracker from "../components/Valuation/FloorPriceTracker";
 import SalesVolumeDaily from "../components/Valuation/SalesVolumeDaily";
-import ScoreBox from "../components/General/ScoreBox";
-import { MostUnderValuedLand } from "../components/Valuation";
-import CommentaryBox from "../components/General/CommentaryBox";
+import {  MostUnderValuedLand } from "../components/Valuation";
+import { convertETHPrediction, convertMANAPrediction } from "../lib/valuation/valuationUtils";
+import { useRouter } from "next/router";
 
 
 
 const ValuationPage: NextPage = ({ prices }: any) => {
+  const { query } = useRouter()
     const [apiData, setAPIData] = useState<IAPIData>();
     const [predictions, setPredictions] = useState<IPredictions>()
 
@@ -25,36 +26,23 @@ const ValuationPage: NextPage = ({ prices }: any) => {
     const [showCard, setShowCard] = useState(false);
     const [idError, setIdError] = useState("");
     const [coordinatesError, setCoordinatesError] = useState("");
-    const [tokenId, setTokenId ] = useState("0");
+    const [tokenId, setTokenId ] = useState("");
+    const [comingFromLink, setComingFromLink] = useState<Boolean>()
 
     const [metaverse, setMetaverse] = useState<Metaverse>(Metaverse.SANDBOX)
 
-    const convertETHPrediction = (ethPrediction: number) => {
-        const ethUSD = prices.ethereum.usd;
-        const sandUSD = prices["the-sandbox"].usd;
-        const usdPrediction = ethPrediction * ethUSD;
-        const sandPrediction = usdPrediction / sandUSD;
-        return { ethPrediction, usdPrediction, sandPrediction }
-    }
-
-    const convertMANAPrediction = (manaPrediction: number) => {
-        const ethUSD = prices.ethereum.usd;
-        const manaUSD = prices.decentraland.usd;
-        const usdPrediction = manaPrediction * manaUSD;
-        const ethPrediction = usdPrediction / ethUSD;
-        return { ethPrediction, usdPrediction, manaPrediction }
-    }
+    
 
     const handleAPIData = (data: any) => {
 
         setAPIData(data)
         if (data.metaverse === Metaverse.SANDBOX) {
             const ethPrediction = data.prices.predicted_price;
-            const predictions = convertETHPrediction(ethPrediction)
+            const predictions = convertETHPrediction(prices, ethPrediction)
             setPredictions(predictions)
         } else if (data.metaverse === Metaverse.DECENTRALAND) {
             const manaPrediction = data.prices.predicted_price;
-            const predictions = convertMANAPrediction(manaPrediction)
+            const predictions = convertMANAPrediction(prices, manaPrediction)
             setPredictions(predictions)
         }
 
@@ -80,7 +68,7 @@ const ValuationPage: NextPage = ({ prices }: any) => {
             });
             const data = await res.json()
             if (data.err) {
-                setCoordinatesError("Not enough data yet")
+                setCoordinatesError("LAND doesn't exist")
                 setShowCard(false);
             } else {
                 handleAPIData(data)
@@ -96,23 +84,26 @@ const ValuationPage: NextPage = ({ prices }: any) => {
 
     }
 
-    const handleIDSubmit = async (ev: any) => {
-        ev.preventDefault();
-        const tokenID = (document.getElementById('tokenID') as HTMLInputElement).value
+    const handleIDSubmit = async (ev?: React.FormEvent<HTMLFormElement>, fromQuery?: boolean) => {
+      console.log("handling")
+      ev?.preventDefault();
+      console.log("passed prevent")
+      setIdProcessing(true);
+      console.log("passed ID Processing")
 
-        setIdProcessing(true);
-
+        const tokenID = fromQuery ? query.land : tokenId
+        const chosenMetaverse = fromQuery  ? query.metaverse : metaverse 
         try {
             const res = await fetch("/api/getLandData", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ tokenID: tokenID, metaverse: metaverse })
+                body: JSON.stringify({ tokenID: tokenID, metaverse: chosenMetaverse })
             });
             const data = await res.json()
             if (data.err) {
-                setIdError("Not enough data yet")
+                setIdError("LAND doesn't exist")
                 setShowCard(false);
             } else {
                 handleAPIData(data)
@@ -126,6 +117,18 @@ const ValuationPage: NextPage = ({ prices }: any) => {
             setIdProcessing(false);
         }
     }
+
+    useEffect(() => {
+      if (comingFromLink === false) return
+      if (!query.land || !query.metaverse) return
+      // If coming from Outside Link then show land in link
+      handleIDSubmit(undefined, true)
+      // Change this to not retrigger
+      setComingFromLink(false)
+
+    },[query])
+
+    
     const floorPrice = null;
     const floorPriceHistory = null;
 
@@ -136,51 +139,70 @@ const ValuationPage: NextPage = ({ prices }: any) => {
                 <meta name="description" content="Governance of metaverse related items, fair valuation and minting of NFT backed tokens and provision of metaverse market data." />
             </Head>
 
-            {/* <div className="h-full w-full flex flex-row items-center justify-evenly mt-8 xl:mt-0"> */}
-            <div className="w-full flex flex-col items-center justify-start space-y-10 max-w-4xl mt-8 xl:mt-0">
+            <div className="w-full flex flex-col items-center xs:w-[22rem] sm:w-full justify-start space-y-10 max-w-4xl mt-8 xl:mt-0">
 
-                <div className="flex flex-col items-start border-t border-l border-opacity-20 shadow-dark rounded-xl p-5 w-full bg-grey-dark bg-opacity-30 text-left">
-                    <h2 className="text-transparent bg-clip-text bg-gradient-to-b from-blue-500 via-green-400 to-green-500 pb-0 sm:pb-2">LAND Valuation</h2>
-                    {/* <p className={`text-lg xl:text-xl font-medium text-gray-200 pt-0 sm:pt-5`}>YOu can also buy the dataset containing detailled raw data about The Sandbox LANDs NFTs on the <a href="https://market.oceanprotocol.com/asset/did:op:8331D69bF312604542D5f5f41D859dA27568B7cd" target="_blank" className="underline">Ocean Marketplace</a>.</p> */}
+                {/* Main Header */}
+                <div className="gray-box flex justify-between items-center">
+                  <h1 className="text-transparent bg-clip-text lg:text-5xl text-3xl bg-gradient-to-b from-blue-500 via-green-400 to-green-500 pb-0 sm:pb-2">LAND Valuation</h1>
+                  {/* Watchlist and Portfolio Button's wrapper */}
+                  <div className="sm:flex gap-5 hidden">
+                    {/* Portfolio */}
+                    <Link href={'/portfolio'}>
+                      <button className='hoverlift font-medium text-white p-3 rounded-xl bg-gradient-to-br transition-all duration-300 from-pink-600 to-blue-500'>
+                        Explore your portfolio
+                      </button>
+                    </Link>
+                    {/*  Watchlist */}
+                    <Link href={'/watchlist'}>
+                      <button className='hoverlift font-medium text-white p-3 rounded-xl bg-gradient-to-br transition-all duration-300 from-pink-600 to-blue-500'>
+                        Go to Watchlist
+                      </button>
+                    </Link>
+                  </div>
                 </div>
 
-                <div className="flex flex-col sm:flex-row space-y-5 sm:space-y-0 space-x-0 sm:space-x-5 md:space-x-10 items-stretch justify-between w-full">
-                    <SalesVolumeDaily collectionName={metaverse} one_day_volume={null}></SalesVolumeDaily>
-                    
-                    <div className="flex flex-col justify-between w-full space-y-5 md:space-y-10 lg:space-y-5">
-                        {/* <div className="flex flex-col items-start border-t border-l border-opacity-20 shadow-dark rounded-xl p-5 w-full bg-grey-dark bg-opacity-30 text-left">
-                            <p className="font-medium text-gray-300 mb-3 pl-1">Choose Metaverse</p>
-                        </div> */}
-                        <FloorPriceTracker price={floorPrice} priceHistory={floorPriceHistory} collectionName={metaverse}/>
-                        
-                    </div>
+                {/* MOBILE Watchlist and Portfolio Button's wrapper */}
+                <div className="sm:hidden gap-5 flex">
+                  {/* Portfolio */}
+                  <Link href={'/portfolio'}>
+                    <button className='hoverlift font-medium text-white p-3 rounded-xl bg-gradient-to-br transition-all duration-300 from-pink-600 to-blue-500'>
+                      Explore your portfolio
+                    </button>
+                  </Link>
+                  {/*  Watchlist */}
+                  <Link href={'/watchlist'}>
+                    <button className='hoverlift font-medium text-white p-3 rounded-xl bg-gradient-to-br transition-all duration-300 from-pink-600 to-blue-500'>
+                      Go to Watchlist
+                    </button>
+                  </Link>
                 </div>
                 
-
+                
+                {/* Metaverse Form and ScoreBox Wrapper */}
                 <div className="flex flex-col sm:flex-row space-y-5 sm:space-y-0 space-x-0 sm:space-x-5 md:space-x-10 items-stretch justify-between w-full">
             
-                    <div className="flex flex-col justify-between w-full space-y-5 md:space-y-10 lg:space-y-5">
+                    {/* Left Side */}
+                    <div className="flex flex-col w-full gap-10">
                         
-                        <div className="flex flex-col items-start border-t border-l border-opacity-20 shadow-dark rounded-xl p-5 w-full bg-grey-dark bg-opacity-30 text-left">
+                        {/* Choose Metaverse */}
+                        <div className="flex flex-col items-start gray-box text-left">
                             <p className="font-medium text-gray-300 mb-3 pl-1">Choose Metaverse</p>
 
                             <div className="flex space-x-5">
-                                <div onClick={() => setMetaverse(Metaverse.SANDBOX)} className={`flex flex-col items-center justify-center space-y-2 rounded-xl cursor-pointer p-2 px-3 pt-4 w-24 md:w-30 h-24 md:h-30 group focus:outline-none ${metaverse === Metaverse.SANDBOX ? "border-opacity-100" : "border-opacity-40 hover:border-opacity-100"} border focus:border-opacity-100 transition duration-300 ease-in-out`}>
+                                <div onClick={() => setMetaverse(Metaverse.SANDBOX)} className={`flex flex-col items-center justify-center space-y-2 rounded-xl cursor-pointer p-2 px-3 pt-4 w-24 md:w-30 h-24 md:h-30 group focus:outline-none ${metaverse === Metaverse.SANDBOX ? "border-opacity-100 text-gray-200" : "border-opacity-40 hover:border-opacity-100 text-gray-400 hover:text-gray-200"} border border-gray-400 focus:border-opacity-100 transition duration-300 ease-in-out`}>
                                     <img src="/images/the-sandbox-sand-logo.png" className={`h-12 md:h-14 ${metaverse === Metaverse.SANDBOX ? "grayscale-0" : "grayscale"} group-hover:grayscale-0 transition duration-300 ease-in-out`} />
-                                    <p className="font-medium text-gray-400 text-xs md:text-sm pt-1">Sandbox</p>
+                                    <p className="font-medium text-xs md:text-sm pt-1">Sandbox</p>
                                 </div>
-                                <div onClick={() => setMetaverse(Metaverse.DECENTRALAND)} className={`flex flex-col items-center justify-center space-y-2 rounded-xl cursor-pointer p-2 px-3 pt-4 w-24 md:w-30 h-24 md:h-30 group focus:outline-none ${metaverse === Metaverse.DECENTRALAND ? "border-opacity-100" : "border-opacity-40 hover:border-opacity-100"} border focus:border-opacity-100 transition duration-300 ease-in-out`}>
+                                <div onClick={() => setMetaverse(Metaverse.DECENTRALAND)} className={`flex flex-col items-center justify-center space-y-2 rounded-xl cursor-pointer p-2 px-3 pt-4 w-24 md:w-30 h-24 md:h-30 group focus:outline-none ${metaverse === Metaverse.DECENTRALAND ? "border-opacity-100 text-gray-200" : "text-gray-400 hover:text-gray-200 border-opacity-40 hover:border-opacity-100"} border border-gray-400 focus:border-opacity-100 transition duration-300 ease-in-out`}>
                                     <img src="/images/decentraland-mana-logo.png" className={`h-12 md:h-14 ${metaverse === Metaverse.DECENTRALAND ? "grayscale-0" : "grayscale"} group-hover:grayscale-0 transition duration-300 ease-in-out`} />
-                                    <p className="font-medium text-gray-400 text-xs md:text-sm pt-1">Decentraland</p>
+                                    <p className="font-medium text-xs md:text-sm pt-1">Decentraland</p>
                                 </div>
                             </div>
                         </div>
-
-                        <div className={`${showCard ? "animate__fadeIn" : "hidden"} flex flex-col items-start border-t border-l border-opacity-20 shadow-dark rounded-xl p-5 w-full bg-grey-dark bg-opacity-30 text-left`} >
-                            <ScoreBox showCard={showCard} landId={tokenId}></ScoreBox>
-                        </div>
-
-                        <div className="flex flex-col items-start border-t border-l border-opacity-20 shadow-dark rounded-xl p-5 w-full bg-grey-dark bg-opacity-30 text-left">
+                        
+                        {/* Valuation Form */}
+                        <div className="flex flex-col items-start gray-box">
+                            {/* Find by Token ID */}
                             <div className="relative flex flex-wrap items-center mb-3 pl-1 text-left w-full max-w-sm">
                                 <p className="font-medium text-gray-300">Find by Token ID</p>
                                 <BsQuestionCircle className="text-gray-300 cursor-pointer peer ml-3 -mt-1" />
@@ -197,6 +219,7 @@ const ValuationPage: NextPage = ({ prices }: any) => {
                             </form>
                             <p className="font-medium text-xs text-red-500 mt-1 pl-2 text-left w-full max-w-sm">{idError}</p>
 
+                            {/* Find by Coordinatess */}
                             <p className="font-medium  text-gray-300 mb-3 pl-1 text-left w-full max-w-sm mt-8">Find by Coordinates</p>
                             <form onSubmit={handleCoordinatesSubmit} onInput={() => { setIdError(""); setCoordinatesError("") }} className="relative flex items-stretch justify-between space-x-3 lg:space-x-5 w-full rounded-xl max-w-sm">
                                 <input required id="X" type="text" placeholder="X" className={`bg-transparent w-full text-white font-medium p-4 focus:outline-none border ${coordinatesError ? "border-red-500 border-opacity-100" : "border-opacity-40 "} hover:border-opacity-100 focus:border-opacity-100 transition duration-300 ease-in-out rounded-xl placeholder-white placeholder-opacity-75`} />
@@ -213,40 +236,26 @@ const ValuationPage: NextPage = ({ prices }: any) => {
 
                     </div>
 
-                    <div className="flex flex-col items-start border-t border-l border-opacity-20 shadow-dark rounded-xl p-5 w-full max-w-full sm:max-w-sm bg-grey-dark bg-opacity-30 text-left">
+                    {/* Price Card */}
+                    <div className="flex flex-col items-start border-[#5b5c571a] border-t border-l border-opacity-20 shadow-dark rounded-xl py-5 px-10 w-full max-w-full sm:max-w-sm bg-grey-dark bg-opacity-30 text-left">
                         <PriceCard showCard={showCard} processing={idProcessing || coordinatesProcessing} apiData={apiData} predictions={predictions} />
-                        <CommentaryBox showCard={showCard} landId={tokenId}></CommentaryBox>
                     </div>
 
                 </div>
 
                 
-
-                <div className="flex flex-col items-start border-t border-l border-opacity-20 shadow-dark rounded-xl p-5 w-full bg-grey-dark bg-opacity-30 text-left">
-                    <p className={`text-lg xl:text-xl font-medium text-gray-300`}>You can also buy the full dataset containing detailed raw data about The Sandbox LANDs NFTs on the <a href="https://market.oceanprotocol.com/asset/did:op:8331D69bF312604542D5f5f41D859dA27568B7cd" target="_blank" className="hover:underline text-pink-600">Ocean Marketplace</a>.</p>
-                </div>
-
-                {/* Tier 1 - Buttons */}
-                <div className="flex gap-5">
-
-                  {/* Tier 1 - Portfolio */}
-                  <Link href={'/portfolio'}>
-                    <button className='hoverlift text-white p-4 rounded-xl bg-gradient-to-br transition-all duration-300 from-pink-600 to-blue-500'>
-                      Explore your portfolio
-                    </button>
-                  </Link>
-
-                  {/* Tier 1 - Watchlist */}
-                  <Link href={'/watchlist'}>
-                    <button className='hoverlift text-white p-4 rounded-xl bg-gradient-to-br transition-all duration-300 from-pink-600 to-blue-500'>
-                      Go to Watchlist
-                    </button>
-                  </Link>
-            
-                </div>
                 
                 {/* Tier 1 - Most Undervalued Land */}
-                <MostUnderValuedLand verticalUnder="sm" predictions={undefined} processing={false} showCard={true} apiData={undefined} />
+                {/* <MostUnderValuedLand verticalUnder="sm" predictions={undefined} processing={false} showCard={true} apiData={undefined} /> */}
+                {/* Daily Volume and Floor Price Wrapper */}
+                <div className="flex flex-col sm:flex-row space-y-5 sm:space-y-0 space-x-0 sm:space-x-5 md:space-x-10 items-stretch justify-between w-full">
+                    {/* Daily Volume */}
+                    <SalesVolumeDaily collectionName={metaverse} one_day_volume={null}></SalesVolumeDaily>
+                    {/* Floor Price */}
+                    <div className="flex flex-col justify-between w-full space-y-5 md:space-y-10 lg:space-y-5">
+                        <FloorPriceTracker price={floorPrice} priceHistory={floorPriceHistory} collectionName={metaverse}/>
+                    </div>
+                </div>
                 
                 <div className="flex flex-col items-start shadow-blck rounded-xl py-3 px-4 w-full bg-grey-dark bg-opacity-20 text-left">
                     <p className={`text-xs sm:text-sm text-gray-400`}>The MGH DAO does not provide, personalized investment recommendations or advisory services. Any information provided through the land evaluation tool and others is not, and should not be, considered as advice of any kind and is for information purposes only. That land is “valuated” does not mean, that it is in any way approved, checked audited, and/or has a real or correct value. In no event shall the MGH DAO be liable for any special, indirect, or consequential damages, or any other damages of any kind, including but not limited to loss of use, loss of profits, or loss of data, arising out of or in any way connected with the use of or inability to use the Service, including without limitation any damages resulting from reliance by you on any information obtained from using the Service.</p>

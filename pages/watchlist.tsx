@@ -233,7 +233,7 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
       <section className='pt-12 xl:pt-0 animate-fade-in-slow flex flex-col items-center max-w-3xl text-white w-full'>
         {/* Title */}
         <div className='sm:gray-box mb-8'>
-          <h1 className='text-center green-text-gradient'>Your Watchlist</h1>
+          <h1 className='md:text-5xl lg:text-6xl text-4xl green-text-gradient'>Your Watchlist</h1>
         </div>
         {/* Add Land Form */}
         <AddLandForm

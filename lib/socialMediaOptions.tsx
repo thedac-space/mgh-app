@@ -10,7 +10,7 @@ export const SocialMediaOptions = (
   predictions?: IPredictions,
   wallet?: string
 ) => {
-  const mghLink = `https://app.metagamehub.io/valuation`
+  const mghLink = `https://app.metagamehub.io/valuation?land=${apiData?.tokenId}%26metaverse=${apiData?.metaverse}`
   // Text for Portfolio
   const portfolioText = `Here%20is%20my%20Metaverse%20collection!%20%23MyNFTs%20%23MGHDAO%0A%0A&url=https://app.metagamehub.io/portfolio?wallet=${wallet}`
 
@@ -19,7 +19,7 @@ export const SocialMediaOptions = (
     2
   )}%20ETH%0A${predictions?.usdPrediction.toFixed(
     2
-  )}%20USDC%0A**************%0A%0A${apiData?.opensea_link}&url=${mghLink}`
+  )}%20USDC%0A**************%0A%0A&url=${mghLink}`
 
   // Whatsapp Text for Portfolio
   const whatsappPortfolioText = `Here%20is%20my%20Metaverse%20collection!%20%23MyNFTs%20%23MGHDAO%0A%0Ahttps://app.metagamehub.io/portfolio?wallet=${wallet}`

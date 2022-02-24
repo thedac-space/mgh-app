@@ -72,7 +72,7 @@ class SalesVolumeDaily extends React.Component<SalesVolumeDailyProps, SalesVolum
             const { one_day_volume, collectionName } = defaultProps;
             return (
                 <>
-                    <div className="flex flex-col items-start border-t border-l border-opacity-20 shadow-dark rounded-xl p-5 w-full bg-grey-dark bg-opacity-30 text-left">
+                    <div className="flex flex-col items-start gray-box">
                         <p className={`text-lg xl:text-xl font-medium text-gray-300`}>
                             We couldn't obtain Volume data for the {collectionName ? " "+collectionName : ""} collection. Check the <a href="https://opensea.io/collection" target="_blank" className="hover:underline text-pink-600">OpenSea Marketplace</a> for more information.
                         </p>
@@ -83,7 +83,7 @@ class SalesVolumeDaily extends React.Component<SalesVolumeDailyProps, SalesVolum
         
         return (
             <>
-                <div className="flex flex-col items-start border-t border-l border-opacity-20 shadow-dark rounded-xl p-5 w-full bg-grey-dark bg-opacity-30 text-left">
+                <div className="flex flex-col items-start gray-box">
                     <p className={`text-lg xl:text-xl font-medium text-gray-300`}>Daily volume: </p>
 
                     <div className={`flex space-x-4 items-center w-full justify-start py-2 h-full`}>

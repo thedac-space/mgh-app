@@ -112,7 +112,8 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
             })
             const rawAssets = await res.json()
             // Formatting Assets to fit into the Cards
-           rawAssets.assets && rawAssets.assets.length > 0 &&
+            rawAssets.assets &&
+              rawAssets.assets.length > 0 &&
               (await Promise.all(
                 rawAssets.assets.map(async (asset: any) => {
                   const formattedAsset = await formatLandAsset(
@@ -164,7 +165,7 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
           <div className='sm:gray-box mb-8 sm:mb-12'>
             {externalWallet ? (
               <>
-                <h1 className='green-text-gradient'>Portfolio</h1>
+                <h1 className='md:text-5xl lg:text-6xl text-4xl green-text-gradient'>Portfolio</h1>
                 <ExternalLink
                   className='m-auto text-center sm:text-lg md:text-xl'
                   text={ellipseAddress(externalWallet as string)}
@@ -172,7 +173,7 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                 />
               </>
             ) : (
-              <h1 className='green-text-gradient'>Your Portfolio</h1>
+              <h1 className='md:text-5xl lg:text-6xl text-4xl green-text-gradient'>Your Portfolio</h1>
             )}
           </div>
           {!externalWallet && !address ? (
@@ -204,22 +205,22 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                     )}
                     {/* Share Icons */}
                     {!externalWallet && address && (
-                      <div className='flex gap-2 justify-center'>
+                      <div className='flex gap-8 justify-center'>
                         {/* Twitter */}
                         <button
                           onClick={() =>
                             window.open(socialMedia.twitter.portfolioLink)
                           }
-                          className='animate-fade-in-slow text-white p-4 rounded-xl bg-gradient-to-br transition-all duration-300 from-pink-600 to-blue-500'
+                          className='gray-box bg-transparent border-gray-600 shadow-sm w-fit'
                         >
-                          <BsTwitter className='block w-6 h-6 m-auto transition ease-in-out duration-300 hover:scale-105' />
+                          <BsTwitter className='text-blue-400 w-10 h-10 transition ease-in-out duration-300 hover:scale-105' />
                         </button>
                         {/* Copy Link */}
                         <button
                           onClick={copyLink}
-                          className='relative animate-fade-in-slow text-white p-4 rounded-xl bg-gradient-to-br transition-all duration-300 from-pink-600 to-blue-500'
+                          className='relative gray-box border-gray-600 bg-transparent shadow-sm w-fit'
                         >
-                          <FiCopy className='block w-6 h-6 m-auto transition ease-in-out duration-300 hover:scale-105' />
+                          <FiCopy className='w-10 h-10 text-pink-500 relative transition ease-in-out duration-300 hover:scale-105' />
                           {copiedText && (
                             <Fade direction='bottom-right' duration={500}>
                               <span className='font-medium absolute w-fit p-4 rounded-xl -top-1/2 bg-gradient-to-br transition-all duration-300 from-pink-600 to-blue-500'>

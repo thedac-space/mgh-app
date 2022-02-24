@@ -1,7 +1,10 @@
+import { BsTwitter } from "react-icons/bs";
 import { FiExternalLink } from "react-icons/fi"
 import { Metaverse } from "../lib/enums"
+import { SocialMediaOptions } from "../lib/socialMediaOptions";
 import { IAPIData, IPredictions } from "../lib/types";
 import { ellipseAddress } from "../lib/utilities";
+import { LandLikeBox } from "./Valuation";
 
 export interface PriceCardProps {
     showCard: boolean;
@@ -11,6 +14,8 @@ export interface PriceCardProps {
 }
 
 const PriceCard = ({ showCard, processing, apiData, predictions }: PriceCardProps) => {
+
+  const options = SocialMediaOptions(apiData, predictions)
 
     if (!apiData || !predictions) {
         return (<></>)
@@ -27,11 +32,17 @@ const PriceCard = ({ showCard, processing, apiData, predictions }: PriceCardProp
     return (
         <div className={`${showCard ? "animate__fadeIn" : "hidden"} ${processing && "animate__fadeOut animate__fast"} animate__animated relative w-full h-full space-y-3 flex flex-col items-center`}>
 
-            <div className="flex flex-col flex-grow min-w-max 2xl:flex-none items-center">
-                <a href={apiData.external_link} target="_blank" className="relative w-28 md:w-36 h-28 md:h-36 hover:shadow-dark">
-                    <img src={apiData.images.image_url} className="rounded-md object-cover" />
-                    <FiExternalLink className="absolute top-0 right-0 text-white text-xs backdrop-filter backdrop-blur-sm rounded-xl w-6 h-6 p-1" />
+            <div className="flex flex-col w-full flex-grow 2xl:flex-none">
+              {/* Image and Likes Wrapper */}
+              <div className="w-full flex md:gap-10 sm:gap-4 justify-between md:justify-start items-center">
+                {/* Image */}
+                <a href={apiData.external_link} target="_blank" className="relative hover:shadow-dark">
+                    <img src={apiData.images.image_url} className="rounded-md object-cover w-36 h-36" />
+                    <FiExternalLink className="absolute top-0 left-0 text-white text-xs backdrop-filter backdrop-blur-sm rounded-xl w-6 h-6 p-1" />
                 </a>
+                {/* Likes */}
+                <LandLikeBox landId={apiData.tokenId} metaverse={apiData.metaverse} />
+              </div>
                 <p className="text-xl 2xl:text-2xl font-bold text-gray-200 pt-3">
                     {apiData.name}
                 </p>
@@ -53,7 +64,7 @@ const PriceCard = ({ showCard, processing, apiData, predictions }: PriceCardProp
 
             <hr className="block border-gray-500 w-5/6" />
 
-            <div className="flex flex-col self-start flex-grow min-w-max pt-2 pl-5">
+            <div className="flex flex-col self-start flex-grow min-w-max">
                 <p className="text-gray-200 font-medium pb-1 w-full">
                     Price Estimation:
                 </p>
@@ -90,11 +101,14 @@ const PriceCard = ({ showCard, processing, apiData, predictions }: PriceCardProp
                     </div>
                 )}
             </div>
-
+            <BsTwitter
+              title='Share Valuation'
+              onClick={() => window.open(options.twitter.valuationLink)}
+              className='absolute h-6 w-6 bottom-3.5 sm:bottom-5 right-0 text-gray-200 hover:text-blue-400 transition ease-in-out duration-300 cursor-pointer'
+            />
         </div>
     )
 }
 
 export default PriceCard
-
 

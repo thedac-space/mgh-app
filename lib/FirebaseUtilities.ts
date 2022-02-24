@@ -9,6 +9,7 @@ import {
   collection,
   setDoc,
 } from 'firebase/firestore/lite'
+import { Score } from '../components/Valuation/LandLikeBox'
 import { Metaverse } from './enums'
 
 // Firebase Init
@@ -83,56 +84,69 @@ export async function removeLandFromWatchList(
 /* Commentaries and valuation scores  */
 
 //get valuation scores
-export async function getValuationScores(landId: string) {
-  let landRef, score
+export async function getValuationScores(landId: string, metaverse: Metaverse) {
   try {
-    landRef = doc(db, 'lands', landId)
-    score = await getDoc(landRef)
-    return score.data()
+    const land = doc(db, 'lands-' + metaverse, landId)
+    const score = (await getDoc(land)).data()
+    if (!score) return await createValuationScore(landId, metaverse)
+    return score
   } catch (error) {
-    const createdScore = await createValuationScore(landId)
-    return createdScore
+    console.log(error)
   }
 }
 
 // Creating a valuation score
-export async function createValuationScore(landId: string) {
-  const land = collection(db, 'lands')
+export async function createValuationScore(
+  landId: string,
+  metaverse: Metaverse
+) {
+  const land = collection(db, 'lands-' + metaverse)
   await setDoc(doc(land, landId), {
-    'liked-count': 0,
-    'disliked-count': 0,
-    commentaries: [],
+    likes: [],
+    dislikes: [],
   })
 }
 
-// Add commentary about valuation from user
-
-export async function addCommentaryToLand(
-  landId: number,
-  walletAddress: string,
-  commentary: string,
-  likeStatus: boolean
+// Like Land Valuation
+export async function likeLand(
+  landId: string,
+  address: string,
+  metaverse: Metaverse
 ) {
-  const landRef = doc(db, 'lands', '' + landId)
-  const land = await getDoc(landRef)
-  const landData = land.data()
-  const likedCount = landData ? landData['liked-count'] : 0
-  const dislikedCount = landData ? landData['disliked-count'] : 0
-
-  if (likeStatus) {
-    await updateDoc(landRef, {
-      'liked-count': likedCount + 1,
-      'disliked-count': dislikedCount,
-      commentaries: arrayUnion(commentary),
+  const land = doc(db, 'lands-' + metaverse, landId)
+  const landData = (await getDoc(land)).data() as Score | undefined
+  // If user already liked then take that like away
+  if (landData?.likes.includes(address))
+    return await updateDoc(land, {
+      likes: arrayRemove(address),
     })
-  } else {
-    await updateDoc(landRef, {
-      'liked-count': likedCount,
-      'disliked-count': dislikedCount + 1,
-      commentaries: arrayUnion(commentary),
-    })
-  }
 
-  const updatedData = await getValuationScores(walletAddress)
-  return updatedData
+  await updateDoc(land, {
+    likes: arrayUnion(address),
+  })
+  await updateDoc(land, {
+    dislikes: arrayRemove(address),
+  })
+}
+
+// Dislike Land Valuation
+export async function dislikeLand(
+  landId: string,
+  address: string,
+  metaverse: Metaverse
+) {
+  const land = doc(db, 'lands-' + metaverse, landId)
+  const landData = (await getDoc(land)).data() as Score | undefined
+  // If user already disliked then take that dislike away
+  if (landData?.dislikes.includes(address))
+    return await updateDoc(land, {
+      dislikes: arrayRemove(address),
+    })
+
+  await updateDoc(land, {
+    dislikes: arrayUnion(address),
+  })
+  await updateDoc(land, {
+    likes: arrayRemove(address),
+  })
 }
