@@ -209,7 +209,7 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                     )}
                     {/* Share Icons */}
                     {!externalWallet && address && (
-                      <div className='flex gap-8 justify-center'>
+                      <div className='flex gap-16 justify-center'>
                         {/* Copy Link */}
                         <button onClick={copyLink} className='relative'>
                           <FiCopy className='w-9 h-9 text-pink-500 relative transition ease-in-out duration-300 hover:scale-105' />
