@@ -81,7 +81,7 @@ export async function removeLandFromWatchList(
   return updatedData
 }
 
-/* Commentaries and valuation scores  */
+/* Valuation scores  */
 
 //get valuation scores
 export async function getValuationScores(landId: string, metaverse: Metaverse) {

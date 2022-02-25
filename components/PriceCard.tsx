@@ -4,7 +4,8 @@ import { Metaverse } from "../lib/enums"
 import { SocialMediaOptions } from "../lib/socialMediaOptions";
 import { IAPIData, IPredictions } from "../lib/types";
 import { ellipseAddress } from "../lib/utilities";
-import { LandLikeBox } from "./Valuation";
+import { useAppSelector } from "../state/hooks";
+import { AddToWatchlistButton, LandLikeBox } from "./Valuation";
 
 export interface PriceCardProps {
     showCard: boolean;
@@ -14,7 +15,7 @@ export interface PriceCardProps {
 }
 
 const PriceCard = ({ showCard, processing, apiData, predictions }: PriceCardProps) => {
-
+  const { address } = useAppSelector((state) => state.account)
   const options = SocialMediaOptions(apiData, predictions)
 
     if (!apiData || !predictions) {
@@ -35,8 +36,8 @@ const PriceCard = ({ showCard, processing, apiData, predictions }: PriceCardProp
             {/* Image and Name + Links Wrapper */}
             <div className="w-full justify-center flex gap-4">
               {/* Image */}
-              <a href={apiData.external_link} target="_blank" className="w-full  relative hover:shadow-dark">
-                  <img src={apiData.images.image_url} className="rounded-md object-cover w-full h-full" />
+              <a href={apiData.external_link} target="_blank" className="w-full h-full relative hover:shadow-dark">
+                  <img src={apiData.images.image_url} className="rounded-md object-cover min-h-[159px] w-full h-full" />
                   <FiExternalLink className="absolute top-0 left-0 text-white text-xs backdrop-filter backdrop-blur-sm rounded-xl w-6 h-6 p-1" />
               </a>
               {/* Text Wrapper  */}
@@ -44,11 +45,11 @@ const PriceCard = ({ showCard, processing, apiData, predictions }: PriceCardProp
                 {/* Land Name & Id */}
                 <div>
                   {/* Land Name */}
-                  <p className="text-lg 2xl:text-xl mb-2 font-semibold text-gray-200">
+                  <p className="text-lg mb-2 font-semibold text-gray-200">
                       {apiData.name}
                   </p>
                   {/* Token Id */}
-                  <p className="text-xs text-gray-400 flex gap-2 pb-3">
+                  <p className="text-xs text-gray-400 flex gap-2">
                       Token ID: {handleTokenID(apiData.tokenId)}
                       <BsTwitter
                         title='Share Valuation'
@@ -57,6 +58,8 @@ const PriceCard = ({ showCard, processing, apiData, predictions }: PriceCardProp
                         />
                   </p>
                 </div>
+                {/* Add To Watchlist Button */}
+                {address &&  <AddToWatchlistButton landId={apiData.tokenId} metaverse={apiData.metaverse} /> }
                 {/* Links */}
                 <div className="flex flex-col gap-4 justify-center">
                   {/* Open Sea Link */}
@@ -74,7 +77,7 @@ const PriceCard = ({ showCard, processing, apiData, predictions }: PriceCardProp
             </div>
 
             <hr className="block border-gray-500 w-5/6" />
-
+            {/* Price Estimation */}
             <div className="flex flex-col self-start flex-grow min-w-max">
                 <p className="text-gray-200 font-medium pb-1 w-full">
                     Price Estimation:
@@ -117,6 +120,7 @@ const PriceCard = ({ showCard, processing, apiData, predictions }: PriceCardProp
             <div className="flex flex-start">
               <LandLikeBox landId={apiData.tokenId} metaverse={apiData.metaverse} />
             </div>
+
         </div>
     )
 }

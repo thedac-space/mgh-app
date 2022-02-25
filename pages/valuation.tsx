@@ -17,7 +17,7 @@ import { useRouter } from "next/router";
 
 
 const ValuationPage: NextPage = ({ prices }: any) => {
-  const { query } = useRouter()
+    const { query } = useRouter()
     const [apiData, setAPIData] = useState<IAPIData>();
     const [predictions, setPredictions] = useState<IPredictions>()
 
