@@ -165,7 +165,9 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
           <div className='sm:gray-box mb-8 sm:mb-12'>
             {externalWallet ? (
               <>
-                <h1 className='md:text-5xl lg:text-6xl text-4xl green-text-gradient'>Portfolio</h1>
+                <h1 className='md:text-5xl lg:text-6xl text-4xl green-text-gradient'>
+                  Portfolio
+                </h1>
                 <ExternalLink
                   className='m-auto text-center sm:text-lg md:text-xl'
                   text={ellipseAddress(externalWallet as string)}
@@ -173,7 +175,9 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                 />
               </>
             ) : (
-              <h1 className='md:text-5xl lg:text-6xl text-4xl green-text-gradient'>Your Portfolio</h1>
+              <h1 className='md:text-5xl lg:text-6xl text-4xl green-text-gradient'>
+                Your Portfolio
+              </h1>
             )}
           </div>
           {!externalWallet && !address ? (
@@ -206,21 +210,9 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                     {/* Share Icons */}
                     {!externalWallet && address && (
                       <div className='flex gap-8 justify-center'>
-                        {/* Twitter */}
-                        <button
-                          onClick={() =>
-                            window.open(socialMedia.twitter.portfolioLink)
-                          }
-                          className='gray-box bg-transparent border-gray-600 shadow-sm w-fit'
-                        >
-                          <BsTwitter className='text-blue-400 w-10 h-10 transition ease-in-out duration-300 hover:scale-105' />
-                        </button>
                         {/* Copy Link */}
-                        <button
-                          onClick={copyLink}
-                          className='relative gray-box border-gray-600 bg-transparent shadow-sm w-fit'
-                        >
-                          <FiCopy className='w-10 h-10 text-pink-500 relative transition ease-in-out duration-300 hover:scale-105' />
+                        <button onClick={copyLink} className='relative'>
+                          <FiCopy className='w-9 h-9 text-pink-500 relative transition ease-in-out duration-300 hover:scale-105' />
                           {copiedText && (
                             <Fade direction='bottom-right' duration={500}>
                               <span className='font-medium absolute w-fit p-4 rounded-xl -top-1/2 bg-gradient-to-br transition-all duration-300 from-pink-600 to-blue-500'>
@@ -228,6 +220,15 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                               </span>
                             </Fade>
                           )}
+                        </button>
+                        {/* Twitter */}
+                        <button
+                          onClick={() =>
+                            window.open(socialMedia.twitter.portfolioLink)
+                          }
+                          className=''
+                        >
+                          <BsTwitter className='text-blue-400 w-9 h-9 transition ease-in-out duration-300 hover:scale-105' />
                         </button>
                       </div>
                     )}
