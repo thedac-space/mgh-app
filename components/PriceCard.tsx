@@ -45,11 +45,11 @@ const PriceCard = ({ showCard, processing, apiData, predictions }: PriceCardProp
                 {/* Land Name & Id */}
                 <div>
                   {/* Land Name */}
-                  <p className="text-lg mb-2 font-semibold text-gray-200">
+                  <p className="text-lg mb-2 font-semibold whitespace-nowrap text-gray-200">
                       {apiData.name}
                   </p>
                   {/* Token Id */}
-                  <p className="text-xs text-gray-400 flex gap-2">
+                  <p className="text-xs flex-nowrap text-gray-400 flex gap-2">
                       Token ID: {handleTokenID(apiData.tokenId)}
                       <BsTwitter
                         title='Share Valuation'
