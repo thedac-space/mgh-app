@@ -26,6 +26,10 @@ class MyDocument extends Document {
                         `,
                         }}
                     />
+                    <meta property="og:image" content="/images/mgh_logo.png" />
+                    <meta property="og:image:type" content="image/png" />
+                    <meta property="og:image:width" content="2664" />
+                    <meta property="og:image:height" content="2664" />
                 </Head>
                 <body>
                     <Main />
