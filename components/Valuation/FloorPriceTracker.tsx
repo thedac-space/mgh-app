@@ -78,7 +78,7 @@ class FloorPriceTracker extends React.Component<FloorPriceCardProps, FloorPriceC
             const { collectionName } = defaultProps;
             return (
                 <>
-                    <div className="flex flex-col items-start border-t border-l border-opacity-20 shadow-dark rounded-xl p-5 w-full bg-grey-dark bg-opacity-30 text-left">
+                    <div className="flex flex-col items-start gray-box">
                         <p className={`text-lg xl:text-xl font-medium text-gray-300`}>
                             We couldn't obtain floor price for the {collectionName} lands collection. Check <a href="https://opensea.io/collection" target="_blank" className="hover:underline text-pink-600">Open Sea Market</a> for more information.
                         </p>
@@ -90,7 +90,7 @@ class FloorPriceTracker extends React.Component<FloorPriceCardProps, FloorPriceC
 
         return (
             <>
-                <div className="flex flex-col items-start border-t border-l border-opacity-20 shadow-dark rounded-xl p-5 w-full bg-grey-dark bg-opacity-30 text-left">
+                <div className="flex flex-col items-start gray-box">
                     <p className={`text-lg xl:text-xl font-medium text-gray-300`}>Floor Price: </p>
 
                     <div className={`flex space-x-4 items-center w-full justify-start py-2 h-full`}>

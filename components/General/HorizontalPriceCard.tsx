@@ -4,6 +4,8 @@ import { IPriceCard } from '../../lib/valuation/valuationTypes'
 import { ExternalAssetLink } from './Links'
 import { useVisible } from '../../lib/hooks'
 import { Fade } from 'react-awesome-reveal'
+import { BsTwitter } from 'react-icons/bs'
+import { SocialMediaOptions } from '../../lib/socialMediaOptions'
 
 const HorizontalPriceCard = ({
   showCard,
@@ -15,8 +17,9 @@ const HorizontalPriceCard = ({
   if (!apiData || !predictions) {
     return <></>
   }
-  const { ref, isVisible: showPopup, setIsVisible } = useVisible(false)
 
+  // SocialMediaOptions contains all options with their texts, icons, etc..
+  const options = SocialMediaOptions(apiData, predictions)
   return (
     <div
       className={`${showCard ? 'animate__fadeIn' : 'hidden'} ${
@@ -30,12 +33,13 @@ const HorizontalPriceCard = ({
         <h4 className='border-none text-white mb-4'>Price Estimation:</h4>
         <PriceList predictions={predictions} />
       </div>
-      <FiShare2
+      <BsTwitter
         title='Share Valuation'
-        onClick={() => setIsVisible(true)}
+        onClick={() => window.open(options.twitter.valuationLink)}
         className='absolute h-5 w-5 bottom-0 right-0 text-gray-200 hover:text-blue-400 transition ease-in-out duration-300 cursor-pointer'
       />
-      <div className='contents' ref={ref}>
+      {/* Share POPUP, using only Twitter Icon for now */}
+      {/* <div className='contents' ref={ref}>
         {showPopup && (
           <Fade className='z-10 absolute -bottom-3 left-1/2 -translate-x-2/4'>
             <SharePopup
@@ -46,7 +50,7 @@ const HorizontalPriceCard = ({
             />
           </Fade>
         )}
-      </div>
+      </div> */}
     </div>
   )
 }

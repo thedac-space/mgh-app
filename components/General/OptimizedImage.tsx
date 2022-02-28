@@ -6,6 +6,14 @@ interface Props {
   layout?: 'intrinsic' | 'fixed' | 'fill' | 'responsive' | undefined
   rounded?: 'sm' | 'md' | 'lg' | 'full'
   className?: string
+  objectFit?:
+    | 'contain'
+    | 'cover'
+    | 'fill'
+    | 'none'
+    | 'scale-down'
+    | 'inherit'
+    | 'initial'
 }
 
 const OptimizedImage = ({
@@ -15,6 +23,7 @@ const OptimizedImage = ({
   width,
   rounded,
   className,
+  objectFit,
 }: Props) => {
   return (
     <Image
@@ -25,7 +34,7 @@ const OptimizedImage = ({
       layout={layout}
       height={height || 150}
       loading='lazy'
-      objectFit='cover'
+      objectFit={objectFit || 'cover'}
       className={'rounded-' + rounded + ' ' + className}
     />
   )
