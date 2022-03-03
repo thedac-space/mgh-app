@@ -155,14 +155,15 @@ export async function dislikeLand(
 // Get TVL History
 
 export async function getTVLHistory() {
-  const tvlDocs = await getDocs(collection(db, 'MV-TVL'))
-  let logs: Array<{ date: Date; tvl: number }> = []
-  tvlDocs.forEach((doc) => {
-    logs.push({
-      date: new Date(doc.get('time')),
-      tvl: doc.get('tvl'),
-    })
-  })
-  logs.sort((a, b) => a.date.valueOf() - b.date.valueOf())
+  interface TvlDoc {
+    botSandBalance: number
+    landsWorth: number
+    time: number
+    totalAmountStaked: number
+    tvl: number
+  }
+  const logs = (await getDoc(doc(db, 'MV-TVL', 'lands'))).data()
+    ?.TVL as TvlDoc[]
+
   return logs
 }

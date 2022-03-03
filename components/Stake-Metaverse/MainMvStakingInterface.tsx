@@ -79,11 +79,7 @@ const MainMvStakingInterface = ({ refetch, setRefetch, mainState }: Props) => {
       const maxAmount = await getMaxAmountStaked(provider)
       // Checking if user has any rewards to their name
       const rawRewardsDue = nftId
-        ? Number(
-            ethers.utils.formatEther(
-              await getUpdatedRewardsDue(nftId, provider)
-            )
-          ).toFixed(2)
+        ? Number(await getUpdatedRewardsDue(nftId, provider)).toFixed(2)
         : undefined
       const rewardsDue = Number(rawRewardsDue) >= 1 ? rawRewardsDue : undefined
       // Checking amount that user can withdraw from staked tokens
@@ -116,7 +112,6 @@ const MainMvStakingInterface = ({ refetch, setRefetch, mainState }: Props) => {
     // No Staking NFT yet..
     if (!stateData?.userNftId) {
       const tx = await deposit(stakeAmount, signer!)
-      console.log(`Deposit ${stakeAmount}`, tx)
     } else {
       // Already has a Staking NFT
       const tx = await increasePosition(
@@ -124,7 +119,6 @@ const MainMvStakingInterface = ({ refetch, setRefetch, mainState }: Props) => {
         stakeAmount,
         signer!
       )
-      console.log(`IncreasePosition ${stakeAmount}`, tx)
     }
     setRefetch(!refetch)
   }
@@ -132,25 +126,29 @@ const MainMvStakingInterface = ({ refetch, setRefetch, mainState }: Props) => {
   // Needs to Approve before Staking
   const approveAndStake = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    if (Number(approveAndStakeAmount) < 0) return
+    if (
+      Number(approveAndStakeAmount) < 0 ||
+      Number(stateData?.currentStakingAssetBalance) <
+        Number(approveAndStakeAmount) ||
+      !address ||
+      !signer
+    )
+      return
     // No Staking NFT and not approved
-    console.log('IS ThERE NFT?: ', stateData?.userNftId)
+    console.log('NFT?: ', stateData?.userNftId)
     if (!stateData?.userNftId) {
       const tx = await approveAndCallDeposit(
-        address!,
+        address,
         approveAndStakeAmount,
-        signer!
+        signer
       )
-      console.log(`ApproveAndCallDeposit: ${approveAndStakeAmount}`, tx)
     } else {
       // Has already staked but needs to approve again ??
       const tx = await approveAndCallIncrease(
-        address!,
+        address,
         approveAndStakeAmount,
-        stateData.userNftId,
-        signer!
+        signer
       )
-      console.log(`ApproveAndCallIncrease${approveAndStakeAmount}`, tx)
     }
     setRefetch(!refetch)
   }
@@ -167,7 +165,6 @@ const MainMvStakingInterface = ({ refetch, setRefetch, mainState }: Props) => {
     if (!stateData?.isWithdraw || !signer) return
 
     await withdraw(stateData.userNftId!, unstakeAmount, signer)
-    console.log('unstake')
     setRefetch(!refetch)
   }
 
@@ -179,30 +176,49 @@ const MainMvStakingInterface = ({ refetch, setRefetch, mainState }: Props) => {
     setRefetch(!refetch)
   }
 
+  // Max Amount to stake (doing it here to be a bit cleaner)
+  const stakingAssetBalance = parseFloat(
+    stateData?.currentStakingAssetBalance!
+  ).toFixed(2)
+  const maxStakingAmount =
+    Number(stakingAssetBalance) > 0 ? stakingAssetBalance : '0'
+
+  // Checking that user is on correct chain
+  const correctChain = chainId === Chains.ETHEREUM_RINKEBY.chainId
+  // Checking if user has an NFT == if user staked
+  const hasStaked = stateData?.userNftId
   // Form Logic
   const options = {
     stake: {
-      text: stateData?.userNftId ? 'Increase Position' : 'Stake',
-      onClick: stake,
-      value: stakeAmount,
-      setValue: setStakeAmount,
-      disabled: !stateData?.userNftId || !address,
-      maxAmount: parseFloat(stateData?.currentStakingAssetBalance!).toFixed(2),
+      title: 'Stake',
+      text:
+        hasStaked && Number(stateData.withdrawableAmount) > 0
+          ? 'Increase $SAND'
+          : hasStaked
+          ? 'Stake $SAND'
+          : 'Approve and Stake',
+      onClick: hasStaked ? stake : approveAndStake,
+      value: hasStaked ? stakeAmount : approveAndStakeAmount,
+      setValue: hasStaked ? setStakeAmount : setApproveAndStakeAmount,
+      disabled: !address || !correctChain,
+      maxAmount: maxStakingAmount,
     },
-    approveAndStake: {
-      text: stateData?.userNftId ? 'Approve and Increase' : 'Approve and Stake',
-      onClick: approveAndStake,
-      value: approveAndStakeAmount,
-      setValue: setApproveAndStakeAmount,
-      disabled: !!stateData?.userNftId || !address,
-      maxAmount: parseFloat(stateData?.currentStakingAssetBalance!).toFixed(2),
-    },
+
+    // approveAndStake: {
+    //   text: stateData?.userNftId ? 'Approve and Increase' : 'Approve and Stake',
+    //   onClick: approveAndStake,
+    //   value: approveAndStakeAmount,
+    //   setValue: setApproveAndStakeAmount,
+    //   disabled: !!stateData?.userNftId || !address || !correctChain,
+    //   maxAmount: maxStakingAmount,
+    // },
     unstake: {
+      title: 'Unstake',
       text:
         Number(stateData?.withdrawableAmount) === 0
           ? 'No Withdrawable Amount'
           : stateData?.isWithdraw
-          ? 'Unstake'
+          ? 'Unstake $SAND'
           : 'Wait till next withdraw phase',
       onClick: unstake,
       value: unstakeAmount,
@@ -211,24 +227,27 @@ const MainMvStakingInterface = ({ refetch, setRefetch, mainState }: Props) => {
         !stateData?.isWithdraw ||
         Number(stateData?.withdrawableAmount) === 0 ||
         !stateData?.withdrawableAmount ||
-        !address,
+        !address ||
+        !correctChain,
       maxAmount: stateData?.withdrawableAmount,
     },
     getRewards: {
+      title: 'Rewards',
       text: stateData?.rewardsDue
         ? `Get Rewards: ${stateData.rewardsDue} $MGH`
         : 'No Rewards',
       onClick: takeRewards,
-      disabled: !stateData?.rewardsDue || !address,
+      disabled: !stateData?.rewardsDue || !address || !correctChain,
+      value: undefined,
+      setValue: undefined,
+      maxAmount: undefined,
     },
   }
-  const eee = stateData?.withdrawableAmount
-  console.log({ eee })
-  type optionTypes = 'stake' | 'approveAndStake' | 'unstake'
+  type optionTypes = 'stake' | 'unstake' | 'getRewards'
   const optionKeys = Object.keys(options) as optionTypes[]
 
   return (
-    <div className='flex flex-col md:w-2/4 gap-6 gray-box bg-opacity-10 text-white'>
+    <div className='flex flex-col lg:w-2/4 gap-6 gray-box bg-opacity-10 text-white'>
       {/* Top Level */}
       <div className='flex w-full justify-between'>
         {/* Coin Image */}
@@ -252,13 +271,7 @@ const MainMvStakingInterface = ({ refetch, setRefetch, mainState }: Props) => {
         <span>Locking Period</span>
         <span>1 Month</span>
       </div>
-      {/* Available Amount  */}
-      {/* <div className='flex w-full justify-between'>
-        <span>Available Amount</span>
-        <span>
-          {parseFloat(stateData?.currentStakingAssetBalance!).toFixed(2)}$SAND
-        </span>
-      </div> */}
+
       {/* Staking Options */}
       {optionKeys.map((key) => (
         // Each Option functions as a Form
@@ -267,36 +280,51 @@ const MainMvStakingInterface = ({ refetch, setRefetch, mainState }: Props) => {
           key={key}
           onSubmit={(e) => options[key].onClick(e)}
         >
-          {/* Span showing Max amount to Stake/Unstake */}
-          {!options[key].disabled && options[key].maxAmount && (
-            <span
-              className={
-                'text-xs font-medium absolute top-2 right-2 ' +
-                (Number(options[key].maxAmount) > Number(options[key].value)
-                  ? 'text-gray-500'
-                  : 'text-red-500')
-              }
-            >
-              Max: {options[key].maxAmount} $SAND
-            </span>
+          {/* Title with Available Amount  */}
+          {options[key].setValue && (
+            <div className='self-start flex items-center space-x-1 sm:space-x-3 w-full px-1 mb-1.5'>
+              {/* Title */}
+              <p
+                className={
+                  (options[key].disabled ? 'text-gray-500' : 'text-gray-300') +
+                  ' font-medium text-xl flex-grow'
+                }
+              >
+                {options[key].title}
+              </p>
+              {/* Max Amount */}
+              {!options[key].disabled && (
+                <p
+                  onClick={() =>
+                    options[key].setValue!(options[key].maxAmount!)
+                  }
+                  className='text-gray-400 hover:text-gray-300 cursor-pointer font-medium  transition ease-in-out duration-300'
+                >
+                  Max: {options[key].maxAmount || 0}
+                </p>
+              )}
+            </div>
           )}
           {/* Input */}
           {options[key].setValue && (
             <input
-              required
               disabled={options[key].disabled}
-              type='number'
-              className='p-1 text-gray-800 w-full'
               value={!options[key].disabled ? options[key].value : ''}
-              onChange={(e) => options[key].setValue(e.target.value)}
+              onChange={(e) => options[key].setValue!(e.target.value)}
+              autoComplete='off'
+              required
+              type='number'
+              className='text-right w-full bg-grey-dark border-gray-400 shadow-dark hover:shadow-colorbottom focus:shadow-colorbottom bg-opacity-40 text-gray-200 font-medium text-lg sm:text-xl p-3 sm:p-4 pt-4 sm:pt-5 focus:outline-none border border-opacity-30 disabled:hover:border-opacity-30 hover:border-opacity-80 focus:border-opacity-60 transition duration-300 ease-in-out rounded-xl placeholder-white placeholder-opacity-75 disabled:bg-transparent  disabled:shadow-none'
             />
           )}
           {/* Submit Button */}
           <button
             disabled={options[key].disabled}
-            className='w-full items-center justify-center text-center transition-all flex grow gap-2 ease-in hover:shadow-subtleWhite z-10 p-2 font-medium text-gray-200 disabled:bg-gray-500 disabled:text-gray-800 bg-[#8884d8]'
+            className={`disabled:opacity-30 disabled:hover:shadow-dark disabled:cursor-default mt-2 sm:mt-4 flex justify-center items-center border border-pink-600 shadow-dark hover:shadow-button transition ease-in-out duration-500 rounded-xl w-full py-3 sm:py-4`}
           >
-            {options[key].text}
+            <p className='pt-1 z-10 text-pink-600 font-medium text-lg sm:text-xl'>
+              {options[key].text}
+            </p>
           </button>
         </form>
       ))}

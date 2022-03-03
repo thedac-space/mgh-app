@@ -6,7 +6,7 @@ interface Props {
   stats: {
     amountStaked: string
     lastTimeRewardsUpdate: number
-    rewardsDue: string
+    rewardsDue: string | undefined
     hasWithdrawnInEpoche: boolean
     coin: string
     tokenId: string
@@ -15,8 +15,8 @@ interface Props {
 
 const NftCard = ({ stats }: Props) => {
   const rewardsDue =
-    Number(formatEther(stats.rewardsDue)) >= 1
-      ? `Rewards Due: ${formatEther(stats.rewardsDue)}`
+    Number(stats.rewardsDue) >= 1
+      ? `Rewards Due: ${stats.rewardsDue}`
       : `No Rewards Due`
   return (
     <div className='text-gray-100 w-full max-w-xs p-8 rounded-[6rem] bg-grey-darkest'>
@@ -29,7 +29,7 @@ const NftCard = ({ stats }: Props) => {
       <p className='flex justify-between w-full'>
         <span>Staked:</span>{' '}
         <span>
-          {parseFloat(formatEther(stats.amountStaked))}${stats.coin}
+          {Number(stats.amountStaked).toFixed(2)}${stats.coin}
         </span>
       </p>
       <p className='flex justify-between w-full'>
@@ -38,7 +38,7 @@ const NftCard = ({ stats }: Props) => {
       <p className='flex justify-between w-full'>
         <span>Staked:</span>{' '}
         <span>
-          {parseFloat(formatEther(stats.amountStaked))}${stats.coin}
+          {Number(stats.amountStaked).toFixed(2)}${stats.coin}
         </span>
       </p>
     </div>

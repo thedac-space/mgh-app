@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
+import { BsCircleFill, BsDot } from 'react-icons/bs'
 import { Cell, Pie, PieChart, ResponsiveContainer } from 'recharts'
 import { MainMvState } from '../../lib/stake-metaverse/types'
 import { ICoinPrices } from '../../lib/valuation/valuationTypes'
@@ -15,6 +16,8 @@ interface Props {
   mainState: MainMvState
 }
 const AllocationChart = ({ tvl, prices, mainState }: Props) => {
+  const chartContainerRef = useRef<HTMLDivElement>(null)
+  const [outerRadius, setOuterRadius] = useState(30)
   const data = [
     {
       name: 'Bot Sand Balance',
@@ -35,22 +38,45 @@ const AllocationChart = ({ tvl, prices, mainState }: Props) => {
   ]
   const COLORS = ['#e08f8d', '#6caf6c', '#8884d8']
 
-  let renderLabel = function (entry: any /* Pie Data Object */) {
-    return `${entry.name}: ${(entry.percent * 100).toFixed(0)}%`
-  }
-  return (
-    <>
-      <h3 className='text-xl text-gray-300'>TVL Allocation</h3>
+  useEffect(() => {
+    // Initial Size Calculation
+    const initialCalculation = chartContainerRef?.current!.offsetWidth / 12
+    setOuterRadius(initialCalculation > 35 ? initialCalculation : 39)
+    const handleResize = () => {
+      const calculation = chartContainerRef?.current!.offsetWidth / 12
+      const radiusNumber = calculation > 35 ? calculation : 39
+      setOuterRadius(radiusNumber)
+      console.log('radius: ', radiusNumber)
+    }
+    window.addEventListener('resize', handleResize)
+    return () => {
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [data])
 
-      <ResponsiveContainer width='100%' height='80%'>
+  // Function to Style Chart's Labels
+  const renderLabel = (entry: any /* Pie Data Object */) => {
+    const text =
+      outerRadius < 40
+        ? (entry.percent * 100).toFixed(0) + '%'
+        : `${entry.name}: ${(entry.percent * 100).toFixed(0)}%`
+    return text
+  }
+
+  return (
+    <div ref={chartContainerRef}>
+      <h3 className='text-xl py-0 text-gray-300'>TVL Allocation</h3>
+
+      <ResponsiveContainer width='100%' height={180} debounce={25}>
         <PieChart className='mx-auto'>
           <Pie
+            isAnimationActive={false}
             data={data}
             dataKey='value'
             label={renderLabel}
             cx='50%'
             cy='50%'
-            outerRadius={70}
+            outerRadius={outerRadius}
             fill='#8884d8'
           >
             {data.map((entry, index) => (
@@ -59,7 +85,14 @@ const AllocationChart = ({ tvl, prices, mainState }: Props) => {
           </Pie>
         </PieChart>
       </ResponsiveContainer>
-    </>
+      {outerRadius < 40 &&
+        data.map((entry, i) => (
+          <p className='flex gap-2 font-medium'>
+            <BsCircleFill fill={COLORS[i]} className='w-3 relative top-[3px]' />
+            {entry.name}
+          </p>
+        ))}
+    </div>
   )
 }
 

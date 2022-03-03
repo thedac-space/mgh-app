@@ -13,7 +13,6 @@ const MvInfoTable = () => {
     const fetchOrders = async () => {
       const res = await fetch(`/api/fetchOrders/${Wallets.BOT}`)
       const { orders } = await res.json()
-      console.log((orders as any[])?.slice(0, 3))
       setOrders(orders?.slice(0, 3))
     }
     fetchOrders()
@@ -25,7 +24,7 @@ const MvInfoTable = () => {
         <thead>
           <tr>
             <th>Date</th>
-            <th>Markeplace</th>
+            {/* <th>Markeplace</th> */}
             <th>NFTID</th>
             <th>Value</th>
             <th>Buy/Sell</th>
@@ -38,17 +37,14 @@ const MvInfoTable = () => {
             orders?.map((order: any) => (
               <tr key={order.id}>
                 <td>{new Date(order?.closing_date).toDateString()}</td>
-                <td>OpenSea</td>
+                {/* <td>OpenSea</td> */}
                 <td>{handleTokenID(order?.metadata?.asset.id)}</td>
                 <td>{getPrice(order).toFixed(2)} ETH</td>
                 <td>Buy</td>
                 <td>
-                  <a
-                    href={'ether'}
-                    className='cursor-pointer'
-                    target='_blank'
-                  ></a>{' '}
-                  www.etherscan.io/tx
+                  <a href={order.id} className='cursor-pointer' target='_blank'>
+                    1230....212
+                  </a>{' '}
                 </td>
               </tr>
             ))}

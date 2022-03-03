@@ -5,7 +5,10 @@ import { Metaverse } from '../lib/enums'
 import { ICoinPrices } from '../lib/valuation/valuationTypes'
 import { formatLandAsset } from '../lib/valuation/valuationUtils'
 import { Wallets } from '../lib/wallets'
-import { IMetaverseStaking } from '../types/ethers-contracts/IMetaverseStaking'
+import {
+  DepositEvent,
+  IMetaverseStaking,
+} from '../types/ethers-contracts/IMetaverseStaking'
 import { SandToken } from '../types/ethers-contracts/SandToken'
 
 const { MV_STAKING, SAND_TOKEN } = Contracts
@@ -19,7 +22,6 @@ const SAND_TOKEN_ADDRESS = SAND_TOKEN.MOCK_RINKEBY.address
 const MAX_UINT = ethers.constants.MaxUint256
 const { formatEther, parseEther } = ethers.utils
 
-// type Web3Provider = providers.Web3Provider
 type Web3Provider = providers.BaseProvider
 type Signer = ethers.Signer
 
@@ -32,6 +34,7 @@ const createStakingContract = (providerOrSigner: Web3Provider | Signer) => {
     MV_STAKING_ABI,
     providerOrSigner
   ) as IMetaverseStaking
+
   return contract
 }
 
@@ -52,10 +55,11 @@ const createSandContract = (providerOrSigner: Web3Provider | Signer) => {
 export const deposit = async (amount: string, signer: Signer) => {
   const bigNumAmount = parseEther(amount)
   const wei = formatEther(amount)
-  console.log({ bigNumAmount })
-  console.log({ wei })
+
+  // Token Id as Time from the frontend
+  const tokenId = Date.now()
   const contract = createStakingContract(signer)
-  const tx = await contract.deposit(bigNumAmount)
+  const tx = await contract.deposit(tokenId, bigNumAmount)
   await tx.wait()
   return tx
 }
@@ -71,7 +75,6 @@ export const increasePosition = async (
   const tx = await contract.increasePosition(tokenId, bigNumAmount)
   await tx.wait()
   return tx
-  // console.log('increase')
 }
 
 //withdraw staked amount from nft
@@ -80,11 +83,9 @@ export const withdraw = async (
   amount: string,
   signer: Signer
 ) => {
-  console.log({ tokenId })
-  console.log({ amount })
-  // const bigNumAmount = parseEther(amount)
+  const bigNumAmount = parseEther(amount)
   const contract = createStakingContract(signer)
-  const tx = await contract.withdraw(tokenId, amount)
+  const tx = await contract.withdraw(tokenId, bigNumAmount)
   await tx.wait()
   return tx
 }
@@ -104,16 +105,19 @@ export const approveAndCallDeposit = async (
   signer: Signer
 ) => {
   const bigNumAmount = parseEther(amount)
-  const time = Date.now()
+  // TokenId from Date to save gas
+  const tokenId = Date.now().toString()
   // Signature of function to call
-  const signature = '0xbd9ae7d1'
+  const signature = ethers.utils
+    .id('approveAndCallHandlerDeposit(address,uint256,uint256)')
+    .slice(0, 10)
+
   const sandContract = createSandContract(signer)
   const abiCoder = new ethers.utils.AbiCoder()
   const encodedMsg = abiCoder.encode(
     ['address', 'uint256', 'uint256'],
-    [address, time, bigNumAmount]
+    [address, tokenId, bigNumAmount]
   )
-
   const tx = await sandContract.approveAndCall(
     MV_STAKING_ADDRESS,
     MAX_UINT,
@@ -127,20 +131,22 @@ export const approveAndCallDeposit = async (
 export const approveAndCallIncrease = async (
   address: string,
   amount: string,
-  tokenId: string,
   signer: Signer
 ) => {
-  const time = Date.now()
+  // TokenId from Date to save gas
+  const tokenId = Date.now()
   const bigNumAmount = parseEther(amount)
   // Signature of function to call
-  const signature = '0xd24c0de3'
+  const signature = ethers.utils
+    .id('approveAndCallHandlerIncrease(address,uint256,uint256)')
+    .slice(0, 10)
   const sandContract = createSandContract(signer)
 
   const abiCoder = new ethers.utils.AbiCoder()
 
   const encodedMsg = abiCoder.encode(
     ['address', 'uint256', 'uint256'],
-    [address, time, bigNumAmount]
+    [address, tokenId, bigNumAmount]
   )
   const tx = await sandContract.approveAndCall(
     MV_STAKING_ADDRESS,
@@ -210,9 +216,9 @@ export const viewNftStats = async (tokenId: string, provider: Web3Provider) => {
   const contract = createStakingContract(provider)
   const stats = await contract.viewNftStats(tokenId)
   const formattedStats = {
-    amountStaked: stats.amountStaked.toString(),
+    amountStaked: formatEther(stats.amountStaked),
     lastTimeRewardsUpdate: stats.lastTimeRewardsUpdate,
-    rewardsDue: stats.rewardsDue.toString(),
+    rewardsDue: formatEther(stats.rewardsDue),
     hasWithdrawnInEpoche: stats.hasWithdrawnInEpoche,
     coin: 'SAND',
   }
@@ -227,7 +233,7 @@ export const getUpdatedRewardsDue = async (
 ) => {
   const contract = createStakingContract(provider)
   const updatedRewards = await contract.getUpdatedRewardsDue(tokenId)
-  return updatedRewards.toString()
+  return formatEther(updatedRewards)
 }
 
 // returns the amount of staked tokens that can be withdrawn now or in the next withdraw phase
@@ -238,7 +244,7 @@ export const getWithdrawableAmount = async (
 ) => {
   const contract = createStakingContract(provider)
   const amount = await contract.getWithdrawableAmount(tokenId)
-  return amount.toString()
+  return Number(formatEther(amount)).toFixed(2)
 }
 
 // Check Balance of Sand Coins
@@ -260,7 +266,9 @@ export const getUserDepositEvents = async (
 ) => {
   const contract = createStakingContract(provider)
   const event = contract.filters.Deposit(null, address)
-  const depositEvent = await contract.queryFilter(event)
+  const depositEvent = (await contract.queryFilter(event)) as
+    | undefined[]
+    | DepositEvent[]
   return depositEvent
 }
 
@@ -290,13 +298,14 @@ export const getTVL = async (provider: Web3Provider) => {
   const totalAmountStaked = Number(
     formatEther(await getTotalAmountStaked(provider))
   )
+
+  console.log({ totalAmountStaked })
   let totalLandsWorthSand = 0
   const res = await fetch(
     `/api/fetchAssets/${Wallets.BOT}/${Contracts.LAND.ETHEREUM_MAINNET.newAddress}`
   )
 
   const rawAssets = await res.json()
-  console.log({ rawAssets })
   // Getting money
   rawAssets?.assets?.length > 0 &&
     (await Promise.all(
@@ -313,9 +322,7 @@ export const getTVL = async (provider: Web3Provider) => {
     ))
 
   const landsWorth = Number(totalLandsWorthSand.toFixed(2))
-  console.log({ totalAmountStaked })
-  console.log({ totalLandsWorthSand })
-  console.log({ botSandBalance })
+
   const tvl = totalAmountStaked + landsWorth + botSandBalance
 
   return { tvl, totalAmountStaked, landsWorth, botSandBalance }

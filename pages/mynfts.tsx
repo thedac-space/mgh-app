@@ -24,8 +24,8 @@ const MyNfts: NextPage = () => {
     if (!address || !web3Provider) return
     const setState = async () => {
       const [event] = await getUserDepositEvents(web3Provider, address)
-      console.log({ event })
-      const tokenId = event.args.tokenId.toString()
+      const tokenId = event?.args.tokenId.toString()
+      if (!tokenId) return setNfts([])
       const stats = await viewNftStats(tokenId, web3Provider)
       const nft = { ...stats, tokenId: tokenId }
       setNfts([nft])
@@ -46,6 +46,9 @@ const MyNfts: NextPage = () => {
       <div className='flex w-full justify-center'>
         {nfts.length > 0 &&
           nfts.map((nftStats, i) => <NftCard key={i} stats={nftStats} />)}
+        {/* {nfts.length === 0 && (
+          <h3 className='text-2xl text-gray-200'>Stake to mint an NFT</h3>
+        )} */}
       </div>
     </section>
   )

@@ -5,6 +5,7 @@ import { IoIosSwap } from "react-icons/io"
 import { VscLock } from "react-icons/vsc"
 import { MdOutlineCollections, MdOutlineAttachMoney } from "react-icons/md"
 import {FaHandHoldingUsd} from "react-icons/fa"
+import { BsBank } from 'react-icons/bs';
 
 
 const NavItem = ({ text, link }: any) => {
@@ -32,6 +33,8 @@ const NavItem = ({ text, link }: any) => {
                 return <MdOutlineCollections className={`text-2xl mr-4 z-10 ${focus && "text-pink-600"} group-hover:text-pink-600`} />
             case "/valuation":
                 return <MdOutlineAttachMoney className={`text-2xl mr-4 z-10 ${focus && "text-pink-600"} group-hover:text-pink-600`} />
+            case "/stake-metaverse":
+                return <BsBank className={`text-2xl mr-4 z-10 ${focus && "text-pink-600"} group-hover:text-pink-600`} />
         }
     }
 

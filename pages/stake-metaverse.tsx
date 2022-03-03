@@ -79,7 +79,19 @@ const MetaverseStaking: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
           content='Governance of metaverse related items, fair valuation and minting of NFT backed tokens and provision of metaverse market data.'
         />
       </Head>
-      <section className='w-75vw sm:w-full h-full max-w-5xl pt-12 xl:pt-0 text-gray-400'>
+      <section className='w-full xs:w-75vw lg:w-full h-full max-w-5xl pt-12 xl:pt-0 text-gray-400'>
+        {/* {state === 'loadingTransaction' && (
+          <TransactionModal
+            onDismiss={() => {
+              setTransactionModal(false)
+              !transactionLoading && window.location.reload()
+            }}
+            loading={transactionLoading}
+            success={success}
+            hash={hash}
+            chainId={chainId}
+          />
+        )} */}
         {state === 'loadingFirst' ? (
           <div className='flex w-full h-full justify-center items-center'>
             <Loader />
@@ -102,12 +114,14 @@ const MetaverseStaking: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                 </h4>
               </hgroup>
 
-              <button className='hoverlift text-white p-4 rounded-xl bg-gradient-to-br transition-all duration-300 from-pink-600 to-blue-500 font-medium'>
-                <Link href='/mynfts'>View my NFTs</Link>
-              </button>
+              {address && (
+                <button className='hoverlift text-white p-4 rounded-xl bg-gradient-to-br transition-all duration-300 from-pink-600 to-blue-500 font-medium'>
+                  <Link href='/mynfts'>View my NFTs</Link>
+                </button>
+              )}
             </div>
             {/* Top Tools */}
-            <div className='flex w-full items-stretch justify-between gap-4 mb-4 max-h-full'>
+            <div className='flex flex-col lg:flex-row w-full items-stretch justify-between gap-4 mb-4 max-h-full'>
               {/* Main Interface */}
               <MainMvStakingInterface
                 mainState={state}
@@ -115,7 +129,7 @@ const MetaverseStaking: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                 setRefetch={setRefetch}
               />
               {/* Charts */}
-              <div className='flex flex-col gap-4 grow w-full '>
+              <div className='flex flex-col gap-4 w-full lg:max-w-[650px]'>
                 <div className='gray-box bg-opacity-10 relative'>
                   <AllocationChart
                     mainState={state}
