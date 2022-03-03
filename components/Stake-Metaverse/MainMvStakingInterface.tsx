@@ -1,5 +1,6 @@
 import { ethers } from 'ethers'
 import React, { FormEvent, useEffect, useState } from 'react'
+import { TransactionModal } from '..'
 import useConnectWeb3 from '../../backend/connectWeb3'
 import {
   approveAndCallDeposit,
@@ -28,6 +29,7 @@ interface StateData {
   maxAmount?: string
   rewardsDue?: string
   withdrawableAmount?: string
+  hash?: string
 }
 
 interface Props {
@@ -36,12 +38,19 @@ interface Props {
   mainState: MainMvState
 }
 
+type TxState =
+  | 'loadingTransaction'
+  | 'successTransaction'
+  | 'errorTransaction'
+  | 'loaded'
+
 const MainMvStakingInterface = ({ refetch, setRefetch, mainState }: Props) => {
   const { address, chainId } = useAppSelector((state) => state.account)
   const { web3Provider } = useConnectWeb3()
   const [stakeAmount, setStakeAmount] = useState('')
   const [approveAndStakeAmount, setApproveAndStakeAmount] = useState('')
   const [unstakeAmount, setUnstakeAmount] = useState('')
+  const [state, setState] = useState<TxState>()
   const [stateData, setStateData] = useState<StateData>()
   const signer = web3Provider?.getSigner()
 
@@ -101,6 +110,18 @@ const MainMvStakingInterface = ({ refetch, setRefetch, mainState }: Props) => {
     setStatus()
   }, [address, refetch, web3Provider])
 
+  const processTransaction = async (tx: ethers.ContractTransaction) => {
+    setStateData({ ...stateData, hash: tx.hash })
+    setState('loadingTransaction')
+    try {
+      await tx.wait()
+      setState('successTransaction')
+    } catch (error: any) {
+      setStateData({ ...stateData, hash: error.receipt.transactionHash })
+      setState('errorTransaction')
+    }
+  }
+
   //Staking if Already Approved
   const stake = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -112,6 +133,7 @@ const MainMvStakingInterface = ({ refetch, setRefetch, mainState }: Props) => {
     // No Staking NFT yet..
     if (!stateData?.userNftId) {
       const tx = await deposit(stakeAmount, signer!)
+      processTransaction(tx)
     } else {
       // Already has a Staking NFT
       const tx = await increasePosition(
@@ -119,8 +141,8 @@ const MainMvStakingInterface = ({ refetch, setRefetch, mainState }: Props) => {
         stakeAmount,
         signer!
       )
+      processTransaction(tx)
     }
-    setRefetch(!refetch)
   }
 
   // Needs to Approve before Staking
@@ -142,6 +164,7 @@ const MainMvStakingInterface = ({ refetch, setRefetch, mainState }: Props) => {
         approveAndStakeAmount,
         signer
       )
+      processTransaction(tx)
     } else {
       // Has already staked but needs to approve again ??
       const tx = await approveAndCallIncrease(
@@ -149,13 +172,14 @@ const MainMvStakingInterface = ({ refetch, setRefetch, mainState }: Props) => {
         approveAndStakeAmount,
         signer
       )
+      processTransaction(tx)
     }
-    setRefetch(!refetch)
   }
 
   // Unstaking (can only be done on withdraw phase)
   const unstake = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    // Checking if user has enough amount to unstake
     if (
       Number(unstakeAmount) < 0 ||
       Number(stateData?.withdrawableAmount) < Number(unstakeAmount)
@@ -164,16 +188,16 @@ const MainMvStakingInterface = ({ refetch, setRefetch, mainState }: Props) => {
     // Checking if its withdraw phase
     if (!stateData?.isWithdraw || !signer) return
 
-    await withdraw(stateData.userNftId!, unstakeAmount, signer)
-    setRefetch(!refetch)
+    const tx = await withdraw(stateData.userNftId!, unstakeAmount, signer)
+    processTransaction(tx)
   }
 
   // Taking MGH rewards for Staking
   const takeRewards = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (!stateData?.userNftId || !signer) return
-    await getRewards(stateData?.userNftId, signer)
-    setRefetch(!refetch)
+    const tx = await getRewards(stateData?.userNftId, signer)
+    processTransaction(tx)
   }
 
   // Max Amount to stake (doing it here to be a bit cleaner)
@@ -248,6 +272,18 @@ const MainMvStakingInterface = ({ refetch, setRefetch, mainState }: Props) => {
 
   return (
     <div className='flex flex-col lg:w-2/4 gap-6 gray-box bg-opacity-10 text-white'>
+      {state?.includes('Transaction') && (
+        <TransactionModal
+          onDismiss={() => {
+            state !== 'loadingTransaction' && setRefetch(!refetch)
+            setState('loaded')
+          }}
+          loading={state === 'loadingTransaction'}
+          success={state === 'successTransaction'}
+          hash={stateData?.hash}
+          chainId={chainId}
+        />
+      )}
       {/* Top Level */}
       <div className='flex w-full justify-between'>
         {/* Coin Image */}

@@ -3,7 +3,6 @@ import { NextPage } from 'next'
 import Head from 'next/head'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
-import { Pie, PieChart } from 'recharts'
 import useConnectWeb3 from '../backend/connectWeb3'
 import { getCurrentEpoche, getTVL } from '../backend/metaverseStaking'
 import { Loader } from '../components'
@@ -14,7 +13,6 @@ import {
   MvTVL,
 } from '../components/Stake-Metaverse'
 import { Chains } from '../lib/chains'
-import { getTVLHistory } from '../lib/FirebaseUtilities'
 import { MainMvState } from '../lib/stake-metaverse/types'
 import { ICoinPrices } from '../lib/valuation/valuationTypes'
 import { useAppSelector } from '../state/hooks'
@@ -50,7 +48,7 @@ const MetaverseStaking: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 
   useEffect(() => {
     const fetchState = async () => {
-      setState('loadingFirst')
+      !state && setState('loadingFirst')
       const provider =
         !web3Provider || chainId !== Chains.ETHEREUM_RINKEBY.chainId
           ? new ethers.providers.InfuraProvider(
@@ -80,18 +78,6 @@ const MetaverseStaking: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
         />
       </Head>
       <section className='w-full xs:w-75vw lg:w-full h-full max-w-5xl pt-12 xl:pt-0 text-gray-400'>
-        {/* {state === 'loadingTransaction' && (
-          <TransactionModal
-            onDismiss={() => {
-              setTransactionModal(false)
-              !transactionLoading && window.location.reload()
-            }}
-            loading={transactionLoading}
-            success={success}
-            hash={hash}
-            chainId={chainId}
-          />
-        )} */}
         {state === 'loadingFirst' ? (
           <div className='flex w-full h-full justify-center items-center'>
             <Loader />

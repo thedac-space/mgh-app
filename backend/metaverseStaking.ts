@@ -54,13 +54,10 @@ const createSandContract = (providerOrSigner: Web3Provider | Signer) => {
 // mint a new nft with amount staked tokens
 export const deposit = async (amount: string, signer: Signer) => {
   const bigNumAmount = parseEther(amount)
-  const wei = formatEther(amount)
-
   // Token Id as Time from the frontend
   const tokenId = Date.now()
   const contract = createStakingContract(signer)
   const tx = await contract.deposit(tokenId, bigNumAmount)
-  await tx.wait()
   return tx
 }
 
@@ -73,7 +70,6 @@ export const increasePosition = async (
   const bigNumAmount = parseEther(amount)
   const contract = createStakingContract(signer)
   const tx = await contract.increasePosition(tokenId, bigNumAmount)
-  await tx.wait()
   return tx
 }
 
@@ -86,7 +82,6 @@ export const withdraw = async (
   const bigNumAmount = parseEther(amount)
   const contract = createStakingContract(signer)
   const tx = await contract.withdraw(tokenId, bigNumAmount)
-  await tx.wait()
   return tx
 }
 
@@ -94,7 +89,6 @@ export const withdraw = async (
 export const getRewards = async (tokenId: string, signer: Signer) => {
   const contract = createStakingContract(signer)
   const tx = await contract.getRewards(tokenId)
-  await tx.wait()
   return tx
 }
 
@@ -123,7 +117,6 @@ export const approveAndCallDeposit = async (
     MAX_UINT,
     signature + encodedMsg.slice(2)
   )
-  await tx.wait()
   return tx
 }
 
@@ -153,7 +146,6 @@ export const approveAndCallIncrease = async (
     MAX_UINT,
     signature + encodedMsg.slice(2)
   )
-  await tx.wait()
   return tx
 }
 
