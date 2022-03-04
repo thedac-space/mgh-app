@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { BsQuestionCircle } from 'react-icons/bs'
 import { AddLandButton } from '.'
+import { WalletModal } from '..'
 import { Metaverse } from '../../lib/enums'
 import { LandsKey } from '../../lib/valuation/valuationTypes'
 import { WatchListState } from '../../pages/watchlist'
@@ -27,6 +28,7 @@ const AddLandForm = ({ state, addToWatchList, ids, landKeys }: Props) => {
     Y: '',
   })
   const [metaverse, setMetaverse] = useState<Metaverse>()
+  const [openModal, setOpenModal] = useState(false)
 
   const mvOptions = {
     sandbox: { logo: '/images/the-sandbox-sand-logo.png' },
@@ -53,9 +55,15 @@ const AddLandForm = ({ state, addToWatchList, ids, landKeys }: Props) => {
   }
 
   return state === 'noWallet' ? (
-    <button className='items-center justify-center font-medium text-center transition-all ease-in cursor-default z-10 p-4 rounded-xl bg-gradient-to-br from-pink-600 to-blue-500'>
-      No Wallet Detected
-    </button>
+    <>
+      {openModal && <WalletModal onDismiss={() => setOpenModal(false)} />}
+
+      <button onClick={() => setOpenModal(true)} className="disabled:opacity-50 self-center disabled:hover:shadow-dark disabled:cursor-default mt-4 relative flex justify-center items-center transition ease-in-out duration-500 shadow-dark rounded-xl w-full max-w-xs py-3 sm:py-4 group">
+        <div className="h-full w-full absolute bg-gradient-to-br transition-all ease-in-out duration-300 from-pink-600 to-blue-500 rounded-xl opacity-60 group-hover:opacity-80" />
+        <span className="pt-1 z-10 text-gray-200 font-medium text-lg sm:text-xl">Connect Wallet</span>
+      </button>
+    </>
+
   ) : (
     <div className='gray-box bg-opacity-10 transition-all w-fit mb-14 flex flex-col md:flex-row gap-6'>
       {/* Metaverse Options */}
@@ -70,20 +78,18 @@ const AddLandForm = ({ state, addToWatchList, ids, landKeys }: Props) => {
               disabled={limitReached}
               key={landKey}
               onClick={() => setMetaverse(landKey as Metaverse)}
-              className={`flex flex-col items-center justify-center space-y-2 rounded-xl cursor-pointer p-2 px-3 pt-4 md:w-30 md:h-[9.7rem] w-24 h-24 group focus:outline-none ${
-                metaverse === landKey
-                  ? 'border-opacity-100 text-gray-200'
-                  : 'border-opacity-40 hover:border-opacity-100 text-gray-400 hover:text-gray-200'
-              } border border-gray-400 focus:border-opacity-100 transition duration-300 ease-in-out`}
+              className={`flex flex-col items-center justify-center space-y-2 rounded-xl cursor-pointer p-2 px-3 pt-4 md:w-30 md:h-[9.7rem] w-24 h-24 group focus:outline-none ${metaverse === landKey
+                ? 'border-opacity-100 text-gray-200'
+                : 'border-opacity-40 hover:border-opacity-100 text-gray-400 hover:text-gray-200'
+                } border border-gray-400 focus:border-opacity-100 transition duration-300 ease-in-out`}
             >
               <OptimizedImage
                 src={mvOptions[landKey].logo}
-                height={80}
-                width={80}
+                height={60}
+                width={60}
                 objectFit='contain'
-                className={`w-10 ${
-                  metaverse === landKey ? 'grayscale-0' : 'grayscale'
-                } group-hover:grayscale-0 transition duration-300 ease-in-out`}
+                className={`w-10 ${metaverse === landKey ? 'grayscale-0' : 'grayscale'
+                  } group-hover:grayscale-0 transition duration-300 ease-in-out`}
               />
               <p className='font-medium text-xs md:text-sm pt-1'>
                 {landKey[0].toUpperCase() + landKey.substring(1)}

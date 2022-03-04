@@ -170,8 +170,7 @@ h6 {
 }
 
 .gray-box {
-  @apply border-t border-l border-opacity-20 shadow-dark rounded-xl p-5 w-full bg-grey-dark bg-opacity-30;
-  border-color: #5b5c571a;
+  @apply border-t border-l border-white/10 shadow-dark rounded-xl p-5 w-full bg-grey-dark bg-opacity-30;
 }
 
 .text-gradient {

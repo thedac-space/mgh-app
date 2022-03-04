@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { FaRegThumbsDown, FaRegThumbsUp, FaSadTear, FaSmile, FaThumbsDown, FaThumbsUp } from 'react-icons/fa'
+import { BiDislike, BiLike } from 'react-icons/bi'
+import { BsTwitter } from 'react-icons/bs'
 import { Metaverse } from '../../lib/enums'
 import {
   dislikeLand,
@@ -16,8 +17,9 @@ export interface Score {
 interface Props {
   landId: string
   metaverse: Metaverse
+  twitterLink: string
 }
-const LandLikeBox = ({ landId, metaverse }: Props) => {
+const LandLikeBox = ({ landId, metaverse, twitterLink }: Props) => {
   const { address } = useAppSelector((state) => state.account)
   const [score, setScore] = useState<Score>()
   const [refetch, setRefetch] = useState(false)
@@ -93,32 +95,38 @@ const LandLikeBox = ({ landId, metaverse }: Props) => {
   }, [landId, refetch, address])
 
   return (
-    <div className='flex text-center w-full justify-start font-medium gap-8 text-gray-200'>
+    <div className='flex text-center w-full justify-start items-end font-medium gap-6 text-gray-400'>
       {/* Like */}
-      <div className='flex items-end gap-4'>
-        <FaRegThumbsUp
+      <div className='flex items-end gap-3'>
+        <BiLike
           onClick={like}
           role='button'
           className={
-            'h-8 md:h-10 w-8 md:w-10 hover:text-green-500 transition-all ' +
+            'h-8 md:h-10 w-8 md:w-10 hover:text-green-500 transition-all' +
             (userReacted.liked ? 'text-green-500' : '')
           }
         />
         <p className='text-green-500 text-xl font-medium'>{score?.likes.length || 0}</p>
       </div>
       {/* Dislike */}
-      <div className='flex items-end gap-4'>
-      {/* <div> */}
-        <FaRegThumbsDown
+      <div className='flex items-end gap-3'>
+        {/* <div> */}
+        <BiDislike
           onClick={dislike}
           role='button'
           className={
-            'h-8 md:h-10 w-8 md:w-10 hover:text-red-500 transition-all ' +
+            'h-8 md:h-10 w-8 md:w-10 hover:text-red-500 transition-all' +
             (userReacted.disliked && 'text-red-500')
           }
         />
         <p className='text-red-500 font-medium text-xl'>{score?.dislikes.length || 0}</p>
       </div>
+      <div className='grow' />
+      <BsTwitter
+        title='Share Valuation'
+        onClick={() => window.open(twitterLink)}
+        className='h-6 md:h-8 w-auto text-gray-400 hover:text-blue-400 transition duration-300 cursor-pointer'
+      />
     </div>
   )
 }
