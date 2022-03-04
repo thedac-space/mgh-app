@@ -584,3 +584,24 @@ h6 {
   transform: translateY(-5px);
   transition: all 0.3s;
 }
+
+.nft-border-left {
+  position: absolute;
+  z-index: 20;
+  display: flex;
+  gap: 2rem;
+  font-style: italic;
+  top: 45%;
+  transform: translateY(-50%) rotate(270deg);
+  left: -29%;
+}
+.nft-border-right {
+  position: absolute;
+  z-index: 20;
+  display: flex;
+  gap: 2rem;
+  font-style: italic;
+  top: 45%;
+  transform: translateY(-50%) rotate(90deg);
+  right: -29%;
+}
