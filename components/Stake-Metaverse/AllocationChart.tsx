@@ -87,7 +87,7 @@ const AllocationChart = ({ tvl, prices, mainState }: Props) => {
       </ResponsiveContainer>
       {outerRadius < 40 &&
         data.map((entry, i) => (
-          <p className='flex gap-2 font-medium'>
+          <p key={i} className='flex gap-2 font-medium'>
             <BsCircleFill fill={COLORS[i]} className='w-3 relative top-[3px]' />
             {entry.name}
           </p>
