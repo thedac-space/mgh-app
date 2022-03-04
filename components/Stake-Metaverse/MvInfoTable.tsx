@@ -19,7 +19,7 @@ const MvInfoTable = () => {
   }, [address, web3Provider])
   return (
     <div className='gray-box bg-opacity-10'>
-      <table className='w-full text-left'>
+      <table className='w-full font-medium text-left'>
         {/* TABLE HEAD */}
         <thead>
           <tr>
