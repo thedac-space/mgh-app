@@ -33,10 +33,10 @@ const MyNfts: NextPage = () => {
     setState()
   }, [address, web3Provider])
   return (
-    <section className='w-75vw sm:w-full max-w-5xl pt-12 xl:pt-0'>
+    <section className='w-75vw sm:w-full max-w-5xl pt-12 xl:pt-0 relative'>
       <h1 className='text-center mb-8 text-6xl green-text-gradient'>My NFTs</h1>
 
-      <button className='hoverlift text-white p-4 rounded-xl bg-gradient-to-br transition-all duration-300 from-pink-600 to-blue-500 font-medium'>
+      <button className='hoverlift text-white p-4 absolute left-0 top-3 rounded-xl bg-gradient-to-br transition-all duration-300 from-pink-600 to-blue-500 font-medium'>
         <Link href={'/stake-metaverse'}>
           <span className='flex gap-2 items-center'>
             <BsArrowLeft className='relative bottom-005' /> Go Back

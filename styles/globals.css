@@ -590,18 +590,16 @@ h6 {
   z-index: 20;
   display: flex;
   gap: 2rem;
-  font-style: italic;
   top: 45%;
   transform: translateY(-50%) rotate(270deg);
-  left: -29%;
+  left: -9rem;
 }
 .nft-border-right {
   position: absolute;
   z-index: 20;
   display: flex;
   gap: 2rem;
-  font-style: italic;
   top: 45%;
   transform: translateY(-50%) rotate(90deg);
-  right: -29%;
+  right: -9rem;
 }
