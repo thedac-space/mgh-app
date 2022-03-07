@@ -163,7 +163,7 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 
       {openModal && <WalletModal onDismiss={() => setOpenModal(false)} />}
 
-      <section className='w-75vw sm:w-full max-w-7xl pt-12 xl:pt-0'>
+      <section className='w-full xs:w-[22rem] sm:w-[26rem] md:w-[48rem] lg:w-full max-w-7xl pt-12 xl:pt-0'>
         {/* Headers */}
         <hgroup className='text-gray-200 text-center flex flex-col'>
           {/* Change Title if there's a query on the uri */}
@@ -186,16 +186,18 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
             )}
           </div>
           {!externalWallet && !address ? (
-            <button onClick={() => setOpenModal(true)} className="disabled:opacity-50 self-center disabled:hover:shadow-dark disabled:cursor-default mt-4 relative flex justify-center items-center transition ease-in-out duration-500 shadow-dark rounded-xl w-full max-w-xs py-3 sm:py-4 group">
-              <div className="h-full w-full absolute bg-gradient-to-br transition-all ease-in-out duration-300 from-pink-600 to-blue-500 rounded-xl opacity-60 group-hover:opacity-80" />
-              <span className="pt-1 z-10 text-gray-200 font-medium text-lg sm:text-xl">Connect Wallet</span>
+            <button
+              onClick={() => setOpenModal(true)}
+              className='disabled:opacity-50 self-center disabled:hover:shadow-dark disabled:cursor-default mt-4 relative flex justify-center items-center transition ease-in-out duration-500 shadow-dark rounded-xl w-full max-w-xs py-3 sm:py-4 group'
+            >
+              <div className='h-full w-full absolute bg-gradient-to-br transition-all ease-in-out duration-300 from-pink-600 to-blue-500 rounded-xl opacity-60 group-hover:opacity-80' />
+              <span className='pt-1 z-10 text-gray-200 font-medium text-lg sm:text-xl'>
+                Connect Wallet
+              </span>
             </button>
-            // <button className='items-center justify-center font-medium text-center transition-all ease-in cursor-default z-10 p-4 rounded-xl bg-gradient-to-br from-pink-600 to-blue-500'>
-            //   No Wallet Detected
-            // </button>
           ) : (
             // Total Lands and Total Worth Container
-            <div className='flex flex-col sm:flex-row gap-4 md:gap-12 mb-0 sm:mb-12'>
+            <div className='flex flex-col md:flex-row gap-4 lg:gap-12 md:gap-6 mb-0 sm:mb-12'>
               {/* Total Lands */}
               <div className='flex flex-col justify-between gap-4 text-center transition-all gray-box relative'>
                 <h3 className='text-xl md:text-3xl xl:text-4xl'>
@@ -209,15 +211,12 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                       {totalAssets}
                     </p>
                     {externalWallet && (
-                      <div onClick={seeOwnPortfolio} className='hover:scale-105 cursor-pointer max-w-max self-center font-medium text-white px-5 py-3 flex items-center justify-center rounded-xl bg-gradient-to-br from-blue-500/30 to-green-500/30 transition-all duration-300'>
-                        <span className="pt-1 text-xl">My Portfolio</span>
+                      <div
+                        onClick={seeOwnPortfolio}
+                        className='hover:scale-105 cursor-pointer max-w-max self-center font-medium text-white px-5 py-3 flex items-center justify-center rounded-xl bg-gradient-to-br from-blue-500/30 to-green-500/30 transition-all duration-300'
+                      >
+                        <span className='pt-1 text-xl'>My Portfolio</span>
                       </div>
-                      // <button
-                      //   onClick={seeOwnPortfolio}
-                      //   className='min-w-fit w-1/2 mx-auto animate-fade-in-slow font-medium text-white py-3 px-4 rounded-xl bg-gradient-to-br transition-all duration-300 from-pink-600 to-blue-500'
-                      // >
-                      //   See your Own Portfolio
-                      // </button>
                     )}
                     {/* Share Icons */}
                     {!externalWallet && address && (
@@ -249,8 +248,8 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
               </div>
 
               {/* Total Worth */}
-              <div className='flex flex-col w-full sm:w-2/3 transition-all justify-between text-center mb-8 sm:mb-0 gray-box'>
-                <h3 className='text-xl md:text-3xl xl:text-4xl mb-4'>
+              <div className='flex flex-col w-full md:w-2/3 transition-all justify-between text-center mb-8 sm:mb-0 gray-box'>
+                <h3 className='text-xl md:text-3xl xl:text-4xl mb-4 whitespace-nowrap'>
                   Total Value Worth
                 </h3>
                 {loading ? (
