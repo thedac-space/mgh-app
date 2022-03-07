@@ -1,7 +1,10 @@
 import React from 'react'
+import { BiLoaderCircle } from 'react-icons/bi'
 import { BsEmojiSunglasses } from 'react-icons/bs'
 import { IoWarningOutline } from 'react-icons/io5'
 import { MdAddLocationAlt } from 'react-icons/md'
+import { RiLoader3Fill, RiLoader4Fill } from 'react-icons/ri'
+import { VscLoading } from 'react-icons/vsc'
 import { WatchListState } from '../../pages/watchlist'
 
 interface Props {
@@ -44,7 +47,7 @@ const AddLandButton = ({ limitReached, state, addBy }: Props) => {
     >
       {/* Loading Icon */}
       {loadingIconBoolean && (
-        <svg className='animate-spin-slow h-6 w-6 border-4 border-t-gray-300 border-l-gray-300 border-gray-800 rounded-full' />
+        <RiLoader3Fill className='animate-spin-slow h-5 w-5 xs:h-6 xs:w-6' />
       )}
       {/* Land Limit Icon */}
       {limitReached && (
