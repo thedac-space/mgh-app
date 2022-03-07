@@ -1,7 +1,7 @@
 import { NextPage } from 'next'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
-import { BsArrowLeft } from 'react-icons/bs'
+import { FaArrowLeft } from 'react-icons/fa'
 import useConnectWeb3 from '../backend/connectWeb3'
 import { getUserDepositEvents, viewNftStats } from '../backend/metaverseStaking'
 import { NftCard } from '../components/MyNfts'
@@ -36,13 +36,12 @@ const MyNfts: NextPage = () => {
     <section className='w-75vw sm:w-full max-w-5xl pt-12 xl:pt-0 relative'>
       <h1 className='text-center mb-8 text-6xl green-text-gradient'>My NFTs</h1>
 
-      <button className='hoverlift text-white p-4 absolute left-0 top-3 rounded-xl bg-gradient-to-br transition-all duration-300 from-pink-600 to-blue-500 font-medium'>
-        <Link href={'/stake-metaverse'}>
-          <span className='flex gap-2 items-center'>
-            <BsArrowLeft className='relative bottom-005' /> Go Back
-          </span>
-        </Link>
-      </button>
+      <Link href={'/stake-metaverse'}>
+        <span className='flex text-gray-400 items-center gap-2 cursor-pointer font-medium text-lg hover:text-blue-400 transition ease-in-out'>
+          <FaArrowLeft className='relative bottom-[1px]' /> Go Back
+        </span>
+      </Link>
+
       <div className='flex w-full justify-center'>
         {nfts.length > 0 &&
           nfts.map((nftStats, i) => <NftCard key={i} stats={nftStats} />)}
