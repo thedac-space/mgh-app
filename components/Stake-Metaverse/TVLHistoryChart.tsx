@@ -7,16 +7,14 @@ const TVLHistoryChart = ({ data }: any) => {
   const theme = {
     chart: {
       timeScale: {
-        // rightOffset: 50,
-        // barSpacing: 10,
+        barSpacing: 1,
         // fixLeftEdge: true,
-        // lockVisibleTimeRangeOnResize: true,
+        lockVisibleTimeRangeOnResize: true,
         // rightBarStaysOnScroll: true,
-        // borderVisible: true,
-        // borderColor: '#fff000',
-        // visible: true,
+        borderVisible: true,
+        borderColor: '#15ff002d',
+        visible: true,
         timeVisible: true,
-        // secondsVisible: true,
       },
       layout: {
         backgroundColor: '#2B2B43',
@@ -26,9 +24,7 @@ const TVLHistoryChart = ({ data }: any) => {
       watermark: {
         color: 'rgba(0, 0, 0, 0)',
       },
-      // crosshair: {
-      //   color: '#758696',
-      // },
+
       grid: {
         vertLines: {
           color: '#2B2B43',
@@ -39,9 +35,10 @@ const TVLHistoryChart = ({ data }: any) => {
       },
     },
     series: {
-      topColor: 'rgba(32, 226, 47, 0.56)',
-      bottomColor: 'rgba(32, 226, 47, 0.04)',
-      lineColor: 'rgba(32, 226, 47, 1)',
+      // Change this to change colors lines of the chart
+      // topColor: '#a8205d',
+      // bottomColor: '#db277821',
+      // lineColor: '#db2777',
     },
   }
 
@@ -52,7 +49,7 @@ const TVLHistoryChart = ({ data }: any) => {
 
     const chart = createChart(chartContainerRef?.current!, {
       width: chartContainerRef?.current!.clientWidth,
-      height: 250,
+      height: 280,
     })
     chart.timeScale().fitContent()
 
@@ -69,7 +66,7 @@ const TVLHistoryChart = ({ data }: any) => {
     }
   }, [data])
 
-  return <div className='max-w-full' ref={chartContainerRef} />
+  return <div className='max-w-full h-full' ref={chartContainerRef} />
 }
 
 export default TVLHistoryChart

@@ -297,15 +297,18 @@ const MainMvStakingInterface = ({ refetch, setRefetch, mainState }: Props) => {
           <p>EPOCHE: {stateData?.epocheNumber}</p>
         </div>
       </div>
-      {/* APY */}
-      <div className='flex w-full justify-between'>
-        <span>APY</span>
-        <span>125%</span>
-      </div>
-      {/* Locking Period */}
-      <div className='flex w-full justify-between'>
-        <span>Locking Period</span>
-        <span>1 Month</span>
+      {/* APY and Locking Period Wrapper */}
+      <div className='flex flex-col gap-2'>
+        {/* APY */}
+        <div className='flex w-full justify-between'>
+          <span>APY</span>
+          <span>125%</span>
+        </div>
+        {/* Locking Period */}
+        <div className='flex w-full justify-between'>
+          <span>Locking Period</span>
+          <span>1 Month</span>
+        </div>
       </div>
 
       {/* Staking Options */}
@@ -317,51 +320,49 @@ const MainMvStakingInterface = ({ refetch, setRefetch, mainState }: Props) => {
           onSubmit={(e) => options[key].onClick(e)}
         >
           {/* Title with Available Amount  */}
-          {options[key].setValue && (
-            <div className='self-start flex items-center space-x-1 sm:space-x-3 w-full px-1 mb-1.5'>
-              {/* Title */}
-              <p
-                className={
-                  (options[key].disabled ? 'text-gray-500' : 'text-gray-300') +
-                  ' font-medium text-xl flex-grow'
-                }
-              >
-                {options[key].title}
-              </p>
-              {/* Max Amount */}
-              {!options[key].disabled && (
-                <p
-                  onClick={() =>
-                    options[key].setValue!(options[key].maxAmount!)
-                  }
-                  className='text-gray-400 hover:text-gray-300 cursor-pointer font-medium  transition ease-in-out duration-300'
-                >
-                  Max: {options[key].maxAmount || 0}
-                </p>
-              )}
-            </div>
-          )}
-          {/* Input */}
-          {options[key].setValue && (
-            <input
-              disabled={options[key].disabled}
-              value={!options[key].disabled ? options[key].value : ''}
-              onChange={(e) => options[key].setValue!(e.target.value)}
-              autoComplete='off'
-              required
-              type='number'
-              className='text-right w-full bg-grey-dark border-gray-400 shadow-dark hover:shadow-colorbottom focus:shadow-colorbottom bg-opacity-40 text-gray-200 font-medium text-lg sm:text-xl p-3 sm:p-4 pt-4 sm:pt-5 focus:outline-none border border-opacity-30 disabled:hover:border-opacity-30 hover:border-opacity-80 focus:border-opacity-60 transition duration-300 ease-in-out rounded-xl placeholder-white placeholder-opacity-75 disabled:bg-transparent  disabled:shadow-none'
-            />
-          )}
-          {/* Submit Button */}
-          <button
-            disabled={options[key].disabled}
-            className={`disabled:opacity-30 disabled:hover:shadow-dark disabled:cursor-default mt-2 sm:mt-4 flex justify-center items-center border border-pink-600 shadow-dark hover:shadow-button transition ease-in-out duration-500 rounded-xl w-full py-3 sm:py-4`}
-          >
-            <p className='pt-1 z-10 text-pink-600 font-medium text-lg sm:text-xl'>
-              {options[key].text}
+          <div className='flex px-1 items-center w-full mb-1.5'>
+            {/* Title */}
+            <p
+              className={
+                (options[key].disabled ? 'text-gray-500' : 'text-gray-300') +
+                ' font-medium text-xl flex-grow'
+              }
+            >
+              {options[key].title}
             </p>
-          </button>
+            {/* Max Amount */}
+            {!options[key].disabled && (
+              <p
+                onClick={() => options[key].setValue!(options[key].maxAmount!)}
+                className='text-gray-400 hover:text-gray-300 cursor-pointer font-medium  transition ease-in-out duration-300'
+              >
+                Max: {options[key].maxAmount || 0}
+              </p>
+            )}
+          </div>
+          <div className='flex flex-col gap-3'>
+            {/* Input */}
+            {options[key].setValue && (
+              <input
+                disabled={options[key].disabled}
+                value={!options[key].disabled ? options[key].value : ''}
+                onChange={(e) => options[key].setValue!(e.target.value)}
+                autoComplete='off'
+                required
+                type='number'
+                className='text-right w-full bg-grey-dark border-gray-400 shadow-dark hover:shadow-colorbottom focus:shadow-colorbottom bg-opacity-40 text-gray-200 font-medium text-lg sm:text-xl p-3 sm:p-4 pt-4 sm:pt-5 focus:outline-none border border-opacity-30 disabled:hover:border-opacity-30 hover:border-opacity-80 focus:border-opacity-60 transition duration-300 ease-in-out rounded-xl placeholder-white placeholder-opacity-75 disabled:bg-transparent  disabled:shadow-none'
+              />
+            )}
+            {/* Submit Button */}
+            <button
+              disabled={options[key].disabled}
+              className={` disabled:opacity-30 disabled:hover:shadow-dark disabled:cursor-default flex justify-center items-center border border-pink-600 shadow-dark hover:shadow-button transition ease-in-out duration-500 rounded-xl w-full py-3 sm:py-4`}
+            >
+              <p className='pt-1 z-10 text-pink-600 font-medium text-lg sm:text-xl'>
+                {options[key].text}
+              </p>
+            </button>
+          </div>
         </form>
       ))}
     </div>

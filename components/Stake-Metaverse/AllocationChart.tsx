@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { BsCircleFill, BsDot } from 'react-icons/bs'
-import { Cell, Pie, PieChart, ResponsiveContainer } from 'recharts'
+import { Cell, Pie, PieChart, ResponsiveContainer, Label } from 'recharts'
 import { MainMvState } from '../../lib/stake-metaverse/types'
 import { ICoinPrices } from '../../lib/valuation/valuationTypes'
 interface TVL {
@@ -46,7 +46,6 @@ const AllocationChart = ({ tvl, prices, mainState }: Props) => {
       const calculation = chartContainerRef?.current!.offsetWidth / 12
       const radiusNumber = calculation > 35 ? calculation : 39
       setOuterRadius(radiusNumber)
-      console.log('radius: ', radiusNumber)
     }
     window.addEventListener('resize', handleResize)
     return () => {
@@ -61,6 +60,18 @@ const AllocationChart = ({ tvl, prices, mainState }: Props) => {
         ? (entry.percent * 100).toFixed(0) + '%'
         : `${entry.name}: ${(entry.percent * 100).toFixed(0)}%`
     return text
+    // return (
+    //   <text
+    //     x={entry.x}
+    //     y={entry.y}
+    //     dy={-4}
+    //     fontSize='16'
+    //     fontFamily='sans-serif'
+    //     fill={entry.fill}
+    //   >
+    //     {entry.value}%
+    //   </text>
+    // )
   }
 
   return (
@@ -77,21 +88,25 @@ const AllocationChart = ({ tvl, prices, mainState }: Props) => {
             cx='50%'
             cy='50%'
             outerRadius={outerRadius}
-            fill='#8884d8'
           >
-            {data.map((entry, index) => (
+            {data.map((_, index) => (
               <Cell key={`cell-${index}`} fill={COLORS[index]} />
             ))}
           </Pie>
         </PieChart>
       </ResponsiveContainer>
-      {outerRadius < 40 &&
-        data.map((entry, i) => (
-          <p key={i} className='flex gap-2 font-medium'>
-            <BsCircleFill fill={COLORS[i]} className='w-3 relative top-[3px]' />
-            {entry.name}
-          </p>
-        ))}
+      <div>
+        {outerRadius < 40 &&
+          data.map((entry, i) => (
+            <p key={i} className='flex gap-2 font-medium'>
+              <BsCircleFill
+                fill={COLORS[i]}
+                className='w-3 relative top-[3px]'
+              />
+              {entry.name}
+            </p>
+          ))}
+      </div>
     </div>
   )
 }

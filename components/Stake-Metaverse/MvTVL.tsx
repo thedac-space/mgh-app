@@ -41,12 +41,12 @@ const MvTVL = ({ refetch, tvl, prices, mainState }: Props) => {
   }, [web3Provider, refetch])
 
   return (
-    <>
-      <h3 className='green-text-gradient text-xl'>
+    <div>
+      <h3 className='text-gray-200 text-xl'>
         Current TVL: <span>{data[data.length - 1]?.value} $USD</span>
       </h3>
       <TVLHistoryChart data={data} />
-    </>
+    </div>
   )
 }
 

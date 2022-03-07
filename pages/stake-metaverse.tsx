@@ -3,6 +3,7 @@ import { NextPage } from 'next'
 import Head from 'next/head'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
+import { FaArrowRight } from 'react-icons/fa'
 import useConnectWeb3 from '../backend/connectWeb3'
 import { getCurrentEpoche, getTVL } from '../backend/metaverseStaking'
 import { Loader } from '../components'
@@ -84,38 +85,27 @@ const MetaverseStaking: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
           </div>
         ) : (
           <>
-            <h1 className='text-center mb-16 text-6xl green-text-gradient'>
-              Metaverse Staking
-            </h1>
-
             <div className='flex justify-between items-center'>
-              <hgroup>
-                <h4 className='text-base text-gray-300 border-none'>
-                  <span className='font-medium'> Next Withdrawal Phase:</span>{' '}
-                  {epoche?.formattedEpoche.end}
-                </h4>
-                <h4 className='text-base text-gray-300 border-none'>
-                  <span className='font-medium'> Next Epoche Start: </span>{' '}
-                  {epoche?.nextEpocheStart}
-                </h4>
-              </hgroup>
-
+              <h1 className='text-3xl text-gray-200'>Metaverse Staking</h1>
               {address && (
-                <button className='hoverlift text-white p-4 rounded-xl bg-gradient-to-br transition-all duration-300 from-pink-600 to-blue-500 font-medium'>
-                  <Link href='/mynfts'>View my NFTs</Link>
-                </button>
+                <Link href='/mynfts'>
+                  <span className='flex items-center gap-2 cursor-pointer font-medium text-lg hover:text-blue-400 transition ease-in-out'>
+                    My NFTs <FaArrowRight className='relative bottom-[1px]' />
+                  </span>
+                </Link>
               )}
             </div>
             {/* Top Tools */}
-            <div className='flex flex-col lg:flex-row w-full items-stretch justify-between gap-4 mb-4 max-h-full'>
+            <div className='flex flex-col lg:flex-row w-full items-stretch justify-between gap-4 mb-4'>
               {/* Main Interface */}
               <MainMvStakingInterface
                 mainState={state}
                 refetch={refetch}
                 setRefetch={setRefetch}
               />
-              {/* Charts */}
-              <div className='flex flex-col gap-4 w-full lg:max-w-[650px]'>
+              {/* Charts and Withdrawal/Epoche Wrapper */}
+              <div className='flex flex-col gap-4 lg:w-2/3 lg:max-w-[650px]'>
+                {/* Allocation Chart */}
                 <div className='gray-box bg-opacity-10 relative'>
                   <AllocationChart
                     mainState={state}
@@ -123,14 +113,27 @@ const MetaverseStaking: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                     tvl={tvl}
                   />
                 </div>
-                {/* TVL */}
-                <div className='gray-box bg-opacity-10'>
+                {/* TVL Chart */}
+                <div className='gray-box grow bg-opacity-10'>
                   <MvTVL
                     mainState={state}
                     tvl={tvl}
                     refetch={refetch}
                     prices={prices}
                   />
+                </div>
+                {/* Withdrawal Phase and Epoche Wrapper */}
+                <div className='text-lg gray-box bg-opacity-10'>
+                  <p className='text-gray-300 border-none'>
+                    <span className='font-medium'> Next Withdrawal Phase:</span>{' '}
+                    <span className='text-base'>
+                      {epoche?.formattedEpoche.end}
+                    </span>
+                  </p>
+                  <p className='text-gray-300 border-none'>
+                    <span className='font-medium'> Next Epoche Start: </span>{' '}
+                    <span className='text-base'>{epoche?.nextEpocheStart}</span>
+                  </p>
                 </div>
               </div>
             </div>
