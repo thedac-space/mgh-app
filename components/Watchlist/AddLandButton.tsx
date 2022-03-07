@@ -1,10 +1,8 @@
 import React from 'react'
-import { BiLoaderCircle } from 'react-icons/bi'
 import { BsEmojiSunglasses } from 'react-icons/bs'
 import { IoWarningOutline } from 'react-icons/io5'
 import { MdAddLocationAlt } from 'react-icons/md'
-import { RiLoader3Fill, RiLoader4Fill } from 'react-icons/ri'
-import { VscLoading } from 'react-icons/vsc'
+import { RiLoader3Fill } from 'react-icons/ri'
 import { WatchListState } from '../../pages/watchlist'
 
 interface Props {
