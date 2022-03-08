@@ -1,5 +1,7 @@
 import { ethers } from 'ethers'
+import Link from 'next/link'
 import React, { FormEvent, useEffect, useState } from 'react'
+import { FaArrowRight } from 'react-icons/fa'
 import { TransactionModal } from '..'
 import useConnectWeb3 from '../../backend/connectWeb3'
 import {
@@ -271,7 +273,7 @@ const MainMvStakingInterface = ({ refetch, setRefetch, mainState }: Props) => {
   const optionKeys = Object.keys(options) as optionTypes[]
 
   return (
-    <div className='flex flex-col lg:w-2/4 gap-6 gray-box bg-opacity-10 text-white'>
+    <div className='flex flex-col font-medium lg:w-2/4 gap-6 gray-box bg-opacity-10 text-white'>
       {state?.includes('Transaction') && (
         <TransactionModal
           onDismiss={() => {
@@ -292,9 +294,20 @@ const MainMvStakingInterface = ({ refetch, setRefetch, mainState }: Props) => {
           height={100}
           src='/images/the-sandbox-sand-logo.png'
         />
-        {/* Epoche Number */}
-        <div>
+        {/* Epoche Number & MyNFts Link */}
+        <div className='flex flex-col justify-around'>
+          {/* Epoche */}
           <p>EPOCHE: {stateData?.epocheNumber}</p>
+          {/* My Nfts */}
+          {address && (
+            <a className='block lg:hidden'>
+              <Link href='/mynfts'>
+                <span className='flex items-center gap-2 cursor-pointer text-base hover:text-blue-400 transition ease-in-out'>
+                  My NFTs <FaArrowRight className='relative bottom-[1px]' />
+                </span>
+              </Link>
+            </a>
+          )}{' '}
         </div>
       </div>
       {/* APY and Locking Period Wrapper */}
