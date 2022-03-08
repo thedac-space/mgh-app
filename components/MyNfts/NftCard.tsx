@@ -16,7 +16,7 @@ const array = Array(10)
 const NftCard = ({ stats }: Props) => {
   const rewardsDue =
     Number(stats.rewardsDue) >= 1
-      ? `Rewards Due: ${stats.rewardsDue}`
+      ? `Rewards Due: ${stats.rewardsDue} $MGH`
       : `No Rewards Due`
 
   console.log({ stats })
@@ -55,11 +55,11 @@ const NftCard = ({ stats }: Props) => {
         <p className='flex justify-between w-full'>
           <span>Stake:</span>{' '}
           <span>
-            {Number(stats.amountStaked).toFixed(2)}${stats.coin}
+            {Number(stats.amountStaked).toFixed(2)} ${stats.coin}
           </span>
         </p>
         <p className='flex justify-between w-full'>
-          <span>Rewards:</span> <span>{rewardsDue} $MGH</span>
+          <span>Rewards:</span> <span>{rewardsDue} </span>
         </p>
       </div>
     </div>
