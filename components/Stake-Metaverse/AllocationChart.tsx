@@ -36,7 +36,7 @@ const AllocationChart = ({ tvl, prices, mainState }: Props) => {
       value: Number((tvl.landsWorth * prices['the-sandbox'].usd).toFixed(2)),
     },
   ]
-  const COLORS = ['#e08f8d', '#6caf6c', '#8884d8']
+  const COLORS = ['rgb(218, 97, 151)', '#6caf6c', '#8884d8']
 
   useEffect(() => {
     // Initial Size Calculation
@@ -78,7 +78,12 @@ const AllocationChart = ({ tvl, prices, mainState }: Props) => {
     <div ref={chartContainerRef}>
       <h3 className='text-xl py-0 text-gray-300'>TVL Allocation</h3>
 
-      <ResponsiveContainer width='100%' height={180} debounce={25}>
+      <ResponsiveContainer
+        className='font-medium'
+        width='100%'
+        height={180}
+        debounce={25}
+      >
         <PieChart className='mx-auto'>
           <Pie
             isAnimationActive={false}
