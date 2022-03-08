@@ -60,18 +60,6 @@ const AllocationChart = ({ tvl, prices, mainState }: Props) => {
         ? (entry.percent * 100).toFixed(0) + '%'
         : `${entry.name}: ${(entry.percent * 100).toFixed(0)}%`
     return text
-    // return (
-    //   <text
-    //     x={entry.x}
-    //     y={entry.y}
-    //     dy={-4}
-    //     fontSize='16'
-    //     fontFamily='sans-serif'
-    //     fill={entry.fill}
-    //   >
-    //     {entry.value}%
-    //   </text>
-    // )
   }
 
   return (
