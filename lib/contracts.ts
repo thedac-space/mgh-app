@@ -57,17 +57,17 @@ export const Contracts = {
   REWARD_TOKEN: {
     ETHEREUM_RINKEBY: {
       address: '0xA0740464ee4d74062C5A4D3aC045d4729231108d',
-      interface: new Interface(SandToken),
+      abi: new Interface(SandToken),
     },
   },
   SAND_TOKEN: {
     MOCK_RINKEBY: {
       address: '0x20C207D79a207c87B59DB2007c7Fb581F0298788',
-      interface: new Interface(SandToken),
+      abi: new Interface(SandToken),
     },
     ETHEREUM_MAINNET: {
       address: '0x3845badAde8e6dFF049820680d1F14bD3903a5d0',
-      interface: new Interface(SandToken),
+      abi: new Interface(SandToken),
     },
   },
   // Sandbox
