@@ -2,7 +2,8 @@ import { ethers } from 'ethers'
 import Link from 'next/link'
 import React, { FormEvent, useEffect, useState } from 'react'
 import { FaArrowRight } from 'react-icons/fa'
-import { TransactionModal } from '..'
+import { TransactionModal, WalletModal } from '..'
+import changeChain from '../../backend/changeChain'
 import useConnectWeb3 from '../../backend/connectWeb3'
 import {
   approveAndCallDeposit,
@@ -55,8 +56,9 @@ const MainMvStakingInterface = ({ refetch, setRefetch, mainState }: Props) => {
   const [unstakeAmount, setUnstakeAmount] = useState('')
   const [state, setState] = useState<TxState>()
   const [stateData, setStateData] = useState<StateData>()
+  const [walletModal, setWalletModal] = useState(false)
   const signer = web3Provider?.getSigner()
-
+  const wrongNetwork = chainId !== Chains.ETHEREUM_RINKEBY.chainId
   const resetForm = () => {
     setStakeAmount('')
     setApproveAndStakeAmount('')
@@ -68,7 +70,7 @@ const MainMvStakingInterface = ({ refetch, setRefetch, mainState }: Props) => {
     // Making all Requests
     const setStatus = async () => {
       const provider =
-        !web3Provider || chainId !== Chains.ETHEREUM_RINKEBY.chainId
+        !web3Provider || wrongNetwork
           ? new ethers.providers.InfuraProvider(
               Chains.ETHEREUM_RINKEBY.chainId,
               '03bfd7b76f3749c8bb9f2c91bdba37f3'
@@ -77,7 +79,8 @@ const MainMvStakingInterface = ({ refetch, setRefetch, mainState }: Props) => {
 
       // Getting Epoche Number
       const epocheNumber = await getEpocheNumber(provider)
-      if (!address) return setStateData({ epocheNumber: epocheNumber })
+      if (!address || wrongNetwork)
+        return setStateData({ epocheNumber: epocheNumber })
       // Check if user owns an NFT
       const nftIds = await getUserNFTs(provider, address)
       let nftId: string | undefined
@@ -209,6 +212,12 @@ const MainMvStakingInterface = ({ refetch, setRefetch, mainState }: Props) => {
     processTransaction(tx)
   }
 
+  const handleClick = async () => {
+    address
+      ? changeChain(web3Provider?.provider, Chains.ETHEREUM_RINKEBY.chainId)
+      : setWalletModal(true)
+  }
+
   // Max Amount to stake (doing it here to be a bit cleaner)
   const stakingAssetBalance = parseFloat(
     stateData?.currentStakingAssetBalance!
@@ -271,7 +280,10 @@ const MainMvStakingInterface = ({ refetch, setRefetch, mainState }: Props) => {
   const optionKeys = Object.keys(options) as optionTypes[]
 
   return (
-    <div className='flex flex-col font-medium lg:w-2/4 gap-6 gray-box bg-opacity-10 text-white'>
+    <div className='flex flex-col font-medium lg:w-2/4 gap-6 gray-box bg-opacity-10 text-white relative'>
+      {/* Wallet Modal */}
+      {walletModal && <WalletModal onDismiss={() => setWalletModal(false)} />}
+      {/* transaction modal */}
       {state?.includes('Transaction') && (
         <TransactionModal
           onDismiss={() => {
@@ -283,6 +295,19 @@ const MainMvStakingInterface = ({ refetch, setRefetch, mainState }: Props) => {
           hash={stateData?.hash}
           chainId={chainId}
         />
+      )}
+
+      {/* Switch to Proper Net / Connect Wallet button */}
+      {(!address || wrongNetwork) && (
+        <>
+          <div className='absolute top-0 left-0 w-full h-full bg-black bg-opacity-0 backdrop-blur-sm rounded-xl z-20'></div>
+          <button
+            onClick={handleClick}
+            className='absolute opacity-80 hover:opacity-100 top-2/4 left-2/4 -translate-x-2/4 -translate-y-2/4 z-30 font-medium text-white px-6 py-4 rounded-xl bg-gradient-to-br transition-all duration-300 from-pink-600 to-blue-500'
+          >
+            {address ? 'Switch to Rinkeby' : 'Connect Wallet'}
+          </button>
+        </>
       )}
       {/* Top Level */}
       <div className='flex w-full justify-between'>
