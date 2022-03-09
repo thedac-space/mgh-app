@@ -121,7 +121,6 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
               getAddress((externalWallet as string) ?? address),
               landOptions[option].contract
             )
-            console.log({ rawIds })
             rawIds.length > 0 &&
               (await Promise.all(
                 rawIds.map(async (id) => {
