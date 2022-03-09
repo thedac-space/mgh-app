@@ -19,7 +19,6 @@ const NftCard = ({ stats }: Props) => {
       ? `Rewards Due: ${stats.rewardsDue} $MGH`
       : `No Rewards Due`
 
-  console.log({ stats })
   return (
     <div className='text-gray-200 w-full  max-w-md p-8 rounded-[6rem] bg-grey-darkest relative'>
       {/* Top Border */}

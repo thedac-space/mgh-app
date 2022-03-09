@@ -8,6 +8,7 @@ import { Wallets } from '../lib/wallets'
 import {
   DepositEvent,
   IMetaverseStaking,
+  TransferEvent,
 } from '../types/ethers-contracts/IMetaverseStaking'
 import { SandToken } from '../types/ethers-contracts/SandToken'
 
@@ -252,7 +253,7 @@ export const checkSandBalance = async (
 /* EVENTS */
 
 // Check if user has already deposited/minted an NFT...will expand this to allow all metaverses
-export const getUserDepositEvents = async (
+export const getTokenIdFromDeposit = async (
   provider: Web3Provider,
   address: string
 ) => {
@@ -261,7 +262,61 @@ export const getUserDepositEvents = async (
   const depositEvent = (await contract.queryFilter(event)) as
     | undefined[]
     | DepositEvent[]
-  return depositEvent
+
+  /* Doing this loop in the rare case that user deposited, then sold nft,
+   then deposited again etc... */
+  const [filteredId] = await Promise.all(
+    depositEvent.map(async (event) => {
+      const tokenId = event?.args.tokenId.toString()
+      const ownerAddress = tokenId && (await contract.ownerOf(tokenId))
+      if (ownerAddress === address) return tokenId
+    })
+  )
+  return filteredId
+}
+
+export const getUserNFTs = async (provider: Web3Provider, address: string) => {
+  const contract = createStakingContract(provider)
+  // Getting al transfer events that involve the user
+  const event = contract.filters.Transfer(undefined, address)
+  const transferEvents = (await contract.queryFilter(event)) as
+    | undefined[]
+    | TransferEvent[]
+
+  /* Looping through all transfer events and retrieving
+    only the tokenId that user currently owns */
+
+  // getting all async promises
+  const currentOwners = await Promise.all(
+    transferEvents.map(async (event) => {
+      const tokenId = event?.args.tokenId.toString()
+      const ownerAddress = tokenId && (await contract.ownerOf(tokenId))
+      return { ownerAddress, tokenId }
+    })
+  )
+
+  // Filtering promises
+  let filteredIds: string[] = []
+  for (let nft of currentOwners) {
+    if (
+      nft.ownerAddress === address &&
+      nft.tokenId &&
+      !filteredIds.includes(nft.tokenId)
+    ) {
+      filteredIds.push(nft.tokenId)
+    }
+  }
+  return filteredIds
+}
+
+export const transferNFT = async (signer: Signer, address: string) => {
+  const contract = createStakingContract(signer)
+  const tx = await contract.transferFrom(
+    address,
+    '0x7812B090d1a3Ead77B5D8F470D3faCA900A6ccB9',
+    '1646231188132'
+  )
+  await tx.wait()
 }
 
 /* TVL */

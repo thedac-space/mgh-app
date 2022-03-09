@@ -13,7 +13,7 @@ import {
   getMaxAmountStaked,
   getRewards,
   getUpdatedRewardsDue,
-  getUserDepositEvents,
+  getUserNFTs,
   getWithdrawableAmount,
   increasePosition,
   isWithdrawPhase,
@@ -26,6 +26,7 @@ import { OptimizedImage } from '../General'
 interface StateData {
   epocheNumber?: string
   userNftId?: string
+  nfts?: string[]
   isWithdraw?: boolean
   currentStakingAssetBalance?: string
   maxAmount?: string
@@ -66,8 +67,6 @@ const MainMvStakingInterface = ({ refetch, setRefetch, mainState }: Props) => {
     resetForm()
     // Making all Requests
     const setStatus = async () => {
-      if (!address) return
-
       const provider =
         !web3Provider || chainId !== Chains.ETHEREUM_RINKEBY.chainId
           ? new ethers.providers.InfuraProvider(
@@ -75,24 +74,31 @@ const MainMvStakingInterface = ({ refetch, setRefetch, mainState }: Props) => {
               '03bfd7b76f3749c8bb9f2c91bdba37f3'
             )
           : web3Provider
+
       // Getting Epoche Number
       const epocheNumber = await getEpocheNumber(provider)
-      // Check if user already staked
-      const [event] = await getUserDepositEvents(provider, address)
-      // set Nft Id for user
-      const nftId = event?.args.tokenId.toString()
-      // Check if its Withdraw Phase
-      const isWithdraw = await isWithdrawPhase(provider)
-      // Checking Sand Balance of User
-      const sandBalance = await checkSandBalance(provider, address)
-      const balance = ethers.utils.formatEther(sandBalance)
-      // Checking max possible amount to stake
-      const maxAmount = await getMaxAmountStaked(provider)
+      if (!address) return setStateData({ epocheNumber: epocheNumber })
+      // Check if user owns an NFT
+      const nftIds = await getUserNFTs(provider, address)
+      let nftId: string | undefined
+      if (!stateData?.userNftId) {
+        nftId = nftIds[0]
+      } else {
+        nftId = stateData?.userNftId
+      }
       // Checking if user has any rewards to their name
       const rawRewardsDue = nftId
         ? Number(await getUpdatedRewardsDue(nftId, provider)).toFixed(2)
         : undefined
       const rewardsDue = Number(rawRewardsDue) >= 1 ? rawRewardsDue : undefined
+      // Check if its Withdraw Phase
+      const isWithdraw = await isWithdrawPhase(provider)
+      // Checking Sand Balance of User
+      const balance = ethers.utils.formatEther(
+        await checkSandBalance(provider, address)
+      )
+      // Checking max possible amount to stake
+      const maxAmount = await getMaxAmountStaked(provider)
       // Checking amount that user can withdraw from staked tokens
       const withdrawableAmount = nftId
         ? await getWithdrawableAmount(nftId, provider)
@@ -101,12 +107,13 @@ const MainMvStakingInterface = ({ refetch, setRefetch, mainState }: Props) => {
       // Setting State
       setStateData({
         epocheNumber: epocheNumber,
-        userNftId: nftId,
         isWithdraw: isWithdraw,
         currentStakingAssetBalance: balance,
         maxAmount: maxAmount,
         rewardsDue: rewardsDue,
         withdrawableAmount: withdrawableAmount,
+        nfts: nftIds,
+        userNftId: nftId,
       })
     }
     setStatus()
@@ -211,7 +218,7 @@ const MainMvStakingInterface = ({ refetch, setRefetch, mainState }: Props) => {
 
   // Checking that user is on correct chain
   const correctChain = chainId === Chains.ETHEREUM_RINKEBY.chainId
-  // Checking if user has an NFT == if user staked
+  // Checking if user has an NFT
   const hasStaked = stateData?.userNftId
   // Form Logic
   const options = {
@@ -229,15 +236,6 @@ const MainMvStakingInterface = ({ refetch, setRefetch, mainState }: Props) => {
       disabled: !address || !correctChain,
       maxAmount: maxStakingAmount,
     },
-
-    // approveAndStake: {
-    //   text: stateData?.userNftId ? 'Approve and Increase' : 'Approve and Stake',
-    //   onClick: approveAndStake,
-    //   value: approveAndStakeAmount,
-    //   setValue: setApproveAndStakeAmount,
-    //   disabled: !!stateData?.userNftId || !address || !correctChain,
-    //   maxAmount: maxStakingAmount,
-    // },
     unstake: {
       title: 'Unstake',
       text:
@@ -322,8 +320,27 @@ const MainMvStakingInterface = ({ refetch, setRefetch, mainState }: Props) => {
           <span>Locking Period</span>
           <span>1 Month</span>
         </div>
+        {/* In case user has more than 1 NFT */}
+        {stateData?.nfts && stateData.nfts.length > 1 && (
+          <div className='flex w-full justify-between'>
+            <span>Select NFT</span>
+            <select
+              className='bg-transparent text-[0.9rem] tracking-wider font-medium text-right text-gray-200 hover:text-white cursor-pointer transition-all'
+              value={stateData.userNftId}
+              onChange={(e) => {
+                setStateData({ ...stateData, userNftId: e.target.value })
+                setRefetch(!refetch)
+              }}
+            >
+              {stateData.nfts.map((nft) => (
+                <option key={nft} value={nft}>
+                  {nft}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
       </div>
-
       {/* Staking Options */}
       {optionKeys.map((key) => (
         // Each Option functions as a Form
