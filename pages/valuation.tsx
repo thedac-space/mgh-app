@@ -145,7 +145,7 @@ const ValuationPage: NextPage = ({ prices }: any) => {
                 <div className="gray-box flex flex-col sm:flex-row justify-between items-center">
                   <h1 className="text-transparent bg-clip-text lg:text-5xl text-3xl bg-gradient-to-br from-blue-500 via-green-400 to-green-500 pb-0 sm:pb-2">LAND Valuation</h1>
                   {/* Watchlist and Portfolio Button's wrapper */}
-                  <div className="flex space-x-5">
+                  <div className="flex space-x-5 mt-5 sm:mt-0">
                     {/* Portfolio */}
                     <Link href={'/portfolio'}>
                       <a className='hover:scale-105 font-medium text-white px-5 py-3 flex items-center justify-center rounded-xl bg-gradient-to-br from-blue-500/30 to-green-500/30 transition-all duration-300'>
@@ -159,22 +159,6 @@ const ValuationPage: NextPage = ({ prices }: any) => {
                       </a>
                     </Link>
                   </div>
-                </div>
-
-                {/* MOBILE Watchlist and Portfolio Button's wrapper */}
-                <div className="sm:hidden gap-5 flex">
-                  {/* Portfolio */}
-                  <Link href={'/portfolio'}>
-                    <a className='hoverlift font-medium text-white p-3 rounded-xl bg-gradient-to-br transition-all duration-300 from-pink-600 to-blue-500'>
-                      Explore your portfolio
-                    </a>
-                  </Link>
-                  {/*  Watchlist */}
-                  <Link href={'/watchlist'}>
-                    <a className='hoverlift font-medium text-white p-3 rounded-xl bg-gradient-to-br transition-all duration-300 from-pink-600 to-blue-500'>
-                      Go to Watchlist
-                    </a>
-                  </Link>
                 </div>
                 
                 

@@ -26,6 +26,7 @@ import useConnectWeb3 from '../backend/connectWeb3'
 const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   const { query, push } = useRouter()
   const [openModal, setOpenModal] = useState(false)
+  const { web3Provider, disconnectWallet } = useConnectWeb3();
 
   const initialWorth = {
     ethPrediction: 0,
@@ -186,15 +187,9 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
             )}
           </div>
           {!externalWallet && !address ? (
-            <button
-              onClick={() => setOpenModal(true)}
-              className='disabled:opacity-50 self-center disabled:hover:shadow-dark disabled:cursor-default mt-4 relative flex justify-center items-center transition ease-in-out duration-500 shadow-dark rounded-xl w-full max-w-xs py-3 sm:py-4 group'
-            >
-              <div className='h-full w-full absolute bg-gradient-to-br transition-all ease-in-out duration-300 from-pink-600 to-blue-500 rounded-xl opacity-60 group-hover:opacity-80' />
-              <span className='pt-1 z-10 text-gray-200 font-medium text-lg sm:text-xl'>
-                Connect Wallet
-              </span>
-            </button>
+            <div className='w-full flex justify-center'>
+              <WalletButton onClick={() => setOpenModal(true)} disconnectWallet={disconnectWallet} />
+            </div>
           ) : (
             // Total Lands and Total Worth Container
             <div className='flex flex-col md:flex-row gap-4 lg:gap-12 md:gap-6 mb-0 sm:mb-12'>
