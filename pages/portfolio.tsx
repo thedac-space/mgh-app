@@ -22,17 +22,21 @@ import { FiCopy } from 'react-icons/fi'
 import { SocialMediaOptions } from '../lib/socialMediaOptions'
 import WalletButton from '../components/WalletButton'
 import useConnectWeb3 from '../backend/connectWeb3'
+import { ethers } from 'ethers'
+import { Chains } from '../lib/chains'
+import { getUserNFTs } from '../lib/nftUtils'
+import { getAddress } from 'ethers/lib/utils'
 
 const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   const { query, push } = useRouter()
   const [openModal, setOpenModal] = useState(false)
-  const { web3Provider, disconnectWallet } = useConnectWeb3();
+  const { web3Provider, disconnectWallet } = useConnectWeb3()
 
   const initialWorth = {
     ethPrediction: 0,
     usdPrediction: 0,
   }
-  const { address } = useAppSelector((state) => state.account)
+  const { address, chainId } = useAppSelector((state) => state.account)
   const [copiedText, setCopiedText] = useState(false)
 
   const [totalWorth, setTotalWorth] = useState<IPredictions>(initialWorth)
@@ -97,6 +101,14 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
     if (externalWallet && alreadyFetched) return
     setAlreadyFetched(true)
 
+    const provider =
+      !web3Provider || chainId !== Chains.ETHEREUM_MAINNET.chainId
+        ? new ethers.providers.InfuraProvider(
+            Chains.ETHEREUM_MAINNET.chainId,
+            '03bfd7b76f3749c8bb9f2c91bdba37f3'
+          )
+        : web3Provider
+
     // Requesting and Formatting Assets
     const setPortfolioAssets = async () => {
       resetState()
@@ -104,24 +116,17 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
       try {
         await Promise.all(
           options.map(async (option) => {
-            const res = await fetch('/api/fetchAssets', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                wallet: (externalWallet as string) ?? address,
-                assetContract: landOptions[option].contract,
-              }),
-            })
-            const rawAssets = await res.json()
-            // Formatting Assets to fit into the Cards
-            rawAssets.assets &&
-              rawAssets.assets.length > 0 &&
+            const rawIds = await getUserNFTs(
+              provider,
+              getAddress((externalWallet as string) ?? address),
+              landOptions[option].contract
+            )
+            console.log({ rawIds })
+            rawIds.length > 0 &&
               (await Promise.all(
-                rawAssets.assets.map(async (asset: any) => {
+                rawIds.map(async (id) => {
                   const formattedAsset = await formatLandAsset(
-                    asset.token_id,
+                    id,
                     prices,
                     option as Metaverse
                   )
@@ -188,7 +193,10 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
           </div>
           {!externalWallet && !address ? (
             <div className='w-full flex justify-center'>
-              <WalletButton onClick={() => setOpenModal(true)} disconnectWallet={disconnectWallet} />
+              <WalletButton
+                onClick={() => setOpenModal(true)}
+                disconnectWallet={disconnectWallet}
+              />
             </div>
           ) : (
             // Total Lands and Total Worth Container
