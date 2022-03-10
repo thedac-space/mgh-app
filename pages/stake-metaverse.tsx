@@ -126,13 +126,13 @@ const MetaverseStaking: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                 </div>
                 {/* Withdrawal Phase and Epoche Wrapper */}
                 <div className='text-lg gray-box bg-opacity-10'>
-                  <p className='text-gray-300 border-none'>
+                  <p className='text-gray-300 whitespace-pre-line border-none'>
                     <span className='font-medium'> Next Withdrawal Phase:</span>{' '}
                     <span className='text-base'>
                       {epoche?.formattedEpoche.end}
                     </span>
                   </p>
-                  <p className='text-gray-300 border-none'>
+                  <p className='text-gray-300 whitespace-pre-line border-none'>
                     <span className='font-medium'> Next Epoche Start: </span>{' '}
                     <span className='text-base'>{epoche?.nextEpocheStart}</span>
                   </p>
@@ -140,7 +140,7 @@ const MetaverseStaking: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
               </div>
             </div>
             {/* Table */}
-            <div className='pb-8'>
+            <div className='pb-4'>
               <h3 className='text-xl text-gray-300'>Latest Bot Transactions</h3>
               <MvInfoTable />
             </div>

@@ -21,15 +21,15 @@ const MvInfoTable = () => {
   }, [address, web3Provider])
   return (
     <div className='gray-box bg-opacity-10'>
-      <table className='w-full font-medium text-left'>
+      <table className='w-full font-medium text-left text-[0.92rem] sm:text-base lg:text-lg'>
         {/* TABLE HEAD */}
         <thead>
-          <tr className='border-b'>
-            <th className=''>Date</th>
-            <th className='hidden md:block'>NFT ID</th>
-            <th>Value</th>
-            <th>Buy/Sell</th>
-            <th>Etherscan</th>
+          <tr>
+            <th className='mb-2'>Date</th>
+            <th className='mb-2 hidden md:table-cell'>NFT ID</th>
+            <th className='mb-2'>Value</th>
+            <th className='mb-2'>Type</th>
+            <th className='mb-2'>Etherscan</th>
           </tr>
         </thead>
         <tbody>
@@ -45,8 +45,8 @@ const MvInfoTable = () => {
                 </td>
                 <td className='mb-3'>
                   <span className='flex gap-1'>
+                    <FaEthereum className='relative top-0.5' />
                     {getPrice(order).toFixed(2)}{' '}
-                    <FaEthereum className='relative top-005' />
                   </span>
                 </td>
                 <td className='mb-3'>Buy</td>
