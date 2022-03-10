@@ -40,6 +40,7 @@ const SmallScreenToolbar = ({ onWalletClick, disconnectWallet, web3Provider, cha
                     <NavItem text="Stake" link="/stake" />
                     <NavItem text="NFT Pools" link="/pools" />
                     <NavItem text="LAND Valuation" link="/valuation" />
+                    <NavItem text='MV Staking' link='/stake-metaverse' />
                 </div>
 
                 {/* <div className="flex flex-col space-y-3 md:hidden mb-12"> */}
