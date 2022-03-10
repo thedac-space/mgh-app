@@ -78,7 +78,7 @@ const MetaverseStaking: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
           content='Governance of metaverse related items, fair valuation and minting of NFT backed tokens and provision of metaverse market data.'
         />
       </Head>
-      <section className='w-full xs:w-75vw sm:w-[28rem] md:w-[36rem] lg:w-full h-full max-w-5xl pt-12 xl:pt-0 text-gray-400'>
+      <section className='w-full sm:w-[30rem] md:w-[36rem] lg:w-full h-full max-w-5xl pt-12 xl:pt-0 text-gray-400'>
         {state === 'loadingFirst' ? (
           <div className='flex w-full h-full justify-center items-center'>
             <Loader />
@@ -140,7 +140,7 @@ const MetaverseStaking: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
               </div>
             </div>
             {/* Table */}
-            <div>
+            <div className='pb-8'>
               <h3 className='text-xl text-gray-300'>Latest Bot Transactions</h3>
               <MvInfoTable />
             </div>

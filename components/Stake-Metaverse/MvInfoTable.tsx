@@ -1,9 +1,11 @@
 import { ethers } from 'ethers'
 import React, { useEffect, useState } from 'react'
+import { FaEthereum } from 'react-icons/fa'
 import useConnectWeb3 from '../../backend/connectWeb3'
 import { getPrice, handleTokenID } from '../../lib/valuation/valuationUtils'
 import { Wallets } from '../../lib/wallets'
 import { useAppSelector } from '../../state/hooks'
+import { OptimizedImage } from '../General'
 
 const MvInfoTable = () => {
   const { address } = useAppSelector((state) => state.account)
@@ -22,10 +24,9 @@ const MvInfoTable = () => {
       <table className='w-full font-medium text-left'>
         {/* TABLE HEAD */}
         <thead>
-          <tr>
-            <th>Date</th>
-            {/* <th>Markeplace</th> */}
-            <th>NFTID</th>
+          <tr className='border-b'>
+            <th className=''>Date</th>
+            <th className='hidden md:block'>NFT ID</th>
             <th>Value</th>
             <th>Buy/Sell</th>
             <th>Etherscan</th>
@@ -36,13 +37,25 @@ const MvInfoTable = () => {
           {orders &&
             orders?.map((order: any) => (
               <tr key={order.id}>
-                <td>{new Date(order?.closing_date).toDateString()}</td>
-                {/* <td>OpenSea</td> */}
-                <td>{handleTokenID(order?.metadata?.asset.id)}</td>
-                <td>{getPrice(order).toFixed(2)} ETH</td>
-                <td>Buy</td>
-                <td>
-                  <a href={order.id} className='cursor-pointer' target='_blank'>
+                <td className='mb-3'>
+                  {new Date(order?.closing_date).toLocaleDateString('en-GB')}
+                </td>
+                <td className='hidden md:table-cell mb-3'>
+                  {handleTokenID(order?.metadata?.asset.id)}
+                </td>
+                <td className='mb-3'>
+                  <span className='flex gap-1'>
+                    {getPrice(order).toFixed(2)}{' '}
+                    <FaEthereum className='relative top-005' />
+                  </span>
+                </td>
+                <td className='mb-3'>Buy</td>
+                <td className='mb-3'>
+                  <a
+                    href={'https://etherscan.com/address/' + order.id}
+                    className='cursor-pointer'
+                    target='_blank'
+                  >
                     1230....212
                   </a>{' '}
                 </td>
