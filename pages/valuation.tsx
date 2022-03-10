@@ -58,6 +58,7 @@ const ValuationPage: NextPage = ({ prices }: any) => {
 
     const handleCoordinatesSubmit = async (ev: any) => {
         ev.preventDefault();
+        setCoordinatesError("");
 
         const X = (document.getElementById('X') as HTMLInputElement).value
         const Y = (document.getElementById('Y') as HTMLInputElement).value
@@ -92,6 +93,7 @@ const ValuationPage: NextPage = ({ prices }: any) => {
 
     const handleIDSubmit = async (ev: any) => {
         ev.preventDefault();
+        setIdError("");
 
         const tokenID = (document.getElementById('tokenID') as HTMLInputElement).value
 
