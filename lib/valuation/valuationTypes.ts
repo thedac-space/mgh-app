@@ -11,7 +11,6 @@ export interface IPriceCard {
   processing?: boolean
   apiData?: IAPIData
   predictions?: IPredictions
-  verticalUnder?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 }
 
 export type LandsKey = 'sandbox' | 'decentraland'

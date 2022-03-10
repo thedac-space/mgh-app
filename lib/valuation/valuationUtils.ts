@@ -86,8 +86,10 @@ export const handleTokenID = (tokenID: string) => {
   }
 }
 
-/* Getting current asset price from OpenSea. (orders: any[]) 
-  refers to the array of orders we get from each asset */
+/**
+ * @param orders Array of order objects from each OpenSea Asset
+ * @returns current price for asset & best offered price for asset
+ */
 export function getBoundaryPrices(orders: any[]) {
   let currentPrice: number | undefined
   let bestOfferedPrice: number | undefined
@@ -97,7 +99,7 @@ export function getBoundaryPrices(orders: any[]) {
     best_offered_price: bestOfferedPrice,
   }
 
-  if (orders !== undefined) {
+  if (orders) {
     for (let order of orders) {
       let value = getPrice(order)
       if (order.side == 0)

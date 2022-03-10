@@ -13,22 +13,30 @@ import { useAppSelector } from '../state/hooks'
 import { Contracts } from '../lib/contracts'
 import { useRouter } from 'next/router'
 import { ellipseAddress } from '../lib/utilities'
-import { Loader } from '../components'
+import { Loader, WalletModal } from '../components'
 import { Fade } from 'react-awesome-reveal'
 import { Metaverse } from '../lib/enums'
 import PortfolioList from '../components/Portfolio/PortfolioList'
 import { BsTwitter } from 'react-icons/bs'
 import { FiCopy } from 'react-icons/fi'
 import { SocialMediaOptions } from '../lib/socialMediaOptions'
+import WalletButton from '../components/WalletButton'
+import useConnectWeb3 from '../backend/connectWeb3'
+import { ethers } from 'ethers'
+import { Chains } from '../lib/chains'
+import { getUserNFTs } from '../lib/nftUtils'
+import { getAddress } from 'ethers/lib/utils'
 
 const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   const { query, push } = useRouter()
+  const [openModal, setOpenModal] = useState(false)
+  const { web3Provider, disconnectWallet } = useConnectWeb3()
 
   const initialWorth = {
     ethPrediction: 0,
     usdPrediction: 0,
   }
-  const { address } = useAppSelector((state) => state.account)
+  const { address, chainId } = useAppSelector((state) => state.account)
   const [copiedText, setCopiedText] = useState(false)
 
   const [totalWorth, setTotalWorth] = useState<IPredictions>(initialWorth)
@@ -93,6 +101,14 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
     if (externalWallet && alreadyFetched) return
     setAlreadyFetched(true)
 
+    const provider =
+      !web3Provider || chainId !== Chains.ETHEREUM_MAINNET.chainId
+        ? new ethers.providers.InfuraProvider(
+            Chains.ETHEREUM_MAINNET.chainId,
+            '03bfd7b76f3749c8bb9f2c91bdba37f3'
+          )
+        : web3Provider
+
     // Requesting and Formatting Assets
     const setPortfolioAssets = async () => {
       resetState()
@@ -100,19 +116,16 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
       try {
         await Promise.all(
           options.map(async (option) => {
-            const res = await fetch(
-              `/api/fetchAssets/${externalWallet ?? address}/${
-                landOptions[option].contract
-              }`
+            const rawIds = await getUserNFTs(
+              provider,
+              getAddress((externalWallet as string) ?? address),
+              landOptions[option].contract
             )
-            const rawAssets = await res.json()
-            // Formatting Assets to fit into the Cards
-            rawAssets.assets &&
-              rawAssets.assets.length > 0 &&
+            rawIds.length > 0 &&
               (await Promise.all(
-                rawAssets.assets.map(async (asset: any) => {
+                rawIds.map(async (id) => {
                   const formattedAsset = await formatLandAsset(
-                    asset.token_id,
+                    id,
                     prices,
                     option as Metaverse
                   )
@@ -153,9 +166,11 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
         />
       </Head>
 
-      <section className='w-75vw sm:w-full max-w-7xl pt-12 xl:pt-0'>
+      {openModal && <WalletModal onDismiss={() => setOpenModal(false)} />}
+
+      <section className='w-full xs:w-[22rem] sm:w-[26rem] md:w-[48rem] lg:w-full max-w-7xl pt-12 xl:pt-0'>
         {/* Headers */}
-        <hgroup className='text-white text-center'>
+        <hgroup className='text-gray-200 text-center flex flex-col'>
           {/* Change Title if there's a query on the uri */}
           <div className='sm:gray-box mb-8 sm:mb-12'>
             {externalWallet ? (
@@ -176,12 +191,15 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
             )}
           </div>
           {!externalWallet && !address ? (
-            <button className='items-center justify-center font-medium text-center transition-all ease-in cursor-default z-10 p-4 rounded-xl bg-gradient-to-br from-pink-600 to-blue-500'>
-              No Wallet Detected
-            </button>
+            <div className='w-full flex justify-center'>
+              <WalletButton
+                onClick={() => setOpenModal(true)}
+                disconnectWallet={disconnectWallet}
+              />
+            </div>
           ) : (
             // Total Lands and Total Worth Container
-            <div className='flex flex-col sm:flex-row gap-4 md:gap-12 mb-0 sm:mb-12'>
+            <div className='flex flex-col md:flex-row gap-4 lg:gap-12 md:gap-6 mb-0 sm:mb-12'>
               {/* Total Lands */}
               <div className='flex flex-col justify-between gap-4 text-center transition-all gray-box relative'>
                 <h3 className='text-xl md:text-3xl xl:text-4xl'>
@@ -191,26 +209,26 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                   <Loader />
                 ) : (
                   <>
-                    <p className='text-4xl animate-fade-in-slow reverse-text-gradient mb-2 font-bold'>
+                    <p className='text-5xl animate-fade-in-slow text-blue-500 mb-2 font-medium'>
                       {totalAssets}
                     </p>
                     {externalWallet && (
-                      <button
+                      <div
                         onClick={seeOwnPortfolio}
-                        className='min-w-fit w-1/2 mx-auto animate-fade-in-slow font-medium text-white py-3 px-4 rounded-xl bg-gradient-to-br transition-all duration-300 from-pink-600 to-blue-500'
+                        className='hover:scale-105 cursor-pointer max-w-max self-center font-medium text-white px-5 py-3 flex items-center justify-center rounded-xl bg-gradient-to-br from-blue-500/30 to-green-500/30 transition-all duration-300'
                       >
-                        See your Own Portfolio
-                      </button>
+                        <span className='pt-1 text-xl'>My Portfolio</span>
+                      </div>
                     )}
                     {/* Share Icons */}
                     {!externalWallet && address && (
-                      <div className='flex gap-16 justify-center'>
+                      <div className='flex gap-5 justify-end'>
                         {/* Copy Link */}
                         <button onClick={copyLink} className='relative'>
-                          <FiCopy className='w-9 h-9 text-pink-500 relative transition ease-in-out duration-300 hover:scale-105' />
+                          <FiCopy className='w-9 h-9 text-gray-400 relative hover:text-blue-400' />
                           {copiedText && (
                             <Fade direction='bottom-right' duration={500}>
-                              <span className='font-medium absolute w-fit p-4 rounded-xl -top-1/2 bg-gradient-to-br transition-all duration-300 from-pink-600 to-blue-500'>
+                              <span className='font-medium min-w-max absolute w-fit p-3 pt-4 bg-black/50 backdrop-blur-xl rounded-xl -top-1/2'>
                                 Link Copied!
                               </span>
                             </Fade>
@@ -223,7 +241,7 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                           }
                           className=''
                         >
-                          <BsTwitter className='text-blue-400 w-9 h-9 transition ease-in-out duration-300 hover:scale-105' />
+                          <BsTwitter className='text-gray-400 w-9 h-9 hover:text-blue-400' />
                         </button>
                       </div>
                     )}
@@ -232,8 +250,8 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
               </div>
 
               {/* Total Worth */}
-              <div className='flex flex-col w-full sm:w-2/3 transition-all justify-between text-center mb-8 sm:mb-0 gray-box'>
-                <h3 className='text-xl md:text-3xl xl:text-4xl mb-4'>
+              <div className='flex flex-col w-full md:w-2/3 transition-all justify-between text-center mb-8 sm:mb-0 gray-box'>
+                <h3 className='text-xl md:text-3xl xl:text-4xl mb-4 whitespace-nowrap'>
                   Total Value Worth
                 </h3>
                 {loading ? (
