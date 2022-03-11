@@ -7,7 +7,6 @@ const MostUnderValuedLand = ({
   showCard,
   predictions,
   processing,
-  verticalUnder,
 }: IPriceCard) => {
   const mockApiData = {
     external_link:
@@ -20,7 +19,7 @@ const MostUnderValuedLand = ({
     name: 'LAND (136, 4)',
     opensea_link:
       'https://opensea.io/assets/0x50f5474724e0ee42d9a4e711ccfb275809fd6d4a/85204',
-    tokenId: 85204,
+    tokenId: "85204",
   }
 
   const mockPredictions = {
@@ -41,7 +40,6 @@ const MostUnderValuedLand = ({
         <HorizontalPriceCard
           apiData={mockApiData}
           showCard={showCard}
-          verticalUnder={verticalUnder}
           predictions={mockPredictions}
           processing={processing}
         />
