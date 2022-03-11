@@ -1,4 +1,3 @@
-import { formatEther } from 'ethers/lib/utils'
 import React from 'react'
 import { OptimizedImage } from '../General'
 
@@ -12,7 +11,7 @@ interface Props {
     tokenId: string
   }
 }
-const array = Array(10)
+
 const NftCard = ({ stats }: Props) => {
   const rewardsDue =
     Number(stats.rewardsDue) >= 1
@@ -22,7 +21,7 @@ const NftCard = ({ stats }: Props) => {
   return (
     <div className='text-gray-200 w-full  max-w-md p-8 rounded-[6rem] bg-grey-darkest relative'>
       {/* Top Border */}
-      <span className='absolute top-2 left-2/4 text-gray-400 -translate-x-2/4 flex whitespace-nowrap italic gap-4'>
+      <span className='absolute top-2 left-2/4 text-gray-400 -translate-x-2/4 flex whitespace-nowrap italic text-sm xs:text-base gap-2 sm:gap-4'>
         {[...Array(3)].map((_, i) => (
           <span key={i}>MGH DAO</span>
         ))}
