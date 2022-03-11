@@ -10,6 +10,7 @@
     "gen:types": "typechain --target=ethers-v5 ./backend/abi/*.json"
   },
   "dependencies": {
+    "@ethersproject/providers": "^5.6.0",
     "@mailchimp/mailchimp_marketing": "^3.0.69",
     "@maticnetwork/wallet-widget": "^1.2.2",
     "@metamask/detect-provider": "^1.2.0",

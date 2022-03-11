@@ -12,7 +12,7 @@ export type { TokenAbiETHRinkeby } from "./TokenAbiETHRinkeby";
 export type { TokenAbiMaticMainnet } from "./TokenAbiMaticMainnet";
 export type { TokenAbiMaticTestnet } from "./TokenAbiMaticTestnet";
 
-export { ERC721__factory } from "./factories/ERC721__factory";
+export { ERC721__factory } from "./factories/Erc721__factory";
 export { IMetaverseStaking__factory } from "./factories/IMetaverseStaking__factory";
 export { SandToken__factory } from "./factories/SandToken__factory";
 export { StakingAbiETHRinkeby__factory } from "./factories/StakingAbiETHRinkeby__factory";
