@@ -1,8 +1,9 @@
 import { createChart } from 'lightweight-charts'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 const TVLHistoryChart = ({ data }: any) => {
   const chartContainerRef = useRef<HTMLDivElement>(null)
+  const [interval, setInterval] = useState<'daily'| 'weekly' | 'monthly'>()
 
   const theme = {
     chart: {
@@ -42,6 +43,7 @@ const TVLHistoryChart = ({ data }: any) => {
     },
   }
 
+  
   useEffect(() => {
     const handleResize = () => {
       chart.applyOptions({ width: chartContainerRef?.current!.clientWidth! })
@@ -52,7 +54,7 @@ const TVLHistoryChart = ({ data }: any) => {
       height: 280,
     })
     chart.timeScale().fitContent()
-
+    
     const areaSeries = chart.addAreaSeries()
     chart.applyOptions(theme.chart)
     areaSeries.applyOptions(theme.series)
@@ -64,9 +66,16 @@ const TVLHistoryChart = ({ data }: any) => {
 
       chart.remove()
     }
-  }, [data])
+  }, [data, interval])
 
-  return <div className='max-w-full h-full' ref={chartContainerRef} />
+  return <div className='max-w-full h-full relative' ref={chartContainerRef} >
+    <div className='absolute top-2 left-2 z-10 flex gap-2'>
+
+    <button onClick={() => setInterval('daily')}>1D</button>
+    <button onClick={() => setInterval('weekly')}>1W</button>
+    <button onClick={() => setInterval('monthly')}>1M</button>
+    </div>
+    </div>
 }
 
 export default TVLHistoryChart
