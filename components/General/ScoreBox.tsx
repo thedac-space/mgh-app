@@ -23,7 +23,7 @@ class ScoreBox extends React.Component<ScoreBoxProps, ScoreBoxState> {
     }
 
     async componentDidUpdate() {
-        this.scores = await getValuationScores(this.props.landId);
+        // this.scores = await getValuationScores(this.props.landId);
     }
 
     render() { 
@@ -31,7 +31,7 @@ class ScoreBox extends React.Component<ScoreBoxProps, ScoreBoxState> {
             <>
                 <div className={` ${this.props.showCard ? "animate__fadeIn" : "hidden"} mt-5`}>
                     <div className="container">
-                            <div className="flex row relative flex flex-wrap items-center mb-3 pl-1 text-left w-full max-w-sm">
+                            <div className="flex row relative flex-wrap items-center mb-3 pl-1 text-left w-full max-w-sm">
                                 <div className="col-xs-4 col-sm-4 col-md-4 col-lg-4">
                                     <p className=" text-lg xl:text-xl font-medium text-gray-300">Valuation Score: </p>
                                 </div>
