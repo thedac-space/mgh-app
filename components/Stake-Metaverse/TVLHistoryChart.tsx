@@ -1,17 +1,22 @@
 import { createChart } from 'lightweight-charts'
 import { useEffect, useRef, useState } from 'react'
 
-const TVLHistoryChart = ({ data }: any) => {
+interface Data {
+  time: number
+  value: number
+}
+
+const TVLHistoryChart = ({ data }: { data: Data[] }) => {
   const chartContainerRef = useRef<HTMLDivElement>(null)
-  const [interval, setInterval] = useState<'daily'| 'weekly' | 'monthly'>()
+  const [interval, setInterval] = useState<'daily' | 'hourly' | '5min'>('5min')
 
   const theme = {
     chart: {
       timeScale: {
         barSpacing: 1,
-        // fixLeftEdge: true,
+        fixLeftEdge: true,
+        fixRightEdge: true,
         lockVisibleTimeRangeOnResize: true,
-        // rightBarStaysOnScroll: true,
         borderVisible: true,
         borderColor: '#15ff002d',
         visible: true,
@@ -43,7 +48,25 @@ const TVLHistoryChart = ({ data }: any) => {
     },
   }
 
-  
+  // Filtering Data between 5min/1hour/1day
+  const setChartInterval = (data: Data[]) => {
+    if (interval === '5min') return data
+    const filteredData = data.filter((element, i) => {
+      let time = 0
+      let nextTime = 0
+      if (interval === 'hourly') {
+        time = new Date(element.time * 1000).getHours()
+        nextTime = new Date(data[i + 1]?.time * 1000).getHours()
+      }
+      if (interval === 'daily') {
+        time = new Date(element.time * 1000).getDay()
+        nextTime = new Date(data[i + 1]?.time * 1000).getDay()
+      }
+      return time !== nextTime
+    })
+    return filteredData
+  }
+
   useEffect(() => {
     const handleResize = () => {
       chart.applyOptions({ width: chartContainerRef?.current!.clientWidth! })
@@ -54,11 +77,12 @@ const TVLHistoryChart = ({ data }: any) => {
       height: 280,
     })
     chart.timeScale().fitContent()
-    
+    const chartData = setChartInterval(data)
+
     const areaSeries = chart.addAreaSeries()
     chart.applyOptions(theme.chart)
     areaSeries.applyOptions(theme.series)
-    areaSeries.setData(data)
+    areaSeries.setData(chartData as any /* :) */)
 
     window.addEventListener('resize', handleResize)
     return () => {
@@ -68,14 +92,30 @@ const TVLHistoryChart = ({ data }: any) => {
     }
   }, [data, interval])
 
-  return <div className='max-w-full h-full relative' ref={chartContainerRef} >
-    <div className='absolute top-2 left-2 z-10 flex gap-2'>
-
-    <button onClick={() => setInterval('daily')}>1D</button>
-    <button onClick={() => setInterval('weekly')}>1W</button>
-    <button onClick={() => setInterval('monthly')}>1M</button>
+  return (
+    <div className='max-w-full h-full relative' ref={chartContainerRef}>
+      <div className='absolute top-1 left-1 z-10 flex gap-2'>
+        <button
+          className='gray-box font-semibold rounded-lg p-2 text-xs text-gray-400 hover:text-gray-300 hover:bg-opacity-80'
+          onClick={() => setInterval('5min')}
+        >
+          5MIN
+        </button>
+        <button
+          className='gray-box font-semibold rounded-lg p-2 text-xs text-gray-400 hover:text-gray-300 hover:bg-opacity-80'
+          onClick={() => setInterval('hourly')}
+        >
+          1H
+        </button>
+        <button
+          className='gray-box font-semibold rounded-lg p-2 text-xs text-gray-400 hover:text-gray-300 hover:bg-opacity-80'
+          onClick={() => setInterval('daily')}
+        >
+          1D
+        </button>
+      </div>
     </div>
-    </div>
+  )
 }
 
 export default TVLHistoryChart
