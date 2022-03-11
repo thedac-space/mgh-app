@@ -1,6 +1,6 @@
 
 import React, { ReactNode, useState } from "react";
-import { addCommentaryToLand } from '../../lib/FirebaseUtilities'
+// import { addCommentaryToLand } from '../../lib/FirebaseUtilities'
 
 
 interface CommentaryBoxProps {
@@ -42,8 +42,8 @@ class CommentaryBox extends React.Component<CommentaryBoxProps, CommentaryBoxSta
 
     async submitCommentary(){
         const liked = (this.state.isLiked && !this.state.isDisliked)
-        const done = await addCommentaryToLand(this.props.landId, '0x0000', this.state.commentary, liked)
-        console.log("done", done);
+        // const done = await addCommentaryToLand(this.props.landId, '0x0000', this.state.commentary, liked)
+        // console.log("done", done);
     }
 
     componentDidMount() {
@@ -59,7 +59,7 @@ class CommentaryBox extends React.Component<CommentaryBoxProps, CommentaryBoxSta
             <>
                 <div className={`${ this.props.showCard ? "animate__fadeIn" : "hidden"} mt-5`}>
                     <div className="container">
-                            <div className="flex row relative flex flex-wrap items-center mb-3 pl-1 text-left w-full max-w-sm">
+                            <div className="flex row relative flex-wrap items-center mb-3 pl-1 text-left w-full max-w-sm">
                                 <p className="font-medium text-gray-300">How happy are you with this valuation?</p>
                             </div>
     
