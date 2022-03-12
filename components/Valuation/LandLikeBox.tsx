@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { Fade } from 'react-awesome-reveal'
 import { BiDislike, BiLike } from 'react-icons/bi'
 import { BsTwitter } from 'react-icons/bs'
 import { Metaverse } from '../../lib/enums'
@@ -27,9 +28,14 @@ const LandLikeBox = ({ landId, metaverse, twitterLink }: Props) => {
     liked: false,
     disliked: false,
   })
+  const [connectToVote, setConnectToVote] = useState(false)
 
   const like = async () => {
-    if (!address || !score) return
+    if (!score) return
+    if (!address) {
+      setConnectToVote(true)
+      return setTimeout(() => setConnectToVote(false), 1100)
+    }
     // If user already liked take like away
     if (userReacted.liked) {
       /////// Instant Feedback
@@ -54,7 +60,11 @@ const LandLikeBox = ({ landId, metaverse, twitterLink }: Props) => {
   }
 
   const dislike = async () => {
-    if (!address || !score) return
+    if (!score) return
+    if (!address) {
+      setConnectToVote(true)
+      return setTimeout(() => setConnectToVote(false), 1100)
+    }
     // If user already dislike then take dislike out
     if (userReacted.disliked) {
       /////// Instant Feedback
@@ -95,7 +105,16 @@ const LandLikeBox = ({ landId, metaverse, twitterLink }: Props) => {
   }, [landId, refetch, address])
 
   return (
-    <div className='flex text-center w-full justify-start items-end font-medium gap-6 text-gray-400'>
+    <div className='flex relative text-center w-full justify-start items-end font-medium gap-6 text-gray-400'>
+      {connectToVote && (
+        <div className='absolute'>
+          <Fade duration={500}>
+            <span className='font-medium min-w-max absolute w-fit p-3 pt-4 bg-black/50 backdrop-blur-xl rounded-xl -top-1/2'>
+              Connect Wallet to Vote!
+            </span>
+          </Fade>
+        </div>
+      )}
       {/* Like */}
       <div className='flex items-end gap-3'>
         <BiLike
@@ -106,7 +125,9 @@ const LandLikeBox = ({ landId, metaverse, twitterLink }: Props) => {
             (userReacted.liked ? 'text-green-500' : '')
           }
         />
-        <p className='text-green-500 text-xl font-medium'>{score?.likes.length || 0}</p>
+        <p className='text-green-500 text-xl font-medium'>
+          {score?.likes.length || 0}
+        </p>
       </div>
       {/* Dislike */}
       <div className='flex items-end gap-3'>
@@ -119,7 +140,9 @@ const LandLikeBox = ({ landId, metaverse, twitterLink }: Props) => {
             (userReacted.disliked && 'text-red-500')
           }
         />
-        <p className='text-red-500 font-medium text-xl'>{score?.dislikes.length || 0}</p>
+        <p className='text-red-500 font-medium text-xl'>
+          {score?.dislikes.length || 0}
+        </p>
       </div>
       <div className='grow' />
       <BsTwitter
