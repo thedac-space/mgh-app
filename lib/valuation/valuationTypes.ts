@@ -13,7 +13,7 @@ export interface IPriceCard {
   predictions?: IPredictions
 }
 
-export type LandsKey = 'sandbox' | 'decentraland'
+export type LandsKey = 'sandbox' | 'decentraland' | 'axie-infinity'
 
 export interface IWatchListCard extends IPriceCard {
   currentPrice?: number

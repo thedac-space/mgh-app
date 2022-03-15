@@ -47,6 +47,9 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   >([])
   const [formattedDecentralandAssets, setFormattedDecentralandAssets] =
     useState<IPriceCard[]>([])
+  const [formattedAxieAssets, setFormattedAxieAssets] = useState<IPriceCard[]>(
+    []
+  )
   const [loading, setLoading] = useState(true)
   const socialMedia = SocialMediaOptions(undefined, undefined, address)
   const externalWallet = query.wallet
@@ -62,6 +65,11 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
       contract: Contracts.PARCEL.ETHEREUM_MAINNET.address,
       assetsList: formattedDecentralandAssets,
       setList: setFormattedDecentralandAssets,
+    },
+    'axie-infinity': {
+      contract: Contracts.AXIE_LANDS.RONIN_MAINNET.address,
+      assetsList: formattedAxieAssets,
+      setList: setFormattedAxieAssets,
     },
   }
 
@@ -97,6 +105,19 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
     })
   }
 
+  const formatAddress = (address: string) => {
+    // If Ronin Address
+    // if (!address) return
+    // return address.length
+    if (address[0] === 'r') {
+      // const roninAddress =
+      // 'ronin:' + getAddress(address.substring(address.indexOf(':') + 1))
+      // console.log({ roninAddress })
+      return getAddress(address.substring(address.indexOf(':') + 1))
+    }
+    // Else
+    return getAddress(address)
+  }
   useEffect(() => {
     if (externalWallet && alreadyFetched) return
     setAlreadyFetched(true)
@@ -112,16 +133,18 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
     // Requesting and Formatting Assets
     const setPortfolioAssets = async () => {
       resetState()
+      if (!address && !externalWallet) return
       // OpenSea API Call
       try {
         await Promise.all(
           options.map(async (option) => {
             const rawIds = await getUserNFTs(
               provider,
-              getAddress((externalWallet as string) ?? address),
+              formatAddress((externalWallet as string) ?? address),
               landOptions[option].contract
             )
-            rawIds.length > 0 &&
+            rawIds &&
+              rawIds.length > 0 &&
               (await Promise.all(
                 rawIds.map(async (id) => {
                   const formattedAsset = await formatLandAsset(
