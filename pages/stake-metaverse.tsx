@@ -5,7 +5,11 @@ import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import { FaArrowRight } from 'react-icons/fa'
 import useConnectWeb3 from '../backend/connectWeb3'
-import { getCurrentEpoche, getTVL } from '../backend/metaverseStaking'
+import {
+  getCurrentEpoche,
+  getTVL,
+  isWithdrawPhase,
+} from '../backend/metaverseStaking'
 import { Loader } from '../components'
 import {
   AllocationChart,
@@ -40,6 +44,7 @@ const MetaverseStaking: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   const [refetch, setRefetch] = useState(false)
   const [state, setState] = useState<MainMvState>()
   const [epoche, setEpoche] = useState<Epoche>()
+  const [isWithdraw, setIsWithdraw] = useState(false)
   const [tvl, setTvl] = useState<TVL>({
     tvl: 0,
     totalAmountStaked: 0,
@@ -59,6 +64,8 @@ const MetaverseStaking: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
           : web3Provider
       // Getting Epoche Stats
       const epoche = await getCurrentEpoche(provider)
+      const isWithdraw = await isWithdrawPhase(provider)
+      setIsWithdraw(isWithdraw)
       setEpoche(epoche)
       const tvl = await getTVL(provider)
       setTvl(tvl)
@@ -129,7 +136,7 @@ const MetaverseStaking: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                   <p className='text-gray-300 whitespace-pre-line border-none'>
                     <span className='font-medium'> Next Withdrawal Phase:</span>{' '}
                     <span className='text-base'>
-                      {epoche?.formattedEpoche.end}
+                      {isWithdraw ? 'Now' : epoche?.formattedEpoche.end}
                     </span>
                   </p>
                   <p className='text-gray-300 whitespace-pre-line border-none'>
