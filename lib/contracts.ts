@@ -63,7 +63,7 @@ export const Contracts = {
   },
   AXIE_LANDS: {
     RONIN_MAINNET: {
-      address: '8c811e3c958e190f5ec15fb376533a3398620500',
+      address: '0x8c811e3c958e190f5ec15fb376533a3398620500',
       abi: new Interface(AxieLandAbi),
     },
   },
