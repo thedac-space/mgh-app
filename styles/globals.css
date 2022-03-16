@@ -583,3 +583,8 @@ h6 {
   transform: translateY(-5px);
   transition: all 0.3s;
 }
+
+.map-grid {
+  display: grid;
+  grid-template-columns: repeat(264, 1fr);
+}
