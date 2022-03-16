@@ -34,49 +34,46 @@ export const getUserNFTs = async (
   address: string,
   contractAddress: string
 ) => {
-  let finalProvider = provider
-  let contract: unknown
   // If NFTs are from Axie Infinity connect to Ronin Network
-  if (contractAddress === Contracts.AXIE_LANDS.RONIN_MAINNET.address) {
-    finalProvider = new ethers.providers.JsonRpcProvider(
-      Chains.RONIN_MAINNET.rpcUrl
-    )
-    const axieContract = createAxieLandContract(finalProvider, contractAddress)
-    const owner = await axieContract.ownerOf(
-      BigNumber.from(
-        '115792089237316195423570985008687907814818077203574517667432170581469777887231'
-      )
-    )
+  // if (contractAddress === Contracts.AXIE_LANDS.RONIN_MAINNET.address) {
+  //   finalProvider = new ethers.providers.JsonRpcProvider(
+  //     Chains.RONIN_MAINNET.rpcUrl
+  //   )
+  //   const axieContract = createAxieLandContract(finalProvider, contractAddress)
+  //   const owner = await axieContract.ownerOf(
+  //     BigNumber.from(
+  //       '115792089237316195423570985008687907814818077203574517667432170581469777887231'
+  //     )
+  //   )
 
-    const balance = (await axieContract.balanceOf(address)).toString()
-    console.log({ balance })
-    console.log({ address })
-    console.log({ owner })
-    const ev = axieContract.filters.AdminChanged()
-    const event = await axieContract.queryFilter(ev)
-    // const axieTransfer = (await axieContract.queryFilter(ev)) as
-    //   | never[]
-    //   | TransferEvent[]
+  //   const balance = (await axieContract.balanceOf(address)).toString()
+  //   console.log({ balance })
+  //   console.log({ address })
+  //   console.log({ owner })
+  //   const ev = axieContract.filters.AdminChanged()
+  //   const event = await axieContract.queryFilter(ev)
+  //   const axieTransfer = (await axieContract.queryFilter(ev)) as
+  //     | never[]
+  //     | TransferEvent[]
 
-    console.log({ event })
-    // const res = await fetch(`/api/fetchAxieLands/${address}`)
-    return balance
-    // const name = await contract.name()
-    // console.log({ name })
-    // const owner = await contract.ownerOf(
-    //   '115792089237316195423570985008687907814818077203574517667432170581469777887231'
-    // )
-    // const balance = await contract.balanceOf(
-    //   '0x0fBcE05c1fa6D3E6434f4a9A874E1F9003b7EdF4'
-    // )
-    // console.log('Owner: ', owner)
-    // console.log('Balance: ', balance)
-    // console.log('holaa')
-    // return
-  } else {
-    contract = createNFTContract(finalProvider, contractAddress)
-  }
-  console.log({ finalProvider })
+  //   console.log({ event })
+  //   // const res = await fetch(`/api/fetchAxieLands/${address}`)
+  //   return axieTransfer
+  //   // const name = await contract.name()
+  //   // console.log({ name })
+  //   // const owner = await contract.ownerOf(
+  //   //   '115792089237316195423570985008687907814818077203574517667432170581469777887231'
+  //   // )
+  //   // const balance = await contract.balanceOf(
+  //   //   '0x0fBcE05c1fa6D3E6434f4a9A874E1F9003b7EdF4'
+  //   // )
+  //   // console.log('Owner: ', owner)
+  //   // console.log('Balance: ', balance)
+  //   // console.log('holaa')
+  //   // return
+  // } else {
+  // }
+  const contract = createNFTContract(provider, contractAddress)
   // Getting al transfer events that involve the user
   const event = contract.filters.Transfer(undefined, address)
 
