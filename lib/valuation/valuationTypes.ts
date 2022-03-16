@@ -9,11 +9,12 @@ export interface ICoinPrices {
 export interface IPriceCard {
   showCard?: boolean
   processing?: boolean
-  apiData?: IAPIData
-  predictions?: IPredictions
+  apiData: IAPIData
+  predictions: IPredictions
 }
 
 export type LandsKey = 'sandbox' | 'decentraland'
+export type WatchlistLandsKey = 'sandbox' | 'decentraland' | 'axie-infinity'
 
 export interface IWatchListCard extends IPriceCard {
   currentPrice?: number
