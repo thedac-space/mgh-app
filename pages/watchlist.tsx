@@ -6,16 +6,20 @@ import {
   LandsKey,
   ICoinPrices,
   IWatchListCard,
+  WatchlistLandsKey,
 } from '../lib/valuation/valuationTypes'
 import {
   convertETHPrediction,
   convertMANAPrediction,
-  getBoundaryPrices,
+  getAxieLandData,
+  // getBoundaryPrices,
+  getCurrentPrice,
   getLandData,
 } from '../lib/valuation/valuationUtils'
 import { Metaverse } from '../lib/enums'
 import {
   addLandToWatchList,
+  addMissingWatchlist,
   createUser,
   getUserInfo,
   removeLandFromWatchList,
@@ -23,6 +27,7 @@ import {
 import { useAppSelector } from '../state/hooks'
 import { Contracts } from '../lib/contracts'
 import { Fade } from 'react-awesome-reveal'
+import { formatMetaverseName } from '../lib/utilities'
 
 export type WatchListState =
   | 'loadingFirst'
@@ -34,6 +39,8 @@ export type WatchListState =
   | 'limitCoordinatesSandbox'
   | 'limitIdDecentraland'
   | 'limitCoordinatesDecentraland'
+  | 'limitIdAxie'
+  | 'limitCoordinatesAxie'
   | 'loadingQueryId'
   | 'loadingQueryCoordinates'
   | 'noWallet'
@@ -47,10 +54,10 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   const [decentralandLands, setDecentralandLands] = useState<IWatchListCard[]>(
     []
   )
+  const [axieLands, setAxieLands] = useState<IWatchListCard[]>([])
   const [ids, setIds] = useState<string[]>([])
   const { address } = useAppSelector((state) => state.account)
 
-  // Creating object so we don't have to do 10000 if statements
   const landOptions = {
     // LAND contract address might have to be changed once Sandbox && OpenSea finish migration
     sandbox: {
@@ -71,10 +78,20 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
       limitCoordinatesState: 'limitCoordinatesDecentraland',
       convert: convertMANAPrediction,
     },
+    'axie-infinity': {
+      contract: Contracts.AXIE_LANDS.RONIN_MAINNET.address,
+      firebase: 'axie-infinity-watchlist',
+      landList: axieLands,
+      setList: setAxieLands,
+      limitIdState: 'limitIdAxie',
+      limitCoordinatesState: 'limitCoordinatesAxie',
+      convert: convertETHPrediction,
+    },
   }
 
+  const axieContract = Contracts.AXIE_LANDS.RONIN_MAINNET.address
   // Creating Array for looping through Metaverses Options
-  const landKeys = Object.keys(landOptions) as LandsKey[]
+  const landKeys = Object.keys(landOptions) as WatchlistLandsKey[]
 
   const addToWatchList = async (
     metaverse: Metaverse,
@@ -92,30 +109,29 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
       }, 2000)
     }
 
-    if (address) {
-      landId && setState('loadingQueryId')
-      coordinates && setState('loadingQueryCoordinates')
-      // Checking whether land exists
-      const landData = await getLandData(metaverse, landId, coordinates)
-      // If Land returns a result from our API
-      if (landData.name) {
-        // Adding Land to Database
-        await addLandToWatchList(landData.tokenId, address, metaverse)
-        // Giving Feedback to user for Good Query
-        landId && setState('successId')
-        coordinates && setState('successCoordinates')
-        setTimeout(() => {
-          // Retrigger useEffect
-          setRefetch(!reFetch)
-        }, 1100)
-      } else {
-        landId && setState('badQueryId')
-        coordinates && setState('badQueryCoordinates')
-        return setTimeout(() => {
-          // Retrigger useEffect
-          setState('loaded')
-        }, 2000)
-      }
+    if (!address) return
+    landId && setState('loadingQueryId')
+    coordinates && setState('loadingQueryCoordinates')
+    // Checking whether land exists
+    const landData = await getLandData(metaverse, landId, coordinates)
+    // If Land returns a result from our API
+    if (landData.tokenId) {
+      // Adding Land to Database
+      await addLandToWatchList(landData.tokenId, address, metaverse)
+      // Giving Feedback to user for Good Query
+      landId && setState('successId')
+      coordinates && setState('successCoordinates')
+      setTimeout(() => {
+        // Retrigger useEffect
+        setRefetch(!reFetch)
+      }, 1100)
+    } else {
+      landId && setState('badQueryId')
+      coordinates && setState('badQueryCoordinates')
+      return setTimeout(() => {
+        // Retrigger useEffect
+        setState('loaded')
+      }, 2000)
     }
   }
 
@@ -149,51 +165,72 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
         userData &&
           (await Promise.all(
             landKeys.map(async (landKey) => {
+              if (!userData[landOptions[landKey].firebase]) {
+                return await addMissingWatchlist(
+                  address!,
+                  landOptions[landKey].firebase
+                )
+              }
               await Promise.all(
                 // Mapping through all Assets in Watchlist from User
+
                 userData[landOptions[landKey].firebase].map(
                   async (land: string) => {
                     // If we already fetched Item, do not refetch it
-                    if (!ids.includes(land)) {
-                      // Retrieving Data from our API for each Asset
-                      const landData = await getLandData(
-                        landKey as Metaverse,
-                        land
+                    if (ids.includes(land)) return
+                    // Retrieving Data from our API for each Asset
+                    const landData = await getLandData(
+                      landKey as Metaverse,
+                      land
+                    )
+                    let currentPriceUSD = NaN
+                    if (landKey === 'axie-infinity') {
+                      // Retrieving data from Axie Marketplace
+                      const axieLandData = await getAxieLandData(
+                        landData.coords.x,
+                        landData.coords.y
                       )
+                      currentPriceUSD = Number(
+                        axieLandData.auction?.currentPriceUSD
+                      )
+                    }
+                    if (landKey !== 'axie-infinity') {
                       // Retrieving data from OpenSea (Comes in ETH)
                       const res = await fetch(
                         `/api/fetchSingleAsset/${landOptions[landKey].contract}/${landData.tokenId}`
                       )
 
                       // Retrieving Latest Orders for each Asset
-                      const orders = (await res.json()).orders
+                      const listings = (await res.json()).listings
                       // Getting Current Price for each Asset
-                      const result = getBoundaryPrices(orders)
+
+                      currentPriceUSD =
+                        getCurrentPrice(listings) * prices.ethereum.usd
                       // Formatting Price to USD
-                      const currentPriceUSD = Number(
-                        (result.current_price! * prices.ethereum.usd).toFixed(2)
-                      )
-                      // Converting Predictions
-                      const predictions = landOptions[landKey].convert(
-                        prices,
-                        landData.prices.predicted_price
-                      )
-                      // Creating FormattedLand Instance
-                      const formattedLand = {
-                        apiData: landData,
-                        predictions: predictions,
-                        currentPrice: currentPriceUSD,
-                      }
-                      // Pushing it to State Array
-                      landOptions[landKey].setList((previous) => [
-                        formattedLand,
-                        ...previous,
-                      ])
-                      setIds((previous) => [
-                        ...previous,
-                        formattedLand.apiData.tokenId,
-                      ])
+                      // currentPriceUSD = Number(
+                      //   (result.current_price! * prices.ethereum.usd)
+                      // )
                     }
+                    // Converting Predictions
+                    const predictions = landOptions[landKey].convert(
+                      prices,
+                      landData.prices.predicted_price
+                    )
+                    // Creating FormattedLand Instance
+                    const formattedLand = {
+                      apiData: landData,
+                      predictions: predictions,
+                      currentPrice: currentPriceUSD,
+                    }
+                    // Pushing it to State Array
+                    landOptions[landKey].setList((previous) => [
+                      formattedLand,
+                      ...previous,
+                    ])
+                    setIds((previous) => [
+                      ...previous,
+                      formattedLand.apiData.tokenId,
+                    ])
                   }
                 )
               )
@@ -253,7 +290,7 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                 <article key={key} className='mb-8 w-full'>
                   <Fade>
                     <h3 className='gray-box xs:w-[22rem] sm:w-fit mx-auto  sm:ml-0 green-text-gradient mb-4'>
-                      {key.toUpperCase()}
+                      {formatMetaverseName(key, true)}
                     </h3>
                   </Fade>
                   <LandList

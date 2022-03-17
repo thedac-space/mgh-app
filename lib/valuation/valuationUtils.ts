@@ -87,39 +87,43 @@ export const handleTokenID = (tokenID: string) => {
 }
 
 /**
- * @param orders Array of order objects from each OpenSea Asset
- * @returns current price for asset & best offered price for asset
+ * @param listings Array of listing objects from each OpenSea Asset
+ * @returns current price for asset
  */
-export function getBoundaryPrices(orders: any[]) {
-  let currentPrice: number | undefined
-  let bestOfferedPrice: number | undefined
-
-  let result = {
-    current_price: currentPrice,
-    best_offered_price: bestOfferedPrice,
-  }
-
-  if (orders) {
-    for (let order of orders) {
-      let value = getPrice(order)
-      if (order.side == 0)
-        result.best_offered_price = result.best_offered_price
-          ? Math.max(result.best_offered_price, value)
-          : value
-      else if (order.side == 1 && order.static_extradata === '0x')
-        result.current_price = result.current_price
-          ? Math.min(result.current_price, value)
-          : value
-    }
-  }
-  return result
-}
-function getPrice(order: any) {
-  if (order.payment_token_contract.symbol === 'USDC')
-    return (order.current_price / 1e6) * order.payment_token_contract.eth_price
-  if (order.payment_token_contract.symbol === 'SAND')
+export function getCurrentPrice(listings: any[] | undefined) {
+  if (!listings) return NaN
+  const listing = listings[0]
+  if (listing.payment_token_contract.symbol === 'USDC')
     return (
-      (order.current_price / 1e18) * 3 * order.payment_token_contract.eth_price
+      (listing.current_price / 1e6) * listing.payment_token_contract.eth_price
     )
-  return (order.current_price / 1e18) * order.payment_token_contract.eth_price
+  if (listing.payment_token_contract.symbol === 'SAND')
+    return (
+      (listing.current_price / 1e18) *
+      3 *
+      listing.payment_token_contract.eth_price
+    )
+  return (
+    (listing.current_price / 1e18) * listing.payment_token_contract.eth_price
+  )
+}
+
+export const getAxieLandData = async (x: number, y: number) => {
+  const res = await fetch('https://graphql-gateway.axieinfinity.com/graphql', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      operationName: 'GetLandDetail',
+      variables: {
+        col: x,
+        row: y,
+      },
+      query:
+        'query GetLandDetail($col: Int!, $row: Int!) {\n  land(col: $col, row: $row) {\n    ...LandDetail\n    __typename\n  }\n}\n\nfragment LandDetail on LandPlot {\n  tokenId\n  owner\n  ownerProfile {\n    name\n    __typename\n  }\n  landType\n  row\n  col\n  auction {\n    ...AxieAuction\n    __typename\n  }\n  __typename\n}\n\nfragment AxieAuction on Auction {\n  startingPrice\n  endingPrice\n  startingTimestamp\n  endingTimestamp\n  duration\n  timeLeft\n  currentPrice\n  currentPriceUSD\n  suggestedPrice\n  seller\n  listingIndex\n  state\n  __typename\n}\n',
+    }),
+  })
+  const jsonRes = await res.json()
+  return jsonRes.data.land
 }

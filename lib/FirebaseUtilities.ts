@@ -38,6 +38,18 @@ export async function createUser(walletAddress: string) {
   await setDoc(doc(users, walletAddress), {
     'sandbox-watchlist': [],
     'decentraland-watchlist': [],
+    'axie-infinity-watchlist': [],
+  })
+}
+// Add Missing Watchlist in case there's an update/new metaverse and user had already been created
+export async function addMissingWatchlist(
+  walletAddress: string,
+  watchlist: string
+) {
+  const users = collection(db, 'users')
+
+  await updateDoc(doc(users, walletAddress), {
+    [watchlist]: [],
   })
 }
 
@@ -48,15 +60,10 @@ export async function addLandToWatchList(
   metaverse: Metaverse
 ) {
   const user = doc(db, 'users', walletAddress)
-  if (metaverse == 'sandbox') {
-    await updateDoc(user, {
-      'sandbox-watchlist': arrayUnion(landId),
-    })
-  } else if (metaverse == 'decentraland') {
-    await updateDoc(user, {
-      'decentraland-watchlist': arrayUnion(landId),
-    })
-  }
+  await updateDoc(user, {
+    [metaverse + '-watchlist']: arrayUnion(landId),
+  })
+
   const updatedData = await getUserInfo(walletAddress)
   return updatedData
 }
@@ -68,15 +75,10 @@ export async function removeLandFromWatchList(
   metaverse: Metaverse
 ) {
   const user = doc(db, 'users', walletAddress)
-  if (metaverse == 'sandbox') {
-    await updateDoc(user, {
-      'sandbox-watchlist': arrayRemove(landId),
-    })
-  } else if (metaverse == 'decentraland') {
-    await updateDoc(user, {
-      'decentraland-watchlist': arrayRemove(landId),
-    })
-  }
+  await updateDoc(user, {
+    [metaverse + '-watchlist']: arrayRemove(landId),
+  })
+
   const updatedData = await getUserInfo(walletAddress)
   return updatedData
 }

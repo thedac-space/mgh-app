@@ -46,14 +46,17 @@ export interface IPoolData {
 }
 
 export interface IAPIData {
+    coords: {x: number, y: number}
     metaverse: Metaverse;
-    name: string;
-    opensea_link: string;
-    external_link: string;
-    images: {
+    name?: string;
+    opensea_link?: string;
+    external_link?: string;
+    url?: string;
+    images?: {
         image_url: string;
     };
-    tokenId: string; // changed this cause the API returns a string
+    image?: string
+    tokenId: string;
     prices?: { predicted_price: number }
 }
 
