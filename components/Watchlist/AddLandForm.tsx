@@ -32,7 +32,7 @@ const AddLandForm = ({ state, addToWatchList, ids, landKeys }: Props) => {
   })
   const [metaverse, setMetaverse] = useState<Metaverse>(Metaverse.SANDBOX)
   const [openModal, setOpenModal] = useState(false)
-  const { web3Provider, disconnectWallet } = useConnectWeb3()
+  const { disconnectWallet } = useConnectWeb3()
 
   const mvOptions = {
     sandbox: { logo: '/images/the-sandbox-sand-logo.png' },
