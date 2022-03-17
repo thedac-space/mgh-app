@@ -91,7 +91,7 @@ export const handleTokenID = (tokenID: string) => {
  * @returns current price for asset
  */
 export function getCurrentPrice(listings: any[] | undefined) {
-  if (!listings) return NaN
+  if (!listings || !listings[0]) return NaN
   const listing = listings[0]
   if (listing.payment_token_contract.symbol === 'USDC')
     return (
