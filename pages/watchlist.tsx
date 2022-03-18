@@ -67,6 +67,7 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
       setList: setSandboxLands,
       limitIdState: 'limitIdSandbox',
       limitCoordinatesState: 'limitCoordinatesSandbox',
+      metaverse: Metaverse.SANDBOX,
       convert: convertETHPrediction,
     },
     decentraland: {
@@ -76,6 +77,7 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
       setList: setDecentralandLands,
       limitIdState: 'limitIdDecentraland',
       limitCoordinatesState: 'limitCoordinatesDecentraland',
+      metaverse: Metaverse.DECENTRALAND,
       convert: convertMANAPrediction,
     },
     'axie-infinity': {
@@ -85,6 +87,7 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
       setList: setAxieLands,
       limitIdState: 'limitIdAxie',
       limitCoordinatesState: 'limitCoordinatesAxie',
+      metaverse: Metaverse.AXIE_INFINITY,
       convert: convertETHPrediction,
     },
   }
@@ -212,10 +215,11 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                       // )
                     }
                     // Converting Predictions
-                    const predictions = landOptions[landKey].convert(
-                      prices,
-                      landData.prices.predicted_price
-                    )
+                    // const predictions = landOptions[landKey].convert(
+                    //   prices,
+                    //   landData.prices.predicted_price
+                    // )
+                    const predictions = convertETHPrediction(prices, landData.prices.eth_predicted_price, landOptions[landKey].metaverse)
                     // Creating FormattedLand Instance
                     const formattedLand = {
                       apiData: landData,
@@ -307,7 +311,7 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 
 export async function getServerSideProps() {
   const coin = await fetch(
-    'https://api.coingecko.com/api/v3/simple/price?ids=ethereum%2Cthe-sandbox%2Cdecentraland&vs_currencies=usd'
+    'https://api.coingecko.com/api/v3/simple/price?ids=ethereum%2Cthe-sandbox%2Cdecentraland%2Caxie-infinity&vs_currencies=usd'
   )
   const prices: ICoinPrices = await coin.json()
 

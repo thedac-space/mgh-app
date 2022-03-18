@@ -19,68 +19,69 @@ const defaultProps = {
 
 class SalesVolumeDaily extends React.Component<SalesVolumeDailyProps, SalesVolumeDailyState>{
 
-    constructor(props:any) {
+    constructor(props: any) {
         super(props);
         this.state = {
             stats: {}
-        }    
-    }
-
-    componentDidUpdate(prevProps:any) {
-        if (prevProps.collectionName !== this.props.collectionName) {
-          this.getCollectionData();
         }
     }
 
-    async getCollectionData(){
-        const {collectionName} = this.props;
+    componentDidUpdate(prevProps: any) {
+        if (prevProps.collectionName !== this.props.collectionName) {
+            this.getCollectionData();
+        }
+    }
+
+    async getCollectionData() {
+        const { collectionName } = this.props;
         let stats;
-        if(this.props.one_day_volume){
+        if (this.props.one_day_volume) {
             stats = {
                 one_day_volume: this.props.one_day_volume
             }
         } else {
-           stats = await getCollectionData(collectionName);
+            stats = await getCollectionData(collectionName);
         }
-        
+
         const ethExchangeValue = await getETHExchangeValue();
-        
+
         stats.one_day_volume_usd = stats.one_day_volume * ethExchangeValue.ethereum.usd;
         stats.one_day_volume_sand = (stats.one_day_volume * ethExchangeValue.ethereum.usd) / ethExchangeValue['the-sandbox'].usd;
         stats.one_day_volume_mana = (stats.one_day_volume * ethExchangeValue.ethereum.usd) / ethExchangeValue['decentraland'].usd;
-       
-        this.setState({stats});
+        stats.one_day_volume_axs = (stats.one_day_volume * ethExchangeValue.ethereum.usd) / ethExchangeValue['axie-infinity'].usd;
+
+        this.setState({ stats });
     }
 
-    
+
     componentDidMount() {
         this.getCollectionData();
     }
 
-    getStat(name: string){
+    getStat(name: string) {
 
-        if(this.state.stats){
-            if(this.state.stats[name]) return this.state.stats[name];
+        if (this.state.stats) {
+            if (this.state.stats[name]) return this.state.stats[name];
             else return '-';
         } else {
             return "-";
         }
     }
-    
+
     render() {
-        if(!this.props.one_day_volume && !this.props.collectionName) {
+        if (!this.props.one_day_volume && !this.props.collectionName) {
             const { one_day_volume, collectionName } = defaultProps;
             return (
                 <>
                     <div className="flex flex-col items-start gray-box">
                         <p className={`text-lg xl:text-xl font-medium text-gray-300`}>
-                            We couldn't obtain Volume data for the {collectionName ? " "+collectionName : ""} collection. Check the <a href="https://opensea.io/collection" target="_blank" className="hover:underline text-pink-600">OpenSea Marketplace</a> for more information.
+                            We couldn't obtain Volume data for the {collectionName ? " " + collectionName : ""} collection. Check the <a href="https://opensea.io/collection" target="_blank" className="hover:underline text-pink-600">OpenSea Marketplace</a> for more information.
                         </p>
                     </div>
                 </>
             );
         }
-        
+
         return (
             <>
                 <div className="flex flex-col items-start gray-box">
@@ -114,6 +115,15 @@ class SalesVolumeDaily extends React.Component<SalesVolumeDailyProps, SalesVolum
                             <img src="/images/decentraland-mana-logo.png" className="rounded-full h-9 md:h-10 w-9 md:w-10  p-1 shadow-button" />
                             <p className="text-xl md:text-2xl font-medium text-gray-300 pt-0.5">
                                 {this.state.stats.one_day_volume_mana?.toLocaleString(undefined, { maximumFractionDigits: 2 })} <span className="font-light text-lg md:text-xl">MANA</span>
+                            </p>
+                        </div>
+                    )}
+
+                    {this.props.collectionName === Metaverse.AXIE_INFINITY && (
+                        <div className={`flex space-x-4 items-center w-full justify-start py-2 h-full`}>
+                            <img src="/images/axie-infinity-axs-logo.png" className="rounded-full h-9 md:h-10 w-9 md:w-10  p-1 shadow-button" />
+                            <p className="text-xl md:text-2xl font-medium text-gray-300 pt-0.5">
+                                {this.state.stats.one_day_volume_axs?.toLocaleString(undefined, { maximumFractionDigits: 2 })} <span className="font-light text-lg md:text-xl">AXS</span>
                             </p>
                         </div>
                     )}

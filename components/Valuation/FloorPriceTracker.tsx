@@ -1,5 +1,5 @@
 import React from 'react';
-import {getCollectionData, getETHExchangeValue} from '../../backend/services/openSeaDataManager';
+import { getCollectionData, getETHExchangeValue } from '../../backend/services/openSeaDataManager';
 import { Metaverse } from '../../lib/enums';
 
 interface FloorPriceCardProps {
@@ -20,16 +20,16 @@ const defaultProps = {
 
 class FloorPriceTracker extends React.Component<FloorPriceCardProps, FloorPriceCardState>{
 
-    constructor(props:any) {
+    constructor(props: any) {
         super(props);
         this.state = {
             stats: {}
-        }    
+        }
     }
 
-    componentDidUpdate(prevProps:any) {
+    componentDidUpdate(prevProps: any) {
         if (prevProps.collectionName !== this.props.collectionName) {
-          this.getCollectionData();
+            this.getCollectionData();
         }
     }
 
@@ -39,42 +39,43 @@ class FloorPriceTracker extends React.Component<FloorPriceCardProps, FloorPriceC
         this.setState({stats});
     } */
 
-    async getCollectionData(){
-        const {collectionName} = this.props;
+    async getCollectionData() {
+        const { collectionName } = this.props;
         let stats;
-        if(this.props.price){
+        if (this.props.price) {
             stats = {
                 floor_price: this.props.price
             }
         } else {
-           stats = await getCollectionData(collectionName);
+            stats = await getCollectionData(collectionName);
         }
-        
+
         const ethExchangeValue = await getETHExchangeValue();
-        
+
         stats.floor_price_usd = stats.floor_price * ethExchangeValue.ethereum.usd;
         stats.floor_price_sand = (stats.floor_price * ethExchangeValue.ethereum.usd) / ethExchangeValue['the-sandbox'].usd;
         stats.floor_price_mana = (stats.floor_price * ethExchangeValue.ethereum.usd) / ethExchangeValue['decentraland'].usd;
-       
-        this.setState({stats});
+        stats.floor_price_axs = (stats.floor_price * ethExchangeValue.ethereum.usd) / ethExchangeValue['axie-infinity'].usd;
+
+        this.setState({ stats });
     }
-    
+
     componentDidMount() {
         this.getCollectionData();
     }
 
-    getStat(name: string){
+    getStat(name: string) {
 
-        if(this.state.stats){
-            if(this.state.stats[name]) return this.state.stats[name];
+        if (this.state.stats) {
+            if (this.state.stats[name]) return this.state.stats[name];
             else return '-';
         } else {
             return "-";
         }
     }
-    
+
     render() {
-        if(!this.props.price && !this.props.priceHistory && !this.props.collectionName) {
+        if (!this.props.price && !this.props.priceHistory && !this.props.collectionName) {
             const { collectionName } = defaultProps;
             return (
                 <>
@@ -121,6 +122,15 @@ class FloorPriceTracker extends React.Component<FloorPriceCardProps, FloorPriceC
                             <img src="/images/decentraland-mana-logo.png" className="rounded-full h-9 md:h-10 w-9 md:w-10  p-1 shadow-button" />
                             <p className="text-xl md:text-2xl font-medium text-gray-300 pt-0.5">
                                 {this.state.stats.floor_price_mana?.toLocaleString(undefined, { maximumFractionDigits: 2 })} <span className="font-light text-lg md:text-xl">MANA</span>
+                            </p>
+                        </div>
+                    )}
+
+                    {this.props.collectionName === Metaverse.AXIE_INFINITY && (
+                        <div className={`flex space-x-4 items-center w-full justify-start py-2 h-full`}>
+                            <img src="/images/axie-infinity-axs-logo.png" className="rounded-full h-9 md:h-10 w-9 md:w-10  p-1 shadow-button" />
+                            <p className="text-xl md:text-2xl font-medium text-gray-300 pt-0.5">
+                                {this.state.stats.floor_price_axs?.toLocaleString(undefined, { maximumFractionDigits: 2 })} <span className="font-light text-lg md:text-xl">AXS</span>
                             </p>
                         </div>
                     )}

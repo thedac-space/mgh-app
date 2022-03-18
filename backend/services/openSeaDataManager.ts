@@ -22,13 +22,16 @@ export class OpenSeaDataManager {
 } */
 
 async function getCollectionStats(collectionName: string){
+    if (collectionName === "axie-infinity") {
+        collectionName = "axie"
+    }
     const data = await fetch(`https://api.opensea.io/api/v1/collection/${collectionName}`);
     const data_json = await data.json();
     return data_json;
 }
 
 async function getEthExchangePrice(){
-    const data = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=ethereum%2Cthe-sandbox%2Cdecentraland&vs_currencies=usd`);
+    const data = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=ethereum%2Cthe-sandbox%2Cdecentraland%2Caxie-infinity&vs_currencies=usd`);
     const data_json = await data.json();
     return data_json;
 }

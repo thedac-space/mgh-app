@@ -5,13 +5,29 @@ import { ICoinPrices, IPriceCard } from './valuationTypes'
 
 export const convertETHPrediction = (
   coinPrices: ICoinPrices,
-  ethPrediction: number
+  ethPrediction: number,
+  metaverse: Metaverse
 ) => {
+
   const ethUSD = coinPrices.ethereum.usd
-  const sandUSD = coinPrices['the-sandbox'].usd
   const usdPrediction = ethPrediction * ethUSD
-  const sandPrediction = usdPrediction / sandUSD
-  return { ethPrediction, usdPrediction, sandPrediction }
+  let metaverseUSD;
+  let metaversePrediction;
+
+
+  if (metaverse === Metaverse.SANDBOX) {
+    metaverseUSD = coinPrices['the-sandbox'].usd
+    metaversePrediction = usdPrediction / metaverseUSD
+  } else if (metaverse === Metaverse.DECENTRALAND) {
+    metaverseUSD = coinPrices['decentraland'].usd
+    metaversePrediction = usdPrediction / metaverseUSD
+  }
+  else if (metaverse === Metaverse.AXIE_INFINITY) {
+    metaverseUSD = coinPrices['axie-infinity'].usd
+    metaversePrediction = usdPrediction / metaverseUSD
+  }
+
+  return { ethPrediction, usdPrediction, metaversePrediction }
 }
 
 export const convertMANAPrediction = (
@@ -67,7 +83,7 @@ export const formatLandAsset = async (
 
   if (metaverse === 'sandbox') {
     Object.defineProperty(formattedAsset, 'predictions', {
-      value: convertETHPrediction(coinPrices, apiData.prices!.predicted_price),
+      value: convertETHPrediction(coinPrices, apiData.prices!.predicted_price, Metaverse.SANDBOX),
     })
   } else if (metaverse === 'decentraland') {
     Object.defineProperty(formattedAsset, 'predictions', {

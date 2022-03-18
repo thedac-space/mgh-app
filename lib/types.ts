@@ -63,6 +63,5 @@ export interface IAPIData {
 export interface IPredictions {
     ethPrediction: number;
     usdPrediction: number;
-    sandPrediction?: number;
-    manaPrediction?: number;
+    metaversePrediction?: number;
 }

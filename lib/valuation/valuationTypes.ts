@@ -4,6 +4,7 @@ export interface ICoinPrices {
   decentraland: { usd: number }
   ethereum: { usd: number }
   'the-sandbox': { usd: number }
+  'axie-infinity': { usd: number }
 }
 
 export interface IPriceCard {
