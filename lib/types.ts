@@ -54,7 +54,7 @@ export interface IAPIData {
     image_url: string
   }
   tokenId: string
-  prices?: {
+  prices: {
     predicted_price: number
     eth_predicted_price: number
     history: { price: number; timestamp: number }[] | never[]
