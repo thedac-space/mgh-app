@@ -81,15 +81,11 @@ export const formatLandAsset = async (
     processing: false,
   }
 
-  if (metaverse === 'decentraland') {
-    Object.defineProperty(formattedAsset, 'predictions', {
-      value: convertMANAPrediction(coinPrices, apiData.prices!.predicted_price),
-    })
-  } else {
-    Object.defineProperty(formattedAsset, 'predictions', {
-      value: convertETHPrediction(coinPrices, apiData.prices!.predicted_price),
-    })
-  }
+
+  Object.defineProperty(formattedAsset, 'predictions', {
+    value: convertETHPrediction(coinPrices, apiData.prices!.predicted_price, metaverse),
+  })
+
   return formattedAsset as IPriceCard
 }
 

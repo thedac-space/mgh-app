@@ -65,10 +65,12 @@ const PriceCard = ({ showCard, processing, apiData, predictions }: PriceCardProp
                     {/* Links */}
                     <div className="flex flex-col gap-1 justify-center">
                         {/* Open Sea Link */}
-                        <a href={apiData.opensea_link} target="_blank" className="flex items-center max-w-max space-x-1 text-gray-300 text-sm hover:text-blue-400 transition duration-300 ease-in-out" >
-                            <p className="font-medium">Opensea</p>
-                            <FiExternalLink className="mb-0.5" />
-                        </a>
+                        {apiData.metaverse !== Metaverse.AXIE_INFINITY && (
+                            <a href={apiData.opensea_link} target="_blank" className="flex items-center max-w-max space-x-1 text-gray-300 text-sm hover:text-blue-400 transition duration-300 ease-in-out" >
+                                <p className="font-medium">Opensea</p>
+                                <FiExternalLink className="mb-0.5" />
+                            </a>
+                        )}
                         {/* Metaverse Link */}
                         <a href={apiData.external_link} target="_blank" className="flex items-center max-w-max space-x-1 text-gray-300 text-sm hover:text-blue-400 transition duration-300 ease-in-out" >
                             <p className="font-medium capitalize">{apiData.metaverse}</p>
