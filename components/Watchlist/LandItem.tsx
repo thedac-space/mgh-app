@@ -7,7 +7,10 @@ import React from 'react'
 import { FaTrash } from 'react-icons/fa'
 // import { useVisible } from '../../lib/hooks'
 import { Metaverse } from '../../lib/enums'
-import { handleTokenID } from '../../lib/valuation/valuationUtils'
+import {
+  handleLandName,
+  handleTokenID,
+} from '../../lib/valuation/valuationUtils'
 import { BsTwitter } from 'react-icons/bs'
 import { SocialMediaOptions } from '../../lib/socialMediaOptions'
 import { formatMetaverseName } from '../../lib/utilities'
@@ -29,17 +32,16 @@ const LandItem = ({
   })
 
   const {
-    image,
     images,
     metaverse,
     coords,
     opensea_link,
     name,
-    url,
     external_link,
     tokenId,
   } = apiData
 
+  console.log({ apiData })
   // SocialMediaOptions contains all options with their texts, icons, etc..
   const options = SocialMediaOptions(apiData, predictions)
 
@@ -84,7 +86,7 @@ const LandItem = ({
           <OptimizedImage
             height={imgSize}
             width={imgSize}
-            src={isAxie ? image! : images!.image_url}
+            src={images.image_url}
             rounded='lg'
           />
           <FiExternalLink className='absolute top-0 right-0 text-white text-xs backdrop-filter backdrop-blur-sm rounded-xl w-6 h-6 p-1' />
@@ -93,7 +95,7 @@ const LandItem = ({
         <div className='flex flex-col justify-between'>
           <div>
             <h3 className='text-base sm:text-xl font-normal md:text-2xl p-0 leading-4'>
-              {isAxie ? `Plot ${coords.x},${coords.y}` : name}
+              {handleLandName(metaverse, coords, name)}
             </h3>
             <p className='text-gray-400'>
               ID: {handleTokenID(tokenId)}{' '}
@@ -112,7 +114,7 @@ const LandItem = ({
                   <ExternalLink href={opensea_link} text='OpenSea' />
                 )}
                 <ExternalLink
-                  href={isAxie ? url! : external_link!}
+                  href={external_link}
                   text={formatMetaverseName(metaverse)}
                 />
               </nav>

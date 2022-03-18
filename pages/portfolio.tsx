@@ -12,7 +12,7 @@ import { IPredictions } from '../lib/types'
 import { useAppSelector } from '../state/hooks'
 import { Contracts } from '../lib/contracts'
 import { useRouter } from 'next/router'
-import { ellipseAddress } from '../lib/utilities'
+import { ellipseAddress, formatMetaverseName } from '../lib/utilities'
 import { Loader, WalletModal } from '../components'
 import { Fade } from 'react-awesome-reveal'
 import { Metaverse } from '../lib/enums'
@@ -24,7 +24,7 @@ import WalletButton from '../components/WalletButton'
 import useConnectWeb3 from '../backend/connectWeb3'
 import { ethers } from 'ethers'
 import { Chains } from '../lib/chains'
-import { getUserNFTs } from '../lib/nftUtils'
+import { getAxieLands, getUserNFTs } from '../lib/nftUtils'
 import { getAddress } from 'ethers/lib/utils'
 
 const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
@@ -53,6 +53,7 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   const [loading, setLoading] = useState(true)
   const socialMedia = SocialMediaOptions(undefined, undefined, address)
   const externalWallet = query.wallet
+  const isRonin = query.wallet?.toString().startsWith('ronin')
 
   const landOptions = {
     // LAND contract address might have to be changed once Sandbox && OpenSea finish migration
@@ -107,16 +108,11 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 
   const formatAddress = (address: string) => {
     // If Ronin Address
-    // if (!address) return
-    // return address.length
-    if (address[0] === 'r') {
-      // const roninAddress =
-      // 'ronin:' + getAddress(address.substring(address.indexOf(':') + 1))
-      // console.log({ roninAddress })
+    if (address.startsWith('ronin:')) {
       return getAddress(address.substring(address.indexOf(':') + 1))
     }
-    // Else
-    return getAddress(address)
+    if (address.startsWith('0x')) return getAddress(address)
+    return getAddress('0x0000000000000000000000000000000000000000')
   }
   useEffect(() => {
     if (externalWallet && alreadyFetched) return
@@ -133,16 +129,24 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
     // Requesting and Formatting Assets
     const setPortfolioAssets = async () => {
       resetState()
-      if (!address && !externalWallet) return
+      if (!address && !externalWallet) return setLoading(false)
+
       // OpenSea API Call
       try {
         await Promise.all(
           options.map(async (option) => {
-            const rawIds = await getUserNFTs(
-              provider,
-              formatAddress((externalWallet as string) ?? address),
-              landOptions[option].contract
-            )
+            let rawIds: string[] | undefined
+            if (option === 'axie-infinity') {
+              rawIds = await getAxieLands(
+                formatAddress((externalWallet as string) ?? address)
+              )
+            } else {
+              rawIds = await getUserNFTs(
+                provider,
+                formatAddress((externalWallet as string) ?? address),
+                landOptions[option].contract
+              )
+            }
             rawIds &&
               rawIds.length > 0 &&
               (await Promise.all(
@@ -204,7 +208,11 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                 <ExternalLink
                   className='m-auto text-center sm:text-lg md:text-xl'
                   text={ellipseAddress(externalWallet as string)}
-                  href={'https://opensea.io/' + externalWallet}
+                  href={
+                    isRonin
+                      ? `https://marketplace.axieinfinity.com/profile/${externalWallet}/land/`
+                      : `https://opensea.io/${externalWallet}`
+                  }
                 />
               </>
             ) : (
@@ -294,7 +302,7 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
               <article key={option} className='mb-8 sm:mb-12'>
                 <Fade>
                   <h3 className='text-center gray-box green-text-gradient mb-8 sm:mb-12'>
-                    {option.toUpperCase()}
+                    {formatMetaverseName(option, true)}
                   </h3>
                 </Fade>
                 <PortfolioList

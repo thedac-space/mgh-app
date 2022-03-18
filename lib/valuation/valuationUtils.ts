@@ -65,13 +65,13 @@ export const formatLandAsset = async (
     processing: false,
   }
 
-  if (metaverse === 'sandbox') {
-    Object.defineProperty(formattedAsset, 'predictions', {
-      value: convertETHPrediction(coinPrices, apiData.prices!.predicted_price),
-    })
-  } else if (metaverse === 'decentraland') {
+  if (metaverse === 'decentraland') {
     Object.defineProperty(formattedAsset, 'predictions', {
       value: convertMANAPrediction(coinPrices, apiData.prices!.predicted_price),
+    })
+  } else {
+    Object.defineProperty(formattedAsset, 'predictions', {
+      value: convertETHPrediction(coinPrices, apiData.prices!.predicted_price),
     })
   }
   return formattedAsset as IPriceCard
@@ -83,6 +83,25 @@ export const handleTokenID = (tokenID: string) => {
     return ellipseAddress(tokenID.toString(), 3)
   } else {
     return tokenID
+  }
+}
+
+// Formatting Land Name if its too long or missing (Custom land names in decentraland..)
+export const handleLandName = (
+  metaverse: Metaverse,
+  coords: { x: number; y: number },
+  landName?: string
+) => {
+  const options = {
+    sandbox: 'Land',
+    decentraland: 'Parcel',
+    'axie-infinity': 'Plot',
+  }
+  if (!landName) return `${options[metaverse]} ${coords.x},${coords.y}`
+  if (landName.toString().length > 25) {
+    return `${options[metaverse]} ${coords.x},${coords.y}`
+  } else {
+    return landName
   }
 }
 
