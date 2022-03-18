@@ -131,7 +131,7 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
       resetState()
       if (!address && !externalWallet) return setLoading(false)
 
-      // OpenSea API Call
+      // OpenSea/ Axie Market API Call
       try {
         await Promise.all(
           options.map(async (option) => {
