@@ -6,13 +6,11 @@ import {
   LandsKey,
   ICoinPrices,
   IWatchListCard,
-  WatchlistLandsKey,
 } from '../lib/valuation/valuationTypes'
 import {
   convertETHPrediction,
   convertMANAPrediction,
   getAxieLandData,
-  // getBoundaryPrices,
   getCurrentPrice,
   getLandData,
 } from '../lib/valuation/valuationUtils'
@@ -94,7 +92,7 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 
   const axieContract = Contracts.AXIE_LANDS.RONIN_MAINNET.address
   // Creating Array for looping through Metaverses Options
-  const landKeys = Object.keys(landOptions) as WatchlistLandsKey[]
+  const landKeys = Object.keys(landOptions) as LandsKey[]
 
   const addToWatchList = async (
     metaverse: Metaverse,
@@ -142,11 +140,13 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
     async (landId: string, metaverse: Metaverse) => {
       // Removing Land from Database
       await removeLandFromWatchList(landId, address!, metaverse)
-      let filteredLands = landOptions[metaverse].landList.filter((land) => {
-        return land.apiData?.tokenId !== landId
-      })
+
       // Updating Lands for selected Metaverse
-      landOptions[metaverse].setList(filteredLands)
+      landOptions[metaverse].setList((previous) =>
+        previous.filter((land) => {
+          return land.apiData.tokenId !== landId
+        })
+      )
 
       // Updating Ids
       setIds((previous) => previous.filter((id) => id !== landId))

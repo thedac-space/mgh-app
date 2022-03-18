@@ -5,7 +5,7 @@ import { WalletModal } from '..'
 import useConnectWeb3 from '../../backend/connectWeb3'
 import { Metaverse } from '../../lib/enums'
 import { formatMetaverseName } from '../../lib/utilities'
-import { LandsKey, WatchlistLandsKey } from '../../lib/valuation/valuationTypes'
+import { LandsKey } from '../../lib/valuation/valuationTypes'
 import { WatchListState } from '../../pages/watchlist'
 import { OptimizedImage } from '../General'
 import WalletButton from '../WalletButton'
@@ -21,7 +21,7 @@ interface Props {
     }
   ) => Promise<NodeJS.Timeout | undefined>
   ids: string[]
-  landKeys: WatchlistLandsKey[]
+  landKeys: LandsKey[]
 }
 const AddLandForm = ({ state, addToWatchList, ids, landKeys }: Props) => {
   const limitReached = ids.length === landKeys.length * 10

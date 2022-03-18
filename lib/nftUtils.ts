@@ -1,10 +1,7 @@
-import { BigNumber, ethers } from 'ethers'
+import { ethers } from 'ethers'
 import { ERC721, TransferEvent } from '../types/ethers-contracts/ERC721'
 import ERC721ABI from '../backend/abi/ERC721.json'
 import { Interface } from 'ethers/lib/utils'
-import { Contracts } from './contracts'
-import { Chains } from './chains'
-import { AxieLand } from '../types/ethers-contracts'
 type Provider = ethers.providers.BaseProvider
 
 // Using a Generic ERC721 ABI!!
@@ -17,62 +14,59 @@ const createNFTContract = (provider: Provider, contractAddress: string) => {
   return contract as ERC721
 }
 
-const createAxieLandContract = (
-  provider: Provider,
-  contractAddress: string
-) => {
-  const contract = new ethers.Contract(
-    contractAddress,
-    Contracts.AXIE_LANDS.RONIN_MAINNET.abi,
-    provider
-  )
-  return contract as AxieLand
+/**
+ *  @dev Fetch User's Current Lands from the Axie Marketplace API
+ *  @returns Array of tokenIds of User's Axie Lands
+ * */
+export const getAxieLands = async (address: string) => {
+  let filteredIds: any[] = []
+  const requestLands = async (from = 0) => {
+    const res = await fetch(
+      'https://graphql-gateway.axieinfinity.com/graphql',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          operationName: 'GetLandsGrid',
+          variables: {
+            from: from,
+            size: 10000,
+            sort: 'PriceAsc',
+            auctionType: 'All',
+            owner: address,
+            criteria: {},
+          },
+          query:
+            'query GetLandsGrid($from: Int!, $size: Int!, $sort: SortBy!, $owner: String, $criteria: LandSearchCriteria, $auctionType: AuctionType) {\n  lands(criteria: $criteria, from: $from, size: $size, sort: $sort, owner: $owner, auctionType: $auctionType) {\n    total\n    results {\n      ...LandBriefV2\n      __typename\n    }\n    __typename\n  }\n}\n\nfragment LandBriefV2 on LandPlot {\n  tokenId\n  owner\n  landType\n  row\n  col\n  auction {\n    currentPrice\n    startingTimestamp\n    currentPriceUSD\n    __typename\n  }\n  ownerProfile {\n    name\n    __typename\n  }\n  __typename\n}\n',
+        }),
+      }
+    )
+    const results = (await res.json()).data.lands.results as any[]
+    results.forEach((result) => filteredIds.push(result.tokenId))
+  }
+
+  /* Current requests Caps at 100 Results.
+   Looping and ofsetting in case user owns more than 100 lands */
+  for (let i = 0; i < 90601; ) {
+    await requestLands(i)
+    i += 100
+    if (filteredIds.length !== i) break
+  }
+  return filteredIds
 }
 
+/**
+ *  @dev Fetch User's Current NFTs. Should work with any Valid ERC-721
+ *  @returns Array of tokenIds of User's NFTs
+ * */
 export const getUserNFTs = async (
   provider: Provider,
   address: string,
   contractAddress: string
 ) => {
-  // If NFTs are from Axie Infinity connect to Ronin Network
-  // if (contractAddress === Contracts.AXIE_LANDS.RONIN_MAINNET.address) {
-  //   finalProvider = new ethers.providers.JsonRpcProvider(
-  //     Chains.RONIN_MAINNET.rpcUrl
-  //   )
-  //   const axieContract = createAxieLandContract(finalProvider, contractAddress)
-  //   const owner = await axieContract.ownerOf(
-  //     BigNumber.from(
-  //       '115792089237316195423570985008687907814818077203574517667432170581469777887231'
-  //     )
-  //   )
-
-  //   const balance = (await axieContract.balanceOf(address)).toString()
-  //   console.log({ balance })
-  //   console.log({ address })
-  //   console.log({ owner })
-  //   const ev = axieContract.filters.AdminChanged()
-  //   const event = await axieContract.queryFilter(ev)
-  //   const axieTransfer = (await axieContract.queryFilter(ev)) as
-  //     | never[]
-  //     | TransferEvent[]
-
-  //   console.log({ event })
-  //   // const res = await fetch(`/api/fetchAxieLands/${address}`)
-  //   return axieTransfer
-  //   // const name = await contract.name()
-  //   // console.log({ name })
-  //   // const owner = await contract.ownerOf(
-  //   //   '115792089237316195423570985008687907814818077203574517667432170581469777887231'
-  //   // )
-  //   // const balance = await contract.balanceOf(
-  //   //   '0x0fBcE05c1fa6D3E6434f4a9A874E1F9003b7EdF4'
-  //   // )
-  //   // console.log('Owner: ', owner)
-  //   // console.log('Balance: ', balance)
-  //   // console.log('holaa')
-  //   // return
-  // } else {
-  // }
+  if (!address.startsWith('0x')) return
   const contract = createNFTContract(provider, contractAddress)
   // Getting al transfer events that involve the user
   const event = contract.filters.Transfer(undefined, address)
