@@ -209,17 +209,13 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 
                       currentPriceUSD =
                         getCurrentPrice(listings) * prices.ethereum.usd
-                      // Formatting Price to USD
-                      // currentPriceUSD = Number(
-                      //   (result.current_price! * prices.ethereum.usd)
-                      // )
                     }
-                    // Converting Predictions
-                    // const predictions = landOptions[landKey].convert(
-                    //   prices,
-                    //   landData.prices.predicted_price
-                    // )
-                    const predictions = convertETHPrediction(prices, landData.prices.eth_predicted_price, landOptions[landKey].metaverse)
+
+                    const predictions = convertETHPrediction(
+                      prices,
+                      landData.prices.eth_predicted_price,
+                      landOptions[landKey].metaverse
+                    )
                     // Creating FormattedLand Instance
                     const formattedLand = {
                       apiData: landData,

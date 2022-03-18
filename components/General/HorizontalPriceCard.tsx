@@ -27,10 +27,7 @@ const HorizontalPriceCard = ({
       {/* RIGHT/BOTTOM - PriceList */}
       <div className='w-full'>
         <h4 className='border-none text-white mb-4'>Price Estimation:</h4>
-        <PriceList
-          predictions={predictions}
-          noNativeCoin={apiData.metaverse === 'axie-infinity'}
-        />
+        <PriceList predictions={predictions} metaverse={apiData.metaverse} />
       </div>
       <BsTwitter
         title='Share Valuation'

@@ -37,7 +37,7 @@ const AddLandForm = ({ state, addToWatchList, ids, landKeys }: Props) => {
   const mvOptions = {
     sandbox: { logo: '/images/the-sandbox-sand-logo.png' },
     decentraland: { logo: '/images/decentraland-mana-logo.png' },
-    'axie-infinity': { logo: '/images/axie-infinity-logo.png' },
+    'axie-infinity': { logo: '/images/axie-infinity-axs-logo.png' },
   }
 
   const addById = async (e: React.FormEvent<HTMLFormElement>) => {

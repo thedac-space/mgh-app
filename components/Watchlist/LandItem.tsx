@@ -133,10 +133,7 @@ const LandItem = ({
       {/* RIGHT */}
       <div className='transition-all sm:relative static bottom-1'>
         {/* Price List */}
-        <PriceList
-          predictions={prices}
-          noNativeCoin={metaverse === 'axie-infinity'}
-        />
+        <PriceList predictions={prices} metaverse={metaverse} />
         {/* Current Listing Price */}
         <p
           className={`text-md text-left sm:text-right pt-2 sm:pt-0  relative left-1 sm:left-0 ${
