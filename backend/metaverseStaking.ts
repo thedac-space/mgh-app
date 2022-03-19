@@ -194,7 +194,7 @@ export const getCurrentEpoche = async (provider: Web3Provider) => {
 export const getMaxAmountStaked = async (provider: Web3Provider) => {
   const contract = createStakingContract(provider)
   const maxAmount = await contract.getMaximumAmountStaked()
-  return maxAmount.toString()
+  return formatEther(maxAmount)
 }
 
 // returns wether withdraws are currently open
@@ -237,7 +237,7 @@ export const getWithdrawableAmount = async (
 ) => {
   const contract = createStakingContract(provider)
   const amount = await contract.getWithdrawableAmount(tokenId)
-  return Number(formatEther(amount)).toFixed(2)
+  return formatEther(amount)
 }
 
 // Check Balance of Sand Coins
@@ -338,7 +338,7 @@ export const getTVL = async (provider: Web3Provider) => {
   ) as SandToken
 
   const botSandBalance = Number(
-    Number(formatEther(await contract.balanceOf(Wallets.BOT))).toFixed(2)
+    formatEther(await contract.balanceOf(Wallets.BOT))
   )
 
   /* */
@@ -368,7 +368,7 @@ export const getTVL = async (provider: Web3Provider) => {
       })
     ))
 
-  const landsWorth = Number(totalLandsWorthSand.toFixed(2))
+  const landsWorth = totalLandsWorthSand
 
   const tvl = totalAmountStaked + landsWorth + botSandBalance
 

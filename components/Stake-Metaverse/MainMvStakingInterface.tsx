@@ -1,6 +1,7 @@
 import { ethers } from 'ethers'
 import Link from 'next/link'
 import React, { FormEvent, useEffect, useState } from 'react'
+import { Fade } from 'react-awesome-reveal'
 import { FaArrowRight } from 'react-icons/fa'
 import { TransactionModal, WalletModal } from '..'
 import changeChain from '../../backend/changeChain'
@@ -30,7 +31,7 @@ interface StateData {
   nfts?: string[]
   isWithdraw?: boolean
   currentStakingAssetBalance?: string
-  maxAmount?: string
+  maxAmountStaked?: string
   rewardsDue?: string
   withdrawableAmount?: string
   hash?: string
@@ -47,6 +48,7 @@ type TxState =
   | 'successTransaction'
   | 'errorTransaction'
   | 'loaded'
+  | 'maxContractAmount'
 
 const MainMvStakingInterface = ({ refetch, setRefetch, mainState }: Props) => {
   const { address, chainId } = useAppSelector((state) => state.account)
@@ -91,7 +93,7 @@ const MainMvStakingInterface = ({ refetch, setRefetch, mainState }: Props) => {
       }
       // Checking if user has any rewards to their name
       const rawRewardsDue = nftId
-        ? Number(await getUpdatedRewardsDue(nftId, provider)).toFixed(2)
+        ? await getUpdatedRewardsDue(nftId, provider)
         : undefined
       const rewardsDue = Number(rawRewardsDue) >= 1 ? rawRewardsDue : undefined
       // Check if its Withdraw Phase
@@ -101,7 +103,7 @@ const MainMvStakingInterface = ({ refetch, setRefetch, mainState }: Props) => {
         await checkSandBalance(provider, address)
       )
       // Checking max possible amount to stake
-      const maxAmount = await getMaxAmountStaked(provider)
+      const maxAmountStaked = await getMaxAmountStaked(provider)
       // Checking amount that user can withdraw from staked tokens
       const withdrawableAmount = nftId
         ? await getWithdrawableAmount(nftId, provider)
@@ -112,7 +114,7 @@ const MainMvStakingInterface = ({ refetch, setRefetch, mainState }: Props) => {
         epocheNumber: epocheNumber,
         isWithdraw: isWithdraw,
         currentStakingAssetBalance: balance,
-        maxAmount: maxAmount,
+        maxAmountStaked: maxAmountStaked,
         rewardsDue: rewardsDue,
         withdrawableAmount: withdrawableAmount,
         nfts: nftIds,
@@ -134,14 +136,22 @@ const MainMvStakingInterface = ({ refetch, setRefetch, mainState }: Props) => {
     }
   }
 
+  const maxAmountReached = () => {
+    setState('maxContractAmount')
+    setTimeout(() => {
+      setState('loaded')
+    }, 1100)
+  }
   //Staking if Already Approved
   const stake = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    if (Number(stakeAmount) < 0) return
-    if (Number(stakeAmount) > Number(stateData?.currentStakingAssetBalance!)) {
-      return console.log('too much')
+    const userStake = Number(stakeAmount)
+    if (userStake <= 0) return
+    if (userStake > Number(stateData?.currentStakingAssetBalance!)) {
+      return
     }
-    if (stakeAmount > stateData?.currentStakingAssetBalance!) return
+    if (userStake > Number(stateData?.maxAmountStaked))
+      return maxAmountReached()
     // No Staking NFT yet..
     if (!stateData?.userNftId) {
       const tx = await deposit(stakeAmount, signer!)
@@ -160,16 +170,18 @@ const MainMvStakingInterface = ({ refetch, setRefetch, mainState }: Props) => {
   // Needs to Approve before Staking
   const approveAndStake = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    const userStake = Number(approveAndStakeAmount)
     if (
-      Number(approveAndStakeAmount) < 0 ||
-      Number(stateData?.currentStakingAssetBalance) <
-        Number(approveAndStakeAmount) ||
+      userStake < 0 ||
+      Number(stateData?.currentStakingAssetBalance) < userStake ||
       !address ||
       !signer
     )
       return
+
+    if (userStake > Number(stateData?.maxAmountStaked))
+      return maxAmountReached()
     // No Staking NFT and not approved
-    console.log('NFT?: ', stateData?.userNftId)
     if (!stateData?.userNftId) {
       const tx = await approveAndCallDeposit(
         address,
@@ -178,7 +190,7 @@ const MainMvStakingInterface = ({ refetch, setRefetch, mainState }: Props) => {
       )
       processTransaction(tx)
     } else {
-      // Has already staked but needs to approve again ??
+      // Has already staked but needs to approve again
       const tx = await approveAndCallIncrease(
         address,
         approveAndStakeAmount,
@@ -219,9 +231,8 @@ const MainMvStakingInterface = ({ refetch, setRefetch, mainState }: Props) => {
   }
 
   // Max Amount to stake (doing it here to be a bit cleaner)
-  const stakingAssetBalance = parseFloat(
-    stateData?.currentStakingAssetBalance!
-  ).toFixed(2)
+  const stakingAssetBalance = stateData?.currentStakingAssetBalance!
+
   const maxStakingAmount =
     Number(stakingAssetBalance) > 0 ? stakingAssetBalance : '0'
 
@@ -267,7 +278,7 @@ const MainMvStakingInterface = ({ refetch, setRefetch, mainState }: Props) => {
     getRewards: {
       title: 'Rewards',
       text: stateData?.rewardsDue
-        ? `Get Rewards: ${stateData.rewardsDue} $MGH`
+        ? `Get Rewards: ${Number(stateData.rewardsDue).toFixed(2)} $MGH`
         : 'No Rewards',
       onClick: takeRewards,
       disabled: !stateData?.rewardsDue || !address || !correctChain,
@@ -391,7 +402,7 @@ const MainMvStakingInterface = ({ refetch, setRefetch, mainState }: Props) => {
                 onClick={() => options[key].setValue!(options[key].maxAmount!)}
                 className='text-gray-400 hover:text-gray-300 cursor-pointer font-medium  transition ease-in-out duration-300'
               >
-                Max: {options[key].maxAmount || 0}
+                Max: {Number(options[key].maxAmount).toFixed(2) || 0}
               </p>
             )}
           </div>
@@ -411,11 +422,18 @@ const MainMvStakingInterface = ({ refetch, setRefetch, mainState }: Props) => {
             {/* Submit Button */}
             <button
               disabled={options[key].disabled}
-              className={` disabled:opacity-30 disabled:hover:shadow-dark disabled:cursor-default flex justify-center items-center border border-pink-600 shadow-dark hover:shadow-button transition ease-in-out duration-500 rounded-xl w-full py-3 sm:py-4`}
+              className={`  relative disabled:opacity-30 disabled:hover:shadow-dark disabled:cursor-default flex justify-center items-center border border-pink-600 shadow-dark hover:shadow-button transition ease-in-out duration-500 rounded-xl w-full py-3 sm:py-4`}
             >
               <p className='pt-1 z-10 text-pink-600 font-medium text-lg sm:text-xl'>
                 {options[key].text}
               </p>
+              {state === 'maxContractAmount' && key === 'stake' && (
+                <Fade duration={500}>
+                  <span className='font-medium min-w-max absolute w-fit p-3 pt-4 bg-black backdrop-blur-xl rounded-xl top-2/3 left-1/2 -translate-x-1/2 z-40'>
+                    Not Enough Liquidity {/* Find better way of saying this */}
+                  </span>
+                </Fade>
+              )}
             </button>
           </div>
         </form>
