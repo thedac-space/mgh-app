@@ -57,8 +57,8 @@ const AllocationChart = ({ tvl, prices, mainState }: Props) => {
   const renderLabel = (entry: any /* Pie Data Object */) => {
     const text =
       outerRadius < 40
-        ? (entry.percent * 100).toFixed(0) + '%'
-        : `${entry.name}: ${(entry.percent * 100).toFixed(0)}%`
+        ? (entry.percent * 100).toFixed(1) + '%'
+        : `${entry.name}: ${(entry.percent * 100).toFixed(1)}%`
     return text
   }
 
