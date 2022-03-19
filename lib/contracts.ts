@@ -50,19 +50,19 @@ export const Contracts = {
   },
   MV_STAKING: {
     ETHEREUM_RINKEBY: {
-      address: '0xb5f6B6166BED6171030821a52719dd2565f75987', //  Actual Implementation  0xD654AD57C85f344B022074cEEabA19A7310f68E5
+      address: '0xdFF99135f774f1AE9ffd8fB57ac76A48621ec74a',
       abi: new Interface(IMetaverseStaking as unknown as string[]),
     },
   },
   REWARD_TOKEN: {
     ETHEREUM_RINKEBY: {
-      address: '0x31E8c0b8933Df73b5BE9B8c747ea54b27e8B44d0',
+      address: '0x8c8fDBBB2d890F67da116c5EC457e66aFa3e9205',
       abi: new Interface(SandToken),
     },
   },
   SAND_TOKEN: {
     MOCK_RINKEBY: {
-      address: '0x292Ed674D337A3e9C7a495E1cBd7cD5723Cc9d8E', // For the Staking contract Tests
+      address: '0xe3f8f102356419B80484890aB20fD1f03C85702D', // For the Metaverse Staking contract Tests
       abi: new Interface(SandToken),
     },
     ETHEREUM_MAINNET: {
