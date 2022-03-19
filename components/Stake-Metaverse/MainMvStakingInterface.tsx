@@ -95,7 +95,8 @@ const MainMvStakingInterface = ({ refetch, setRefetch, mainState }: Props) => {
       const rawRewardsDue = nftId
         ? await getUpdatedRewardsDue(nftId, provider)
         : undefined
-      const rewardsDue = Number(rawRewardsDue) >= 1 ? rawRewardsDue : undefined
+
+      const rewardsDue = Number(rawRewardsDue) > 0 ? rawRewardsDue : undefined
       // Check if its Withdraw Phase
       const isWithdraw = await isWithdrawPhase(provider)
       // Checking Sand Balance of User
@@ -397,7 +398,7 @@ const MainMvStakingInterface = ({ refetch, setRefetch, mainState }: Props) => {
               {options[key].title}
             </p>
             {/* Max Amount */}
-            {!options[key].disabled && (
+            {!options[key].disabled && options[key].setValue && (
               <p
                 onClick={() => options[key].setValue!(options[key].maxAmount!)}
                 className='text-gray-400 hover:text-gray-300 cursor-pointer font-medium  transition ease-in-out duration-300'
