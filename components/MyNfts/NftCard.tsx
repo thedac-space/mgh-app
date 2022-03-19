@@ -40,7 +40,7 @@ const NftCard = ({ stats }: Props) => {
         ))}
       </span>
       <OptimizedImage
-        src='/images/nft_mock.png'
+        src='/images/nft-image.png'
         height={300}
         width={250}
         layout='responsive'
