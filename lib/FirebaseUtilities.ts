@@ -107,6 +107,14 @@ export async function createValuationScore(
   })
 }
 
+export async function setFirebaseLands(lands: any[]) {
+  const land = collection(db, 'map-sandbox')
+  console.log({ lands })
+  await setDoc(doc(land, Date.now().toString()), {
+    lands: lands,
+  })
+}
+
 // Like Land Valuation
 export async function likeLand(
   landId: string,
