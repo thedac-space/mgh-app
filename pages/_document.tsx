@@ -30,6 +30,7 @@ class MyDocument extends Document {
                     <meta property="og:image:type" content="image/png" />
                     <meta property="og:image:width" content="2664" />
                     <meta property="og:image:height" content="2664" />
+                    <meta name="robots" content="noodp,noydir" />
                 </Head>
                 <body>
                     <Main />
