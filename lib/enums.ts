@@ -14,3 +14,8 @@ export enum Provider {
     METAMASK = "metamask",
     WALLETCONNECT = "walletconnect"
 }
+
+export enum Metaverse {
+    SANDBOX = "sandbox",
+    DECENTRALAND = "decentraland"
+}

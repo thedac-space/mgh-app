@@ -1,4 +1,4 @@
-import { Network } from "./enums";
+import { Metaverse, Network } from "./enums";
 
 export interface NetworkState {
     value: Network
@@ -43,4 +43,23 @@ export interface IPoolData {
     name: string;
     APY: number | string;
     lockingMonth: number;
+}
+
+export interface IAPIData {
+    metaverse: Metaverse;
+    name: string;
+    opensea_link: string;
+    external_link: string;
+    images: {
+        image_url: string;
+    };
+    tokenId: string; // changed this cause the API returns a string
+    prices?: { predicted_price: number }
+}
+
+export interface IPredictions {
+    ethPrediction: number;
+    usdPrediction: number;
+    sandPrediction?: number;
+    manaPrediction?: number;
 }
