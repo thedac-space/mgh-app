@@ -1,3 +1,4 @@
+import { formatEther } from 'ethers/lib/utils'
 import { Metaverse } from '../enums'
 import { IAPIData } from '../types'
 import { ellipseAddress } from '../utilities'
@@ -142,6 +143,8 @@ export function getCurrentPrice(listings: any[] | undefined) {
   )
 }
 
+// Axie Has its own Marketplace.
+
 export const getAxieLandData = async (x: number, y: number) => {
   const res = await fetch('https://graphql-gateway.axieinfinity.com/graphql', {
     method: 'POST',
@@ -160,4 +163,45 @@ export const getAxieLandData = async (x: number, y: number) => {
   })
   const jsonRes = await res.json()
   return jsonRes.data.land
+}
+
+export const getAxieFloorPrice = async () => {
+  const res = await fetch('https://graphql-gateway.axieinfinity.com/graphql', {
+    method: 'POST',
+
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      operationName: 'GetLandsGrid',
+      variables: {
+        from: 0,
+        size: 1,
+        sort: 'PriceAsc',
+        auctionType: 'Sale',
+        criteria: {},
+      },
+      query:
+        'query GetLandsGrid($from: Int!, $size: Int!, $sort: SortBy!, $owner: String, $criteria: LandSearchCriteria, $auctionType: AuctionType) {\n  lands(criteria: $criteria, from: $from, size: $size, sort: $sort, owner: $owner, auctionType: $auctionType) {\n    total\n    results {\n      ...LandBriefV2\n      __typename\n    }\n    __typename\n  }\n}\n\nfragment LandBriefV2 on LandPlot {\n  tokenId\n  owner\n  landType\n  row\n  col\n  auction {\n    currentPrice\n    startingTimestamp\n    currentPriceUSD\n    __typename\n  }\n  ownerProfile {\n    name\n    __typename\n  }\n  __typename\n}\n',
+    }),
+  })
+  const floorPrice = await res.json()
+  return formatEther(floorPrice.data.lands.results[0].auction.currentPrice)
+}
+
+export const getAxieDailyTradeVolume = async () => {
+  const res = await fetch('https://graphql-gateway.axieinfinity.com/graphql', {
+    method: 'POST',
+
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      operationName: 'GetOverviewToday',
+      query:
+        'query GetOverviewToday {\n  marketStats {\n    last24Hours {\n      ...OverviewFragment\n      __typename\n    }\n  }\n}\n\nfragment OverviewFragment on SettlementStats {\n  count\n  axieCount\n  volume\n  volumeUsd\n  __typename\n}\n',
+    }),
+  })
+  const dailyVolume = await res.json()
+  return formatEther(dailyVolume.data.marketStats.last24Hours.volume)
 }

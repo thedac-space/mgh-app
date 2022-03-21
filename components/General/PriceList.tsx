@@ -1,4 +1,3 @@
-import { OptimizedImage } from '.'
 import { Metaverse } from '../../lib/enums'
 import { IPredictions } from '../../lib/types'
 
@@ -41,9 +40,6 @@ interface Props {
 
 const PriceList = ({ predictions, className, metaverse }: Props) => {
   const keys = Object.keys(predictions) as coinKey[]
-  // const checkValidCoin = (coin: coinKey) => {
-  //   return coin === 'usdPrediction' || coin === 'ethPrediction'
-  // }
   return (
     <ul className={'flex flex-col flex-grow min-w-max gap-4 ' + className}>
       {/* Iterating through each Coin.  */}

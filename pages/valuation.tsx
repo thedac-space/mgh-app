@@ -140,8 +140,6 @@ const ValuationPage: NextPage = ({ prices }: any) => {
     },[query])
 
     
-    const floorPrice = null;
-    const floorPriceHistory = null;
 
     return (
         <>
@@ -249,10 +247,10 @@ const ValuationPage: NextPage = ({ prices }: any) => {
                 {/* Daily Volume and Floor Price Wrapper */}
                 <div className="flex flex-col sm:flex-row space-y-5 sm:space-y-0 space-x-0 sm:space-x-5 md:space-x-10 items-stretch justify-between w-full">
                     {/* Daily Volume */}
-                    <SalesVolumeDaily collectionName={metaverse} one_day_volume={null}></SalesVolumeDaily>
+                    <SalesVolumeDaily metaverse={metaverse} coinPrices={prices} />
                     {/* Floor Price */}
                     <div className="flex flex-col justify-between w-full space-y-5 md:space-y-10 lg:space-y-5">
-                        <FloorPriceTracker price={floorPrice} priceHistory={floorPriceHistory} collectionName={metaverse}/>
+                        <FloorPriceTracker metaverse={metaverse} coinPrices={prices}/>
                     </div>
                 </div>
                 
