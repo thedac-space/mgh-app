@@ -5,6 +5,7 @@ import { SocialMediaOptions } from "../lib/socialMediaOptions";
 import { IAPIData, IPredictions } from "../lib/types";
 import { ellipseAddress } from "../lib/utilities";
 import { useAppSelector } from "../state/hooks";
+import { PriceList } from "./General";
 import { AddToWatchlistButton, LandLikeBox } from "./Valuation";
 
 export interface PriceCardProps {
@@ -30,7 +31,6 @@ const PriceCard = ({ showCard, processing, apiData, predictions }: PriceCardProp
         }
     }
 
-    console.log(apiData)
 
     return (
         <div className={`${showCard ? "animate__fadeIn" : "hidden"} ${processing && "animate__fadeOut animate__fast"} animate__animated relative w-full h-full space-y-5 flex flex-col items-center`}>
@@ -87,46 +87,9 @@ const PriceCard = ({ showCard, processing, apiData, predictions }: PriceCardProp
                     Price Estimation:
                 </p>
 
-                <div className={`flex ${!predictions.ethPrediction && "invisible"} space-x-4 items-center w-full justify-start py-2`}>
-                    <img src="/images/ethereum-eth-logo.png" className="rounded-full  h-9 md:h-10 w-9 md:w-10 p-1 shadow-button" />
-                    <p className="text-xl md:text-2xl font-medium text-gray-300 pt-0.5">
-                        {predictions.ethPrediction.toLocaleString(undefined, { maximumFractionDigits: 2 })} <span className="font-light text-lg md:text-xl">ETH</span>
-                    </p>
-                </div>
-
-                <div className={`flex ${!predictions.usdPrediction && "invisible"} space-x-4 items-center w-full justify-start py-2`}>
-                    <img src="/images/usd-coin-usdc-logo.png" className="rounded-full h-9 md:h-10 w-9 md:w-10  p-1 shadow-button" />
-                    <p className="text-xl md:text-2xl font-medium text-gray-300 pt-0.5">
-                        {predictions.usdPrediction.toLocaleString(undefined, { maximumFractionDigits: 0 })} <span className="font-light text-lg md:text-xl">USDC</span>
-                    </p>
-                </div>
-
-                {apiData.metaverse === Metaverse.SANDBOX && (
-                    <div className={`flex ${!predictions.metaversePrediction && "invisible"} space-x-4 items-center w-full justify-start py-2`}>
-                        <img src="/images/the-sandbox-sand-logo.png" className="rounded-full h-9 md:h-10 w-9 md:w-10  p-1 shadow-button" />
-                        <p className="text-xl md:text-2xl font-medium text-gray-300 pt-0.5">
-                            {predictions.metaversePrediction?.toLocaleString(undefined, { maximumFractionDigits: 0 })} <span className="font-light text-lg md:text-xl">SAND</span>
-                        </p>
-                    </div>
-                )}
-
-                {apiData.metaverse === Metaverse.DECENTRALAND && (
-                    <div className={`flex ${!predictions.metaversePrediction && "invisible"} space-x-4 items-center w-full justify-start py-2`}>
-                        <img src="/images/decentraland-mana-logo.png" className="rounded-full h-9 md:h-10 w-9 md:w-10  p-1 shadow-button" />
-                        <p className="text-xl md:text-2xl font-medium text-gray-300 pt-0.5">
-                            {predictions.metaversePrediction?.toLocaleString(undefined, { maximumFractionDigits: 0 })} <span className="font-light text-lg md:text-xl">MANA</span>
-                        </p>
-                    </div>
-                )}
-
-                {apiData.metaverse === Metaverse.AXIE_INFINITY && (
-                    <div className={`flex ${!predictions.metaversePrediction && "invisible"} space-x-4 items-center w-full justify-start py-2`}>
-                        <img src="/images/axie-infinity-axs-logo.png" className="rounded-full h-9 md:h-10 w-9 md:w-10  p-1 shadow-button" />
-                        <p className="text-xl md:text-2xl font-medium text-gray-300 pt-0.5">
-                            {predictions.metaversePrediction?.toLocaleString(undefined, { maximumFractionDigits: 0 })} <span className="font-light text-lg md:text-xl">AXS</span>
-                        </p>
-                    </div>
-                )}
+              <div>
+                <PriceList predictions={predictions} metaverse={apiData.metaverse} />
+              </div>
             </div>
 
             {/* Likes */}

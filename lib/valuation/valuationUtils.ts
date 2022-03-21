@@ -114,8 +114,8 @@ export const handleLandName = (
     'axie-infinity': 'Plot',
   }
   if (!landName) return `${options[metaverse]} ${coords.x},${coords.y}`
-  if (landName.toString().length > 25) {
-    return `${options[metaverse]} ${coords.x},${coords.y}`
+  if (metaverse === 'decentraland') {
+    return `${options[metaverse]} (${coords.x}, ${coords.y})`
   } else {
     return landName
   }
