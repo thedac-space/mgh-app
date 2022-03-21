@@ -44,9 +44,7 @@ const AddToWatchlistButton = ({ landId, metaverse }: Props) => {
     }
   }
 
-  const loadingDots = () => {
-    const dots = 0
-  }
+  
 
   useEffect(() => {
     const fetchData = async () => {
