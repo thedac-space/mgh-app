@@ -1,5 +1,4 @@
-export = impetus
-declare const impetus: {
+export interface Iimpetus {
   new (args: {
     source: HTMLElement
     update: (x: number, y: number) => void

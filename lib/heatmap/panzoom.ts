@@ -1,10 +1,5 @@
-/*
-  The following code was taken from https://github.com/dy/pan-zoom
-  and modified a bit to allow disposing the event listeners
-*/
-
-import * as Impetus from 'impetus'
 import * as wheel from 'mouse-wheel'
+import * as Impetus from 'impetus'
 import * as touchPinch from 'touch-pinch'
 import * as position from 'touch-position'
 
@@ -22,10 +17,10 @@ type PanZoomEvent = {
   y0: number
 }
 
-export function panzoom(target: HTMLElement, cb: (e: PanZoomEvent) => void) {
+function panzoom(target: any, cb: (e: PanZoomEvent) => void) {
   //enable panning
   let pos = position.emitter({
-    element: target
+    element: target,
   })
 
   let initX = 0
@@ -41,7 +36,7 @@ export function panzoom(target: HTMLElement, cb: (e: PanZoomEvent) => void) {
   let lastX = 0
   const impetus = new Impetus({
     source: target,
-    update: (x, y) => {
+    update: (x: number, y: number) => {
       if (init) {
         init = false
         initX = pos[0]
@@ -57,7 +52,7 @@ export function panzoom(target: HTMLElement, cb: (e: PanZoomEvent) => void) {
         x: pos[0],
         y: pos[1],
         x0: initX,
-        y0: initY
+        y0: initY,
       }
 
       lastX = x
@@ -65,36 +60,39 @@ export function panzoom(target: HTMLElement, cb: (e: PanZoomEvent) => void) {
       cb(e)
     },
     multiplier: 1,
-    friction: 0.75
+    friction: 0.75,
   })
 
   //enable zooming
-  const wheelListener = wheel(target, (_dx, dy, _dz, e) => {
-    e.preventDefault()
-    cb({
-      target,
-      type: 'mouse',
-      dx: 0,
-      dy: 0,
-      dz: dy,
-      x: pos[0],
-      y: pos[1],
-      x0: pos[0],
-      y0: pos[1]
-    })
-  })
+  const wheelListener = wheel(
+    target,
+    (_dx: number, dy: number, _dz: number, e: any) => {
+      e.preventDefault()
+      cb({
+        target,
+        type: 'mouse',
+        dx: 0,
+        dy: 0,
+        dz: dy,
+        x: pos[0],
+        y: pos[1],
+        x0: pos[0],
+        y0: pos[1],
+      })
+    }
+  )
 
   //mobile pinch zoom
   let pinch = touchPinch(target)
   let mult = 2
   let initialCoords: number[] | null = null
 
-  pinch.on('start', _curr => {
+  pinch.on('start', (_curr: number) => {
     let [f1, f2] = pinch.fingers
 
     initialCoords = [
       f2!.position[0] * 0.5 + f1!.position[0] * 0.5,
-      f2!.position[1] * 0.5 + f1!.position[1] * 0.5
+      f2!.position[1] * 0.5 + f1!.position[1] * 0.5,
     ]
 
     impetus && impetus.pause()
@@ -106,7 +104,7 @@ export function panzoom(target: HTMLElement, cb: (e: PanZoomEvent) => void) {
 
     impetus && impetus.resume()
   })
-  pinch.on('change', (curr, prev) => {
+  pinch.on('change', (curr: number, prev: number) => {
     if (!pinch.pinching || !initialCoords) return
 
     cb({
@@ -118,7 +116,7 @@ export function panzoom(target: HTMLElement, cb: (e: PanZoomEvent) => void) {
       x: initialCoords[0],
       y: initialCoords[1],
       x0: initialCoords[0],
-      y0: initialCoords[0]
+      y0: initialCoords[0],
     })
   })
 
@@ -131,3 +129,4 @@ export function panzoom(target: HTMLElement, cb: (e: PanZoomEvent) => void) {
     target.removeEventListener('touchstart', initListener)
   }
 }
+export default panzoom

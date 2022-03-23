@@ -1,13 +1,14 @@
 import * as React from 'react'
 
-import { debounce } from '../../lib/debounce'
-import { panzoom } from '../../lib/panzoom'
-import { getViewport } from '../../lib/viewport'
-import { Coord } from '../../lib/common'
-import { renderMap } from '../../render/map'
-import { Props, State } from './TileMap.types'
+import { debounce } from '../../lib/heatmap/debounce'
+// const panzoom = dynamic(import("../../lib/heatmap/panzoom"), { ssr: false });
+// const panzoom = dynamic(() => import('../../lib/heatmap/panzoom').then(mod => mod.default) as any, {ssr: false})
 
-import './TileMap.css'
+import { getViewport } from '../../lib/heatmap/viewport'
+import { Coord } from '../../lib/heatmap/common'
+import { renderMap } from './map'
+import { Props, State } from './TileMap.types'
+import dynamic from 'next/dynamic'
 
 const MOBILE_WIDTH = 768
 
@@ -32,7 +33,7 @@ export class TileMap extends React.PureComponent<Props, State> {
     panY: 0,
     padding: 4,
     isDraggable: true,
-    renderMap: renderMap
+    renderMap: renderMap,
   }
 
   private oldState: State
@@ -55,11 +56,11 @@ export class TileMap extends React.PureComponent<Props, State> {
       pan: { x: panX, y: panY },
       center: {
         x: x == null ? initialX : x,
-        y: y == null ? initialY : y
+        y: y == null ? initialY : y,
       },
       size: zoom * size,
       zoom,
-      popup: null
+      popup: null,
     }
     this.state = this.generateState(props, initialState)
     this.oldState = this.state
@@ -80,12 +81,12 @@ export class TileMap extends React.PureComponent<Props, State> {
         ...nextState,
         center: {
           x: nextProps.x,
-          y: nextProps.y
+          y: nextProps.y,
         },
         pan: {
           x: 0,
-          y: 0
-        }
+          y: 0,
+        },
       }
     }
 
@@ -100,7 +101,12 @@ export class TileMap extends React.PureComponent<Props, State> {
       newState.zoom !== this.oldState.zoom
 
     // The coords or the amount of parcels changed, so we need to update the state
-    if (nextProps.x !== x || nextProps.y !== y || !this.oldState || isViewportDifferent) {
+    if (
+      nextProps.x !== x ||
+      nextProps.y !== y ||
+      !this.oldState ||
+      isViewportDifferent
+    ) {
       this.oldState = newState
       this.setState(newState)
       this.debouncedHandleChange()
@@ -116,7 +122,7 @@ export class TileMap extends React.PureComponent<Props, State> {
     if (newZoom !== this.props.zoom && newZoom !== this.state.zoom) {
       this.setState({
         zoom: newZoom,
-        size: this.props.size * newZoom
+        size: this.props.size * newZoom,
       })
     }
   }
@@ -126,13 +132,15 @@ export class TileMap extends React.PureComponent<Props, State> {
     this.oldState = this.state
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const { isDraggable } = this.props
 
     this.renderMap()
 
     if (this.canvas) {
       if (isDraggable) {
+        const panzoom = (await import('../../lib/heatmap/panzoom')).default
+
         this.destroy = panzoom(this.canvas, this.handlePanZoom)
       }
       this.canvas.addEventListener('click', this.handleClick)
@@ -168,7 +176,7 @@ export class TileMap extends React.PureComponent<Props, State> {
       center,
       pan,
       size,
-      padding
+      padding,
     })
     return { ...viewport, pan, zoom, center, size }
   }
@@ -184,7 +192,8 @@ export class TileMap extends React.PureComponent<Props, State> {
   handlePanZoom = (args: { dx: number; dy: number; dz: number }) => {
     if (!this.props.isDraggable) return
     const { dx, dy, dz } = args
-    const { size, maxSize, minSize, minX, maxX, minY, maxY, padding } = this.props
+    const { size, maxSize, minSize, minX, maxX, minY, maxY, padding } =
+      this.props
     const { pan, zoom } = this.state
 
     const maxZoom = maxSize / size
@@ -202,18 +211,18 @@ export class TileMap extends React.PureComponent<Props, State> {
 
     const boundaries = {
       nw: { x: minX - halfWidth, y: maxY + halfHeight },
-      se: { x: maxX + halfWidth, y: minY - halfHeight }
+      se: { x: maxX + halfWidth, y: minY - halfHeight },
     }
 
     const viewport = {
       nw: {
         x: this.state.center.x - halfWidth,
-        y: this.state.center.y + halfHeight
+        y: this.state.center.y + halfHeight,
       },
       se: {
         x: this.state.center.x + halfWidth,
-        y: this.state.center.y - halfHeight
-      }
+        y: this.state.center.y - halfHeight,
+      },
     }
 
     if (viewport.nw.x + newPan.x / newSize < boundaries.nw.x) {
@@ -232,7 +241,7 @@ export class TileMap extends React.PureComponent<Props, State> {
     this.setState({
       pan: newPan,
       zoom: newZoom,
-      size: newSize
+      size: newSize,
     })
     this.renderMap()
     this.debouncedUpdateCenter()
@@ -246,7 +255,7 @@ export class TileMap extends React.PureComponent<Props, State> {
 
     const viewportOffset = {
       x: (width - padding - 0.5) / 2 - center.x,
-      y: (height - padding) / 2 + center.y
+      y: (height - padding) / 2 + center.y,
     }
 
     const coordX = Math.round(panOffset.x - viewportOffset.x)
@@ -256,7 +265,7 @@ export class TileMap extends React.PureComponent<Props, State> {
   }
 
   handleClick = (event: MouseEvent) => {
-    const [x, y] = this.mouseToCoords(event.layerX, event.layerY)
+    const [x, y] = this.mouseToCoords(event.offsetX, event.offsetY)
     if (!this.inBounds(x, y)) {
       return
     }
@@ -279,7 +288,7 @@ export class TileMap extends React.PureComponent<Props, State> {
     const { onMouseDown } = this.props
     this.mousedownTimestamp = Date.now()
     if (onMouseDown) {
-      const [x, y] = this.mouseToCoords(event.layerX, event.layerY)
+      const [x, y] = this.mouseToCoords(event.offsetX, event.offsetY)
       if (!this.inBounds(x, y)) {
         return
       }
@@ -289,8 +298,8 @@ export class TileMap extends React.PureComponent<Props, State> {
   }
 
   handleMouseMove = (event: MouseEvent) => {
-    const { layerX, layerY } = event
-    const [x, y] = this.mouseToCoords(layerX, layerY)
+    const { offsetX, offsetY } = event
+    const [x, y] = this.mouseToCoords(offsetX, offsetY)
     if (!this.inBounds(x, y)) {
       this.hidePopup()
       return
@@ -298,7 +307,7 @@ export class TileMap extends React.PureComponent<Props, State> {
 
     if (!this.hover || this.hover.x !== x || this.hover.y !== y) {
       this.hover = { x, y }
-      this.showPopup(x, y, layerY, layerX)
+      this.showPopup(x, y, offsetY, offsetX)
     }
   }
 
@@ -320,7 +329,7 @@ export class TileMap extends React.PureComponent<Props, State> {
         if (this.mounted) {
           this.setState(
             {
-              popup: { x, y, top, left, visible: true }
+              popup: { x, y, top, left, visible: true },
             },
             () => onPopup(this.state.popup!)
           )
@@ -346,8 +355,8 @@ export class TileMap extends React.PureComponent<Props, State> {
           {
             popup: {
               ...this.state.popup,
-              visible: false
-            }
+              visible: false,
+            },
           },
           () => {
             onPopup(this.state.popup!)
@@ -365,12 +374,12 @@ export class TileMap extends React.PureComponent<Props, State> {
     const newPan = { x: panX, y: panY }
     const newCenter = {
       x: center.x + Math.floor((pan.x - panX) / size),
-      y: center.y - Math.floor((pan.y - panY) / size)
+      y: center.y - Math.floor((pan.y - panY) / size),
     }
 
     this.setState({
       pan: newPan,
-      center: newCenter
+      center: newCenter,
     })
   }
 
@@ -392,7 +401,7 @@ export class TileMap extends React.PureComponent<Props, State> {
       nw,
       se,
       center,
-      layers
+      layers,
     })
   }
 
