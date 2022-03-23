@@ -1,7 +1,11 @@
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { Metaverse } from '../../lib/enums'
-import { addLandToWatchList, getUserInfo } from '../../lib/FirebaseUtilities'
+import {
+  addLandToWatchList,
+  createUser,
+  getUserInfo,
+} from '../../lib/FirebaseUtilities'
 import { useAppSelector } from '../../state/hooks'
 
 interface Props {
@@ -51,7 +55,7 @@ const AddToWatchlistButton = ({ landId, metaverse }: Props) => {
     const fetchData = async () => {
       if (address) {
         const user = (await getUserInfo(address)) as Record<Key, string[]>
-        if (!user) return
+        if (!user) return createUser(address)
         const metaverseKey = Object.keys(user).find((key) =>
           key.includes(metaverse)
         ) as Key
