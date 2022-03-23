@@ -26,7 +26,10 @@ const AddToWatchlistButton = ({ landId, metaverse }: Props) => {
   const { address } = useAppSelector((state) => state.account)
   const [state, setState] = useState<WatchlistButtonState>()
   const [refetch, setRefetch] = useState(false)
-  type Key = 'decentraland-watchlist' | 'sandbox-watchlist'
+  type Key =
+    | 'decentraland-watchlist'
+    | 'sandbox-watchlist'
+    | 'axie-infinity-watchlist'
 
   const addToWatchList = async () => {
     if (state === 'alreadyInWatchlist') return push('/watchlist')
@@ -43,8 +46,6 @@ const AddToWatchlistButton = ({ landId, metaverse }: Props) => {
       }, 1100)
     }
   }
-
-  
 
   useEffect(() => {
     const fetchData = async () => {
