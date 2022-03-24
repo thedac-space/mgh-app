@@ -16,6 +16,7 @@ interface Props {
 interface UserWatchlist {
   'decentraland-watchlist': string[]
   'sandbox-watchlist': string[]
+  'axie-infinity-watchlist': string[]
 }
 
 type WatchlistButtonState =
