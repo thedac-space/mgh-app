@@ -30,4 +30,6 @@ export type ValuationTile = {
   eth_predicted_price: number
   predicted_price: number
   percent: number
+  current_price?: number
+  transfers?: number
 }
