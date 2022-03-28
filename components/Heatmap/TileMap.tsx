@@ -1,14 +1,10 @@
 import * as React from 'react'
 
 import { debounce } from '../../lib/heatmap/debounce'
-// const panzoom = dynamic(import("../../lib/heatmap/panzoom"), { ssr: false });
-// const panzoom = dynamic(() => import('../../lib/heatmap/panzoom').then(mod => mod.default) as any, {ssr: false})
-
 import { getViewport } from '../../lib/heatmap/viewport'
-import { Coord } from '../../lib/heatmap/common'
+import { Coord } from '../../lib/heatmap/commonTypes'
 import { renderMap } from './map'
 import { Props, State } from './TileMap.types'
-import dynamic from 'next/dynamic'
 
 const MOBILE_WIDTH = 768
 

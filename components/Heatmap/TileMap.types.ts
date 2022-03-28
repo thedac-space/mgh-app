@@ -1,5 +1,5 @@
-import { Coord, Layer } from '../../lib/common'
-import { Viewport } from '../../lib/viewport'
+import { Coord, Layer } from '../../lib/heatmap/commonTypes'
+import { Viewport } from '../../lib/heatmap/viewport'
 
 export type Props = {
   /** layer to render on the map */
@@ -51,7 +51,12 @@ export type Props = {
     left: number
     visible: boolean
   }) => void
-  onChange?: (data: { center: Coord; nw: Coord; se: Coord; zoom: number }) => void
+  onChange?: (data: {
+    center: Coord
+    nw: Coord
+    se: Coord
+    zoom: number
+  }) => void
   /** renderer */
   renderMap: MapRenderer
 }

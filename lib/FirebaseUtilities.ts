@@ -11,6 +11,7 @@ import {
 } from 'firebase/firestore/lite'
 import { Score } from '../components/Valuation/LandLikeBox'
 import { Metaverse } from './enums'
+import { mapLand } from './heatmap/heatmapTypes'
 
 // Firebase Init
 const firebaseConfig = {
@@ -107,12 +108,18 @@ export async function createValuationScore(
   })
 }
 
-export async function setFirebaseLands(lands: any[]) {
-  const land = collection(db, 'map-sandbox')
-  console.log({ lands })
-  await setDoc(doc(land, Date.now().toString()), {
-    lands: lands,
+export async function setFirebaseLands(lands: any[], metaverse: Metaverse) {
+  const heatmap = doc(db, 'heatmaps', metaverse)
+  await updateDoc(heatmap, {
+    values: arrayUnion(lands),
   })
+}
+
+export async function getFirebaseLands(metaverse: Metaverse) {
+  const heatmap = doc(db, 'heatmaps', metaverse)
+  const heatmapData = (await getDoc(heatmap)).data()
+  if (!heatmapData) return
+  return heatmapData.values
 }
 
 // Like Land Valuation

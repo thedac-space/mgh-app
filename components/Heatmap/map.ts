@@ -1,5 +1,5 @@
 import { renderTile } from './tile'
-import { Coord, Layer } from '../../lib/heatmap/common'
+import { Coord, Layer } from '../../lib/heatmap/commonTypes'
 
 export function renderMap(args: {
   ctx: CanvasRenderingContext2D

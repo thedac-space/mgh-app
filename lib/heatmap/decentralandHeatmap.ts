@@ -1,21 +1,34 @@
-import { Layer } from './common'
+import { AtlasTile, Coord, Layer, ValuationTile } from './commonTypes'
+import { getTileColor, setColours } from './valuationColoring'
 
-type AtlasTile = {
-  x: number
-  y: number
-  type: number
-  estate_id: number
-  left: number
-  top: number
-  topLeft: number
-}
-
+let valuationAtlas: Record<string, ValuationTile> = {}
 let atlas: Record<string, AtlasTile> | null = null
 
 async function loadTiles() {
   const resp = await fetch('https://api.decentraland.org/v1/tiles')
   const json = await resp.json()
+  const totalLands = 90601 // Axie: 90601 - Sandbox: 166404
+  await Promise.all(
+    [...Array(Math.ceil(totalLands / 500))].map(async (_, i) => {
+      const valuationRes = await fetch(
+        `https://services.itrmachines.com/decentraland/requestMap?from=${
+          i * 500
+        }&size=500`
+      )
+      const valuations = (await valuationRes.json()) as Record<
+        string,
+        ValuationTile
+      >
+      Object.keys(valuations).forEach((key) => {
+        const name = valuations[key].coords.x + ',' + valuations[key].coords.y
+        if (name in valuationAtlas) console.log('Repetido', name)
+        valuationAtlas[name] = valuations[key]
+      })
+    })
+  )
   atlas = json.data as Record<string, AtlasTile>
+  console.log(valuationAtlas)
+  setColours(valuationAtlas)
 }
 
 loadTiles().catch(console.error)
@@ -60,3 +73,36 @@ export const atlasLayer: Layer = (x, y) => {
     }
   }
 }
+
+export const onSaleLayer: Layer = (x, y) => {
+  const id = x + ',' + y
+  if (atlas && id in valuationAtlas && id in atlas) {
+    const color = getTileColor(valuationAtlas[id].percent)
+    const top = !!atlas[id].top
+    const left = !!atlas[id].left
+    const topLeft = !!atlas[id].topLeft
+    return {
+      color,
+      top,
+      left,
+      topLeft,
+    }
+  }
+  return null
+}
+// export const onSaleLayer: Layer = (x, y) => {
+//   const id = x + ',' + y
+//   if (atlas && id in atlas && atlas[id].price) {
+//     const color = '#00d3ff'
+//     const top = !!atlas[id].top
+//     const left = !!atlas[id].left
+//     const topLeft = !!atlas[id].topLeft
+//     return {
+//       color,
+//       top,
+//       left,
+//       topLeft,
+//     }
+//   }
+//   return null
+// }
