@@ -1,13 +1,23 @@
+import { ethers } from 'ethers'
+import { Chains } from '../chains'
+import { Contracts } from '../contracts'
+import { getNftTransfersAmount } from '../nftUtils'
 import { AtlasTile, Coord, Layer, ValuationTile } from './commonTypes'
 import { getTileColor, setColours } from './valuationColoring'
 
 let valuationAtlas: Record<string, ValuationTile> = {}
 let atlas: Record<string, AtlasTile> | null = null
-
+const provider = new ethers.providers.InfuraProvider(
+  Chains.ETHEREUM_MAINNET.chainId,
+  '03bfd7b76f3749c8bb9f2c91bdba37f3'
+)
 async function loadTiles() {
   const resp = await fetch('https://api.decentraland.org/v1/tiles')
   const json = await resp.json()
-  const totalLands = 90601 // Axie: 90601 - Sandbox: 166404
+  const SANDBOX_LANDS = 166404
+  const DECENTRALAND_LANDS = 90601
+  const totalLands = SANDBOX_LANDS // Decentraland & Axie: 90601 - Sandbox: 166404 -
+  atlas = json.data as Record<string, AtlasTile>
   await Promise.all(
     [...Array(Math.ceil(totalLands / 500))].map(async (_, i) => {
       const valuationRes = await fetch(
@@ -19,15 +29,21 @@ async function loadTiles() {
         string,
         ValuationTile
       >
-      Object.keys(valuations).forEach((key) => {
-        const name = valuations[key].coords.x + ',' + valuations[key].coords.y
-        if (name in valuationAtlas) console.log('Repetido', name)
-        valuationAtlas[name] = valuations[key]
-      })
+      await Promise.all(
+        Object.keys(valuations).map(async (key) => {
+          const name = valuations[key].coords.x + ',' + valuations[key].coords.y
+          // const transfers = await getNftTransfersAmount(
+          //   provider,
+          //   Contracts.PARCEL.ETHEREUM_MAINNET.address,
+          //   key
+          // )
+          valuationAtlas[name] = valuations[key]
+          // valuationAtlas[name].transfers = transfers
+          if (atlas) valuationAtlas[name].current_price = atlas[name].price
+        })
+      )
     })
   )
-  atlas = json.data as Record<string, AtlasTile>
-  console.log(valuationAtlas)
   setColours(valuationAtlas)
 }
 

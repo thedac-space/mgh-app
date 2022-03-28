@@ -49,3 +49,17 @@ export const getUserNFTs = async (
   }
   return filteredIds
 }
+export const getNftTransfersAmount = async (
+  provider: Provider,
+  contractAddress: string,
+  tokenId: string
+) => {
+  const contract = createNFTContract(provider, contractAddress)
+  const event = contract.filters.Transfer(
+    undefined,
+    undefined,
+    ethers.BigNumber.from(tokenId)
+  )
+  const transfers = await contract.queryFilter(event)
+  return transfers.length
+}
