@@ -123,3 +123,25 @@ function getPrice(order: any) {
     )
   return (order.current_price / 1e18) * order.payment_token_contract.eth_price
 }
+
+/**
+ * @param listings Array of listing objects from each OpenSea Asset
+ * @returns current price for asset
+ */
+export function getCurrentPrice(listings: any[] | undefined) {
+  if (!listings || !listings[0]) return NaN
+  const listing = listings[0]
+  if (listing.payment_token_contract.symbol === 'USDC')
+    return (
+      (listing.current_price / 1e6) * listing.payment_token_contract.eth_price
+    )
+  if (listing.payment_token_contract.symbol === 'SAND')
+    return (
+      (listing.current_price / 1e18) *
+      3 *
+      listing.payment_token_contract.eth_price
+    )
+  return (
+    (listing.current_price / 1e18) * listing.payment_token_contract.eth_price
+  )
+}
