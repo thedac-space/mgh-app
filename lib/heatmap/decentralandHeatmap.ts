@@ -2,6 +2,7 @@ import { ethers } from 'ethers'
 import { Chains } from '../chains'
 import { Contracts } from '../contracts'
 import { getNftTransfersAmount } from '../nftUtils'
+import { getCurrentPrice } from '../valuation/valuationUtils'
 import { AtlasTile, Coord, Layer, ValuationTile } from './commonTypes'
 import { getTileColor, setColours } from './valuationColoring'
 
@@ -32,12 +33,15 @@ async function loadTiles() {
       await Promise.all(
         Object.keys(valuations).map(async (key) => {
           const name = valuations[key].coords.x + ',' + valuations[key].coords.y
+          // const res = await fetch(`fetchSingleAsset/${Contracts.PARCEL.ETHEREUM_MAINNET.address}/${key}`)
+          // const currentPrice = getCurrentPrice(await res.json())
           // const transfers = await getNftTransfersAmount(
           //   provider,
           //   Contracts.PARCEL.ETHEREUM_MAINNET.address,
           //   key
           // )
           valuationAtlas[name] = valuations[key]
+          // valuationAtlas[name].current_price = currentPrice
           // valuationAtlas[name].transfers = transfers
           if (atlas) valuationAtlas[name].current_price = atlas[name].price
         })
