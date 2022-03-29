@@ -13,10 +13,7 @@ export type { TokenAbiETHRinkeby } from "./TokenAbiETHRinkeby";
 export type { TokenAbiMaticMainnet } from "./TokenAbiMaticMainnet";
 export type { TokenAbiMaticTestnet } from "./TokenAbiMaticTestnet";
 
-<<<<<<< HEAD
-=======
 export { AxieLand__factory } from "./factories/AxieLand__factory";
->>>>>>> e09c01341bde4370e5048c3debd8e8e144980372
 export { ERC721__factory } from "./factories/ERC721__factory";
 export { IMetaverseStaking__factory } from "./factories/IMetaverseStaking__factory";
 export { SandToken__factory } from "./factories/SandToken__factory";
