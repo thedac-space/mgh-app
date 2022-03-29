@@ -1,3 +1,4 @@
+import { formatEther } from 'ethers/lib/utils'
 import { Metaverse } from '../enums'
 import { IAPIData } from '../types'
 import { ellipseAddress } from '../utilities'
@@ -5,13 +6,26 @@ import { ICoinPrices, IPriceCard } from './valuationTypes'
 
 export const convertETHPrediction = (
   coinPrices: ICoinPrices,
-  ethPrediction: number
+  ethPrediction: number,
+  metaverse: Metaverse
 ) => {
   const ethUSD = coinPrices.ethereum.usd
-  const sandUSD = coinPrices['the-sandbox'].usd
   const usdPrediction = ethPrediction * ethUSD
-  const sandPrediction = usdPrediction / sandUSD
-  return { ethPrediction, usdPrediction, sandPrediction }
+  let metaverseUSD
+  let metaversePrediction
+
+  if (metaverse === Metaverse.SANDBOX) {
+    metaverseUSD = coinPrices['the-sandbox'].usd
+    metaversePrediction = usdPrediction / metaverseUSD
+  } else if (metaverse === Metaverse.DECENTRALAND) {
+    metaverseUSD = coinPrices['decentraland'].usd
+    metaversePrediction = usdPrediction / metaverseUSD
+  } else if (metaverse === Metaverse.AXIE_INFINITY) {
+    metaverseUSD = coinPrices['axie-infinity'].usd
+    metaversePrediction = usdPrediction / metaverseUSD
+  }
+
+  return { ethPrediction, usdPrediction, metaversePrediction }
 }
 
 export const convertMANAPrediction = (
@@ -65,15 +79,17 @@ export const formatLandAsset = async (
     processing: false,
   }
 
-  if (metaverse === 'sandbox') {
-    Object.defineProperty(formattedAsset, 'predictions', {
-      value: convertETHPrediction(coinPrices, apiData.prices!.predicted_price),
-    })
-  } else if (metaverse === 'decentraland') {
-    Object.defineProperty(formattedAsset, 'predictions', {
-      value: convertMANAPrediction(coinPrices, apiData.prices!.predicted_price),
-    })
-  }
+  console.log({ metaverse })
+  console.log({ apiData })
+
+  Object.defineProperty(formattedAsset, 'predictions', {
+    value: convertETHPrediction(
+      coinPrices,
+      apiData.prices!.eth_predicted_price,
+      metaverse
+    ),
+  })
+
   return formattedAsset as IPriceCard
 }
 
@@ -86,42 +102,108 @@ export const handleTokenID = (tokenID: string) => {
   }
 }
 
-/**
- * @param orders Array of order objects from each OpenSea Asset
- * @returns current price for asset & best offered price for asset
- */
-export function getBoundaryPrices(orders: any[]) {
-  let currentPrice: number | undefined
-  let bestOfferedPrice: number | undefined
-
-  let result = {
-    current_price: currentPrice,
-    best_offered_price: bestOfferedPrice,
+// Formatting Land Name if its too long or missing (Custom land names in decentraland..)
+export const handleLandName = (
+  metaverse: Metaverse,
+  coords: { x: number; y: number },
+  landName?: string
+) => {
+  const options = {
+    sandbox: 'Land',
+    decentraland: 'Parcel',
+    'axie-infinity': 'Plot',
   }
-
-  if (orders) {
-    for (let order of orders) {
-      let value = getPrice(order)
-      if (order.side == 0)
-        result.best_offered_price = result.best_offered_price
-          ? Math.max(result.best_offered_price, value)
-          : value
-      else if (order.side == 1 && order.static_extradata === '0x')
-        result.current_price = result.current_price
-          ? Math.min(result.current_price, value)
-          : value
-    }
+  if (!landName) return `${options[metaverse]} ${coords.x},${coords.y}`
+  if (metaverse === 'decentraland') {
+    return `${options[metaverse]} (${coords.x}, ${coords.y})`
+  } else {
+    return landName
   }
-  return result
 }
-function getPrice(order: any) {
-  if (order.payment_token_contract.symbol === 'USDC')
-    return (order.current_price / 1e6) * order.payment_token_contract.eth_price
-  if (order.payment_token_contract.symbol === 'SAND')
+
+/**
+ * @param listings Array of listing objects from each OpenSea Asset
+ * @returns current price for asset
+ */
+export function getCurrentPrice(listings: any[] | undefined) {
+  if (!listings || !listings[0]) return NaN
+  const listing = listings[0]
+  if (listing.payment_token_contract.symbol === 'USDC')
     return (
-      (order.current_price / 1e18) * 3 * order.payment_token_contract.eth_price
+      (listing.current_price / 1e6) * listing.payment_token_contract.eth_price
     )
-  return (order.current_price / 1e18) * order.payment_token_contract.eth_price
+  if (listing.payment_token_contract.symbol === 'SAND')
+    return (
+      (listing.current_price / 1e18) *
+      3 *
+      listing.payment_token_contract.eth_price
+    )
+  return (
+    (listing.current_price / 1e18) * listing.payment_token_contract.eth_price
+  )
+}
+
+// Axie Has its own Marketplace.
+
+export const getAxieLandData = async (x: number, y: number) => {
+  const res = await fetch('https://graphql-gateway.axieinfinity.com/graphql', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      operationName: 'GetLandDetail',
+      variables: {
+        col: x,
+        row: y,
+      },
+      query:
+        'query GetLandDetail($col: Int!, $row: Int!) {\n  land(col: $col, row: $row) {\n    ...LandDetail\n    __typename\n  }\n}\n\nfragment LandDetail on LandPlot {\n  tokenId\n  owner\n  ownerProfile {\n    name\n    __typename\n  }\n  landType\n  row\n  col\n  auction {\n    ...AxieAuction\n    __typename\n  }\n  __typename\n}\n\nfragment AxieAuction on Auction {\n  startingPrice\n  endingPrice\n  startingTimestamp\n  endingTimestamp\n  duration\n  timeLeft\n  currentPrice\n  currentPriceUSD\n  suggestedPrice\n  seller\n  listingIndex\n  state\n  __typename\n}\n',
+    }),
+  })
+  const jsonRes = await res.json()
+  return jsonRes.data.land
+}
+
+export const getAxieFloorPrice = async () => {
+  const res = await fetch('https://graphql-gateway.axieinfinity.com/graphql', {
+    method: 'POST',
+
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      operationName: 'GetLandsGrid',
+      variables: {
+        from: 0,
+        size: 1,
+        sort: 'PriceAsc',
+        auctionType: 'Sale',
+        criteria: {},
+      },
+      query:
+        'query GetLandsGrid($from: Int!, $size: Int!, $sort: SortBy!, $owner: String, $criteria: LandSearchCriteria, $auctionType: AuctionType) {\n  lands(criteria: $criteria, from: $from, size: $size, sort: $sort, owner: $owner, auctionType: $auctionType) {\n    total\n    results {\n      ...LandBriefV2\n      __typename\n    }\n    __typename\n  }\n}\n\nfragment LandBriefV2 on LandPlot {\n  tokenId\n  owner\n  landType\n  row\n  col\n  auction {\n    currentPrice\n    startingTimestamp\n    currentPriceUSD\n    __typename\n  }\n  ownerProfile {\n    name\n    __typename\n  }\n  __typename\n}\n',
+    }),
+  })
+  const floorPrice = await res.json()
+  return formatEther(floorPrice.data.lands.results[0].auction.currentPrice)
+}
+
+export const getAxieDailyTradeVolume = async () => {
+  const res = await fetch('https://graphql-gateway.axieinfinity.com/graphql', {
+    method: 'POST',
+
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      operationName: 'GetOverviewToday',
+      query:
+        'query GetOverviewToday {\n  marketStats {\n    last24Hours {\n      ...OverviewFragment\n      __typename\n    }\n  }\n}\n\nfragment OverviewFragment on SettlementStats {\n  count\n  axieCount\n  volume\n  volumeUsd\n  __typename\n}\n',
+    }),
+  })
+  const dailyVolume = await res.json()
+  return formatEther(dailyVolume.data.marketStats.last24Hours.volume)
 }
 
 /**

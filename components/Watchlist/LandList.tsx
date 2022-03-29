@@ -8,7 +8,6 @@ interface Props {
   removeFromWatchList: (landId: string, metaverse: Metaverse) => Promise<void>
 }
 const LandList = ({ lands, removeFromWatchList }: Props) => {
-  const keys = Object.keys(lands) as LandsKey[]
   return (
     <ul className='w-full flex lg:flex-col flex-wrap justify-center gap-4'>
       <Fade duration={550} className='w-full flex justify-center'>

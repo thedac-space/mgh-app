@@ -30,3 +30,14 @@ export function getPoolData(poolId: number | undefined): IPoolData {
 
   return poolData
 }
+
+export const formatMetaverseName = (metaverseName: string, uppercase?: boolean) => {
+   const nameArray = metaverseName.split('-')
+   const formattedName = nameArray
+     .map((word, i) => {
+       if (uppercase) return word.toUpperCase()
+       return word[0].toUpperCase() + word.substring(1)
+     })
+     .join(' ')
+   return formattedName
+ }

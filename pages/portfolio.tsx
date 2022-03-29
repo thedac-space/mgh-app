@@ -12,7 +12,7 @@ import { IPredictions } from '../lib/types'
 import { useAppSelector } from '../state/hooks'
 import { Contracts } from '../lib/contracts'
 import { useRouter } from 'next/router'
-import { ellipseAddress } from '../lib/utilities'
+import { ellipseAddress, formatMetaverseName } from '../lib/utilities'
 import { Loader, WalletModal } from '../components'
 import { Fade } from 'react-awesome-reveal'
 import { Metaverse } from '../lib/enums'
@@ -24,7 +24,7 @@ import WalletButton from '../components/WalletButton'
 import useConnectWeb3 from '../backend/connectWeb3'
 import { ethers } from 'ethers'
 import { Chains } from '../lib/chains'
-import { getUserNFTs } from '../lib/nftUtils'
+import { getAxieLands, getUserNFTs } from '../lib/nftUtils'
 import { getAddress } from 'ethers/lib/utils'
 
 const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
@@ -47,9 +47,13 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   >([])
   const [formattedDecentralandAssets, setFormattedDecentralandAssets] =
     useState<IPriceCard[]>([])
+  const [formattedAxieAssets, setFormattedAxieAssets] = useState<IPriceCard[]>(
+    []
+  )
   const [loading, setLoading] = useState(true)
   const socialMedia = SocialMediaOptions(undefined, undefined, address)
   const externalWallet = query.wallet
+  const isRonin = query.wallet?.toString().startsWith('ronin')
 
   const landOptions = {
     // LAND contract address might have to be changed once Sandbox && OpenSea finish migration
@@ -62,6 +66,11 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
       contract: Contracts.PARCEL.ETHEREUM_MAINNET.address,
       assetsList: formattedDecentralandAssets,
       setList: setFormattedDecentralandAssets,
+    },
+    'axie-infinity': {
+      contract: Contracts.AXIE_LANDS.RONIN_MAINNET.address,
+      assetsList: formattedAxieAssets,
+      setList: setFormattedAxieAssets,
     },
   }
 
@@ -97,6 +106,14 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
     })
   }
 
+  const formatAddress = (address: string) => {
+    // If Ronin Address
+    if (address.startsWith('ronin:')) {
+      return getAddress(address.substring(address.indexOf(':') + 1))
+    }
+    if (address.startsWith('0x')) return getAddress(address)
+    return getAddress('0x0000000000000000000000000000000000000000')
+  }
   useEffect(() => {
     if (externalWallet && alreadyFetched) return
     setAlreadyFetched(true)
@@ -112,16 +129,26 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
     // Requesting and Formatting Assets
     const setPortfolioAssets = async () => {
       resetState()
-      // OpenSea API Call
+      if (!address && !externalWallet) return setLoading(false)
+
+      // OpenSea/ Axie Market API Call
       try {
         await Promise.all(
           options.map(async (option) => {
-            const rawIds = await getUserNFTs(
-              provider,
-              getAddress((externalWallet as string) ?? address),
-              landOptions[option].contract
-            )
-            rawIds.length > 0 &&
+            let rawIds: string[] | undefined
+            if (option === 'axie-infinity') {
+              rawIds = await getAxieLands(
+                formatAddress((externalWallet as string) ?? address)
+              )
+            } else {
+              rawIds = await getUserNFTs(
+                provider,
+                formatAddress((externalWallet as string) ?? address),
+                landOptions[option].contract
+              )
+            }
+            rawIds &&
+              rawIds.length > 0 &&
               (await Promise.all(
                 rawIds.map(async (id) => {
                   const formattedAsset = await formatLandAsset(
@@ -181,7 +208,11 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                 <ExternalLink
                   className='m-auto text-center sm:text-lg md:text-xl'
                   text={ellipseAddress(externalWallet as string)}
-                  href={'https://opensea.io/' + externalWallet}
+                  href={
+                    isRonin
+                      ? `https://marketplace.axieinfinity.com/profile/${externalWallet}/land/`
+                      : `https://opensea.io/${externalWallet}`
+                  }
                 />
               </>
             ) : (
@@ -271,7 +302,7 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
               <article key={option} className='mb-8 sm:mb-12'>
                 <Fade>
                   <h3 className='text-center gray-box green-text-gradient mb-8 sm:mb-12'>
-                    {option.toUpperCase()}
+                    {formatMetaverseName(option, true)}
                   </h3>
                 </Fade>
                 <PortfolioList
@@ -287,7 +318,7 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 
 export async function getServerSideProps() {
   const coin = await fetch(
-    'https://api.coingecko.com/api/v3/simple/price?ids=ethereum%2Cthe-sandbox%2Cdecentraland&vs_currencies=usd'
+    'https://api.coingecko.com/api/v3/simple/price?ids=ethereum%2Cthe-sandbox%2Cdecentraland%2Caxie-infinity&vs_currencies=usd'
   )
   const prices: ICoinPrices = await coin.json()
 

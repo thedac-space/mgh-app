@@ -36,15 +36,26 @@ const ValuationPage: NextPage = ({ prices }: any) => {
     const handleAPIData = (data: any) => {
 
         setAPIData(data)
-        if (data.metaverse === Metaverse.SANDBOX) {
-            const ethPrediction = data.prices.predicted_price;
-            const predictions = convertETHPrediction(prices, ethPrediction)
-            setPredictions(predictions)
-        } else if (data.metaverse === Metaverse.DECENTRALAND) {
-            const manaPrediction = data.prices.predicted_price;
-            const predictions = convertMANAPrediction(prices, manaPrediction)
-            setPredictions(predictions)
-        }
+
+        const ethPrediction = data.prices.eth_predicted_price
+        console.log(ethPrediction)
+        const predictions = convertETHPrediction(prices, ethPrediction, data.metaverse)
+        console.log(predictions)
+        setPredictions(predictions)
+
+        // if (data.metaverse === Metaverse.SANDBOX) {
+        //     const ethPrediction = data.prices.predicted_price;
+        //     const predictions = convertETHPrediction(prices, ethPrediction, Metaverse.SANDBOX)
+        //     setPredictions(predictions)
+        // } else if (data.metaverse === Metaverse.DECENTRALAND) {
+        //     const manaPrediction = data.prices.predicted_price;
+        //     const predictions = convertMANAPrediction(prices, manaPrediction)
+        //     setPredictions(predictions)
+        // } else if (data.metaverse === Metaverse.AXIE_INFINITY) {
+        //     const manaPrediction = data.prices.predicted_price;
+        //     const predictions = convertETHPrediction(prices, manaPrediction, Metaverse.AXIE_INFINITY)
+        //     setPredictions(predictions)
+        // }
 
         setShowCard(true);
 
@@ -129,8 +140,6 @@ const ValuationPage: NextPage = ({ prices }: any) => {
     },[query])
 
     
-    const floorPrice = null;
-    const floorPriceHistory = null;
 
     return (
         <>
@@ -180,6 +189,10 @@ const ValuationPage: NextPage = ({ prices }: any) => {
                                 <div onClick={() => setMetaverse(Metaverse.DECENTRALAND)} className={`flex flex-col items-center justify-center space-y-2 rounded-xl cursor-pointer p-2 px-3 pt-4 w-24 md:w-30 h-24 md:h-30 group focus:outline-none ${metaverse === Metaverse.DECENTRALAND ? "border-opacity-100 text-gray-200" : "text-gray-400 hover:text-gray-200 border-opacity-40 hover:border-opacity-100"} border border-gray-400 focus:border-opacity-100 transition duration-300 ease-in-out`}>
                                     <img src="/images/decentraland-mana-logo.png" className={`h-12 md:h-14 ${metaverse === Metaverse.DECENTRALAND ? "grayscale-0" : "grayscale"} group-hover:grayscale-0 transition duration-300 ease-in-out`} />
                                     <p className="font-medium text-xs md:text-sm pt-1">Decentraland</p>
+                                </div>
+                                <div onClick={() => setMetaverse(Metaverse.AXIE_INFINITY)} className={`flex flex-col items-center justify-center space-y-2 rounded-xl cursor-pointer p-2 px-3 pt-4 w-24 md:w-30 h-24 md:h-30 group focus:outline-none ${metaverse === Metaverse.AXIE_INFINITY ? "border-opacity-100 text-gray-200" : "text-gray-400 hover:text-gray-200 border-opacity-40 hover:border-opacity-100"} border border-gray-400 focus:border-opacity-100 transition duration-300 ease-in-out`}>
+                                    <img src="/images/axie-infinity-axs-logo.png" className={`h-12 md:h-14 ${metaverse === Metaverse.AXIE_INFINITY ? "grayscale-0" : "grayscale"} group-hover:grayscale-0 transition duration-300 ease-in-out`} />
+                                    <p className="font-medium text-xs md:text-sm pt-1">Axie Infinity</p>
                                 </div>
                             </div>
                         </div>
@@ -234,10 +247,10 @@ const ValuationPage: NextPage = ({ prices }: any) => {
                 {/* Daily Volume and Floor Price Wrapper */}
                 <div className="flex flex-col sm:flex-row space-y-5 sm:space-y-0 space-x-0 sm:space-x-5 md:space-x-10 items-stretch justify-between w-full">
                     {/* Daily Volume */}
-                    <SalesVolumeDaily collectionName={metaverse} one_day_volume={null}></SalesVolumeDaily>
+                    <SalesVolumeDaily metaverse={metaverse} coinPrices={prices} />
                     {/* Floor Price */}
                     <div className="flex flex-col justify-between w-full space-y-5 md:space-y-10 lg:space-y-5">
-                        <FloorPriceTracker price={floorPrice} priceHistory={floorPriceHistory} collectionName={metaverse}/>
+                        <FloorPriceTracker metaverse={metaverse} coinPrices={prices}/>
                     </div>
                 </div>
                 
@@ -250,7 +263,7 @@ const ValuationPage: NextPage = ({ prices }: any) => {
 };
 
 export async function getStaticProps() {
-    const res = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=ethereum%2Cthe-sandbox%2Cdecentraland&vs_currencies=usd")
+    const res = await fetch("https://api.coingecko.com/api/v3/simple/price?ids=ethereum%2Cthe-sandbox%2Cdecentraland%2Caxie-infinity&vs_currencies=usd")
     const prices = await res.json();
 
     return {

@@ -17,5 +17,6 @@ export enum Provider {
 
 export enum Metaverse {
     SANDBOX = "sandbox",
-    DECENTRALAND = "decentraland"
+    DECENTRALAND = "decentraland",
+    AXIE_INFINITY = "axie-infinity"
 }

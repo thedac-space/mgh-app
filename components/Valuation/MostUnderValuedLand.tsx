@@ -19,7 +19,7 @@ const MostUnderValuedLand = ({
     name: 'LAND (136, 4)',
     opensea_link:
       'https://opensea.io/assets/0x50f5474724e0ee42d9a4e711ccfb275809fd6d4a/85204',
-    tokenId: "85204",
+    tokenId: '85204',
   }
 
   const mockPredictions = {
@@ -37,12 +37,12 @@ const MostUnderValuedLand = ({
       </h3>
       {/* Land Card */}
       <div className='flex flex-col items-center m-auto gray-box p-4 sm:px-8 sm:w-max text-left'>
-        <HorizontalPriceCard
+        {/* <HorizontalPriceCard
           apiData={mockApiData}
           showCard={showCard}
           predictions={mockPredictions}
           processing={processing}
-        />
+        /> */}
       </div>
     </article>
   )
