@@ -11,7 +11,7 @@ import { IAPIData, IPredictions } from "../lib/types";
 import FloorPriceTracker from "../components/Valuation/FloorPriceTracker";
 import SalesVolumeDaily from "../components/Valuation/SalesVolumeDaily";
 import {  MostUnderValuedLand } from "../components/Valuation";
-import { convertETHPrediction, convertMANAPrediction } from "../lib/valuation/valuationUtils";
+import { convertETHPrediction } from "../lib/valuation/valuationUtils";
 import { useRouter } from "next/router";
 
 
@@ -38,24 +38,8 @@ const ValuationPage: NextPage = ({ prices }: any) => {
         setAPIData(data)
 
         const ethPrediction = data.prices.eth_predicted_price
-        console.log(ethPrediction)
         const predictions = convertETHPrediction(prices, ethPrediction, data.metaverse)
-        console.log(predictions)
         setPredictions(predictions)
-
-        // if (data.metaverse === Metaverse.SANDBOX) {
-        //     const ethPrediction = data.prices.predicted_price;
-        //     const predictions = convertETHPrediction(prices, ethPrediction, Metaverse.SANDBOX)
-        //     setPredictions(predictions)
-        // } else if (data.metaverse === Metaverse.DECENTRALAND) {
-        //     const manaPrediction = data.prices.predicted_price;
-        //     const predictions = convertMANAPrediction(prices, manaPrediction)
-        //     setPredictions(predictions)
-        // } else if (data.metaverse === Metaverse.AXIE_INFINITY) {
-        //     const manaPrediction = data.prices.predicted_price;
-        //     const predictions = convertETHPrediction(prices, manaPrediction, Metaverse.AXIE_INFINITY)
-        //     setPredictions(predictions)
-        // }
 
         setShowCard(true);
 

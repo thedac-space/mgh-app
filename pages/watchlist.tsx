@@ -9,7 +9,6 @@ import {
 } from '../lib/valuation/valuationTypes'
 import {
   convertETHPrediction,
-  convertMANAPrediction,
   getAxieLandData,
   getCurrentPrice,
   getLandData,
@@ -66,7 +65,6 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
       limitIdState: 'limitIdSandbox',
       limitCoordinatesState: 'limitCoordinatesSandbox',
       metaverse: Metaverse.SANDBOX,
-      convert: convertETHPrediction,
     },
     decentraland: {
       contract: Contracts.PARCEL.ETHEREUM_MAINNET.address,
@@ -76,7 +74,6 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
       limitIdState: 'limitIdDecentraland',
       limitCoordinatesState: 'limitCoordinatesDecentraland',
       metaverse: Metaverse.DECENTRALAND,
-      convert: convertMANAPrediction,
     },
     'axie-infinity': {
       contract: Contracts.AXIE_LANDS.RONIN_MAINNET.address,
@@ -86,7 +83,6 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
       limitIdState: 'limitIdAxie',
       limitCoordinatesState: 'limitCoordinatesAxie',
       metaverse: Metaverse.AXIE_INFINITY,
-      convert: convertETHPrediction,
     },
   }
 
