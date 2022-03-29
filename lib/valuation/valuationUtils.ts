@@ -11,32 +11,11 @@ export const convertETHPrediction = (
 ) => {
   const ethUSD = coinPrices.ethereum.usd
   const usdPrediction = ethPrediction * ethUSD
-  let metaverseUSD
-  let metaversePrediction
-
-  if (metaverse === Metaverse.SANDBOX) {
-    metaverseUSD = coinPrices['the-sandbox'].usd
-    metaversePrediction = usdPrediction / metaverseUSD
-  } else if (metaverse === Metaverse.DECENTRALAND) {
-    metaverseUSD = coinPrices['decentraland'].usd
-    metaversePrediction = usdPrediction / metaverseUSD
-  } else if (metaverse === Metaverse.AXIE_INFINITY) {
-    metaverseUSD = coinPrices['axie-infinity'].usd
-    metaversePrediction = usdPrediction / metaverseUSD
-  }
+  const formattedMetaverse = metaverse === 'sandbox' ? 'the-sandbox' : metaverse
+  const metaverseUSD = coinPrices[formattedMetaverse].usd
+  const metaversePrediction = usdPrediction / metaverseUSD
 
   return { ethPrediction, usdPrediction, metaversePrediction }
-}
-
-export const convertMANAPrediction = (
-  coinPrices: ICoinPrices,
-  manaPrediction: number
-) => {
-  const ethUSD = coinPrices.ethereum.usd
-  const manaUSD = coinPrices.decentraland.usd
-  const usdPrediction = manaPrediction * manaUSD
-  const ethPrediction = usdPrediction / ethUSD
-  return { ethPrediction, usdPrediction, manaPrediction }
 }
 
 // Get Data for Single Land Asset
