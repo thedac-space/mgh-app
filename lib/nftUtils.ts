@@ -79,7 +79,7 @@ export const getUserNFTs = async (
   const currentOwners = await Promise.all(
     transferEvents.map(async (event) => {
       const tokenId = ethers.BigNumber.from(
-        event?.topics[3] || event?.args._tokenId
+        event?.topics[3] || event?.args.tokenId
       ).toString()
       const ownerAddress = tokenId && (await contract.ownerOf(tokenId))
       return { ownerAddress, tokenId }
