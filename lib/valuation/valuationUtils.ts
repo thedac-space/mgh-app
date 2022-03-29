@@ -79,9 +79,6 @@ export const formatLandAsset = async (
     processing: false,
   }
 
-  console.log({ metaverse })
-  console.log({ apiData })
-
   Object.defineProperty(formattedAsset, 'predictions', {
     value: convertETHPrediction(
       coinPrices,
@@ -204,26 +201,4 @@ export const getAxieDailyTradeVolume = async () => {
   })
   const dailyVolume = await res.json()
   return formatEther(dailyVolume.data.marketStats.last24Hours.volume)
-}
-
-/**
- * @param listings Array of listing objects from each OpenSea Asset
- * @returns current price for asset
- */
-export function getCurrentPrice(listings: any[] | undefined) {
-  if (!listings || !listings[0]) return NaN
-  const listing = listings[0]
-  if (listing.payment_token_contract.symbol === 'USDC')
-    return (
-      (listing.current_price / 1e6) * listing.payment_token_contract.eth_price
-    )
-  if (listing.payment_token_contract.symbol === 'SAND')
-    return (
-      (listing.current_price / 1e18) *
-      3 *
-      listing.payment_token_contract.eth_price
-    )
-  return (
-    (listing.current_price / 1e18) * listing.payment_token_contract.eth_price
-  )
 }
