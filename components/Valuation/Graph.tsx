@@ -1,50 +1,57 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Metaverse } from "../../lib/enums";
 import { createChart, isUTCTimestamp, UTCTimestamp } from "lightweight-charts";
 import { getValuationDailyData } from "../../lib/FirebaseUtilities";
 
 const Graph = ({ metaverse }: Metaverse) => {
-  useEffect(async () => {
-    const chart = createChart(document.getElementById("metaverseGraph"), {
-      width: 864,
-      height: 197,
-      localization: {
-        timeFormatter: (time: UTCTimestamp) => {
-          const date = new Date(time*1000);
+  const [values, setValues] = useState([]);
+  const [chart, setChart] = useState(null);
+  useEffect(() => {
+    setChart(
+      createChart(document.getElementById("metaverseGraph"), {
+        width: 864,
+        height: 197,
+        localization: {
+          timeFormatter: (time: UTCTimestamp) => {
+            const date = new Date(time * 1000);
 
-          return (
-            date.getFullYear() +
-            "-" +
-            (date.getMonth() + 1) +
-            "-" +
-            date.getDate() +
-            " " +
-            date.getHours() +
-            ":" +
-            date.getMinutes()
-          );
+            return (
+              date.getFullYear() +
+              "-" +
+              (date.getMonth() + 1) +
+              "-" +
+              date.getDate() +
+              " " +
+              date.getHours() +
+              ":" +
+              date.getMinutes()
+            );
+          },
         },
-      },
-      rightPriceScale: {
-        scaleMargins: {
-          top: 0.3,
-          bottom: 0.25,
+        rightPriceScale: {
+          scaleMargins: {
+            top: 0.3,
+            bottom: 0.25,
+          },
+          borderVisible: false,
         },
-        borderVisible: false,
-      },
-      layout: {
-        backgroundColor: "#131722",
-        textColor: "#d1d4dc",
-      },
-      grid: {
-        vertLines: {
-          color: "rgba(42, 46, 57, 0)",
+        layout: {
+          backgroundColor: "#131722",
+          textColor: "#d1d4dc",
         },
-        horzLines: {
-          color: "rgba(42, 46, 57, 0.6)",
+        grid: {
+          vertLines: {
+            color: "rgba(42, 46, 57, 0)",
+          },
+          horzLines: {
+            color: "rgba(42, 46, 57, 0.6)",
+          },
         },
-      },
-    });
+      })
+    );
+    (async () => setValues(await getValuationDailyData(metaverse)))();
+  }, []);
+  if (chart) {
     let areaSeries = chart.addAreaSeries({
       topColor: "rgba(38,198,218, 0.56)",
       bottomColor: "rgba(38,198,218, 0.04)",
@@ -63,20 +70,18 @@ const Graph = ({ metaverse }: Metaverse) => {
         bottom: 0,
       },
     });
-    let values = await getValuationDailyData(metaverse);
     console.log(values);
     values.forEach((data) => {
-
       areaSeries.update({
-        time: new Date(data.time)/1000,
+        time: new Date(data.time) / 1000,
         value: data.dailyVolume.ethPrediction,
       });
       volumeSeries.update({
-        time: new Date(data.time)/1000,
+        time: new Date(data.time) / 1000,
         value: data.floorPrice.ethPrediction,
       });
     });
-  });
+  }
 
   return <div id="metaverseGraph"></div>;
 };
