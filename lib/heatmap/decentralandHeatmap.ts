@@ -15,14 +15,14 @@ const provider = new ethers.providers.InfuraProvider(
 async function loadTiles() {
   const resp = await fetch('https://api.decentraland.org/v1/tiles')
   const json = await resp.json()
-  const SANDBOX_LANDS = 10000 //166404
+  const SANDBOX_LANDS = 1000
   const DECENTRALAND_LANDS = 90601
-  const totalLands = SANDBOX_LANDS // Decentraland & Axie: 90601 - Sandbox: 166404 -
+  const totalLands = DECENTRALAND_LANDS // Decentraland & Axie: 90601 - Sandbox: 166404 -
   atlas = json.data as Record<string, AtlasTile>
   await Promise.all(
     [...Array(Math.ceil(totalLands / 500))].map(async (_, i) => {
       const valuationRes = await fetch(
-        `https://services.itrmachines.com/sandbox/requestMap?from=${
+        `https://services.itrmachines.com/decentraland/requestMap?from=${
           i * 500
         }&size=500`
       )
@@ -33,22 +33,25 @@ async function loadTiles() {
       await Promise.all(
         Object.keys(valuations).map(async (key) => {
           const name = valuations[key].coords.x + ',' + valuations[key].coords.y
-          // const res = await fetch(`fetchSingleAsset/${Contracts.PARCEL.ETHEREUM_MAINNET.address}/${key}`)
-          // const currentPrice = getCurrentPrice(await res.json())
-          // const transfers = await getNftTransfersAmount(
-          //   provider,
-          //   Contracts.PARCEL.ETHEREUM_MAINNET.address,
-          //   key
+          // const res = await fetch(
+          //   `/api/fetchSingleAsset/${Contracts.PARCEL.ETHEREUM_MAINNET.address}/${key}`
           // )
+          // const currentPrice = getCurrentPrice(await res.json())
+          const transfers = await getNftTransfersAmount(
+            provider,
+            Contracts.PARCEL.ETHEREUM_MAINNET.address,
+            key
+          )
           valuationAtlas[name] = valuations[key]
           // valuationAtlas[name].current_price = currentPrice
-          // valuationAtlas[name].transfers = transfers
+          valuationAtlas[name].transfers = transfers
           // if (atlas) valuationAtlas[name].current_price = atlas[name].price
         })
       )
     })
   )
-  setColours(valuationAtlas)
+  setColours(valuationAtlas, 'transfers')
+  console.log({ valuationAtlas })
 }
 
 loadTiles().catch(console.error)
@@ -94,18 +97,18 @@ export const atlasLayer: Layer = (x, y) => {
   }
 }
 
-export const onSaleLayer: Layer = (x, y) => {
+export const onSaleLayer: Layer = (x, y, l) => {
   const id = x + ',' + y
-  if (atlas && id in valuationAtlas && id in atlas) {
+  if (atlas && id in valuationAtlas) {
     const color = getTileColor(valuationAtlas[id].percent)
-    const top = !!atlas[id].top
-    const left = !!atlas[id].left
-    const topLeft = !!atlas[id].topLeft
+    // const top = !!atlas[id].top
+    // const left = !!atlas[id].left
+    // const topLeft = !!atlas[id].topLeft
     return {
       color,
-      top,
-      left,
-      topLeft,
+      // top,
+      // left,
+      // topLeft,
     }
   }
   return null

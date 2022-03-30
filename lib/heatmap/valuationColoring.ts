@@ -11,15 +11,25 @@ export const getPercentage = (partialValue: number, totalValue: number) => {
   return parseInt(((partialValue * 100) / totalValue).toFixed(0))
 }
 
-export const setColours = (valuationAtlas: Record<string, ValuationTile>) => {
+export const setColours = (
+  valuationAtlas: Record<string, ValuationTile>,
+  element:
+    | 'eth_predicted_price'
+    | 'predicted_price'
+    | 'current_price'
+    | 'transfers'
+) => {
   console.log('setting colors')
   const predictions = Object.keys(valuationAtlas).map(
-    (valuation) => valuationAtlas[valuation].eth_predicted_price
+    (valuation) => valuationAtlas[valuation][element]
   )
-  const { max, average } = getAverage(predictions)
+
+  if (typeof predictions[0] !== 'number') return
+  const { max, average } = getAverage(predictions as number[])
+  console.log({ max })
   Object.keys(valuationAtlas).forEach((valuation) => {
     const percent = getPercentage(
-      valuationAtlas[valuation].eth_predicted_price,
+      valuationAtlas[valuation][element] as number,
       max
     )
     valuationAtlas[valuation] = {

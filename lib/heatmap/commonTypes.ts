@@ -3,7 +3,7 @@ export type Coord = {
   y: number
 }
 
-export type Layer = (x: number, y: number) => Tile | null
+export type Layer = (x: number, y: number, atlas?: any) => Tile | null
 
 export type Tile = {
   color: string
