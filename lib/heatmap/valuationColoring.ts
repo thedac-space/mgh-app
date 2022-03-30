@@ -12,6 +12,7 @@ export const getPercentage = (partialValue: number, totalValue: number) => {
 }
 
 export const setColours = (valuationAtlas: Record<string, ValuationTile>) => {
+  console.log('setting colors')
   const predictions = Object.keys(valuationAtlas).map(
     (valuation) => valuationAtlas[valuation].eth_predicted_price
   )
@@ -26,6 +27,7 @@ export const setColours = (valuationAtlas: Record<string, ValuationTile>) => {
       percent: percent,
     }
   })
+  console.log('colors set')
 }
 
 export const getTileColor = (percent: number) => {

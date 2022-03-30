@@ -15,14 +15,14 @@ const provider = new ethers.providers.InfuraProvider(
 async function loadTiles() {
   const resp = await fetch('https://api.decentraland.org/v1/tiles')
   const json = await resp.json()
-  const SANDBOX_LANDS = 166404
+  const SANDBOX_LANDS = 1000 //166404
   const DECENTRALAND_LANDS = 90601
   const totalLands = SANDBOX_LANDS // Decentraland & Axie: 90601 - Sandbox: 166404 -
   atlas = json.data as Record<string, AtlasTile>
   await Promise.all(
     [...Array(Math.ceil(totalLands / 500))].map(async (_, i) => {
       const valuationRes = await fetch(
-        `https://services.itrmachines.com/decentraland/requestMap?from=${
+        `https://services.itrmachines.com/sandbox/requestMap?from=${
           i * 500
         }&size=500`
       )
@@ -43,11 +43,12 @@ async function loadTiles() {
           valuationAtlas[name] = valuations[key]
           // valuationAtlas[name].current_price = currentPrice
           // valuationAtlas[name].transfers = transfers
-          if (atlas) valuationAtlas[name].current_price = atlas[name].price
+          // if (atlas) valuationAtlas[name].current_price = atlas[name].price
         })
       )
     })
   )
+  console.log({ valuationAtlas })
   setColours(valuationAtlas)
 }
 
@@ -96,11 +97,11 @@ export const atlasLayer: Layer = (x, y) => {
 
 export const onSaleLayer: Layer = (x, y) => {
   const id = x + ',' + y
-  if (atlas && id in valuationAtlas && id in atlas) {
+  if (atlas && id in valuationAtlas) {
     const color = getTileColor(valuationAtlas[id].percent)
-    const top = !!atlas[id].top
-    const left = !!atlas[id].left
-    const topLeft = !!atlas[id].topLeft
+    const top = !!atlas[id]?.top
+    const left = !!atlas[id]?.left
+    const topLeft = !!atlas[id]?.topLeft
     return {
       color,
       top,

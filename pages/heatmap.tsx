@@ -8,12 +8,19 @@ import { Metaverse } from '../lib/enums'
 import { Coord, Layer } from '../lib/heatmap/commonTypes'
 import { atlasLayer, onSaleLayer } from '../lib/heatmap/decentralandHeatmap'
 import { useVisible } from '../lib/hooks'
+import { formatMetaverseName } from '../lib/utilities'
 import { ICoinPrices } from '../lib/valuation/valuationTypes'
 
 const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
+  const metaverseOptions = {
+    decentraland: { layers: [atlasLayer, onSaleLayer] },
+    sandbox: { layers: [onSaleLayer] },
+    'axie-infinity': { layers: [onSaleLayer] },
+  }
   const [selected, setSelected] = useState<{ x: number; y: number }>()
   // Hook for Popup
   const { ref, isVisible, setIsVisible } = useVisible(false)
+  const [metaverse, setMetaverse] = useState<Metaverse>(Metaverse.DECENTRALAND)
 
   function isSelected(x: number, y: number) {
     return selected?.x === x && selected?.y === y
@@ -45,14 +52,20 @@ const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
     return () => window.removeEventListener('resize', resize)
   }, [])
   return (
-    <section ref={sectionRef} className='w-full h-full min-h-[85vh]'>
+    <section ref={sectionRef} className='w-full h-full min-h-[75vh]'>
+      <div className='flex'>
+        {Object.keys(metaverseOptions).map((mv) => (
+          <button key={mv} onClick={() => setMetaverse(mv as Metaverse)}>
+            {formatMetaverseName(mv)}
+          </button>
+        ))}
+      </div>
       <TileMap
         className='atlas'
         width={dims.width}
         height={dims.height}
         layers={[
-          atlasLayer,
-          onSaleLayer,
+          ...metaverseOptions[metaverse].layers,
           selectedStrokeLayer,
           selectedFillLayer,
         ]}
@@ -73,7 +86,7 @@ const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
           <Fade>
             <MapCard
               prices={prices}
-              metaverse={Metaverse.DECENTRALAND}
+              metaverse={metaverse}
               x={selected.x.toString()}
               y={selected.y.toString()}
             />
@@ -86,7 +99,7 @@ const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 
 export async function getServerSideProps() {
   const coin = await fetch(
-    'https://api.coingecko.com/api/v3/simple/price?ids=ethereum%2Cthe-sandbox%2Cdecentraland&vs_currencies=usd'
+    'https://api.coingecko.com/api/v3/simple/price?ids=ethereum%2Cthe-sandbox%2Cdecentraland%2Caxie-infinity&vs_currencies=usd'
   )
   const prices: ICoinPrices = await coin.json()
 

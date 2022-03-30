@@ -9,7 +9,6 @@ import { useVisible } from '../../lib/hooks'
 import { Metaverse } from '../../lib/enums'
 import {
   convertETHPrediction,
-  convertMANAPrediction,
   getLandData,
   handleTokenID,
 } from '../../lib/valuation/valuationUtils'
@@ -22,10 +21,6 @@ interface Props {
   prices: ICoinPrices
 }
 const MapCard = ({ x, y, metaverse, prices }: Props) => {
-  const landOptions = {
-    decentraland: { convert: convertMANAPrediction },
-    sandbox: { convert: convertETHPrediction },
-  }
   const mobile = window.innerWidth < 640
   const [apiData, setApiData] = useState<IAPIData>()
   const [cardState, setCardState] = useState<'loading' | 'loaded' | 'error'>(
@@ -49,23 +44,17 @@ const MapCard = ({ x, y, metaverse, prices }: Props) => {
         console.log(landData)
         return setCardState('error')
       }
-      const predictions = landOptions[metaverse].convert(
+      const predictions = convertETHPrediction(
         prices,
-        landData.prices.predicted_price
+        landData.prices.predicted_price,
+        metaverse
       )
       setApiData(landData)
       setPredictions(predictions)
       setCardState('loaded')
+      console.log(metaverse, landData, predictions)
     }
-    // Img sizes
-    const setSizes = () => {
-      const mobile = window.innerWidth < 640
-      const between = window.innerWidth < 700
-    }
-    window.addEventListener('resize', setSizes)
     setData()
-
-    return () => window.removeEventListener('resize', setSizes)
   }, [])
 
   return (
@@ -105,13 +94,14 @@ const MapCard = ({ x, y, metaverse, prices }: Props) => {
               </div>
               {/* External Links */}
               <nav className='flex flex-col md:gap-4 gap-[1.40rem]'>
-                <ExternalLink href={apiData.opensea_link} text='OpenSea' />
+                {apiData.opensea_link && (
+                  <ExternalLink href={apiData.opensea_link} text='OpenSea' />
+                )}
                 <ExternalLink
                   href={apiData.external_link}
                   text={
                     apiData.metaverse[0].toUpperCase() +
                     apiData.metaverse.substring(1)
-                    // 'hola'
                   }
                 />
               </nav>
@@ -120,7 +110,7 @@ const MapCard = ({ x, y, metaverse, prices }: Props) => {
           {/* /* RIGHT */}
           <div className='transition-all static bottom-1'>
             {/* Price List */}
-            <PriceList predictions={predictions} />
+            <PriceList metaverse={metaverse} predictions={predictions} />
             {/* Current Listing Price */}
             <p
             // className={`text-md text-left pt-2 relative left-1 ${
@@ -137,19 +127,6 @@ const MapCard = ({ x, y, metaverse, prices }: Props) => {
             // onClick={() => window.open(options.twitter.valuationLink)}
             className='absolute h-5 w-5 z-30 bottom-6 right-4 text-gray-200 hover:text-blue-400 transition ease-in-out duration-300 cursor-pointer'
           />
-          {/* Share Popup, commented out. Using Twitter only for now
-      <div className='contents' ref={ref}>
-        {showPopup && (
-          <Fade className='z-30 absolute -bottom-3 left-1/2 -translate-x-2/4'>
-            <SharePopup
-              apiData={apiData}
-              sharing='valuation'
-              predictions={predictions}
-              onPopupSelect={() => setIsVisible(false)}
-            />
-          </Fade>
-        )}
-          </div> */}
         </>
       )}
     </div>

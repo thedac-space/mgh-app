@@ -5,7 +5,7 @@ export type Viewport = {
   height: number
   nw: Coord
   se: Coord
-  area: number
+  area?: number
 }
 
 export function getViewport(args: {
