@@ -15,7 +15,7 @@ const provider = new ethers.providers.InfuraProvider(
 async function loadTiles() {
   const resp = await fetch('https://api.decentraland.org/v1/tiles')
   const json = await resp.json()
-  const SANDBOX_LANDS = 1000 //166404
+  const SANDBOX_LANDS = 10000 //166404
   const DECENTRALAND_LANDS = 90601
   const totalLands = SANDBOX_LANDS // Decentraland & Axie: 90601 - Sandbox: 166404 -
   atlas = json.data as Record<string, AtlasTile>
@@ -48,7 +48,6 @@ async function loadTiles() {
       )
     })
   )
-  console.log({ valuationAtlas })
   setColours(valuationAtlas)
 }
 
@@ -97,11 +96,11 @@ export const atlasLayer: Layer = (x, y) => {
 
 export const onSaleLayer: Layer = (x, y) => {
   const id = x + ',' + y
-  if (atlas && id in valuationAtlas) {
+  if (atlas && id in valuationAtlas && id in atlas) {
     const color = getTileColor(valuationAtlas[id].percent)
-    const top = !!atlas[id]?.top
-    const left = !!atlas[id]?.left
-    const topLeft = !!atlas[id]?.topLeft
+    const top = !!atlas[id].top
+    const left = !!atlas[id].left
+    const topLeft = !!atlas[id].topLeft
     return {
       color,
       top,
