@@ -4,14 +4,13 @@ import { createChart, isUTCTimestamp, UTCTimestamp } from "lightweight-charts";
 import { getValuationDailyData } from "../../lib/FirebaseUtilities";
 
 const Graph = ({ metaverse }: Metaverse) => {
-  var chart;
   useEffect(async () => {
-    chart = createChart(document.getElementById("metaverseGraph"), {
+    const chart = createChart(document.getElementById("metaverseGraph"), {
       width: 864,
       height: 197,
       localization: {
         timeFormatter: (time: UTCTimestamp) => {
-          var date = new Date(time);
+          const date = new Date(time*1000);
 
           return (
             date.getFullYear() +
@@ -46,14 +45,14 @@ const Graph = ({ metaverse }: Metaverse) => {
         },
       },
     });
-    var areaSeries = chart.addAreaSeries({
+    let areaSeries = chart.addAreaSeries({
       topColor: "rgba(38,198,218, 0.56)",
       bottomColor: "rgba(38,198,218, 0.04)",
       lineColor: "rgba(38,198,218, 1)",
       lineWidth: 2,
     });
 
-    var volumeSeries = chart.addHistogramSeries({
+    let volumeSeries = chart.addHistogramSeries({
       color: "#26a69a",
       priceFormat: {
         type: "volume",
@@ -64,48 +63,16 @@ const Graph = ({ metaverse }: Metaverse) => {
         bottom: 0,
       },
     });
-    var values = await getValuationDailyData(metaverse);
+    let values = await getValuationDailyData(metaverse);
     console.log(values);
     values.forEach((data) => {
-      var date = new Date(data.time);
-      console.log(
-        date.getFullYear() +
-          "-" +
-          (date.getMonth() + 1) +
-          "-" +
-          date.getDate() +
-          " " +
-          date.getHours() +
-          ":" +
-          date.getMinutes()
-      );
 
       areaSeries.update({
-        time: Date.parse(
-          date.getFullYear() +
-            "-" +
-            (date.getMonth() + 1) +
-            "-" +
-            date.getDate() +
-            " " +
-            date.getHours() +
-            ":" +
-            date.getMinutes()
-        ) as UTCTimestamp,
+        time: new Date(data.time)/1000,
         value: data.dailyVolume.ethPrediction,
       });
       volumeSeries.update({
-        time: Date.parse(
-          date.getFullYear() +
-            "-" +
-            (date.getMonth() + 1) +
-            "-" +
-            date.getDate() +
-            " " +
-            date.getHours() +
-            ":" +
-            date.getMinutes()
-        ) as UTCTimestamp,
+        time: new Date(data.time)/1000,
         value: data.floorPrice.ethPrediction,
       });
     });
