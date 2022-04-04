@@ -11,7 +11,9 @@ import {
 } from 'firebase/firestore/lite'
 import { Score } from '../components/Valuation/LandLikeBox'
 import { Metaverse } from './enums'
+import { ValuationTile } from './heatmap/commonTypes'
 import { mapLand } from './heatmap/heatmapTypes'
+import { typedKeys } from './utilities'
 
 // Firebase Init
 const firebaseConfig = {
@@ -166,4 +168,31 @@ export async function dislikeLand(
   await updateDoc(land, {
     likes: arrayRemove(address),
   })
+}
+
+// Heatmap
+export const addHeatmapData = async (
+  metaverse: Metaverse,
+  heatmap: Record<string, ValuationTile>,
+  time: number
+) => {
+  const keys = typedKeys(heatmap)
+  // LOOP ON KEYS
+  let indexedHeatmap: Record<string, ValuationTile> = {}
+  for (let i = 0; i < keys.length; i++) {
+    // MAKE OBJECTS CONTAINING ONLY 2000 OF THEM
+    indexedHeatmap[keys[i]] = heatmap[keys[i]]
+    if (i !== 0 && i % 2000 === 0) {
+      // PUSH THAT OBJECT WITH ITS INDEX TO FIREBASE
+      try {
+        console.log('setting Data', metaverse)
+        await setDoc(doc(db, 'heatmap-' + metaverse, time + '_' + i / 2000), {
+          indexedHeatmap,
+        })
+      } catch (e) {
+        console.log(e)
+      }
+      indexedHeatmap = {}
+    }
+  }
 }

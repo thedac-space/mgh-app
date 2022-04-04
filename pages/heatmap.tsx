@@ -61,20 +61,19 @@ const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   }, [])
   return (
     <section ref={sectionRef} className='w-full h-full min-h-[75vh] relative'>
-      {/* Metaverse Selection */}
-      <div className='flex'>
-        {typedKeys(metaverseOptions).map((mv) => (
-          <button key={mv} onClick={() => setMetaverse(mv as Metaverse)}>
-            {formatMetaverseName(mv)}
-          </button>
-        ))}
-      </div>
-
-      {/* Top left GUI */}
-      <div className='absolute top-0 left-0 z-20'>
+      <div className='absolute top-0 z-20 flex gap-4 p-2'>
+        {/* Top left GUI */}
         {hovered && (
           <MapLandSummary coordinates={hovered} metaverse={metaverse} />
         )}
+        {/* Metaverse Selection */}
+        <div className='flex gray-box bg-opacity-100'>
+          {typedKeys(metaverseOptions).map((mv) => (
+            <button key={mv} onClick={() => setMetaverse(mv as Metaverse)}>
+              {formatMetaverseName(mv)}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Map */}
