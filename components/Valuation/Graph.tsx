@@ -6,7 +6,7 @@ import { getValuationDailyData } from "../../lib/FirebaseUtilities";
 const Graph = ({ metaverse }: Metaverse) => {
   const metaverseGraph = useRef<HTMLDivElement>(null);
   const [values, setValues] = useState([]);
-  const [symbol, setSymbol] = useState<"ETH" | "USDC" | "SAND">("ETH");
+  const [symbol, setSymbol] = useState<"ETH" | "USDC" | "Metaverse">("ETH");
 
   useEffect(() => {
     (async () => setValues(await getValuationDailyData(metaverse)))();
@@ -16,22 +16,10 @@ const Graph = ({ metaverse }: Metaverse) => {
     const chart = createChart(metaverseGraph?.current!, {
       width: metaverseGraph?.current!.clientWidth,
       height: 197,
-      localization: {
-        timeFormatter: (time: UTCTimestamp) => {
-          const date = new Date(time * 1000);
-
-          return (
-            date.getFullYear() +
-            "-" +
-            (date.getMonth() + 1) +
-            "-" +
-            date.getDate() +
-            " " +
-            date.getHours() +
-            ":" +
-            date.getMinutes()
-          );
-        },
+      timeScale: {
+        fixLeftEdge: true,
+        fixRightEdge: true,
+        timeVisible: true,
       },
       rightPriceScale: {
         scaleMargins: {
@@ -110,19 +98,20 @@ const Graph = ({ metaverse }: Metaverse) => {
     <div className="max-w-full h-full relative" ref={metaverseGraph}>
       <div className="absolute top-1 left-1 z-10 flex gap-2">
         <button
-          className="gray-box font-semibold rounded-lg p-2 text-xs text-gray-400 hover:text-gray-300 hover:bg-opacity-80"
+          className={"gray-box font-semibold  rounded-lg p-2 text-xs text-gray-400"+(symbol==="ETH"?" text-gray-300 bg-opacity-80 ":" hover:text-gray-300 hover:bg-opacity-80")}
           onClick={() => setSymbol("ETH")}
         >
           ETH
+          
         </button>
         <button
-          className="gray-box font-semibold rounded-lg p-2 text-xs text-gray-400 hover:text-gray-300 hover:bg-opacity-80"
+          className={"gray-box font-semibold rounded-lg p-2 text-xs text-gray-400"+(symbol==="USDC"?" text-gray-300 bg-opacity-80 ":" hover:text-gray-300 hover:bg-opacity-80")}
           onClick={() => setSymbol("USDC")}
         >
           USDC
         </button>
         <button
-          className="gray-box font-semibold rounded-lg p-2 text-xs text-gray-400 hover:text-gray-300 hover:bg-opacity-80"
+          className={"gray-box font-semibold rounded-lg p-2 text-xs text-gray-400"+(symbol==="Metaverse"?" text-gray-300 bg-opacity-80 ":" hover:text-gray-300 hover:bg-opacity-80")}
           onClick={() => setSymbol("Metaverse")}
         >
           {metaverse==="sandbox" && "SAND"||metaverse==="decentraland" && "MANA"||metaverse==="axie-infinity" && "AXS"}
