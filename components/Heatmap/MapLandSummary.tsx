@@ -10,12 +10,16 @@ interface Props {
 
 const MapLandSummary = ({ coordinates, metaverse }: Props) => {
   return (
-    <div className='gray-box bg-opacity-100'>
+    <div className='gray-box bg-opacity-100 h-16 w-fit'>
       {/* {handleLandName(metaverse, coordinates)} */}
-      <div className='flex gap-4'>
+      <div className='flex gap-4 w-30'>
         {typedKeys(coordinates).map((coord) => (
-          <span key={coord} className='text-white font-semibold'>
-            {coord.toUpperCase()}: {coordinates[coord]}
+          <span
+            key={coord}
+            className='text-white font-semibold whitespace-nowrap'
+          >
+            {coord.toUpperCase()}:{' '}
+            {isNaN(coordinates[coord]) ? 'xx' : coordinates[coord]}
           </span>
         ))}
       </div>
