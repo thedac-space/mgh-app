@@ -46,10 +46,12 @@ const Graph = ({ metaverse }: Metaverse) => {
       bottomColor: "rgba(38,198,218, 0.04)",
       lineColor: "rgba(38,198,218, 1)",
       lineWidth: 2,
+      title:"Daily Volume"
     });
 
     const volumeSeries = chart.addHistogramSeries({
       color: "#26a69a",
+      title:"Floor Price",
       priceFormat: {
         type: "volume",
       },
