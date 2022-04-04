@@ -2,8 +2,9 @@ import { supportedChains } from './chains'
 import { stakingPools } from './pools'
 import { IChainData, IPoolData } from './types'
 
-
-export function getChainData(chainId: number | undefined): IChainData | undefined {
+export function getChainData(
+  chainId: number | undefined
+): IChainData | undefined {
   if (!chainId) {
     return
   }
@@ -23,21 +24,31 @@ export function ellipseAddress(address = '', width = 5): string {
 }
 
 export function getPoolData(poolId: number | undefined): IPoolData {
-
-  const poolData = stakingPools.filter(
-    (pool) => pool.id === poolId
-  )[0]
+  const poolData = stakingPools.filter((pool) => pool.id === poolId)[0]
 
   return poolData
 }
 
-export const formatMetaverseName = (metaverseName: string, uppercase?: boolean) => {
-   const nameArray = metaverseName.split('-')
-   const formattedName = nameArray
-     .map((word, i) => {
-       if (uppercase) return word.toUpperCase()
-       return word[0].toUpperCase() + word.substring(1)
-     })
-     .join(' ')
-   return formattedName
- }
+export const formatMetaverseName = (
+  metaverseName: string,
+  uppercase?: boolean
+) => {
+  const nameArray = metaverseName.split('-')
+  const formattedName = nameArray
+    .map((word, i) => {
+      if (uppercase) return word.toUpperCase()
+      return word[0].toUpperCase() + word.substring(1)
+    })
+    .join(' ')
+  return formattedName
+}
+
+export const getState = (state: string, stateOptions: string[]) => {
+  return stateOptions.map((option) => state === option)
+}
+
+export function typedKeys<O extends object, K extends keyof O = keyof O>(
+  obj: O
+): K[] {
+  return Object.keys(obj) as K[]
+}

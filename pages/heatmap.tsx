@@ -3,12 +3,13 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Fade } from 'react-awesome-reveal'
 import { HorizontalPriceCard } from '../components/General'
 import MapCard from '../components/Heatmap/MapCard'
+import MapLandSummary from '../components/Heatmap/MapLandSummary'
 import { TileMap } from '../components/Heatmap/TileMap'
 import { Metaverse } from '../lib/enums'
 import { Coord, Layer } from '../lib/heatmap/commonTypes'
 import { atlasLayer, onSaleLayer } from '../lib/heatmap/decentralandHeatmap'
 import { useVisible } from '../lib/hooks'
-import { formatMetaverseName } from '../lib/utilities'
+import { formatMetaverseName, typedKeys } from '../lib/utilities'
 import { ICoinPrices } from '../lib/valuation/valuationTypes'
 
 const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
@@ -18,6 +19,7 @@ const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
     'axie-infinity': { layers: [onSaleLayer] },
   }
   const [selected, setSelected] = useState<{ x: number; y: number }>()
+  const [hovered, setHovered] = useState<{ x: number; y: number }>()
   // Hook for Popup
   const { ref, isVisible, setIsVisible } = useVisible(false)
   const [metaverse, setMetaverse] = useState<Metaverse>(Metaverse.DECENTRALAND)
@@ -27,6 +29,12 @@ const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   }
   const selectedStrokeLayer: Layer = (x, y) => {
     return isSelected(x, y) ? { color: '#ff0044', scale: 1.4 } : null
+  }
+
+  const hoverLayer: Layer = (x, y) => {
+    return hovered?.x === x && hovered?.y === y
+      ? { color: '#db2777', scale: 1.4 }
+      : null
   }
 
   const selectedFillLayer: Layer = (x, y) => {
@@ -52,14 +60,24 @@ const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
     return () => window.removeEventListener('resize', resize)
   }, [])
   return (
-    <section ref={sectionRef} className='w-full h-full min-h-[75vh]'>
+    <section ref={sectionRef} className='w-full h-full min-h-[75vh] relative'>
+      {/* Metaverse Selection */}
       <div className='flex'>
-        {Object.keys(metaverseOptions).map((mv) => (
+        {typedKeys(metaverseOptions).map((mv) => (
           <button key={mv} onClick={() => setMetaverse(mv as Metaverse)}>
             {formatMetaverseName(mv)}
           </button>
         ))}
       </div>
+
+      {/* Top left GUI */}
+      <div className='absolute top-0 left-0 z-20'>
+        {hovered && (
+          <MapLandSummary coordinates={hovered} metaverse={metaverse} />
+        )}
+      </div>
+
+      {/* Map */}
       <TileMap
         className='atlas'
         width={dims.width}
@@ -68,16 +86,21 @@ const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
           ...metaverseOptions[metaverse].layers,
           selectedStrokeLayer,
           selectedFillLayer,
+          hoverLayer,
         ]}
+        onHover={(x, y) => {
+          setHovered({ x, y })
+        }}
         onClick={(x, y) => {
           if (isSelected(x, y)) {
             setSelected(undefined)
           } else {
-            setSelected({ x: x, y: y })
+            setSelected({ x, y })
             setIsVisible(true)
           }
         }}
       />
+      {/* Predictions Card */}
       {selected && isVisible && (
         <div
           ref={ref}

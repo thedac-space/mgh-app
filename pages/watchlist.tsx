@@ -24,7 +24,7 @@ import {
 import { useAppSelector } from '../state/hooks'
 import { Contracts } from '../lib/contracts'
 import { Fade } from 'react-awesome-reveal'
-import { formatMetaverseName } from '../lib/utilities'
+import { formatMetaverseName, typedKeys } from '../lib/utilities'
 
 export type WatchListState =
   | 'loadingFirst'
@@ -88,7 +88,7 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 
   const axieContract = Contracts.AXIE_LANDS.RONIN_MAINNET.address
   // Creating Array for looping through Metaverses Options
-  const landKeys = Object.keys(landOptions) as LandsKey[]
+  const landKeys = typedKeys(landOptions)
 
   const addToWatchList = async (
     metaverse: Metaverse,
