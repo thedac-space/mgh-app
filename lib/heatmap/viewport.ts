@@ -1,4 +1,4 @@
-import { Coord } from './commonTypes'
+import { Coord } from './heatmapCommonTypes'
 
 export type Viewport = {
   width: number

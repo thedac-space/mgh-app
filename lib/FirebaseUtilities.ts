@@ -11,7 +11,7 @@ import {
 } from 'firebase/firestore/lite'
 import { Score } from '../components/Valuation/LandLikeBox'
 import { Metaverse } from './enums'
-import { ValuationTile } from './heatmap/commonTypes'
+import { ValuationTile } from './heatmap/heatmapCommonTypes'
 import { mapLand } from './heatmap/heatmapTypes'
 import { typedKeys } from './utilities'
 
@@ -186,9 +186,12 @@ export const addHeatmapData = async (
       // PUSH THAT OBJECT WITH ITS INDEX TO FIREBASE
       try {
         console.log('setting Data', metaverse)
-        await setDoc(doc(db, 'heatmap-' + metaverse, time + '_' + i / 2000), {
-          indexedHeatmap,
-        })
+        await setDoc(
+          doc(db, 'heatmap-' + metaverse, metaverse + '_' + i / 2000),
+          {
+            indexedHeatmap,
+          }
+        )
       } catch (e) {
         console.log(e)
       }

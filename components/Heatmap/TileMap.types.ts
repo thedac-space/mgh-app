@@ -1,7 +1,16 @@
-import { Coord, Layer } from '../../lib/heatmap/commonTypes'
+import {
+  Coord,
+  Layer,
+  MapFilter,
+  ValuationTile,
+} from '../../lib/heatmap/heatmapCommonTypes'
 import { Viewport } from '../../lib/heatmap/viewport'
 
 export type Props = {
+  /** Atlas to render on map */
+  atlas: Record<string, ValuationTile>
+  /** Atlas to render on map */
+  filter: MapFilter
   /** layer to render on the map */
   layers: Layer[]
   /** custom class name */
@@ -87,4 +96,6 @@ export type MapRenderer = (args: {
   se: Coord
   center: Coord
   layers: Layer[]
+  atlas: Record<string, ValuationTile>
+  filter: MapFilter
 }) => void

@@ -1,15 +1,15 @@
 import { typedKeys } from '../utilities'
-import { ValuationTile } from './commonTypes'
+import { MapFilter, ValuationTile } from './heatmapCommonTypes'
 
-export const getAverage = (array: (number | undefined)[]) => {
+export const getAvgAndMax = (array: (number | undefined)[]) => {
   console.log('filtering')
   const filteredArray = array.filter((e) => typeof e === 'number') as number[]
   console.log('getting max')
   const max = Math.max(...filteredArray.sort((a, b) => a + b).slice(1))
   console.log('summing')
-  const sum = filteredArray.reduce((prev, current) => prev + current)
-  const average = sum / array.length
-  return { max, average }
+  // const sum = filteredArray.reduce((prev, current) => prev + current)
+  // const average = sum / array.length
+  return max
 }
 
 export const getPercentage = (
@@ -22,22 +22,31 @@ export const getPercentage = (
 
 export const setColours = async (
   valuationAtlas: Record<string, ValuationTile>,
-  element:
-    | 'eth_predicted_price'
-    | 'predicted_price'
-    | 'current_price'
-    | 'transfers'
+  element: MapFilter
 ) => {
   console.log('setting colors')
-  const predictions = typedKeys(valuationAtlas).map(
-    (valuation) => valuationAtlas[valuation][element]
-  )
+  let predictions: (number | undefined)[]
+  if (element === 'transfers') {
+    predictions = typedKeys(valuationAtlas).map(
+      (valuation) => valuationAtlas[valuation].history?.length
+    )
+  } else {
+    predictions = typedKeys(valuationAtlas).map(
+      (valuation) => valuationAtlas[valuation][element]
+    )
+  }
+  let max = NaN
 
-  const { max, average } = getAverage(predictions)
+  max = getAvgAndMax(predictions)
   console.log({ max })
   await Promise.all(
     typedKeys(valuationAtlas).map((valuation) => {
-      const percent = getPercentage(valuationAtlas[valuation][element], max)
+      let percent = NaN
+      if (element === 'transfers') {
+        percent = getPercentage(valuationAtlas[valuation].history?.length, max)
+      } else {
+        percent = getPercentage(valuationAtlas[valuation][element], max)
+      }
       valuationAtlas[valuation] = {
         ...valuationAtlas[valuation],
         percent: percent,
@@ -50,6 +59,7 @@ export const setColours = async (
 const between = (x: number, max: number, min: number) => {
   return x >= min && x <= max
 }
+
 export const getTileColor = (percent: number) => {
   if (between(percent, 100, 20)) return 'rgb(255,0,0)'
   if (between(percent, 19, 15)) return 'rgb(255,137,0)'
