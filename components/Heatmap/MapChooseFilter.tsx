@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
 import { Fade } from 'react-awesome-reveal'
+import { BiTargetLock, BiTransferAlt } from 'react-icons/bi'
 import { IoIosArrowDown } from 'react-icons/io'
+import { MdAttachMoney, MdOutlineLocalOffer } from 'react-icons/md'
+import { VscGraphLine } from 'react-icons/vsc'
 import { MapFilter } from '../../lib/heatmap/commonTypes'
 import { typedKeys } from '../../lib/utilities'
 
@@ -12,13 +15,16 @@ interface Props {
 const MapChooseFilter = ({ filterBy, setFilterBy }: Props) => {
   const [opened, setOpened] = useState(false)
   const filterOptions = {
-    transfers: { name: 'Transfers' },
-    currentPrice: { name: 'Current Price' },
-    priceVariWeek: { name: 'Weekly Price Variation' },
-    priceVariMonth: { name: 'Monthly Price Variation' },
-    priceVariSemester: { name: 'Semester Price Variation' },
-    predictionPrice: { name: 'Predicted Price' },
-    priceDiff: { name: 'Best Offers' },
+    transfers: { name: 'Transfers', icon: <BiTransferAlt /> },
+    currentPrice: { name: 'Current Price', icon: <MdAttachMoney /> },
+    priceVariWeek: { name: 'Weekly Price Variation', icon: <VscGraphLine /> },
+    priceVariMonth: { name: 'Monthly Price Variation', icon: <VscGraphLine /> },
+    priceVariSemester: {
+      name: 'Semestral Price Variation',
+      icon: <VscGraphLine />,
+    },
+    predictionPrice: { name: 'Predicted Price', icon: <BiTargetLock /> },
+    priceDiff: { name: 'Best Offers', icon: <MdOutlineLocalOffer /> },
   }
   return (
     <div>
@@ -26,6 +32,8 @@ const MapChooseFilter = ({ filterBy, setFilterBy }: Props) => {
         onClick={() => setOpened(!opened)}
         className='h-16 gray-box bg-opacity-100 mb-2 items-center w-56 tracking-wider font-semibold text-gray-200 hover:text-white flex justify-between cursor-pointer transition-all'
       >
+        {' '}
+        {filterOptions[filterBy].icon}
         <span>{filterOptions[filterBy].name}</span>
         <IoIosArrowDown
           className={
@@ -52,6 +60,7 @@ const MapChooseFilter = ({ filterBy, setFilterBy }: Props) => {
                       width={25}
                       src={filterOptions[filter].src}
                     /> */}
+                    {filterOptions[filter].icon}
                     <span>{filterOptions[filter].name}</span>
                   </button>
                 </Fade>
