@@ -22,6 +22,7 @@ import { filteredLayer } from '../lib/heatmap/heatmapLayers'
 import { fetchAtlas } from '../lib/heatmap/fetchAtlas'
 import { Loader } from '../components'
 import { setColours } from '../lib/heatmap/valuationColoring'
+import HeatmapLoader from '../components/Heatmap/HeatmapLoader'
 
 const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   const [mapState, setMapState] = useState<'loading' | 'loaded' | 'error'>(
@@ -32,11 +33,7 @@ const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
     'loaded',
     'error',
   ])
-  const metaverseOptions = {
-    decentraland: { baseLayer: [atlasLayer] },
-    sandbox: { baseLayer: [onSaleLayer] },
-    'axie-infinity': { baseLayer: [onSaleLayer] },
-  }
+
   const [selected, setSelected] = useState<{ x: number; y: number }>()
   const [hovered, setHovered] = useState<{ x: number; y: number }>({
     x: NaN,
@@ -46,7 +43,8 @@ const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   const { ref, isVisible, setIsVisible } = useVisible(false)
   const [metaverse, setMetaverse] = useState<Metaverse>(Metaverse.DECENTRALAND)
   const [filterBy, setFilterBy] = useState<MapFilter>('eth_predicted_price')
-  const [atlas, setAtlas] = useState<Record<string, ValuationTile>>()
+  const [atlas, setAtlas] = useState<Record<string, ValuationTile>>({})
+  const [landsLoaded, setLandsLoaded] = useState<number>(0)
 
   function isSelected(x: number, y: number) {
     return selected?.x === x && selected?.y === y
@@ -82,8 +80,9 @@ const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   useEffect(() => {
     console.log('hola')
     const setData = async () => {
+      setLandsLoaded(0)
       setMapState('loading')
-      const mv = await fetchAtlas(metaverse)
+      const mv = await fetchAtlas(metaverse, setLandsLoaded)
       const atlasWithColours = await setColours(mv, filterBy)
       setAtlas(atlasWithColours)
       setMapState('loaded')
@@ -95,6 +94,7 @@ const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
     return () => window.removeEventListener('resize', resize)
   }, [metaverse])
 
+  // Use Effect for changing filters
   useEffect(() => {
     if (!atlas) return
     const changeColours = async () => {
@@ -113,7 +113,9 @@ const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
         {/* Metaverse Selection */}
         <MapChooseFilter filterBy={filterBy} setFilterBy={setFilterBy} />
       </div>
-      {loading && <Loader />}
+      {loading && (
+        <HeatmapLoader landsLoaded={landsLoaded} metaverse={metaverse} />
+      )}
       {/* Map */}
       {atlas && loaded && (
         <TileMap

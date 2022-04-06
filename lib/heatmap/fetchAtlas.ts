@@ -2,26 +2,15 @@ import { Contracts } from '../contracts'
 import { Metaverse } from '../enums'
 import { typedKeys } from '../utilities'
 import { ValuationTile } from './heatmapCommonTypes'
+import { heatmapMvOptions } from './heatmapMvOptions'
 
-export const fetchAtlas = async (metaverse: Metaverse) => {
-  const mvOptions: Record<Metaverse, { lands: number }> = {
-    sandbox: {
-      lands: 166604,
-    },
-    decentraland: {
-      lands: 90601,
-    },
-    'axie-infinity': { lands: 90601 },
-  }
+export const fetchAtlas = async (
+  metaverse: Metaverse,
+  setLandsLoaded: React.Dispatch<React.SetStateAction<number>>
+) => {
   const valuationAtlas: Record<string, ValuationTile> = {}
-  // Getting all lands and dividing by 500 to make requests
-  // for (
-  //   let i = 0;
-  //   i <= [...Array(Math.ceil(mvOptions[metaverse].lands / 500))].length;
-  //   i++
-  // )
   await Promise.all(
-    [...Array(Math.ceil(mvOptions[metaverse].lands / 500))].map(
+    [...Array(Math.ceil(heatmapMvOptions[metaverse].lands / 500))].map(
       async (_, i) => {
         console.log('fetching', i * 500)
         // 500 lands each time
@@ -49,6 +38,7 @@ export const fetchAtlas = async (metaverse: Metaverse) => {
         } catch (e) {
           console.log('error', e)
         }
+        setLandsLoaded((prev) => prev + 500)
       }
     )
   )
