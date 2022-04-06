@@ -112,6 +112,7 @@ const FloorAndVolumeChart = ({ metaverse }: { metaverse: Metaverse }) => {
       <div className='absolute top-1 left-1 z-10 flex gap-2'>
         {typedKeys(symbolOptions).map((arrSymbol) => (
           <button
+          key={arrSymbol}
             className={
               'gray-box font-semibold  rounded-lg p-2 text-xs text-gray-400' +
               (symbol === arrSymbol
