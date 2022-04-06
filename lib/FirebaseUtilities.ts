@@ -155,7 +155,7 @@ export async function dislikeLand(
 
 // Retrieve valuation daily data
 export async function getValuationDailyData(metaverse: Metaverse) {
-  var valuesDoc = doc(db, "valuationGraphs", metaverse);
-  var values = (await getDoc(valuesDoc)).data().values;
+  const valuesDoc = doc(db, "valuationGraphs", metaverse);
+  const values = (await getDoc(valuesDoc)).data().values;
   return values;
 }

@@ -17,7 +17,7 @@ import {
 } from "../lib/valuation/valuationUtils";
 import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
-const Graph = dynamic(() => import("../components/Valuation/Graph"), {
+const FloorAndVolumeChart = dynamic(() => import("../components/Valuation/FloorAndVolumeChart"), {
     ssr: false
   });
   
@@ -381,7 +381,7 @@ const ValuationPage: NextPage = ({ prices }: any) => {
         </div>
         {/*Graph*/}
         <div className="flex flex-col shadow-blck rounded-xl py-3 px-4 w-full bg-grey-dark bg-opacity-20 ">
-          <Graph metaverse={metaverse} />
+          <FloorAndVolumeChart metaverse={metaverse} />
         </div>
         <div className="flex flex-col items-start shadow-blck rounded-xl py-3 px-4 w-full bg-grey-dark bg-opacity-20 text-left">
           <p className={`text-xs sm:text-sm text-gray-400`}>
