@@ -4,6 +4,9 @@ import { getTileColor } from './valuationColoring'
 export const filteredLayer: Layer = (x, y, atlas) => {
   const id = x + ',' + y
   if (!atlas.ITRM || !(id in atlas.ITRM)) return null
+  /** This second Statement checks that in Decentraland
+   * the land is an actual land and not a Road, Plaza, etc...
+   */
   if (
     atlas.decentraland &&
     (!(id in atlas.decentraland) ||
