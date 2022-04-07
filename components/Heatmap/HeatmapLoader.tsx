@@ -1,6 +1,5 @@
 import React from 'react'
 import { Metaverse } from '../../lib/enums'
-import { ValuationTile } from '../../lib/heatmap/heatmapCommonTypes'
 import { heatmapMvOptions } from '../../lib/heatmap/heatmapMvOptions'
 import ProgressBar from '../General/ProgressBar'
 import Loader from '../Loader'
