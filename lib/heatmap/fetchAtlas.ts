@@ -1,4 +1,3 @@
-import { Contracts } from '../contracts'
 import { Metaverse } from '../enums'
 import { typedKeys } from '../utilities'
 import { AtlasTile, ValuationTile } from './heatmapCommonTypes'
@@ -12,7 +11,6 @@ export const fetchITRMAtlas = async (
   await Promise.all(
     [...Array(Math.ceil(heatmapMvOptions[metaverse].lands / 500))].map(
       async (_, i) => {
-        console.log('fetching', i * 500)
         // 500 lands each time
         try {
           // Getting valuations from ITRM
@@ -38,14 +36,15 @@ export const fetchITRMAtlas = async (
         } catch (e) {
           console.log('error', e)
         }
-        setLandsLoaded((prev) => prev + 500)
+        setLandsLoaded((prev) =>
+          heatmapMvOptions[metaverse].lands < prev + 500
+            ? heatmapMvOptions[metaverse].lands
+            : prev + 500
+        )
       }
     )
   )
-  console.log('done!!')
-  console.log(valuationAtlas)
   return valuationAtlas
-  // await setColours(valuationAtlas, 'predicted_price')
 }
 
 export const fetchDecentralandAtlas = async () => {

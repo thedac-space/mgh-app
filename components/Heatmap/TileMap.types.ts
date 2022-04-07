@@ -10,7 +10,7 @@ import { Viewport } from '../../lib/heatmap/viewport'
 export type Props = {
   /** Atlas to render on map */
   atlas: Atlas
-  /** Atlas to render on map */
+  /** Filters to render on map */
   filter: MapFilter
   /** layer to render on the map */
   layers: Layer[]

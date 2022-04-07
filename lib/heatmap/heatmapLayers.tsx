@@ -1,4 +1,4 @@
-import { AtlasTile, Layer } from './heatmapCommonTypes'
+import { Layer } from './heatmapCommonTypes'
 import { getTileColor } from './valuationColoring'
 
 export const filteredLayer: Layer = (x, y, atlas) => {

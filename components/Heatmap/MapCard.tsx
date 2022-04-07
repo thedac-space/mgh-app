@@ -3,10 +3,8 @@ import { RiLoader3Fill } from 'react-icons/ri'
 import { ExternalLink, OptimizedImage, PriceList } from '../General'
 import { IAPIData, IPredictions } from '../../lib/types'
 import { FiExternalLink } from 'react-icons/fi'
-import { ICoinPrices, IPriceCard } from '../../lib/valuation/valuationTypes'
+import { ICoinPrices } from '../../lib/valuation/valuationTypes'
 import React from 'react'
-import { FaTrash } from 'react-icons/fa'
-import { useVisible } from '../../lib/hooks'
 import { Metaverse } from '../../lib/enums'
 import {
   convertETHPrediction,
@@ -14,16 +12,14 @@ import {
   getCurrentPrice,
   getLandData,
   handleLandName,
-  handleTokenID,
 } from '../../lib/valuation/valuationUtils'
 import { BsTwitter } from 'react-icons/bs'
-import { SocialMediaOptions } from '../../lib/socialMediaOptions'
 import Loader from '../Loader'
 import { formatMetaverseName, getState } from '../../lib/utilities'
 import { Contracts } from '../../lib/contracts'
 interface Props {
-  x: string
-  y: string
+  x: number | undefined
+  y: number | undefined
   metaverse: Metaverse
   prices: ICoinPrices
 }
@@ -45,14 +41,11 @@ const MapCard = ({ x, y, metaverse, prices }: Props) => {
     'loaded',
     'error',
   ])
-  const mobile = window.innerWidth < 640
   const notListed = isNaN(currentPrice)
-
-  // SocialMediaOptions contains all options with their texts, icons, etc..
-  // const options = SocialMediaOptions(apiData, predictions)
 
   useEffect(() => {
     const setData = async () => {
+      if (!x || !y) return setCardState('error')
       setCardState('loading')
       const landData = await getLandData(metaverse, undefined, { X: x, Y: y })
 
@@ -92,11 +85,20 @@ const MapCard = ({ x, y, metaverse, prices }: Props) => {
     }
     setData()
   }, [])
-  return (
+  return error || !x || !y ? (
+    <div className='gray-box bg-opacity-100'>
+      <p className='text-lg font-semibold text-center text-gray-200'>
+        No a Valid Land or not enough Data yet!
+      </p>
+    </div>
+  ) : (
     <div className='gray-box p-4 flex flex-col cursor-pointer text-white items-start justify-between gap-4 bg-opacity-100 md:min-h-[362px] md:min-w-[359px] relative'>
       {loading ? (
-        <div className='absolute top-2/4 left-2/4 -translate-x-2/4 -translate-y-2/4'>
+        <div className='w-full flex flex-col gap-10 absolute top-2/4 left-2/4 -translate-x-2/4 -translate-y-2/4'>
           <Loader />
+          <p className='text-lg font-semibold text-center text-gray-200'>
+            Calculating {handleLandName(metaverse, { x: x, y: y })}
+          </p>
         </div>
       ) : (
         loaded &&
@@ -123,8 +125,8 @@ const MapCard = ({ x, y, metaverse, prices }: Props) => {
                 <div>
                   <h3 className='text-base font-normal md:text-2xl p-0 leading-4'>
                     {handleLandName(metaverse, {
-                      x: parseInt(x),
-                      y: parseInt(y),
+                      x: x,
+                      y: y,
                     })}
                   </h3>
                   <p className='text-gray-400'>
@@ -176,7 +178,6 @@ const MapCard = ({ x, y, metaverse, prices }: Props) => {
             </div>
             <BsTwitter
               title='Share Valuation'
-              // onClick={() => window.open(options.twitter.valuationLink)}
               className='absolute h-5 w-5 z-30 bottom-6 right-4 text-gray-200 hover:text-blue-400 transition ease-in-out duration-300 cursor-pointer'
             />
           </>
