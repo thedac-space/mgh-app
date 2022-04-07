@@ -22,7 +22,7 @@ export const convertETHPrediction = (
 export const getLandData = async (
   metaverse: Metaverse,
   tokenID?: string,
-  coordinates?: { X: string; Y: string }
+  coordinates?: { X: string | number; Y: string | number }
 ) => {
   try {
     const predictionRes = await fetch('/api/getLandData', {
@@ -81,7 +81,7 @@ export const handleTokenID = (tokenID: string) => {
 // Formatting Land Name if its too long or missing (Custom land names in decentraland..)
 export const handleLandName = (
   metaverse: Metaverse,
-  coords: { x: number; y: number },
+  coords: { x: number | string; y: number | string },
   landName?: string
 ) => {
   const options = {
