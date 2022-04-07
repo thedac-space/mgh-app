@@ -171,7 +171,7 @@ const MapCard = ({ x, y, metaverse, prices }: Props) => {
               >
                 {isNaN(currentPrice)
                   ? 'Not Listed'
-                  : `Listed: ${currentPrice} USDC`}
+                  : `Listed: ${currentPrice.toFixed(2)} USDC`}
               </p>
             </div>
             <BsTwitter
