@@ -65,3 +65,12 @@ export type MapFilter =
 // | 'priceVariWeek'
 // | 'priceVariMonth'
 // | 'priceVariSemester'
+
+export type HeatmapSize = {
+  maxX: number
+  maxY: number
+  minX: number
+  minY: number
+  initialY: number
+  initialX: number
+}

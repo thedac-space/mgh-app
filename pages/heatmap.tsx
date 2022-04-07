@@ -10,6 +10,7 @@ import { Metaverse } from '../lib/enums'
 import {
   Atlas,
   AtlasTile,
+  HeatmapSize,
   Layer,
   MapFilter,
 } from '../lib/heatmap/heatmapCommonTypes'
@@ -26,6 +27,7 @@ import {
 } from '../lib/heatmap/fetchAtlas'
 import { setColours } from '../lib/heatmap/valuationColoring'
 import HeatmapLoader from '../components/Heatmap/HeatmapLoader'
+import { getHeatmapSize } from '../lib/heatmap/getHeatmapSize'
 
 const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   const [mapState, setMapState] = useState<'loading' | 'loaded' | 'error'>(
@@ -48,6 +50,7 @@ const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   const [filterBy, setFilterBy] = useState<MapFilter>('eth_predicted_price')
   const [atlas, setAtlas] = useState<Atlas>()
   const [landsLoaded, setLandsLoaded] = useState<number>(0)
+  const [heatmapSize, setHeatmapSize] = useState<HeatmapSize>()
 
   function isSelected(x: number, y: number) {
     return selected?.x === x && selected?.y === y
@@ -79,20 +82,37 @@ const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
     })
   }
 
+  const handleMapClick = (x: number, y: number) => {
+    const id = x + ',' + y
+    if (
+      !atlas?.ITRM ||
+      !(id in atlas.ITRM) ||
+      (atlas.decentraland &&
+        (!(id in atlas.decentraland) ||
+          [5, 6, 7, 8, 12].includes(atlas.decentraland[id].type)))
+    ) {
+      setSelected(undefined)
+      setIsVisible(true)
+      return setTimeout(() => setIsVisible(false), 1100)
+    }
+    setSelected({ x: x, y: y })
+    setIsVisible(true)
+  }
+
   // Use Effect for Metaverse Fetching and Map creation
   useEffect(() => {
-    // setLayers([])
     const setData = async () => {
       setLandsLoaded(0)
       setMapState('loading')
       const ITRMAtlas = await fetchITRMAtlas(metaverse, setLandsLoaded)
       let decentralandAtlas: Record<string, AtlasTile> | undefined
-
       if (metaverse === 'decentraland') {
         decentralandAtlas = await fetchDecentralandAtlas()
-        // setLayers([decentralandAPILayer, ...layers])
       }
       const atlasWithColours = await setColours(ITRMAtlas, filterBy)
+      const heatmapSize = getHeatmapSize({ ITRM: ITRMAtlas })
+      setHeatmapSize(heatmapSize)
+      console.log({ heatmapSize })
       setAtlas({ ITRM: atlasWithColours, decentraland: decentralandAtlas })
       setMapState('loaded')
     }
@@ -114,57 +134,69 @@ const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   }, [filterBy])
   return (
     <section ref={sectionRef} className='w-full h-full min-h-[75vh] relative'>
-      <div className='absolute top-0 z-20 flex gap-4 p-2'>
-        {/* Top left GUI */}
-        <MapLandSummary coordinates={hovered} metaverse={metaverse} />
-        {/* Metaverse Selection */}
-        <MapChooseMetaverse metaverse={metaverse} setMetaverse={setMetaverse} />
-        {/* Metaverse Selection */}
-        <MapChooseFilter filterBy={filterBy} setFilterBy={setFilterBy} />
-      </div>
       {loading && (
         <HeatmapLoader landsLoaded={landsLoaded} metaverse={metaverse} />
       )}
-      {/* Map */}
-      {atlas && loaded && (
-        <TileMap
-          filter={filterBy}
-          atlas={atlas}
-          className='atlas'
-          width={dims.width}
-          height={dims.height}
-          layers={[
-            decentralandAPILayer,
-            filteredLayer,
-            selectedStrokeLayer,
-            selectedFillLayer,
-            hoverLayer,
-          ]}
-          onHover={(x, y) => {
-            setHovered({ x, y })
-          }}
-          onClick={(x, y) => {
-            if (isSelected(x, y)) {
-              setSelected(undefined)
-            } else {
-              setSelected({ x, y })
-              setIsVisible(true)
-            }
-          }}
-        />
+      {atlas && heatmapSize && loaded && (
+        <>
+          <div className='absolute top-0 z-20 flex gap-4 p-2'>
+            {/* Top left GUI */}
+            <MapLandSummary coordinates={hovered} metaverse={metaverse} />
+            {/* Metaverse Selection */}
+            <MapChooseMetaverse
+              metaverse={metaverse}
+              setMetaverse={setMetaverse}
+            />
+            {/* Metaverse Selection */}
+            <MapChooseFilter filterBy={filterBy} setFilterBy={setFilterBy} />
+          </div>
+          {/*  Map */}
+          <TileMap
+            minX={heatmapSize.minX}
+            maxX={heatmapSize.maxX}
+            minY={heatmapSize.minY}
+            maxY={heatmapSize.maxY}
+            panX={heatmapSize.initialX}
+            panY={heatmapSize.initialY}
+            initialX={heatmapSize.initialX}
+            initialY={heatmapSize.initialY}
+            filter={filterBy}
+            atlas={atlas}
+            className='atlas'
+            width={dims.width}
+            height={dims.height}
+            layers={[
+              decentralandAPILayer,
+              filteredLayer,
+              selectedStrokeLayer,
+              selectedFillLayer,
+              hoverLayer,
+            ]}
+            onHover={(x, y) => {
+              setHovered({ x, y })
+            }}
+            onClick={(x, y) => {
+              if (isSelected(x, y)) {
+                setSelected(undefined)
+              } else {
+                handleMapClick(x, y)
+              }
+            }}
+          />
+        </>
       )}
       {/* Predictions Card */}
-      {selected && isVisible && (
+      {isVisible && (
         <div
           ref={ref}
           className='absolute top-2/4 left-2/4 -translate-x-2/4 -translate-y-2/4'
         >
-          <Fade>
+          <Fade duration={300}>
             <MapCard
               prices={prices}
               metaverse={metaverse}
-              x={selected.x.toString()}
-              y={selected.y.toString()}
+              x={selected?.x}
+              y={selected?.y}
             />
           </Fade>
         </div>
