@@ -2,13 +2,12 @@ export type Coord = {
   x: number
   y: number
 }
+export type Atlas = {
+  ITRM: Record<string, ValuationTile>
+  decentraland?: Record<string, AtlasTile>
+}
 
-export type Layer = (
-  x: number,
-  y: number,
-  atlas: Record<string, ValuationTile>,
-  filter: MapFilter
-) => Tile | null
+export type Layer = (x: number, y: number, atlas: Atlas) => Tile | null
 
 export type Tile = {
   color: string

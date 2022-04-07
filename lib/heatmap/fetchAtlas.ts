@@ -1,10 +1,10 @@
 import { Contracts } from '../contracts'
 import { Metaverse } from '../enums'
 import { typedKeys } from '../utilities'
-import { ValuationTile } from './heatmapCommonTypes'
+import { AtlasTile, ValuationTile } from './heatmapCommonTypes'
 import { heatmapMvOptions } from './heatmapMvOptions'
 
-export const fetchAtlas = async (
+export const fetchITRMAtlas = async (
   metaverse: Metaverse,
   setLandsLoaded: React.Dispatch<React.SetStateAction<number>>
 ) => {
@@ -46,4 +46,10 @@ export const fetchAtlas = async (
   console.log(valuationAtlas)
   return valuationAtlas
   // await setColours(valuationAtlas, 'predicted_price')
+}
+
+export const fetchDecentralandAtlas = async () => {
+  const resp = await fetch('https://api.decentraland.org/v1/tiles')
+  const json = await resp.json()
+  return json.data as Record<string, AtlasTile> | undefined
 }

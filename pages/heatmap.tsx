@@ -1,7 +1,6 @@
 import { NextPage } from 'next'
 import React, { useEffect, useRef, useState } from 'react'
 import { Fade } from 'react-awesome-reveal'
-import { HorizontalPriceCard } from '../components/General'
 import MapCard from '../components/Heatmap/MapCard'
 import MapChooseFilter from '../components/Heatmap/MapChooseFilter'
 import MapChooseMetaverse from '../components/Heatmap/MapChooseMetaverse'
@@ -9,18 +8,22 @@ import MapLandSummary from '../components/Heatmap/MapLandSummary'
 import { TileMap } from '../components/Heatmap/TileMap'
 import { Metaverse } from '../lib/enums'
 import {
-  Coord,
+  Atlas,
+  AtlasTile,
   Layer,
   MapFilter,
-  ValuationTile,
 } from '../lib/heatmap/heatmapCommonTypes'
-import { atlasLayer, onSaleLayer } from '../lib/heatmap/decentralandHeatmap'
 import { useVisible } from '../lib/hooks'
-import { formatMetaverseName, getState, typedKeys } from '../lib/utilities'
+import { getState } from '../lib/utilities'
 import { ICoinPrices } from '../lib/valuation/valuationTypes'
-import { filteredLayer } from '../lib/heatmap/heatmapLayers'
-import { fetchAtlas } from '../lib/heatmap/fetchAtlas'
-import { Loader } from '../components'
+import {
+  decentralandAPILayer,
+  filteredLayer,
+} from '../lib/heatmap/heatmapLayers'
+import {
+  fetchDecentralandAtlas,
+  fetchITRMAtlas,
+} from '../lib/heatmap/fetchAtlas'
 import { setColours } from '../lib/heatmap/valuationColoring'
 import HeatmapLoader from '../components/Heatmap/HeatmapLoader'
 
@@ -43,7 +46,7 @@ const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   const { ref, isVisible, setIsVisible } = useVisible(false)
   const [metaverse, setMetaverse] = useState<Metaverse>(Metaverse.DECENTRALAND)
   const [filterBy, setFilterBy] = useState<MapFilter>('eth_predicted_price')
-  const [atlas, setAtlas] = useState<Record<string, ValuationTile>>({})
+  const [atlas, setAtlas] = useState<Atlas>()
   const [landsLoaded, setLandsLoaded] = useState<number>(0)
 
   function isSelected(x: number, y: number) {
@@ -78,13 +81,19 @@ const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 
   // Use Effect for Metaverse Fetching and Map creation
   useEffect(() => {
-    console.log('hola')
+    // setLayers([])
     const setData = async () => {
       setLandsLoaded(0)
       setMapState('loading')
-      const mv = await fetchAtlas(metaverse, setLandsLoaded)
-      const atlasWithColours = await setColours(mv, filterBy)
-      setAtlas(atlasWithColours)
+      const ITRMAtlas = await fetchITRMAtlas(metaverse, setLandsLoaded)
+      let decentralandAtlas: Record<string, AtlasTile> | undefined
+
+      if (metaverse === 'decentraland') {
+        decentralandAtlas = await fetchDecentralandAtlas()
+        // setLayers([decentralandAPILayer, ...layers])
+      }
+      const atlasWithColours = await setColours(ITRMAtlas, filterBy)
+      setAtlas({ ITRM: atlasWithColours, decentraland: decentralandAtlas })
       setMapState('loaded')
     }
     setData()
@@ -98,8 +107,8 @@ const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   useEffect(() => {
     if (!atlas) return
     const changeColours = async () => {
-      const atlasWithColours = await setColours(atlas, filterBy)
-      setAtlas(atlasWithColours)
+      const atlasWithColours = await setColours(atlas.ITRM, filterBy)
+      setAtlas({ ...atlas, ITRM: atlasWithColours })
     }
     changeColours()
   }, [filterBy])
@@ -125,7 +134,7 @@ const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
           width={dims.width}
           height={dims.height}
           layers={[
-            // ...metaverseOptions[metaverse].baseLayer,
+            decentralandAPILayer,
             filteredLayer,
             selectedStrokeLayer,
             selectedFillLayer,

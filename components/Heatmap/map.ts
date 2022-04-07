@@ -1,10 +1,5 @@
 import { renderTile } from './tile'
-import {
-  Coord,
-  Layer,
-  MapFilter,
-  ValuationTile,
-} from '../../lib/heatmap/heatmapCommonTypes'
+import { Atlas, Coord, Layer } from '../../lib/heatmap/heatmapCommonTypes'
 
 export function renderMap(args: {
   ctx: CanvasRenderingContext2D
@@ -16,22 +11,9 @@ export function renderMap(args: {
   se: Coord
   center: Coord
   layers: Layer[]
-  atlas: Record<string, ValuationTile>
-  filter: MapFilter
+  atlas: Atlas
 }) {
-  const {
-    ctx,
-    width,
-    height,
-    size,
-    pan,
-    nw,
-    se,
-    center,
-    layers,
-    atlas,
-    filter,
-  } = args
+  const { ctx, width, height, size, pan, nw, se, center, layers, atlas } = args
 
   ctx.clearRect(0, 0, width, height)
 
@@ -44,7 +26,7 @@ export function renderMap(args: {
         const offsetX = (center.x - x) * size + (pan ? pan.x : 0)
         const offsetY = (y - center.y) * size + (pan ? pan.y : 0)
 
-        const tile = layer(x, y, atlas, filter)
+        const tile = layer(x, y, atlas)
         if (!tile) {
           continue
         }

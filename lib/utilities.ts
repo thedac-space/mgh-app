@@ -47,6 +47,9 @@ export const getState = (state: string, stateOptions: string[]) => {
   return stateOptions.map((option) => state === option)
 }
 
+/**
+ * @returns Array of Object keys with their proper types. Use this instead of Object.keys
+ */
 export function typedKeys<O extends object, K extends keyof O = keyof O>(
   obj: O
 ): K[] {

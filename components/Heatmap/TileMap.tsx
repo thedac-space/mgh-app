@@ -399,7 +399,6 @@ export class TileMap extends React.PureComponent<Props, State> {
       center,
       layers,
       atlas,
-      filter,
     })
   }
 

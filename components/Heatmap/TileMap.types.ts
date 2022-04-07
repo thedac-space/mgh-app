@@ -1,4 +1,5 @@
 import {
+  Atlas,
   Coord,
   Layer,
   MapFilter,
@@ -8,7 +9,7 @@ import { Viewport } from '../../lib/heatmap/viewport'
 
 export type Props = {
   /** Atlas to render on map */
-  atlas: Record<string, ValuationTile>
+  atlas: Atlas
   /** Atlas to render on map */
   filter: MapFilter
   /** layer to render on the map */
@@ -96,6 +97,5 @@ export type MapRenderer = (args: {
   se: Coord
   center: Coord
   layers: Layer[]
-  atlas: Record<string, ValuationTile>
-  filter: MapFilter
+  atlas: Atlas
 }) => void
