@@ -17,6 +17,8 @@ import { BsTwitter } from 'react-icons/bs'
 import Loader from '../Loader'
 import { formatMetaverseName, getState } from '../../lib/utilities'
 import { Contracts } from '../../lib/contracts'
+import { AddToWatchlistButton } from '../Valuation'
+import { useAppSelector } from '../../state/hooks'
 interface Props {
   x: number | undefined
   y: number | undefined
@@ -42,6 +44,7 @@ const MapCard = ({ x, y, metaverse, prices }: Props) => {
     'error',
   ])
   const notListed = isNaN(currentPrice)
+  const { address } = useAppSelector((state) => state.account)
 
   useEffect(() => {
     const setData = async () => {
@@ -138,6 +141,13 @@ const MapCard = ({ x, y, metaverse, prices }: Props) => {
                     />{' '}
                   </p>
                 </div>
+                {/* Add To Watchlist Button */}
+                {address && (
+                  <AddToWatchlistButton
+                    landId={apiData.tokenId}
+                    metaverse={apiData.metaverse}
+                  />
+                )}
                 {/* External Links */}
                 <nav className='flex flex-col md:gap-4 gap-[1.40rem]'>
                   {apiData.opensea_link && (
