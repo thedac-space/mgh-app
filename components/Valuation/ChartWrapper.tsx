@@ -19,7 +19,7 @@ type FloorVolumeKeys = 'ethPrediction' | 'usdPrediction' | 'metaversePrediction'
 const ChartWrapper = ({ metaverse }: { metaverse: Metaverse }) => {
   const [values, setValues] = useState<any[]>([])
   useEffect(() => {
-    ;(async () => setValues(await getValuationDailyData(metaverse)))()
+    (async () => setValues(await getValuationDailyData(metaverse)))()
   }, [metaverse])
 
   return (
@@ -27,16 +27,7 @@ const ChartWrapper = ({ metaverse }: { metaverse: Metaverse }) => {
       <AreaChart
         metaverse={metaverse}
         data={values}
-        symbolOptions={{
-          ETH: { key: 'ethPrediction' },
-          USDC: { key: 'usdPrediction' },
-          METAVERSE: {
-            key: 'metaversePrediction',
-            sandbox: 'SAND',
-            decentraland: 'MANA',
-            'axie-infinity': 'AXS',
-          },
-        }}
+        label='Daily Volume'
       />
     </>
   )
