@@ -19,13 +19,15 @@ import { formatMetaverseName, getState } from '../../lib/utilities'
 import { Contracts } from '../../lib/contracts'
 import { AddToWatchlistButton } from '../Valuation'
 import { useAppSelector } from '../../state/hooks'
+import { IoClose } from 'react-icons/io5'
 interface Props {
   x: number | undefined
   y: number | undefined
   metaverse: Metaverse
   prices: ICoinPrices
+  setIsVisible: React.Dispatch<React.SetStateAction<boolean>>
 }
-const MapCard = ({ x, y, metaverse, prices }: Props) => {
+const MapCard = ({ x, y, metaverse, prices, setIsVisible }: Props) => {
   const landOptions = {
     sandbox: { contract: Contracts.LAND.ETHEREUM_MAINNET.newAddress },
     decentraland: { contract: Contracts.PARCEL.ETHEREUM_MAINNET.address },
@@ -56,7 +58,14 @@ const MapCard = ({ x, y, metaverse, prices }: Props) => {
       if (landData.err) {
         return setCardState('error')
       }
-      if (metaverse !== 'axie-infinity') {
+      if (metaverse === 'axie-infinity') {
+        // Retrieving data from Axie Marketplace
+        const axieLandData = await getAxieLandData(
+          landData.coords.x,
+          landData.coords.y
+        )
+        setCurrentPrice(Number(axieLandData.auction?.currentPriceUSD))
+      } else {
         // Retrieving data from OpenSea (Comes in ETH)
         const res = await fetch(
           `/api/fetchSingleAsset/${landOptions[metaverse].contract}/${landData.tokenId}`
@@ -68,13 +77,6 @@ const MapCard = ({ x, y, metaverse, prices }: Props) => {
         // Getting Current Price for each Asset
 
         setCurrentPrice(getCurrentPrice(listings) * prices.ethereum.usd)
-      } else {
-        // Retrieving data from Axie Marketplace
-        const axieLandData = await getAxieLandData(
-          landData.coords.x,
-          landData.coords.y
-        )
-        setCurrentPrice(Number(axieLandData.auction?.currentPriceUSD))
       }
 
       const predictions = convertETHPrediction(
@@ -95,9 +97,9 @@ const MapCard = ({ x, y, metaverse, prices }: Props) => {
       </p>
     </div>
   ) : (
-    <div className='gray-box p-4 flex flex-col cursor-pointer text-white items-start justify-between gap-4 bg-opacity-100 md:min-h-[362px] md:min-w-[359px] relative'>
+    <div className='gray-box py-8 px-4 flex flex-col cursor-pointer text-white items-start justify-between gap-4 bg-opacity-100 md:min-h-[362px] md:min-w-[359px] relative'>
       {loading ? (
-        <div className='w-full flex flex-col gap-10 absolute top-2/4 left-2/4 -translate-x-2/4 -translate-y-2/4'>
+        <div className='w-full flex flex-col gap-14 absolute top-2/4 left-2/4 -translate-x-2/4 -translate-y-2/4'>
           <Loader />
           <p className='text-lg font-semibold text-center text-gray-200'>
             Calculating {handleLandName(metaverse, { x: x, y: y })}
@@ -107,6 +109,10 @@ const MapCard = ({ x, y, metaverse, prices }: Props) => {
         loaded &&
         apiData && (
           <>
+            <IoClose
+              className='absolute top-1 right-1 text-xl hover:text-red-500 transition-all'
+              onClick={() => setIsVisible(false)}
+            />
             {/* /* LEFT */}
             <div className='flex flex-row gap-4 w-full'>
               {/* Image Link */}

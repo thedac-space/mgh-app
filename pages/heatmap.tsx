@@ -156,10 +156,8 @@ const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
             maxX={heatmapSize.maxX}
             minY={heatmapSize.minY}
             maxY={heatmapSize.maxY}
-            panX={heatmapSize.initialX}
-            panY={heatmapSize.initialY}
-            initialX={heatmapSize.initialX}
-            initialY={heatmapSize.initialY}
+            x={heatmapSize.initialY}
+            y={heatmapSize.initialX}
             filter={filterBy}
             atlas={atlas}
             className='atlas'
@@ -193,6 +191,7 @@ const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
         >
           <Fade duration={300}>
             <MapCard
+              setIsVisible={setIsVisible}
               prices={prices}
               metaverse={metaverse}
               x={selected?.x}
