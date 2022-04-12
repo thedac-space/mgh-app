@@ -5,26 +5,20 @@ import { typedKeys } from '../../lib/utilities'
 const ColorGuide = () => {
   const colorsArray = typedKeys(TILE_COLORS)
   return (
-    <div className='flex gap-2 gray-box h-16 bg-opacity-100 items-center w-max'>
-      {colorsArray.map((color, i) => (
-        <span key={color}>
-          {i === 0 && (
-            <span className='text-gray-200 text-sm font-semibold'>
-              Min
-              {i === colorsArray.length - 1 && 'Max'}
+    <div className='flex gap-2 gray-box h-16 bg-opacity-100 items-baseline w-max'>
+      <span className='text-gray-200 text-sm font-semibold'>Min</span>
+      {colorsArray.map(
+        (color, i) =>
+          i !== 0 && (
+            <span key={color}>
+              <div
+                style={{ background: TILE_COLORS[color] }}
+                className='w-4 h-4 relative top-[2px]'
+              ></div>
             </span>
-          )}
-          {i !== 0 && (
-            <div
-              style={{ background: TILE_COLORS[color] }}
-              className='w-4 h-4'
-            ></div>
-          )}
-          {i === colorsArray.length - 1 && (
-            <span className='text-gray-200 text-sm font-semibold'>Max</span>
-          )}
-        </span>
-      ))}
+          )
+      )}
+      <span className='text-gray-200 text-sm font-semibold'>Max</span>
     </div>
   )
 }
