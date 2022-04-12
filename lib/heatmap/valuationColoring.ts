@@ -34,6 +34,8 @@ export const setColours = async (
     predictions = typedKeys(valuationAtlas).map(
       (valuation) => valuationAtlas[valuation].history?.length
     )
+  } else if (element === 'none') {
+    predictions = []
   } else {
     predictions = typedKeys(valuationAtlas).map(
       (valuation) => valuationAtlas[valuation][element]
@@ -52,6 +54,8 @@ export const setColours = async (
           valuationAtlas[valuation].current_price,
           valuationAtlas[valuation].predicted_price
         )
+      } else if (element === 'none') {
+        percent = 20
       } else {
         percent = getPercentage(valuationAtlas[valuation][element], max)
       }
