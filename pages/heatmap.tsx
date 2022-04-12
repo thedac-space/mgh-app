@@ -29,6 +29,7 @@ import { setColours } from '../lib/heatmap/valuationColoring'
 import HeatmapLoader from '../components/Heatmap/HeatmapLoader'
 import { getHeatmapSize } from '../lib/heatmap/getHeatmapSize'
 import ColorGuide from '../components/Heatmap/ColorGuide'
+import MapSearch from '../components/Heatmap/MapSearch'
 
 const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   const [mapState, setMapState] = useState<'loading' | 'loaded' | 'error'>(
@@ -83,7 +84,7 @@ const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
     })
   }
 
-  const handleMapClick = (x: number, y: number) => {
+  const handleMapSelection = (x: number, y: number) => {
     const id = x + ',' + y
     if (
       !atlas?.ITRM ||
@@ -92,6 +93,7 @@ const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
         (!(id in atlas.decentraland) ||
           [5, 6, 7, 8, 12].includes(atlas.decentraland[id].type)))
     ) {
+      setSelected(undefined)
       setIsVisible(true)
       return setTimeout(() => setIsVisible(false), 1100)
     }
@@ -132,6 +134,7 @@ const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
     }
     changeColours()
   }, [filterBy])
+
   return (
     <section ref={sectionRef} className='w-full h-full min-h-[75vh] relative'>
       {loading && (
@@ -140,8 +143,19 @@ const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
       {atlas && heatmapSize && loaded && (
         <>
           <div className='absolute top-0 z-20 flex gap-4 p-2'>
-            {/* Top left GUI */}
-            <MapLandSummary coordinates={hovered} metaverse={metaverse} />
+            <div>
+              {/* Top left Coordinates */}
+              <div className='mb-2 w-[177px]'>
+                <MapLandSummary coordinates={hovered} metaverse={metaverse} />
+              </div>
+              {/* Search Forms */}
+              <div>
+                <MapSearch
+                  handleMapSelection={handleMapSelection}
+                  metaverse={metaverse}
+                />
+              </div>
+            </div>
             {/* Metaverse Selection */}
             <MapChooseMetaverse
               metaverse={metaverse}
@@ -179,7 +193,7 @@ const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
               if (isSelected(x, y)) {
                 setSelected(undefined)
               } else {
-                handleMapClick(x, y)
+                handleMapSelection(x, y)
               }
             }}
           />
@@ -187,7 +201,7 @@ const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
       )}
       {/* Predictions Card */}
       {isVisible && (
-        <div ref={ref} className='absolute top-2/4 left-2 -translate-y-2/4'>
+        <div ref={ref} className='absolute bottom-2 left-2'>
           <Fade duration={300}>
             <MapCard
               setIsVisible={setIsVisible}
