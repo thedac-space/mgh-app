@@ -10,7 +10,7 @@ interface Props {
 
 const MapLandSummary = ({ coordinates, metaverse }: Props) => {
   return (
-    <div className='gray-box bg-opacity-100 h-16 w-fit'>
+    <div className='gray-box bg-opacity-100 h-16'>
       {/* {handleLandName(metaverse, coordinates)} */}
       <div className='flex gap-4 w-30'>
         {typedKeys(coordinates).map((coord) => (
