@@ -1,15 +1,20 @@
 import { typedKeys } from '../utilities'
 import { MapFilter, ValuationTile } from './heatmapCommonTypes'
 
-export const getAvgAndMax = (array: (number | undefined)[]) => {
-  console.log('filtering')
+export const getMax = (array: (number | undefined)[]) => {
   const filteredArray = array.filter((e) => typeof e === 'number') as number[]
-  console.log('getting max')
-  const max = Math.max(...filteredArray.sort((a, b) => a + b).slice(1))
-  console.log('summing')
-  // const sum = filteredArray.reduce((prev, current) => prev + current)
-  // const average = sum / array.length
-  return max
+  return Math.max(...filteredArray.sort((a, b) => a + b).slice(1))
+}
+
+export const getMin = (array: (number | undefined)[]) => {
+  const filteredArray = array.filter((e) => typeof e === 'number') as number[]
+  return Math.min(...filteredArray.sort((a, b) => a + b).slice(1))
+}
+
+export const getAvg = (array: (number | undefined)[]) => {
+  const filteredArray = array.filter((e) => typeof e === 'number') as number[]
+  const sum = filteredArray.reduce((prev, current) => prev + current)
+  return sum / array.length
 }
 
 export const getPercentage = (
@@ -24,7 +29,6 @@ export const setColours = async (
   valuationAtlas: Record<string, ValuationTile>,
   element: MapFilter
 ) => {
-  console.log('setting colors')
   let predictions: (number | undefined)[]
   if (element === 'transfers') {
     predictions = typedKeys(valuationAtlas).map(
@@ -37,7 +41,7 @@ export const setColours = async (
   }
   let max = NaN
 
-  max = getAvgAndMax(predictions)
+  max = getMax(predictions)
   await Promise.all(
     typedKeys(valuationAtlas).map((valuation) => {
       let percent = NaN
@@ -50,11 +54,6 @@ export const setColours = async (
         )
       } else {
         percent = getPercentage(valuationAtlas[valuation][element], max)
-      }
-      if (percent < 100 && percent > 1) {
-        console.log('predicted', valuationAtlas[valuation].predicted_price),
-          console.log('total', valuationAtlas[valuation].current_price)
-        console.log({ percent })
       }
       valuationAtlas[valuation] = {
         ...valuationAtlas[valuation],
@@ -69,13 +68,14 @@ const between = (x: number, max: number, min: number) => {
   return x >= min && x <= max
 }
 
-export const getTileColor = (percent: number) => {
-  if (between(percent, 100, 20)) return 'rgb(255,0,0)'
-  if (between(percent, 19, 15)) return 'rgb(255,137,0)'
-  if (between(percent, 14, 10)) return 'rgb(255,255,0)'
-  if (between(percent, 9, 5)) return 'rgb(0,255,0)'
-  if (between(percent, 4, 1)) return 'rgb(0,255,255)'
-  else return 'rgb(10,10,10)'
+export const TILE_COLORS = {
+  5: 'rgb(255,0,0)', // Max
+  4: 'rgb(255,137,0)',
+  3: 'rgb(255,255,0)',
+  2: 'rgb(0,255,0)',
+  1: 'rgb(0,255,255)', // Min
+  0: 'rgb(10,10,10)', // None
+
   // if (percent > 100) return 'rgb(120,0,0)'
   // if (between(percent, 100, 90)) return 'rgb(255,0,0)'
   // if (between(percent, 89, 80)) return 'rgb(255,95,0)'
@@ -90,4 +90,13 @@ export const getTileColor = (percent: number) => {
   // if (between(percent, 9, 5)) return 'rgb(135,0,255)'
   // if (between(percent, 4, 1)) return 'rgb(230,255,255)'
   // else return 'rgb(10,10,10)'
+}
+
+export const getTileColor = (percent: number) => {
+  if (between(percent, 100, 20)) return TILE_COLORS[5]
+  if (between(percent, 19, 15)) return TILE_COLORS[4]
+  if (between(percent, 14, 10)) return TILE_COLORS[3]
+  if (between(percent, 9, 5)) return TILE_COLORS[2]
+  if (between(percent, 4, 1)) return TILE_COLORS[1]
+  else return TILE_COLORS[0]
 }

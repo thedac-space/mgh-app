@@ -28,6 +28,7 @@ import {
 import { setColours } from '../lib/heatmap/valuationColoring'
 import HeatmapLoader from '../components/Heatmap/HeatmapLoader'
 import { getHeatmapSize } from '../lib/heatmap/getHeatmapSize'
+import ColorGuide from '../components/Heatmap/ColorGuide'
 
 const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   const [mapState, setMapState] = useState<'loading' | 'loaded' | 'error'>(
@@ -91,7 +92,6 @@ const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
         (!(id in atlas.decentraland) ||
           [5, 6, 7, 8, 12].includes(atlas.decentraland[id].type)))
     ) {
-      setSelected(undefined)
       setIsVisible(true)
       return setTimeout(() => setIsVisible(false), 1100)
     }
@@ -149,6 +149,8 @@ const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
             />
             {/* Metaverse Selection */}
             <MapChooseFilter filterBy={filterBy} setFilterBy={setFilterBy} />
+            {/* Color Guide */}
+            <ColorGuide />
           </div>
           {/*  Map */}
           <TileMap
@@ -156,8 +158,8 @@ const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
             maxX={heatmapSize.maxX}
             minY={heatmapSize.minY}
             maxY={heatmapSize.maxY}
-            x={heatmapSize.initialY}
-            y={heatmapSize.initialX}
+            x={selected?.x || heatmapSize.initialY}
+            y={selected?.y || heatmapSize.initialX}
             filter={filterBy}
             atlas={atlas}
             className='atlas'
@@ -185,10 +187,7 @@ const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
       )}
       {/* Predictions Card */}
       {isVisible && (
-        <div
-          ref={ref}
-          className='absolute top-2/4 left-2/4 -translate-x-2/4 -translate-y-2/4'
-        >
+        <div ref={ref} className='absolute top-2/4 left-2 -translate-y-2/4'>
           <Fade duration={300}>
             <MapCard
               setIsVisible={setIsVisible}

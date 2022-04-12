@@ -89,7 +89,7 @@ export const handleLandName = (
     decentraland: 'Parcel',
     'axie-infinity': 'Plot',
   }
-  if (!landName) return `${options[metaverse]} ${coords.x},${coords.y}`
+  if (!landName) return `${options[metaverse]} ${coords.x}, ${coords.y}`
   if (metaverse === 'decentraland') {
     return `${options[metaverse]} (${coords.x}, ${coords.y})`
   } else {
