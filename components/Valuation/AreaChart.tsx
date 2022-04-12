@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react'
 import { Metaverse } from '../../lib/enums'
 import { createChart, UTCTimestamp } from 'lightweight-charts'
 import { typedKeys } from '../../lib/utilities'
+import {IChartValues,symbolPredictions} from '../../lib/types'
 
 interface SymbolProperties {
   key: string
@@ -14,7 +15,7 @@ interface Symbol {
 
 interface Props {
   metaverse: Metaverse
-  data: any[]
+  data: IChartValues[]
   symbolOptions?: Symbol
   defaultSymbol?: string
   label:string
@@ -30,7 +31,6 @@ const FloorAndVolumeChart = ({
   const chartElement = useRef<HTMLDivElement>(null)
   if (symbolOptions)
     var [symbol, setSymbol] = useState<keyof typeof symbolOptions>(defaultSymbol?defaultSymbol:'ETH') //Supposing price is always eth
-
   useEffect(() => {
     if (!chartElement.current) return
     const chart = createChart(chartElement.current, {
@@ -69,22 +69,13 @@ const FloorAndVolumeChart = ({
       title: label,
     })
 
-if(symbolOptions)areaSeries.setData(
+areaSeries.setData(
       data.map((currentData) => {
         return {
           time: (currentData.time / 1000) as UTCTimestamp,
-          value: symbolOptions
-            ? currentData.dailyVolume[symbolOptions[symbol].key]
-            : null,
-        }
-      }),
-    )
-    else
-    areaSeries.setData(
-      data.map((currentData) => {
-        return {
-          time: (currentData.time / 1000) as UTCTimestamp,
-          value: currentData,
+          value: symbolOptions && typeof data == 'object'
+            ? (currentData.data as Record<symbolPredictions,number>)[symbolOptions[symbol].key as symbolPredictions] 
+            : currentData.data,
         }
       }),
     )

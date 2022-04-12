@@ -69,3 +69,10 @@ export interface IPredictions {
     usdPrediction: number;
     metaversePrediction?: number;
 }
+
+export interface IChartValues {
+  time: number
+  data: Record<symbolPredictions, number> | number
+}
+
+export type symbolPredictions = 'ethPrediction' | 'usdPrediction' | 'metaversePrediction'

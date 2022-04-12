@@ -157,6 +157,5 @@ export async function dislikeLand(
 export async function getValuationDailyData(metaverse: Metaverse) {
   const valuesDoc = doc(db, 'valuationGraphs', metaverse)
   const values = (await getDoc(valuesDoc)).data()?.values
-  console.log(values)
   return values
 }
