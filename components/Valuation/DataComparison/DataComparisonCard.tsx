@@ -18,6 +18,11 @@ function getMetaverseTokenFromOpenseaLink(opensea_link: string | undefined) {
   return { metaverse, tokenID };
 }
 
+/**
+ * 
+ * @param param0 
+ * @returns 
+ */
 const DataComparisonCard = ({ apiData, predictions }: Props) => {
   const [offers, setOffers] = useState<number>();
 

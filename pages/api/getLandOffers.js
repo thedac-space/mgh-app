@@ -1,3 +1,8 @@
+/**
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ */
 export default async function handler(req, res) {
   let metaverse = req.body.metaverse
   let tokenID = req.body.tokenId
