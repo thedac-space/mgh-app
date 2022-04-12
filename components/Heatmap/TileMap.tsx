@@ -271,7 +271,11 @@ export class TileMap extends React.PureComponent<Props, State> {
       const elapsed = Date.now() - this.mousedownTimestamp!
       if (elapsed < 200) {
         onClick(x, y)
+        this.setState({
+          pan: { x: x, y },
+        })
         this.renderMap()
+        this.debouncedUpdateCenter()
       }
     }
     if (onMouseUp) {
@@ -384,7 +388,7 @@ export class TileMap extends React.PureComponent<Props, State> {
       return
     }
 
-    const { width, height, layers, renderMap, atlas, filter } = this.props
+    const { width, height, layers, renderMap, atlas } = this.props
     const { nw, se, pan, size, center } = this.state
     const ctx = this.canvas.getContext('2d')!
 
