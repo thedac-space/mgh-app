@@ -41,7 +41,6 @@ const MapChooseFilter = ({ filterBy, setFilterBy }: Props) => {
         onClick={() => setOpened(!opened)}
         className='h-16 gray-box bg-opacity-100 mb-2 items-center w-56 tracking-wider font-semibold text-gray-200 hover:text-white flex justify-between cursor-pointer transition-all'
       >
-        {' '}
         <span className='text-lg'>{filterOptions[filterBy].icon}</span>
         <span>{filterOptions[filterBy].name}</span>
         <IoIosArrowDown
@@ -51,7 +50,7 @@ const MapChooseFilter = ({ filterBy, setFilterBy }: Props) => {
           }
         />
       </button>
-      <div className='flex flex-col gap-2'>
+      <div className='absolute flex flex-col gap-2'>
         {opened &&
           typedKeys(filterOptions).map(
             (filter) =>
@@ -64,11 +63,6 @@ const MapChooseFilter = ({ filterBy, setFilterBy }: Props) => {
                       setOpened(false)
                     }}
                   >
-                    {/* <OptimizedImage
-                      height={25}
-                      width={25}
-                      src={filterOptions[filter].src}
-                    /> */}
                     {filterOptions[filter].icon}
                     <span>{filterOptions[filter].name}</span>
                   </button>
