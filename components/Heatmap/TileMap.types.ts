@@ -98,4 +98,5 @@ export type MapRenderer = (args: {
   center: Coord
   layers: Layer[]
   atlas: Atlas
+  filter: MapFilter
 }) => void

@@ -7,7 +7,12 @@ export type Atlas = {
   decentraland?: Record<string, AtlasTile>
 }
 
-export type Layer = (x: number, y: number, atlas: Atlas) => Tile | null
+export type Layer = (
+  x: number,
+  y: number,
+  atlas: Atlas,
+  filter: MapFilter
+) => Tile | null
 
 export type Tile = {
   color: string
@@ -53,18 +58,12 @@ export type ValuationTile = {
 
 export type MapFilter =
   | 'eth_predicted_price'
-  // | 'history'
   | 'variation_last_week'
   | 'variation_last_four_weeks'
   | 'variation_last_six_months'
   | 'current_price'
   | 'transfers'
-// | 'currentPrice'
-// | 'predictionPrice'
-// | 'priceDiff'
-// | 'priceVariWeek'
-// | 'priceVariMonth'
-// | 'priceVariSemester'
+  | 'none'
 
 export type HeatmapSize = {
   maxX: number
