@@ -1,49 +1,96 @@
 import React from "react";
+import { useState, useEffect } from "react";
 import { IAPIData, IPredictions } from "../../../lib/types";
-import getRealPrice from "./DataComparisonService";
 
 interface Props {
   apiData: IAPIData | undefined;
   predictions: IPredictions | undefined;
 }
 
-const DataComparisonCard = ({ apiData, predictions }: Props) => {
-  let realPrice
-  if(apiData?.opensea_link) {
-    realPrice = getRealPrice(apiData?.opensea_link).then(res => res).catch(err => console.log("ERROR: "+err));
-    console.log("realPrice")
-    console.log(typeof realPrice)
+function getMetaverseTokenFromOpenseaLink(opensea_link: string | undefined) {
+  let metaverse = "";
+  let tokenID = "";
+  if (opensea_link) {
+    const split = opensea_link.split("/");
+    metaverse = split[4];
+    tokenID = split[5];
   }
+  return { metaverse, tokenID };
+}
 
-  realPrice=100
-  console.log("REAL PRICE! ")
-  console.log(realPrice)
+const DataComparisonCard = ({ apiData, predictions }: Props) => {
+  const [offers, setOffers] = useState<number>();
 
   const usdPredictionPrice = predictions?.usdPrediction;
-  const ethPredictionPrice = predictions?.ethPrediction;
-  const metaversePredictionPrice = predictions?.metaversePrediction;
-  
-  let comparisedValue = 0
+  const handleData = async () => {
+    let { metaverse, tokenID } = getMetaverseTokenFromOpenseaLink(
+      apiData?.opensea_link
+    );
+    const res = await fetch("/api/getLandOffers", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ metaverse: metaverse, tokenId: tokenID }),
+    });
+    const data = await res.json();
+    return data;
+  };
 
+  let usdPrice;
 
-  if(usdPredictionPrice){
-    comparisedValue = usdPredictionPrice - 10
+  useEffect(() => {
+    const data = handleData();
+    data
+      .then((res) => {
+        usdPrice = res.offers[0].payment_token_contract.usd_price;
+        usdPrice = parseFloat(usdPrice);
+        setOffers(usdPrice);
+      })
+      .catch((err) => console.log("Error :("));
+  }, []);
+
+  let comparisedValue = 0;
+  if (usdPredictionPrice && offers) {
+    comparisedValue =
+      (Math.abs(usdPredictionPrice - offers) /
+        ((usdPredictionPrice + offers) / 2)) *
+      100;
+    comparisedValue = parseFloat(comparisedValue.toFixed(2));
   }
   const isUnderValued = comparisedValue < 0;
-  
+
   return (
-    <div className="mt-4">
-      {realPrice? 
+    <div className="mt-4 text-xl 2xl:text-2xl font-medium text-gray-300 pt-0.5">
+      {offers ? (
         <>
-          <div className="text-gray-200 font-medium pb-1 w-full">Best offer: {realPrice}</div> 
-          <div className={isUnderValued? 'text-green-500':'text-red-500'}>{comparisedValue}% {isUnderValued? "undervalued":"overvalued"}</div>  
+          <ul className="flex flex-col flex-grow min-w-max gap-4">
+            <li className="animate-fade-in-slow flex gap-4 items-center w-full justify-start h-full ">
+              Best offer:
+              <img
+                src="/images/usd-coin-usdc-logo.png"
+                className="rounded-full  h-9 xl:h-10 w-9 xl:w-10 p-1 shadow-button"
+                loading="lazy"
+              />{" "}
+              {offers}
+              <span className="font-light text-lg md:text-xl"> USDC</span>
+            </li>
+
+            <li className="font-bold">
+              <div
+                className={isUnderValued ? "text-green-500" : "text-red-500"}
+              >
+                {comparisedValue}%{" "}
+                {isUnderValued ? "undervalued" : "overvalued"}
+              </div>
+            </li>
+          </ul>
         </>
-        : 
+      ) : (
         <>
-          <div className="text-gray-200">Loading...</div>
+          <div className="">This land does not have offers :( ...</div>
         </>
-      }
-      
+      )}
     </div>
   );
 };
