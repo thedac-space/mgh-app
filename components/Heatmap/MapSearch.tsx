@@ -73,7 +73,7 @@ const MapSearch = ({ metaverse, handleMapSelection }: Props) => {
                 name={filter}
                 value={filter}
                 checked={searchBy === filter}
-                onClick={() => setSearchBy(filter)}
+                onChange={() => setSearchBy(filter)}
               />
               <label className='text-gray-200 text-sm font-semibold'>
                 {filter[0].toLocaleUpperCase() + filter.substring(1)}
