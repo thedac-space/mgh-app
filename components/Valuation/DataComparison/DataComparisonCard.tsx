@@ -25,7 +25,8 @@ function getMetaverseTokenFromOpenseaLink(opensea_link: string | undefined) {
  */
 const DataComparisonCard = ({ apiData, predictions }: Props) => {
   const [offers, setOffers] = useState<number>();
-
+  const [openseaLink, setOpenSeaLink] = useState<string | undefined>(apiData?.external_link);
+  
   const usdPredictionPrice = predictions?.usdPrediction;
   const handleData = async () => {
     let { metaverse, tokenID } = getMetaverseTokenFromOpenseaLink(
@@ -43,22 +44,25 @@ const DataComparisonCard = ({ apiData, predictions }: Props) => {
   };
 
   let usdPrice;
+  let offerPrice;
 
   useEffect(() => {
     const data = handleData();
     data
       .then((res) => {
+        offerPrice = res.offers[0].current_price;
+        offerPrice = parseFloat(offerPrice) / 1000000000000000000;
         usdPrice = res.offers[0].payment_token_contract.usd_price;
-        usdPrice = parseFloat(usdPrice);
+        usdPrice = parseFloat(usdPrice) * offerPrice;
         setOffers(usdPrice);
       })
-      .catch((err) => console.log("Error :("));
-  }, []);
+      .catch((err) => console.log(err));
+  }, [apiData]);
 
   let comparisedValue = 0;
   if (usdPredictionPrice && offers) {
     comparisedValue =
-      (Math.abs(usdPredictionPrice - offers) /
+      ((offers - usdPredictionPrice) /
         ((usdPredictionPrice + offers) / 2)) *
       100;
     comparisedValue = parseFloat(comparisedValue.toFixed(2));
