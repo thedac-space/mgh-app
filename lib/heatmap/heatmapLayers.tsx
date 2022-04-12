@@ -1,7 +1,7 @@
 import { Layer } from './heatmapCommonTypes'
 import { getTileColor } from './valuationColoring'
 
-export const filteredLayer: Layer = (x, y, atlas) => {
+export const filteredLayer: Layer = (x, y, atlas, filter) => {
   const id = x + ',' + y
   if (!atlas.ITRM || !(id in atlas.ITRM)) return null
   /** This second Statement checks that in Decentraland
@@ -13,7 +13,8 @@ export const filteredLayer: Layer = (x, y, atlas) => {
       [5, 6, 7, 8, 12].includes(atlas.decentraland[id].type))
   )
     return null
-  const color = getTileColor(atlas.ITRM[id].percent ?? 0)
+  const color =
+    filter === 'none' ? '#12b630' : getTileColor(atlas.ITRM[id].percent ?? 0)
   const top = undefined
   const left = undefined
   const topLeft = undefined
