@@ -44,7 +44,7 @@ export function renderMap(args: {
         const offsetX = (center.x - x) * size + (pan ? pan.x : 0)
         const offsetY = (y - center.y) * size + (pan ? pan.y : 0)
 
-        const tile = layer(x, y, atlas, filter)
+        const tile = layer(x, y, atlas)
         if (!tile) {
           continue
         }

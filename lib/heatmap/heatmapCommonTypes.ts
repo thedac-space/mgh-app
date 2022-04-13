@@ -11,7 +11,7 @@ export type Layer = (
   x: number,
   y: number,
   atlas: Atlas,
-  filter: MapFilter
+  filter?: MapFilter
 ) => Tile | null
 
 export type Tile = {

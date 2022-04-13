@@ -70,6 +70,13 @@ const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   const selectedFillLayer: Layer = (x, y) => {
     return isSelected(x, y) ? { color: '#ff9990', scale: 1.2 } : null
   }
+  const [layers, setLayers] = useState<Layer[]>([
+    selectedStrokeLayer,
+    selectedFillLayer,
+    hoverLayer,
+    decentralandAPILayer,
+    filteredLayer,
+  ])
   const sectionRef = useRef<HTMLElement>(null)
   const [dims, setDims] = useState({
     height: sectionRef.current?.offsetHeight,
@@ -84,7 +91,7 @@ const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
     })
   }
 
-  const handleMapSelection = (x: number, y: number) => {
+  const handleMapSelection = (x?: number, y?: number, landId?: string) => {
     const id = x + ',' + y
     if (
       !atlas?.ITRM ||
@@ -97,6 +104,7 @@ const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
       setIsVisible(true)
       return setTimeout(() => setIsVisible(false), 1100)
     }
+    if (!x || !y) return
     setSelected({ x: x, y: y })
     setIsVisible(true)
   }
@@ -162,9 +170,11 @@ const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
               setMetaverse={setMetaverse}
             />
             {/* Metaverse Selection */}
-            <MapChooseFilter filterBy={filterBy} setFilterBy={setFilterBy} />
+            {filterBy !== 'none' && (
+              <MapChooseFilter filterBy={filterBy} setFilterBy={setFilterBy} />
+            )}
             {/* Color Guide */}
-            <ColorGuide />
+            {filterBy !== 'none' && <ColorGuide />}
           </div>
           {/*  Map */}
           <TileMap
