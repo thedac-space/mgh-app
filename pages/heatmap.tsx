@@ -49,7 +49,7 @@ const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   // Hook for Popup
   const { ref, isVisible, setIsVisible } = useVisible(false)
   const [metaverse, setMetaverse] = useState<Metaverse>(Metaverse.DECENTRALAND)
-  const [filterBy, setFilterBy] = useState<MapFilter>('eth_predicted_price')
+  const [filterBy, setFilterBy] = useState<MapFilter>('basic')
   const [atlas, setAtlas] = useState<Atlas>()
   const [landsLoaded, setLandsLoaded] = useState<number>(0)
   const [heatmapSize, setHeatmapSize] = useState<HeatmapSize>()
@@ -62,6 +62,7 @@ const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   }
 
   const hoverLayer: Layer = (x, y) => {
+    console.log('hover layer')
     return hovered?.x === x && hovered?.y === y
       ? { color: '#db2777', scale: 1.4 }
       : null
@@ -70,13 +71,7 @@ const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   const selectedFillLayer: Layer = (x, y) => {
     return isSelected(x, y) ? { color: '#ff9990', scale: 1.2 } : null
   }
-  const [layers, setLayers] = useState<Layer[]>([
-    selectedStrokeLayer,
-    selectedFillLayer,
-    hoverLayer,
-    decentralandAPILayer,
-    filteredLayer,
-  ])
+
   const sectionRef = useRef<HTMLElement>(null)
   const [dims, setDims] = useState({
     height: sectionRef.current?.offsetHeight,
@@ -144,7 +139,7 @@ const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   }, [filterBy])
 
   return (
-    <section ref={sectionRef} className='w-full h-full min-h-[75vh] relative'>
+    <section ref={sectionRef} className='w-full h-2/4 min-h-[50vh] relative'>
       {loading && (
         <HeatmapLoader landsLoaded={landsLoaded} metaverse={metaverse} />
       )}
@@ -170,11 +165,9 @@ const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
               setMetaverse={setMetaverse}
             />
             {/* Metaverse Selection */}
-            {filterBy !== 'none' && (
-              <MapChooseFilter filterBy={filterBy} setFilterBy={setFilterBy} />
-            )}
+            <MapChooseFilter filterBy={filterBy} setFilterBy={setFilterBy} />
             {/* Color Guide */}
-            {filterBy !== 'none' && <ColorGuide />}
+            {filterBy !== 'basic' && <ColorGuide />}
           </div>
           {/*  Map */}
           <TileMap

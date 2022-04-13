@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Fade } from 'react-awesome-reveal'
 import { BiTargetLock, BiTransferAlt } from 'react-icons/bi'
+import { FiMap } from 'react-icons/fi'
 import { IoIosArrowDown } from 'react-icons/io'
 import { MdAttachMoney, MdOutlineLocalOffer } from 'react-icons/md'
 import { VscGraphLine } from 'react-icons/vsc'
@@ -33,7 +34,7 @@ const MapChooseFilter = ({ filterBy, setFilterBy }: Props) => {
       icon: <VscGraphLine />,
     },
     eth_predicted_price: { name: 'Predicted Price', icon: <BiTargetLock /> },
-    // priceDiff: { name: 'Best Offers', icon: <MdOutlineLocalOffer /> },
+    basic: { name: 'Basic', icon: <FiMap /> },
   }
   return (
     <div>

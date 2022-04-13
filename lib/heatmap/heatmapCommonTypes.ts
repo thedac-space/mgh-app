@@ -10,7 +10,7 @@ export type Atlas = {
 export type Layer = (
   x: number,
   y: number,
-  atlas: Atlas,
+  atlas?: Atlas,
   filter?: MapFilter
 ) => Tile | null
 
@@ -63,7 +63,7 @@ export type MapFilter =
   | 'variation_last_six_months'
   | 'current_price'
   | 'transfers'
-  | 'none'
+  | 'basic'
 
 export type HeatmapSize = {
   maxX: number

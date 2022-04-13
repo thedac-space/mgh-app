@@ -3,7 +3,7 @@ import { getTileColor } from './valuationColoring'
 
 export const filteredLayer: Layer = (x, y, atlas, filter) => {
   const id = x + ',' + y
-  if (!atlas.ITRM || !(id in atlas.ITRM)) return null
+  if (!atlas || !atlas.ITRM || !(id in atlas.ITRM)) return null
   /** This second Statement checks that in Decentraland
    * the land is an actual land and not a Road, Plaza, etc...
    */
@@ -13,8 +13,10 @@ export const filteredLayer: Layer = (x, y, atlas, filter) => {
       [5, 6, 7, 8, 12].includes(atlas.decentraland[id].type))
   )
     return null
+  /* Don't show a layer if user is tier0 and metaverse is decentraland. (we already have decentralands Map for that)  */
+  if (filter === 'basic' && atlas.decentraland) return null
   const color =
-    filter === 'none' ? '#12b630' : getTileColor(atlas.ITRM[id].percent ?? 0)
+    filter === 'basic' ? '#12b630' : getTileColor(atlas.ITRM[id].percent ?? 0)
   const top = undefined
   const left = undefined
   const topLeft = undefined
@@ -45,7 +47,7 @@ export const decentralandAPILayer: Layer = (x, y, atlas) => {
     14: '#0d0b0e', // loading even
   })
   const id = x + ',' + y
-  if (atlas.decentraland && id in atlas.decentraland) {
+  if (atlas && atlas.decentraland && id in atlas.decentraland) {
     const tile = atlas.decentraland[id]
     const color = COLOR_BY_TYPE[tile.type]
 
