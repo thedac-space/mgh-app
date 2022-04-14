@@ -46,7 +46,7 @@ export const fetchHeatmapLand = async (
 
   const predictions = convertETHPrediction(
     prices,
-    apiData.prices.eth_predicted_price,
+    apiData.prices?.eth_predicted_price,
     metaverse
   )
 

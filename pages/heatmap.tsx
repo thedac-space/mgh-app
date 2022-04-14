@@ -139,6 +139,7 @@ const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   useEffect(() => {
     const setData = async () => {
       setLandsLoaded(0)
+      setSelected(undefined)
       setMapState('loading')
       const ITRMAtlas = await fetchITRMAtlas(metaverse, setLandsLoaded)
       let decentralandAtlas: Record<string, AtlasTile> | undefined
@@ -234,7 +235,7 @@ const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
       )}
       {/* Predictions Card */}
       {isVisible && (
-        <div ref={ref} className='absolute bottom-2 left-2'>
+        <div ref={ref} className='absolute bottom-2 right-8'>
           <Fade duration={300}>
             <MapCard
               setIsVisible={setIsVisible}

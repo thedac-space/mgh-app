@@ -31,7 +31,7 @@ const MapCard = ({
   setIsVisible,
   mapState,
 }: Props) => {
-  const imgSize = 170
+  const imgSize = 150
   const [loadingQuery, loadedQuery, errorQuery] = getState(mapState, [
     'loadingQuery',
     'loadedQuery',
@@ -48,7 +48,7 @@ const MapCard = ({
       </p>
     </div>
   ) : (
-    <div className='gray-box py-8 px-4 flex flex-col cursor-pointer text-white items-start justify-between gap-4 bg-opacity-100 md:min-h-[362px] md:min-w-[359px] relative'>
+    <div className='gray-box py-4 px-4 flex flex-col cursor-pointer text-white items-start justify-between gap-4 bg-opacity-100 md:min-h-[362px] md:min-w-[359px] relative'>
       {loadingQuery ? (
         <div className='w-full flex flex-col gap-14 absolute top-2/4 left-2/4 -translate-x-2/4 -translate-y-2/4'>
           <Loader />
