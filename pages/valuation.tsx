@@ -14,11 +14,12 @@ import {  MostUnderValuedLand } from "../components/Valuation";
 import { convertETHPrediction } from "../lib/valuation/valuationUtils";
 import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
+import { ICoinPrices } from "../lib/valuation/valuationTypes";
 const FloorAndVolumeChart = dynamic(() => import("../components/Valuation/FloorAndVolumeChart"), {
     ssr: false
   });
-  
-const ValuationPage: NextPage = ({ prices }: any) => {
+
+const ValuationPage: NextPage<{prices: ICoinPrices}> = ({ prices }) => {
     const { query } = useRouter()
     const [apiData, setAPIData] = useState<IAPIData>();
     const [predictions, setPredictions] = useState<IPredictions>()
@@ -80,7 +81,7 @@ const ValuationPage: NextPage = ({ prices }: any) => {
         }
 
     }
-  };
+  
 
   const handleIDSubmit = async (
     ev?: React.FormEvent<HTMLFormElement>,
