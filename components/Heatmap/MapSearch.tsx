@@ -1,23 +1,11 @@
 import React, { useState } from 'react'
 import { BsQuestionCircle } from 'react-icons/bs'
-import { Metaverse } from '../../lib/enums'
 import { getState, typedKeys } from '../../lib/utilities'
+import { VALUATION_STATE } from '../../pages/valuation'
 import SearchLandButton from './SearchLandButton'
 
-export const MapSearchState = {
-  loading: 'loading',
-  loaded: 'loaded',
-  badQueryId: 'badQueryId',
-  badQueryCoordinates: 'badQueryCoordinates',
-  loadingQueryId: 'loadingQueryId',
-  loadingQueryCoordinates: 'loadingQueryCoordinates',
-  noWallet: 'noWallet',
-  successId: 'successId',
-  successCoordinates: 'successCoordinates',
-}
-
 interface Props {
-  metaverse: Metaverse
+  mapState: keyof typeof VALUATION_STATE
   handleMapSelection: (
     x?: number | undefined,
     y?: number | undefined,
@@ -25,16 +13,11 @@ interface Props {
   ) => Promise<NodeJS.Timeout | undefined>
 }
 
-const MapSearch = ({ metaverse, handleMapSelection }: Props) => {
-  // TODO..
-  const [searchState, setSearchState] =
-    useState<keyof typeof MapSearchState>('loaded')
+const MapSearch = ({ mapState, handleMapSelection }: Props) => {
   const [landId, setLandId] = useState('')
   const [coordinates, setCoordinates] = useState({ X: '', Y: '' })
-  const [badQueryId, badQueryCoordinates] = getState(
-    searchState,
-    typedKeys(MapSearchState)
-  )
+  const [loadingQuery] = getState(mapState, ['loadingQuery'])
+
   const [searchBy, setSearchBy] = useState<'coordinates' | 'id'>('coordinates')
   const searchById = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -48,13 +31,11 @@ const MapSearch = ({ metaverse, handleMapSelection }: Props) => {
     coordinates: {
       search: searchByCoordinates,
       text: 'Go by Coordinates',
-      badQuery: badQueryCoordinates,
       hasGuide: false,
     },
     id: {
       search: searchById,
       text: 'Go by ID',
-      badQuery: badQueryId,
       hasGuide: true,
     },
   }
@@ -70,6 +51,7 @@ const MapSearch = ({ metaverse, handleMapSelection }: Props) => {
           Search by
         </p>
         <div className='flex flex-col gap-2 mb-4'>
+          {/* Mapping through search options */}
           {typedKeys(searchOptions).map((filter) => (
             <span className='flex gap-2 items-center relative'>
               <input
@@ -85,7 +67,7 @@ const MapSearch = ({ metaverse, handleMapSelection }: Props) => {
               {searchOptions[filter].hasGuide && (
                 <>
                   <BsQuestionCircle className='text-gray-300 cursor-pointer peer relative bottom-[2px]' />
-                  <p className='absolute -top-7 border border-gray-500 -left-6 xs:left-0 pl-2 p-2 rounded-lg bg-black bg-opacity-10 backdrop-filter backdrop-blur font-medium text-xs text-gray-400 hidden peer-hover:block w-70'>
+                  <p className='absolute -top-7 border border-gray-500 -left-6 xs:left-0 pl-2 p-2 rounded-lg bg-black bg-opacity-10 backdrop-filter backdrop-blur font-medium text-xs text-gray-200 hidden peer-hover:block w-70'>
                     Find LAND on Opensea &gt; Details &gt; Token ID
                   </p>
                 </>
@@ -101,6 +83,7 @@ const MapSearch = ({ metaverse, handleMapSelection }: Props) => {
               // Coordinates Input
               typedKeys(coordinates).map((coord) => (
                 <input
+                  disabled={loadingQuery}
                   key={coord}
                   required
                   type='number'
@@ -112,30 +95,24 @@ const MapSearch = ({ metaverse, handleMapSelection }: Props) => {
                   }
                   value={coordinates[coord]}
                   placeholder={coord}
-                  className='border-gray-300 placeholder-gray-300 bg-transparent block w-16  text-white p-3 focus:outline-none border border-opacity-40 hover:border-opacity-100 focus:border-opacity-100 transition duration-300 ease-in-out rounded-xl placeholder-opacity-75'
+                  className='font-semibold border-gray-300 placeholder-gray-300 bg-transparent block w-16  text-white p-3 focus:outline-none border border-opacity-40 hover:border-opacity-100 focus:border-opacity-100 transition duration-300 ease-in-out rounded-xl placeholder-opacity-75'
                 />
               ))
             ) : (
               // Id Input
               <input
+                disabled={loadingQuery}
                 required
                 type='number'
                 onChange={(e) => setLandId(e.target.value)}
                 value={landId}
                 placeholder='14271'
-                className='border-gray-300 placeholder-gray-300 bg-transparent block w-[8.5rem] text-white p-3 focus:outline-none border border-opacity-40 hover:border-opacity-100 focus:border-opacity-100 transition duration-300 ease-in-out rounded-xl placeholder-opacity-75'
+                className='font-semibold border-gray-300 placeholder-gray-300 bg-transparent block w-[8.5rem] text-white p-3 focus:outline-none border border-opacity-40 hover:border-opacity-100 focus:border-opacity-100 transition duration-300 ease-in-out rounded-xl placeholder-opacity-75'
               />
             )}
           </div>
           {/* Add land Button */}
-          <SearchLandButton searchBy={searchBy} state={searchState} />
-
-          {/* Bad Land Query */}
-          {/* {searchOptions[searchBy].badQuery && (
-            <p className='font-medium text-xs absolute -bottom-5  text-red-500 mt-1 pl-2 text-left w-full max-w-sm'>
-              LAND doesn't exist
-            </p>
-          )} */}
+          <SearchLandButton searchBy={searchBy} mapState={mapState} />
         </div>
       </form>
     </div>
@@ -143,34 +120,3 @@ const MapSearch = ({ metaverse, handleMapSelection }: Props) => {
 }
 
 export default MapSearch
-
-/* Add by Token Id */
-
-// ;<form onSubmit={(e) => searchById(e)}>
-//   <div className='flex gap-2 relative items-center'>
-//     <p className='font-medium mb-2 text-xs md:text-sm pt-1 '>Add by Token ID</p>
-
-//     <BsQuestionCircle className='text-gray-300 cursor-pointer peer relative bottom-1' />
-//     <p className='absolute -top-7 border border-gray-500 -left-6 xs:left-0 pl-2 p-2 rounded-lg bg-black bg-opacity-10 backdrop-filter backdrop-blur font-medium text-xs text-gray-400 hidden peer-hover:block w-70'>
-//       Find LAND on Opensea &gt; Details &gt; Token ID
-//     </p>
-//   </div>
-//   <div className='flex gap-4 relative'>
-//     <input
-//       required
-//       type='number'
-//       onChange={(e) => setLandId(e.target.value)}
-//       value={landId}
-//       placeholder='14271'
-//       className='border-gray-300 placeholder-gray-300 bg-transparent block w-[8.5rem] text-white p-3 focus:outline-none border border-opacity-40 hover:border-opacity-100 focus:border-opacity-100 transition duration-300 ease-in-out rounded-xl placeholder-opacity-75'
-//     />
-//     {/* Add land Button */}
-//     <AddLandButton addBy='id' state={searchState} />
-//     {/* Bad Land Query */}
-//     {badQueryId && (
-//       <p className='font-medium text-xs absolute -bottom-5  text-red-500 mt-1 pl-2 text-left w-full max-w-sm'>
-//         LAND doesn't exist
-//       </p>
-//     )}
-//   </div>
-// </form>
