@@ -35,6 +35,7 @@ import { IAPIData, IPredictions } from '../lib/types'
 import { FloorPriceTracker, SalesVolumeDaily } from '../components/Valuation'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
+import { useRouter } from 'next/router'
 const FloorAndVolumeChart = dynamic(
   () => import('../components/Valuation/FloorAndVolumeChart'),
   {
@@ -43,7 +44,7 @@ const FloorAndVolumeChart = dynamic(
 )
 
 // Making this state as an object in order to iterate easily through it
-export const HEATMAP_STATE = {
+export const VALUATION_STATE = {
   loading: 'loading',
   loaded: 'loaded',
   error: 'error',
@@ -61,9 +62,8 @@ interface CardData {
 
 const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   const [mapState, setMapState] =
-    useState<keyof typeof HEATMAP_STATE>('loading')
-  const [loading, loaded, error, loadingQuery, loadedQuery, errorQuery] =
-    getState(mapState, typedKeys(HEATMAP_STATE))
+    useState<keyof typeof VALUATION_STATE>('loading')
+  const [loading] = getState(mapState, typedKeys(VALUATION_STATE))
 
   const [selected, setSelected] = useState<{ x: number; y: number }>()
   const [hovered, setHovered] = useState<{ x: number; y: number }>({
@@ -96,17 +96,17 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
     return isSelected(x, y) ? { color: '#ff9990', scale: 1.2 } : null
   }
 
-  const sectionRef = useRef<HTMLElement>(null)
+  const mapDivRef = useRef<HTMLDivElement>(null)
   const [dims, setDims] = useState({
-    height: 500,
-    width: sectionRef.current?.offsetWidth,
+    height: mapDivRef.current?.offsetWidth,
+    width: mapDivRef.current?.offsetWidth,
   })
 
   const resize = () => {
-    if (!sectionRef.current) return
+    if (!mapDivRef.current) return
     setDims({
-      height: sectionRef.current.offsetHeight,
-      width: sectionRef.current.offsetWidth,
+      height: mapDivRef.current.offsetHeight,
+      width: mapDivRef.current.offsetWidth,
     })
   }
 
@@ -150,6 +150,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
       setLandsLoaded(0)
       setSelected(undefined)
       setMapState('loading')
+
       const ITRMAtlas = await fetchITRMAtlas(metaverse, setLandsLoaded)
       let decentralandAtlas: Record<string, AtlasTile> | undefined
       if (metaverse === 'decentraland') {
@@ -179,7 +180,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   }, [filterBy])
 
   return (
-    <section ref={sectionRef} className='w-full h-2/4 min-h-[50vh] relative'>
+    <section className='w-full h-full relative'>
       {/* Main Header */}
       <div className='gray-box flex flex-col sm:flex-row justify-between items-center mb-8'>
         <h1 className='text-transparent bg-clip-text lg:text-5xl text-3xl bg-gradient-to-br from-blue-500 via-green-400 to-green-500 mb-0 sm:mb-2'>
@@ -201,7 +202,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
       </div>
 
       {/* Heatmap */}
-      <div className='relative mb-8'>
+      <div className='relative mb-8 min-h-[55vh]' ref={mapDivRef}>
         {loading && (
           <HeatmapLoader landsLoaded={landsLoaded} metaverse={metaverse} />
         )}
@@ -216,8 +217,8 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                 {/* Search Forms */}
                 <div>
                   <MapSearch
+                    mapState={mapState}
                     handleMapSelection={handleMapSelection}
-                    metaverse={metaverse}
                   />
                 </div>
               </div>
@@ -282,8 +283,6 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
         )}
       </div>
 
-      {/* Tier 1 - Most Undervalued Land */}
-      {/* <MostUnderValuedLand verticalUnder="sm" predictions={undefined} processing={false} showCard={true} apiData={undefined} /> */}
       {/* Daily Volume and Floor Price Wrapper */}
       <div className='flex flex-col sm:flex-row space-y-5 sm:space-y-0 space-x-0 sm:space-x-5 md:space-x-10 items-stretch justify-between w-full'>
         {/* Daily Volume */}
