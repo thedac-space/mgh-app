@@ -170,32 +170,10 @@ export async function dislikeLand(
   })
 }
 
-// Heatmap
-export const addHeatmapData = async (
-  metaverse: Metaverse,
-  heatmap: Record<string, ValuationTile>,
-  time: number
-) => {
-  const keys = typedKeys(heatmap)
-  // LOOP ON KEYS
-  let indexedHeatmap: Record<string, ValuationTile> = {}
-  for (let i = 0; i < keys.length; i++) {
-    // MAKE OBJECTS CONTAINING ONLY 2000 OF THEM
-    indexedHeatmap[keys[i]] = heatmap[keys[i]]
-    if (i !== 0 && i % 2000 === 0) {
-      // PUSH THAT OBJECT WITH ITS INDEX TO FIREBASE
-      try {
-        console.log('setting Data', metaverse)
-        await setDoc(
-          doc(db, 'heatmap-' + metaverse, metaverse + '_' + i / 2000),
-          {
-            indexedHeatmap,
-          }
-        )
-      } catch (e) {
-        console.log(e)
-      }
-      indexedHeatmap = {}
-    }
-  }
+
+// Retrieve valuation daily data
+export async function getValuationDailyData(metaverse: Metaverse) {
+  const valuesDoc = doc(db, 'valuationGraphs', metaverse)
+  const values = (await getDoc(valuesDoc)).data()?.values
+  return values
 }

@@ -43,6 +43,7 @@ export const formatMetaverseName = (
   return formattedName
 }
 
+
 /**
  * @description When making dynamic component states, it might be more safe and easier to create a state that allows only one option at a time
  * This way, a component cannot be loading and having an error at the same time. This also helps when cleaning up and makes stateChanges simpler
