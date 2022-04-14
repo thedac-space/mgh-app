@@ -10,11 +10,8 @@ import { Metaverse } from "../lib/enums";
 import { IAPIData, IPredictions } from "../lib/types";
 import FloorPriceTracker from "../components/Valuation/FloorPriceTracker";
 import SalesVolumeDaily from "../components/Valuation/SalesVolumeDaily";
-import { MostUnderValuedLand } from "../components/Valuation";
-import {
-  convertETHPrediction,
-  convertMANAPrediction,
-} from "../lib/valuation/valuationUtils";
+import {  MostUnderValuedLand } from "../components/Valuation";
+import { convertETHPrediction } from "../lib/valuation/valuationUtils";
 import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
 const FloorAndVolumeChart = dynamic(() => import("../components/Valuation/FloorAndVolumeChart"), {
@@ -22,79 +19,66 @@ const FloorAndVolumeChart = dynamic(() => import("../components/Valuation/FloorA
   });
   
 const ValuationPage: NextPage = ({ prices }: any) => {
-  const { query } = useRouter();
-  const [apiData, setAPIData] = useState<IAPIData>();
-  const [predictions, setPredictions] = useState<IPredictions>();
+    const { query } = useRouter()
+    const [apiData, setAPIData] = useState<IAPIData>();
+    const [predictions, setPredictions] = useState<IPredictions>()
 
-  const [idProcessing, setIdProcessing] = useState(false);
-  const [coordinatesProcessing, setCoordinatesProcessing] = useState(false);
-  const [showCard, setShowCard] = useState(false);
-  const [idError, setIdError] = useState("");
-  const [coordinatesError, setCoordinatesError] = useState("");
-  const [tokenId, setTokenId] = useState("");
-  const [comingFromLink, setComingFromLink] = useState<Boolean>();
+    const [idProcessing, setIdProcessing] = useState(false);
+    const [coordinatesProcessing, setCoordinatesProcessing] = useState(false);
+    const [showCard, setShowCard] = useState(false);
+    const [idError, setIdError] = useState("");
+    const [coordinatesError, setCoordinatesError] = useState("");
+    const [tokenId, setTokenId ] = useState("");
+    const [comingFromLink, setComingFromLink] = useState<Boolean>()
 
-  const [metaverse, setMetaverse] = useState<Metaverse>(Metaverse.SANDBOX);
+    const [metaverse, setMetaverse] = useState<Metaverse>(Metaverse.SANDBOX)
 
-  const handleAPIData = (data: any) => {
-    setAPIData(data);
+    
 
-    const ethPrediction = data.prices.eth_predicted_price;
-    console.log(ethPrediction);
-    const predictions = convertETHPrediction(
-      prices,
-      ethPrediction,
-      data.metaverse
-    );
-    console.log(predictions);
-    setPredictions(predictions);
+    const handleAPIData = (data: any) => {
 
-    // if (data.metaverse === Metaverse.SANDBOX) {
-    //     const ethPrediction = data.prices.predicted_price;
-    //     const predictions = convertETHPrediction(prices, ethPrediction, Metaverse.SANDBOX)
-    //     setPredictions(predictions)
-    // } else if (data.metaverse === Metaverse.DECENTRALAND) {
-    //     const manaPrediction = data.prices.predicted_price;
-    //     const predictions = convertMANAPrediction(prices, manaPrediction)
-    //     setPredictions(predictions)
-    // } else if (data.metaverse === Metaverse.AXIE_INFINITY) {
-    //     const manaPrediction = data.prices.predicted_price;
-    //     const predictions = convertETHPrediction(prices, manaPrediction, Metaverse.AXIE_INFINITY)
-    //     setPredictions(predictions)
-    // }
+        setAPIData(data)
 
-    setShowCard(true);
-  };
+        const ethPrediction = data.prices.eth_predicted_price
+        const predictions = convertETHPrediction(prices, ethPrediction, data.metaverse)
+        setPredictions(predictions)
 
-  const handleCoordinatesSubmit = async (ev: any) => {
-    ev.preventDefault();
+        setShowCard(true);
 
-    const X = (document.getElementById("X") as HTMLInputElement).value;
-    const Y = (document.getElementById("Y") as HTMLInputElement).value;
+    }
 
-    setCoordinatesProcessing(true);
+    const handleCoordinatesSubmit = async (ev: any) => {
+        ev.preventDefault();
 
-    try {
-      const res = await fetch("/api/getLandData", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ X: X, Y: Y, metaverse: metaverse }),
-      });
-      const data = await res.json();
-      if (data.err) {
-        setCoordinatesError("LAND doesn't exist");
-        setShowCard(false);
-      } else {
-        handleAPIData(data);
-      }
+        const X = (document.getElementById('X') as HTMLInputElement).value
+        const Y = (document.getElementById('Y') as HTMLInputElement).value
 
-      setCoordinatesProcessing(false);
-    } catch (e) {
-      setCoordinatesError("Something went wrong, please try again later");
-      setShowCard(false);
-      setCoordinatesProcessing(false);
+        setCoordinatesProcessing(true);
+
+        try {
+            const res = await fetch("/api/getLandData", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ X: X, Y: Y, metaverse: metaverse })
+            });
+            const data = await res.json()
+            if (data.err) {
+                setCoordinatesError("LAND doesn't exist")
+                setShowCard(false);
+            } else {
+                handleAPIData(data)
+            }
+
+            setCoordinatesProcessing(false);
+
+        } catch (e) {
+            setCoordinatesError("Something went wrong, please try again later");
+            setShowCard(false);
+            setCoordinatesProcessing(false);
+        }
+
     }
   };
 

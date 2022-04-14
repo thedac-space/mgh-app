@@ -1,5 +1,6 @@
 import { Metaverse } from '../../lib/enums'
 import { IPredictions } from '../../lib/types'
+import { typedKeys } from '../../lib/utilities'
 
 const COINS = {
   ethPrediction: {
@@ -39,12 +40,12 @@ interface Props {
 }
 
 const PriceList = ({ predictions, className, metaverse }: Props) => {
-  const keys = Object.keys(predictions) as coinKey[]
+  const keys = typedKeys(predictions)
   return (
     <ul className={'flex flex-col flex-grow min-w-max gap-4 ' + className}>
       {/* Iterating through each Coin.  */}
       {keys.map(
-        (key: coinKey) =>
+        (key) =>
           (key !== 'metaversePrediction' ||
             (key === 'metaversePrediction' && metaverse)) && (
             <li

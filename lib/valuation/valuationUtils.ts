@@ -11,39 +11,18 @@ export const convertETHPrediction = (
 ) => {
   const ethUSD = coinPrices.ethereum.usd
   const usdPrediction = ethPrediction * ethUSD
-  let metaverseUSD
-  let metaversePrediction
-
-  if (metaverse === Metaverse.SANDBOX) {
-    metaverseUSD = coinPrices['the-sandbox'].usd
-    metaversePrediction = usdPrediction / metaverseUSD
-  } else if (metaverse === Metaverse.DECENTRALAND) {
-    metaverseUSD = coinPrices['decentraland'].usd
-    metaversePrediction = usdPrediction / metaverseUSD
-  } else if (metaverse === Metaverse.AXIE_INFINITY) {
-    metaverseUSD = coinPrices['axie-infinity'].usd
-    metaversePrediction = usdPrediction / metaverseUSD
-  }
+  const formattedMetaverse = metaverse === 'sandbox' ? 'the-sandbox' : metaverse
+  const metaverseUSD = coinPrices[formattedMetaverse].usd
+  const metaversePrediction = usdPrediction / metaverseUSD
 
   return { ethPrediction, usdPrediction, metaversePrediction }
-}
-
-export const convertMANAPrediction = (
-  coinPrices: ICoinPrices,
-  manaPrediction: number
-) => {
-  const ethUSD = coinPrices.ethereum.usd
-  const manaUSD = coinPrices.decentraland.usd
-  const usdPrediction = manaPrediction * manaUSD
-  const ethPrediction = usdPrediction / ethUSD
-  return { ethPrediction, usdPrediction, manaPrediction }
 }
 
 // Get Data for Single Land Asset
 export const getLandData = async (
   metaverse: Metaverse,
   tokenID?: string,
-  coordinates?: { X: string; Y: string }
+  coordinates?: { X?: string | number; Y?: string | number }
 ) => {
   try {
     const predictionRes = await fetch('/api/getLandData', {
@@ -79,9 +58,6 @@ export const formatLandAsset = async (
     processing: false,
   }
 
-  console.log({ metaverse })
-  console.log({ apiData })
-
   Object.defineProperty(formattedAsset, 'predictions', {
     value: convertETHPrediction(
       coinPrices,
@@ -105,7 +81,7 @@ export const handleTokenID = (tokenID: string) => {
 // Formatting Land Name if its too long or missing (Custom land names in decentraland..)
 export const handleLandName = (
   metaverse: Metaverse,
-  coords: { x: number; y: number },
+  coords: { x: number | string; y: number | string },
   landName?: string
 ) => {
   const options = {
@@ -113,7 +89,7 @@ export const handleLandName = (
     decentraland: 'Parcel',
     'axie-infinity': 'Plot',
   }
-  if (!landName) return `${options[metaverse]} ${coords.x},${coords.y}`
+  if (!landName) return `${options[metaverse]} ${coords.x}, ${coords.y}`
   if (metaverse === 'decentraland') {
     return `${options[metaverse]} (${coords.x}, ${coords.y})`
   } else {

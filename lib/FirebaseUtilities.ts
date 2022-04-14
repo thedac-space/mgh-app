@@ -11,6 +11,9 @@ import {
 } from 'firebase/firestore/lite'
 import { Score } from '../components/Valuation/LandLikeBox'
 import { Metaverse } from './enums'
+import { ValuationTile } from './heatmap/heatmapCommonTypes'
+import { mapLand } from './heatmap/heatmapTypes'
+import { typedKeys } from './utilities'
 
 // Firebase Init
 const firebaseConfig = {
@@ -109,6 +112,20 @@ export async function createValuationScore(
   })
 }
 
+export async function setFirebaseLands(lands: any[], metaverse: Metaverse) {
+  const heatmap = doc(db, 'heatmaps', metaverse)
+  await updateDoc(heatmap, {
+    values: arrayUnion(lands),
+  })
+}
+
+export async function getFirebaseLands(metaverse: Metaverse) {
+  const heatmap = doc(db, 'heatmaps', metaverse)
+  const heatmapData = (await getDoc(heatmap)).data()
+  if (!heatmapData) return
+  return heatmapData.values
+}
+
 // Like Land Valuation
 export async function likeLand(
   landId: string,
@@ -152,6 +169,7 @@ export async function dislikeLand(
     likes: arrayRemove(address),
   })
 }
+
 
 // Retrieve valuation daily data
 export async function getValuationDailyData(metaverse: Metaverse) {
