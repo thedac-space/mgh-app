@@ -22,7 +22,7 @@ export const convertETHPrediction = (
 export const getLandData = async (
   metaverse: Metaverse,
   tokenID?: string,
-  coordinates?: { X: string | number; Y: string | number }
+  coordinates?: { X?: string | number; Y?: string | number }
 ) => {
   try {
     const predictionRes = await fetch('/api/getLandData', {

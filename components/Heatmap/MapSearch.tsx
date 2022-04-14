@@ -18,10 +18,15 @@ export const MapSearchState = {
 
 interface Props {
   metaverse: Metaverse
-  handleMapSelection: (x: number, y: number) => NodeJS.Timeout | undefined
+  handleMapSelection: (
+    x?: number | undefined,
+    y?: number | undefined,
+    tokenId?: string | undefined
+  ) => Promise<NodeJS.Timeout | undefined>
 }
 
 const MapSearch = ({ metaverse, handleMapSelection }: Props) => {
+  // TODO..
   const [searchState, setSearchState] =
     useState<keyof typeof MapSearchState>('loaded')
   const [landId, setLandId] = useState('')
@@ -33,7 +38,7 @@ const MapSearch = ({ metaverse, handleMapSelection }: Props) => {
   const [searchBy, setSearchBy] = useState<'coordinates' | 'id'>('coordinates')
   const searchById = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    console.log({ landId })
+    handleMapSelection(undefined, undefined, landId)
   }
   const searchByCoordinates = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -63,7 +68,6 @@ const MapSearch = ({ metaverse, handleMapSelection }: Props) => {
       >
         <p className='mb-4 font-semibold text-gray-200 text-lg pt-1'>
           Search by
-          {/* {searchOptions[searchBy].text} */}
         </p>
         <div className='flex flex-col gap-2 mb-4'>
           {typedKeys(searchOptions).map((filter) => (
@@ -90,6 +94,7 @@ const MapSearch = ({ metaverse, handleMapSelection }: Props) => {
           ))}
         </div>
 
+        {/* Inputs */}
         <div className='flex flex-col gap-4 relative'>
           <div className='flex gap-2'>
             {searchBy === 'coordinates' ? (

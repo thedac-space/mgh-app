@@ -15,7 +15,7 @@ import {
   MapFilter,
 } from '../lib/heatmap/heatmapCommonTypes'
 import { useVisible } from '../lib/hooks'
-import { getState } from '../lib/utilities'
+import { getState, typedKeys } from '../lib/utilities'
 import { ICoinPrices } from '../lib/valuation/valuationTypes'
 import {
   decentralandAPILayer,
@@ -30,16 +30,31 @@ import HeatmapLoader from '../components/Heatmap/HeatmapLoader'
 import { getHeatmapSize } from '../lib/heatmap/getHeatmapSize'
 import ColorGuide from '../components/Heatmap/ColorGuide'
 import MapSearch from '../components/Heatmap/MapSearch'
+import { fetchHeatmapLand } from '../lib/heatmap/fetchHeatmapLand'
+import { IAPIData, IPredictions } from '../lib/types'
+
+// Making this state as an object in order to iterate easily through it
+export const HEATMAP_STATE = {
+  loading: 'loading',
+  loaded: 'loaded',
+  error: 'error',
+  loadingQuery: 'loadingQuery',
+  loadedQuery: 'loadedQuery',
+  errorQuery: 'errorQuery',
+}
+
+interface CardData {
+  apiData: IAPIData
+  predictions: IPredictions
+  currentPrice: number
+  landCoords: { x: string | number; y: string | number }
+}
 
 const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
-  const [mapState, setMapState] = useState<'loading' | 'loaded' | 'error'>(
-    'loading'
-  )
-  const [loading, loaded, error] = getState(mapState, [
-    'loading',
-    'loaded',
-    'error',
-  ])
+  const [mapState, setMapState] =
+    useState<keyof typeof HEATMAP_STATE>('loading')
+  const [loading, loaded, error, loadingQuery, loadedQuery, errorQuery] =
+    getState(mapState, typedKeys(HEATMAP_STATE))
 
   const [selected, setSelected] = useState<{ x: number; y: number }>()
   const [hovered, setHovered] = useState<{ x: number; y: number }>({
@@ -53,6 +68,7 @@ const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   const [atlas, setAtlas] = useState<Atlas>()
   const [landsLoaded, setLandsLoaded] = useState<number>(0)
   const [heatmapSize, setHeatmapSize] = useState<HeatmapSize>()
+  const [cardData, setCardData] = useState<CardData>()
 
   function isSelected(x: number, y: number) {
     return selected?.x === x && selected?.y === y
@@ -62,7 +78,6 @@ const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   }
 
   const hoverLayer: Layer = (x, y) => {
-    console.log('hover layer')
     return hovered?.x === x && hovered?.y === y
       ? { color: '#db2777', scale: 1.4 }
       : null
@@ -86,8 +101,25 @@ const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
     })
   }
 
-  const handleMapSelection = (x?: number, y?: number, landId?: string) => {
-    const id = x + ',' + y
+  // Main Search Function through Clicks,Form inputs.
+  const handleMapSelection = async (
+    x?: number,
+    y?: number,
+    tokenId?: string
+  ) => {
+    x && y && setSelected({ x: x, y: y })
+    setCardData(undefined)
+    setMapState('loadingQuery')
+    setIsVisible(true)
+    const landData = await fetchHeatmapLand(prices, metaverse, tokenId, {
+      x: x,
+      y: y,
+    })
+    if (!landData) {
+      setMapState('errorQuery')
+      return setTimeout(() => setIsVisible(false), 1100)
+    }
+    const id = landData?.landCoords.x + ',' + landData?.landCoords.y
     if (
       !atlas?.ITRM ||
       !(id in atlas.ITRM) ||
@@ -95,13 +127,12 @@ const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
         (!(id in atlas.decentraland) ||
           [5, 6, 7, 8, 12].includes(atlas.decentraland[id].type)))
     ) {
-      setSelected(undefined)
-      setIsVisible(true)
+      setMapState('errorQuery')
       return setTimeout(() => setIsVisible(false), 1100)
     }
-    if (!x || !y) return
-    setSelected({ x: x, y: y })
-    setIsVisible(true)
+    setSelected({ x: landData.landCoords.x, y: landData.landCoords.y })
+    setMapState('loadedQuery')
+    setCardData(landData)
   }
 
   // Use Effect for Metaverse Fetching and Map creation
@@ -117,7 +148,6 @@ const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
       const atlasWithColours = await setColours(ITRMAtlas, filterBy)
       const heatmapSize = getHeatmapSize({ ITRM: ITRMAtlas })
       setHeatmapSize(heatmapSize)
-      console.log({ heatmapSize })
       setAtlas({ ITRM: atlasWithColours, decentraland: decentralandAtlas })
       setMapState('loaded')
     }
@@ -143,9 +173,9 @@ const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
       {loading && (
         <HeatmapLoader landsLoaded={landsLoaded} metaverse={metaverse} />
       )}
-      {atlas && heatmapSize && loaded && (
+      {atlas && heatmapSize && !loading && (
         <>
-          <div className='absolute top-0 z-20 flex gap-4 p-2'>
+          <div className='absolute top-0 z-20 flex gap-4 p-2 w-fit'>
             <div>
               {/* Top left Coordinates */}
               <div className='mb-2 w-[177px]'>
@@ -208,10 +238,12 @@ const HeatMap: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
           <Fade duration={300}>
             <MapCard
               setIsVisible={setIsVisible}
-              prices={prices}
               metaverse={metaverse}
-              x={selected?.x}
-              y={selected?.y}
+              currentPrice={cardData?.currentPrice}
+              apiData={cardData?.apiData}
+              predictions={cardData?.predictions}
+              landCoords={cardData?.landCoords}
+              mapState={mapState}
             />
           </Fade>
         </div>

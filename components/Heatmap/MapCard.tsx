@@ -3,94 +3,45 @@ import { RiLoader3Fill } from 'react-icons/ri'
 import { ExternalLink, OptimizedImage, PriceList } from '../General'
 import { IAPIData, IPredictions } from '../../lib/types'
 import { FiExternalLink } from 'react-icons/fi'
-import { ICoinPrices } from '../../lib/valuation/valuationTypes'
 import React from 'react'
 import { Metaverse } from '../../lib/enums'
-import {
-  convertETHPrediction,
-  getAxieLandData,
-  getCurrentPrice,
-  getLandData,
-  handleLandName,
-} from '../../lib/valuation/valuationUtils'
+import { handleLandName } from '../../lib/valuation/valuationUtils'
 import { BsTwitter } from 'react-icons/bs'
 import Loader from '../Loader'
 import { formatMetaverseName, getState } from '../../lib/utilities'
-import { Contracts } from '../../lib/contracts'
 import { AddToWatchlistButton } from '../Valuation'
 import { useAppSelector } from '../../state/hooks'
 import { IoClose } from 'react-icons/io5'
+import { HEATMAP_STATE } from '../../pages/heatmap'
 interface Props {
-  x: number | undefined
-  y: number | undefined
+  apiData?: IAPIData
+  predictions?: IPredictions
+  currentPrice?: number
+  landCoords?: { x: string | number; y: string | number }
   metaverse: Metaverse
-  prices: ICoinPrices
   setIsVisible: React.Dispatch<React.SetStateAction<boolean>>
+  mapState: keyof typeof HEATMAP_STATE
 }
-const MapCard = ({ x, y, metaverse, prices, setIsVisible }: Props) => {
-  const landOptions = {
-    sandbox: { contract: Contracts.LAND.ETHEREUM_MAINNET.newAddress },
-    decentraland: { contract: Contracts.PARCEL.ETHEREUM_MAINNET.address },
-    'axie-infinity': { contract: Contracts.AXIE_LANDS.RONIN_MAINNET.address },
-  }
-  const [apiData, setApiData] = useState<IAPIData>()
-  const [cardState, setCardState] = useState<'loading' | 'loaded' | 'error'>(
-    'loading'
-  )
-  const [currentPrice, setCurrentPrice] = useState(NaN)
-  const [predictions, setPredictions] = useState<IPredictions>()
+const MapCard = ({
+  apiData,
+  predictions,
+  currentPrice,
+  landCoords,
+  metaverse,
+  setIsVisible,
+  mapState,
+}: Props) => {
   const imgSize = 170
-  const [loading, loaded, error] = getState(cardState, [
-    'loading',
-    'loaded',
-    'error',
+  const [loadingQuery, loadedQuery, errorQuery] = getState(mapState, [
+    'loadingQuery',
+    'loadedQuery',
+    'errorQuery',
   ])
-  const notListed = isNaN(currentPrice)
+  const notListed = !currentPrice || isNaN(currentPrice)
   const { address } = useAppSelector((state) => state.account)
 
-  useEffect(() => {
-    const setData = async () => {
-      if (!x || !y) return setCardState('error')
-      setCardState('loading')
-      const landData = await getLandData(metaverse, undefined, { X: x, Y: y })
-
-      // Converting Predictions
-      if (landData.err) {
-        return setCardState('error')
-      }
-      if (metaverse === 'axie-infinity') {
-        // Retrieving data from Axie Marketplace
-        const axieLandData = await getAxieLandData(
-          landData.coords.x,
-          landData.coords.y
-        )
-        setCurrentPrice(Number(axieLandData.auction?.currentPriceUSD))
-      } else {
-        // Retrieving data from OpenSea (Comes in ETH)
-        const res = await fetch(
-          `/api/fetchSingleAsset/${landOptions[metaverse].contract}/${landData.tokenId}`
-        )
-
-        // Retrieving Latest Orders for each Asset
-        const listings = (await res.json()).listings
-        console.log({ listings })
-        // Getting Current Price for each Asset
-
-        setCurrentPrice(getCurrentPrice(listings) * prices.ethereum.usd)
-      }
-
-      const predictions = convertETHPrediction(
-        prices,
-        landData.prices.eth_predicted_price,
-        metaverse
-      )
-      setApiData(landData)
-      setPredictions(predictions)
-      setCardState('loaded')
-    }
-    setData()
-  }, [])
-  return error || !x || !y ? (
+  useEffect(() => {}, [])
+  return errorQuery ? (
     <div className='gray-box bg-opacity-100'>
       <p className='text-lg font-semibold text-center text-gray-200'>
         No a Valid Land or not enough Data yet!
@@ -98,16 +49,17 @@ const MapCard = ({ x, y, metaverse, prices, setIsVisible }: Props) => {
     </div>
   ) : (
     <div className='gray-box py-8 px-4 flex flex-col cursor-pointer text-white items-start justify-between gap-4 bg-opacity-100 md:min-h-[362px] md:min-w-[359px] relative'>
-      {loading ? (
+      {loadingQuery ? (
         <div className='w-full flex flex-col gap-14 absolute top-2/4 left-2/4 -translate-x-2/4 -translate-y-2/4'>
           <Loader />
           <p className='text-lg font-semibold text-center text-gray-200'>
-            Calculating {handleLandName(metaverse, { x: x, y: y })}
+            Calculating
           </p>
         </div>
       ) : (
-        loaded &&
-        apiData && (
+        loadedQuery &&
+        apiData &&
+        landCoords && (
           <>
             <IoClose
               className='absolute top-1 right-1 text-xl hover:text-red-500 transition-all'
@@ -134,8 +86,8 @@ const MapCard = ({ x, y, metaverse, prices, setIsVisible }: Props) => {
                 <div>
                   <h3 className='text-base font-normal md:text-2xl p-0 leading-4'>
                     {handleLandName(metaverse, {
-                      x: x,
-                      y: y,
+                      x: landCoords.x,
+                      y: landCoords.y,
                     })}
                   </h3>
                   <p className='text-gray-400'>
@@ -171,7 +123,7 @@ const MapCard = ({ x, y, metaverse, prices, setIsVisible }: Props) => {
               {/* Price List */}
               {predictions ? (
                 <PriceList metaverse={metaverse} predictions={predictions} />
-              ) : error ? (
+              ) : errorQuery ? (
                 <span>Not enough Data.</span>
               ) : (
                 <span className='flex gap-2 text-lg'>
@@ -187,7 +139,7 @@ const MapCard = ({ x, y, metaverse, prices, setIsVisible }: Props) => {
                     : 'text-gray-400 '
                 }`}
               >
-                {isNaN(currentPrice)
+                {!currentPrice || isNaN(currentPrice)
                   ? 'Not Listed'
                   : `Listed: ${currentPrice.toFixed(2)} USDC`}
               </p>

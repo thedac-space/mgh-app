@@ -16,34 +16,48 @@ interface Props {
 const MapChooseFilter = ({ filterBy, setFilterBy }: Props) => {
   const [opened, setOpened] = useState(false)
   const filterOptions = {
-    transfers: { name: 'Transfers', icon: <BiTransferAlt /> },
+    basic: { name: 'Basic', shortName: undefined, icon: <FiMap /> },
+    eth_predicted_price: {
+      name: 'Predicted Price',
+      shortName: undefined,
+      icon: <BiTargetLock />,
+    },
+    transfers: {
+      name: 'Transfers',
+      shortName: undefined,
+      icon: <BiTransferAlt />,
+    },
     current_price: {
       name: 'Current Price',
+      shortName: undefined,
       icon: <MdAttachMoney />,
     },
     variation_last_week: {
       name: 'Weekly Price Variation',
+      shortName: 'W.P.V.',
       icon: <VscGraphLine />,
     },
     variation_last_four_weeks: {
       name: 'Monthly Price Variation',
+      shortName: 'M.P.V.',
       icon: <VscGraphLine />,
     },
     variation_last_six_months: {
       name: 'Semestral Price Variation',
+      shortName: 'S.P.V.',
       icon: <VscGraphLine />,
     },
-    eth_predicted_price: { name: 'Predicted Price', icon: <BiTargetLock /> },
-    basic: { name: 'Basic', icon: <FiMap /> },
   }
   return (
     <div>
       <button
         onClick={() => setOpened(!opened)}
-        className='h-16 gray-box bg-opacity-100 mb-2 items-center w-56 tracking-wider font-semibold text-gray-200 hover:text-white flex justify-between cursor-pointer transition-all'
+        className='h-16 gray-box bg-opacity-100 mb-2 items-center w-70 tracking-wider font-semibold text-gray-200 hover:text-white flex justify-between cursor-pointer transition-all'
       >
         <span className='text-lg'>{filterOptions[filterBy].icon}</span>
-        <span>{filterOptions[filterBy].name}</span>
+        <p>
+          {filterOptions[filterBy].shortName ?? filterOptions[filterBy].name}
+        </p>
         <IoIosArrowDown
           className={
             (opened ? 'rotate-180' : '') +
@@ -58,14 +72,16 @@ const MapChooseFilter = ({ filterBy, setFilterBy }: Props) => {
               filter !== filterBy && (
                 <Fade duration={500} key={filter} direction='down'>
                   <button
-                    className='flex gray-box gap-4 bg-opacity-100 items-center text-gray-200 hover:text-white font-semibold'
+                    className='flex gray-box gap-4 bg-opacity-100 items-center text-gray-200 hover:text-white font-semibold w-70'
                     onClick={() => {
                       setFilterBy(filter)
                       setOpened(false)
                     }}
                   >
                     {filterOptions[filter].icon}
-                    <span>{filterOptions[filter].name}</span>
+                    <span className='whitespace-nowrap'>
+                      {filterOptions[filter].name}
+                    </span>
                   </button>
                 </Fade>
               )
