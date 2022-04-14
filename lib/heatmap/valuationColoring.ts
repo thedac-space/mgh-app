@@ -34,7 +34,7 @@ export const setColours = async (
     predictions = typedKeys(valuationAtlas).map(
       (valuation) => valuationAtlas[valuation].history?.length
     )
-  } else if (element === 'none') {
+  } else if (element === 'basic') {
     predictions = []
   } else {
     predictions = typedKeys(valuationAtlas).map(
@@ -54,7 +54,7 @@ export const setColours = async (
           valuationAtlas[valuation].current_price,
           valuationAtlas[valuation].predicted_price
         )
-      } else if (element === 'none') {
+      } else if (element === 'basic') {
         percent = 20
       } else {
         percent = getPercentage(valuationAtlas[valuation][element], max)
@@ -78,7 +78,7 @@ export const TILE_COLORS = {
   3: 'rgb(255,255,0)',
   2: 'rgb(0,255,0)',
   1: 'rgb(0,255,255)', // Min
-  0: 'rgb(10,10,10)', // None
+  0: 'rgb(50,50,50)', // None
 
   // if (percent > 100) return 'rgb(120,0,0)'
   // if (between(percent, 100, 90)) return 'rgb(255,0,0)'
