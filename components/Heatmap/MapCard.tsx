@@ -8,11 +8,12 @@ import { Metaverse } from '../../lib/enums'
 import { handleLandName } from '../../lib/valuation/valuationUtils'
 import { BsTwitter } from 'react-icons/bs'
 import Loader from '../Loader'
-import { formatMetaverseName, getState } from '../../lib/utilities'
-import { AddToWatchlistButton } from '../Valuation'
+import { formatName, getState } from '../../lib/utilities'
+import { AddToWatchlistButton, LandLikeBox } from '../Valuation'
 import { useAppSelector } from '../../state/hooks'
 import { IoClose } from 'react-icons/io5'
-import { HEATMAP_STATE } from '../../pages/heatmap'
+import { HEATMAP_STATE } from '../../pages/valuation'
+import { SocialMediaOptions } from '../../lib/socialMediaOptions'
 interface Props {
   apiData?: IAPIData
   predictions?: IPredictions
@@ -39,8 +40,8 @@ const MapCard = ({
   ])
   const notListed = !currentPrice || isNaN(currentPrice)
   const { address } = useAppSelector((state) => state.account)
+  const options = SocialMediaOptions(apiData, predictions)
 
-  useEffect(() => {}, [])
   return errorQuery ? (
     <div className='gray-box bg-opacity-100'>
       <p className='text-lg font-semibold text-center text-gray-200'>
@@ -113,7 +114,7 @@ const MapCard = ({
                   )}
                   <ExternalLink
                     href={apiData.external_link}
-                    text={formatMetaverseName(metaverse)}
+                    text={formatName(metaverse)}
                   />
                 </nav>
               </div>
@@ -144,10 +145,14 @@ const MapCard = ({
                   : `Listed: ${currentPrice.toFixed(2)} USDC`}
               </p>
             </div>
-            <BsTwitter
-              title='Share Valuation'
-              className='absolute h-5 w-5 z-30 bottom-6 right-4 text-gray-200 hover:text-blue-400 transition ease-in-out duration-300 cursor-pointer'
-            />
+            {/* Likes */}
+            <div className='flex flex-start w-full'>
+              <LandLikeBox
+                landId={apiData.tokenId}
+                metaverse={apiData.metaverse}
+                twitterLink={options.twitter.valuationLink}
+              />
+            </div>
           </>
         )
       )}

@@ -29,11 +29,8 @@ export function getPoolData(poolId: number | undefined): IPoolData {
   return poolData
 }
 
-export const formatMetaverseName = (
-  metaverseName: string,
-  uppercase?: boolean
-) => {
-  const nameArray = metaverseName.split('-')
+export const formatName = (name: string, uppercase?: boolean) => {
+  const nameArray = name.split('-')
   const formattedName = nameArray
     .map((word, i) => {
       if (uppercase) return word.toUpperCase()
@@ -42,7 +39,6 @@ export const formatMetaverseName = (
     .join(' ')
   return formattedName
 }
-
 
 /**
  * @description When making dynamic component states, it might be more safe and easier to create a state that allows only one option at a time

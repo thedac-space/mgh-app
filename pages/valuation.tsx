@@ -1,406 +1,332 @@
-import React, { useEffect, useState } from "react";
-import { NextPage } from "next";
-import Head from "next/head";
-import "animate.css";
-import { HiOutlineSearch } from "react-icons/hi";
-import { BsQuestionCircle } from "react-icons/bs";
-import Link from "next/link";
-import PriceCard from "../components/PriceCard";
-import { Metaverse } from "../lib/enums";
-import { IAPIData, IPredictions } from "../lib/types";
-import FloorPriceTracker from "../components/Valuation/FloorPriceTracker";
-import SalesVolumeDaily from "../components/Valuation/SalesVolumeDaily";
-import {  MostUnderValuedLand } from "../components/Valuation";
-import { convertETHPrediction } from "../lib/valuation/valuationUtils";
-import { useRouter } from "next/router";
-import dynamic from "next/dynamic";
-import { ICoinPrices } from "../lib/valuation/valuationTypes";
-const FloorAndVolumeChart = dynamic(() => import("../components/Valuation/FloorAndVolumeChart"), {
-    ssr: false
-  });
+import { NextPage } from 'next'
+import React, { useEffect, useRef, useState } from 'react'
+import { Fade } from 'react-awesome-reveal'
+import MapCard from '../components/Heatmap/MapCard'
+import MapChooseFilter from '../components/Heatmap/MapChooseFilter'
+import MapChooseMetaverse from '../components/Heatmap/MapChooseMetaverse'
+import MapLandSummary from '../components/Heatmap/MapLandSummary'
+import { TileMap } from '../components/Heatmap/TileMap'
+import { Metaverse } from '../lib/enums'
+import {
+  Atlas,
+  AtlasTile,
+  HeatmapSize,
+  Layer,
+  MapFilter,
+} from '../lib/heatmap/heatmapCommonTypes'
+import { useVisible } from '../lib/hooks'
+import { formatName, getState, typedKeys } from '../lib/utilities'
+import { ICoinPrices } from '../lib/valuation/valuationTypes'
+import {
+  decentralandAPILayer,
+  filteredLayer,
+} from '../lib/heatmap/heatmapLayers'
+import {
+  fetchDecentralandAtlas,
+  fetchITRMAtlas,
+} from '../lib/heatmap/fetchAtlas'
+import { setColours } from '../lib/heatmap/valuationColoring'
+import HeatmapLoader from '../components/Heatmap/HeatmapLoader'
+import { getHeatmapSize } from '../lib/heatmap/getHeatmapSize'
+import ColorGuide from '../components/Heatmap/ColorGuide'
+import MapSearch from '../components/Heatmap/MapSearch'
+import { fetchHeatmapLand } from '../lib/heatmap/fetchHeatmapLand'
+import { IAPIData, IPredictions } from '../lib/types'
+import { FloorPriceTracker, SalesVolumeDaily } from '../components/Valuation'
+import Link from 'next/link'
+import dynamic from 'next/dynamic'
+const FloorAndVolumeChart = dynamic(
+  () => import('../components/Valuation/FloorAndVolumeChart'),
+  {
+    ssr: false,
+  }
+)
 
-const ValuationPage: NextPage<{prices: ICoinPrices}> = ({ prices }) => {
-    const { query } = useRouter()
-    const [apiData, setAPIData] = useState<IAPIData>();
-    const [predictions, setPredictions] = useState<IPredictions>()
+// Making this state as an object in order to iterate easily through it
+export const HEATMAP_STATE = {
+  loading: 'loading',
+  loaded: 'loaded',
+  error: 'error',
+  loadingQuery: 'loadingQuery',
+  loadedQuery: 'loadedQuery',
+  errorQuery: 'errorQuery',
+}
 
-    const [idProcessing, setIdProcessing] = useState(false);
-    const [coordinatesProcessing, setCoordinatesProcessing] = useState(false);
-    const [showCard, setShowCard] = useState(false);
-    const [idError, setIdError] = useState("");
-    const [coordinatesError, setCoordinatesError] = useState("");
-    const [tokenId, setTokenId ] = useState("");
-    const [comingFromLink, setComingFromLink] = useState<Boolean>()
+interface CardData {
+  apiData: IAPIData
+  predictions: IPredictions
+  currentPrice: number
+  landCoords: { x: string | number; y: string | number }
+}
 
-    const [metaverse, setMetaverse] = useState<Metaverse>(Metaverse.SANDBOX)
+const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
+  const [mapState, setMapState] =
+    useState<keyof typeof HEATMAP_STATE>('loading')
+  const [loading, loaded, error, loadingQuery, loadedQuery, errorQuery] =
+    getState(mapState, typedKeys(HEATMAP_STATE))
 
-    
+  const [selected, setSelected] = useState<{ x: number; y: number }>()
+  const [hovered, setHovered] = useState<{ x: number; y: number }>({
+    x: NaN,
+    y: NaN,
+  })
+  // Hook for Popup
+  const { ref, isVisible, setIsVisible } = useVisible(false)
+  const [metaverse, setMetaverse] = useState<Metaverse>(Metaverse.DECENTRALAND)
+  const [filterBy, setFilterBy] = useState<MapFilter>('basic')
+  const [atlas, setAtlas] = useState<Atlas>()
+  const [landsLoaded, setLandsLoaded] = useState<number>(0)
+  const [heatmapSize, setHeatmapSize] = useState<HeatmapSize>()
+  const [cardData, setCardData] = useState<CardData>()
 
-    const handleAPIData = (data: any) => {
+  function isSelected(x: number, y: number) {
+    return selected?.x === x && selected?.y === y
+  }
+  const selectedStrokeLayer: Layer = (x, y) => {
+    return isSelected(x, y) ? { color: '#ff0044', scale: 1.4 } : null
+  }
 
-        setAPIData(data)
+  const hoverLayer: Layer = (x, y) => {
+    return hovered?.x === x && hovered?.y === y
+      ? { color: '#db2777', scale: 1.4 }
+      : null
+  }
 
-        const ethPrediction = data.prices.eth_predicted_price
-        const predictions = convertETHPrediction(prices, ethPrediction, data.metaverse)
-        setPredictions(predictions)
+  const selectedFillLayer: Layer = (x, y) => {
+    return isSelected(x, y) ? { color: '#ff9990', scale: 1.2 } : null
+  }
 
-        setShowCard(true);
+  const sectionRef = useRef<HTMLElement>(null)
+  const [dims, setDims] = useState({
+    height: 500,
+    width: sectionRef.current?.offsetWidth,
+  })
 
-    }
+  const resize = () => {
+    if (!sectionRef.current) return
+    setDims({
+      height: sectionRef.current.offsetHeight,
+      width: sectionRef.current.offsetWidth,
+    })
+  }
 
-    const handleCoordinatesSubmit = async (ev: any) => {
-        ev.preventDefault();
-
-        const X = (document.getElementById('X') as HTMLInputElement).value
-        const Y = (document.getElementById('Y') as HTMLInputElement).value
-
-        setCoordinatesProcessing(true);
-
-        try {
-            const res = await fetch("/api/getLandData", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ X: X, Y: Y, metaverse: metaverse })
-            });
-            const data = await res.json()
-            if (data.err) {
-                setCoordinatesError("LAND doesn't exist")
-                setShowCard(false);
-            } else {
-                handleAPIData(data)
-            }
-
-            setCoordinatesProcessing(false);
-
-        } catch (e) {
-            setCoordinatesError("Something went wrong, please try again later");
-            setShowCard(false);
-            setCoordinatesProcessing(false);
-        }
-
-    }
-  
-
-  const handleIDSubmit = async (
-    ev?: React.FormEvent<HTMLFormElement>,
-    fromQuery?: boolean
+  // Main Search Function through Clicks,Form inputs.
+  const handleMapSelection = async (
+    x?: number,
+    y?: number,
+    tokenId?: string
   ) => {
-    console.log("handling");
-    ev?.preventDefault();
-    console.log("passed prevent");
-    setIdProcessing(true);
-    console.log("passed ID Processing");
-
-    const tokenID = fromQuery ? query.land : tokenId;
-    const chosenMetaverse = fromQuery ? query.metaverse : metaverse;
-    try {
-      const res = await fetch("/api/getLandData", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ tokenID: tokenID, metaverse: chosenMetaverse }),
-      });
-      const data = await res.json();
-      if (data.err) {
-        setIdError("LAND doesn't exist");
-        setShowCard(false);
-      } else {
-        handleAPIData(data);
-      }
-
-      setIdProcessing(false);
-    } catch (e) {
-      setIdError("Something went wrong, please try again later");
-      setShowCard(false);
-      setIdProcessing(false);
+    x && y && setSelected({ x: x, y: y })
+    setCardData(undefined)
+    setMapState('loadingQuery')
+    setIsVisible(true)
+    const landData = await fetchHeatmapLand(prices, metaverse, tokenId, {
+      x: x,
+      y: y,
+    })
+    if (!landData) {
+      setMapState('errorQuery')
+      return setTimeout(() => setIsVisible(false), 1100)
     }
-  };
+    const id = landData?.landCoords.x + ',' + landData?.landCoords.y
+    if (
+      !atlas?.ITRM ||
+      !(id in atlas.ITRM) ||
+      (atlas.decentraland &&
+        (!(id in atlas.decentraland) ||
+          [5, 6, 7, 8, 12].includes(atlas.decentraland[id].type)))
+    ) {
+      setMapState('errorQuery')
+      return setTimeout(() => setIsVisible(false), 1100)
+    }
+    setSelected({ x: landData.landCoords.x, y: landData.landCoords.y })
+    setMapState('loadedQuery')
+    setCardData(landData)
+  }
 
+  // Use Effect for Metaverse Fetching and Map creation
   useEffect(() => {
-    if (comingFromLink === false) return;
-    if (!query.land || !query.metaverse) return;
-    // If coming from Outside Link then show land in link
-    handleIDSubmit(undefined, true);
-    // Change this to not retrigger
-    setComingFromLink(false);
-  }, [query]);
+    const setData = async () => {
+      setLandsLoaded(0)
+      setSelected(undefined)
+      setMapState('loading')
+      const ITRMAtlas = await fetchITRMAtlas(metaverse, setLandsLoaded)
+      let decentralandAtlas: Record<string, AtlasTile> | undefined
+      if (metaverse === 'decentraland') {
+        decentralandAtlas = await fetchDecentralandAtlas()
+      }
+      const atlasWithColours = await setColours(ITRMAtlas, filterBy)
+      const heatmapSize = getHeatmapSize({ ITRM: ITRMAtlas })
+      setHeatmapSize(heatmapSize)
+      setAtlas({ ITRM: atlasWithColours, decentraland: decentralandAtlas })
+      setMapState('loaded')
+    }
+    setData()
+    resize()
+    window.addEventListener('resize', resize)
+
+    return () => window.removeEventListener('resize', resize)
+  }, [metaverse])
+
+  // Use Effect for changing filters
+  useEffect(() => {
+    if (!atlas) return
+    const changeColours = async () => {
+      const atlasWithColours = await setColours(atlas.ITRM, filterBy)
+      setAtlas({ ...atlas, ITRM: atlasWithColours })
+    }
+    changeColours()
+  }, [filterBy])
 
   return (
-    <>
-      <Head>
-        <title>MGH - LAND valuation</title>
-        <meta
-          name="description"
-          content="Governance of metaverse related items, fair valuation and minting of NFT backed tokens and provision of metaverse market data."
-        />
-      </Head>
-
-      <div className="w-full flex flex-col items-center xs:w-[22rem] sm:w-full justify-start space-y-10 max-w-4xl mt-8 xl:mt-0">
-        {/* Main Header */}
-        <div className="gray-box flex flex-col sm:flex-row justify-between items-center">
-          <h1 className="text-transparent bg-clip-text lg:text-5xl text-3xl bg-gradient-to-br from-blue-500 via-green-400 to-green-500 pb-0 sm:pb-2">
-            LAND Valuation
-          </h1>
-          {/* Watchlist and Portfolio Button's wrapper */}
-          <div className="flex space-x-5 mt-5 sm:mt-0">
-            {/* Portfolio */}
-            <Link href={"/portfolio"}>
-              <a className="hover:scale-105 font-medium text-white px-5 py-3 flex items-center justify-center rounded-xl bg-gradient-to-br from-blue-500/30 to-green-500/30 transition-all duration-300">
-                <span className="pt-1 text-xl">Portfolio</span>
-              </a>
-            </Link>
-            {/*  Watchlist */}
-            <Link href={"/watchlist"}>
-              <a className="hover:scale-105 font-medium text-white px-5 py-3 flex items-center justify-center rounded-xl bg-gradient-to-br from-blue-500/30 to-green-500/30 transition duration-300">
-                <span className="pt-1 text-xl">Watchlist</span>
-              </a>
-            </Link>
-          </div>
-        </div>
-
-        {/* Metaverse Form and ScoreBox Wrapper */}
-        <div className="flex flex-col sm:flex-row space-y-5 sm:space-y-0 space-x-0 sm:space-x-5 md:space-x-10 items-stretch justify-between w-full">
-          {/* Left Side */}
-          <div className="flex flex-col w-full gap-10">
-            {/* Choose Metaverse */}
-            <div className="flex flex-col items-start gray-box text-left">
-              <p className="font-medium text-gray-300 mb-3 pl-1">
-                Choose Metaverse
-              </p>
-
-              <div className="flex space-x-5">
-                <div
-                  onClick={() => setMetaverse(Metaverse.SANDBOX)}
-                  className={`flex flex-col items-center justify-center space-y-2 rounded-xl cursor-pointer p-2 px-3 pt-4 w-24 md:w-30 h-24 md:h-30 group focus:outline-none ${
-                    metaverse === Metaverse.SANDBOX
-                      ? "border-opacity-100 text-gray-200"
-                      : "border-opacity-40 hover:border-opacity-100 text-gray-400 hover:text-gray-200"
-                  } border border-gray-400 focus:border-opacity-100 transition duration-300 ease-in-out`}
-                >
-                  <img
-                    src="/images/the-sandbox-sand-logo.png"
-                    className={`h-12 md:h-14 ${
-                      metaverse === Metaverse.SANDBOX
-                        ? "grayscale-0"
-                        : "grayscale"
-                    } group-hover:grayscale-0 transition duration-300 ease-in-out`}
-                  />
-                  <p className="font-medium text-xs md:text-sm pt-1">Sandbox</p>
-                </div>
-                <div
-                  onClick={() => setMetaverse(Metaverse.DECENTRALAND)}
-                  className={`flex flex-col items-center justify-center space-y-2 rounded-xl cursor-pointer p-2 px-3 pt-4 w-24 md:w-30 h-24 md:h-30 group focus:outline-none ${
-                    metaverse === Metaverse.DECENTRALAND
-                      ? "border-opacity-100 text-gray-200"
-                      : "text-gray-400 hover:text-gray-200 border-opacity-40 hover:border-opacity-100"
-                  } border border-gray-400 focus:border-opacity-100 transition duration-300 ease-in-out`}
-                >
-                  <img
-                    src="/images/decentraland-mana-logo.png"
-                    className={`h-12 md:h-14 ${
-                      metaverse === Metaverse.DECENTRALAND
-                        ? "grayscale-0"
-                        : "grayscale"
-                    } group-hover:grayscale-0 transition duration-300 ease-in-out`}
-                  />
-                  <p className="font-medium text-xs md:text-sm pt-1">
-                    Decentraland
-                  </p>
-                </div>
-                <div
-                  onClick={() => setMetaverse(Metaverse.AXIE_INFINITY)}
-                  className={`flex flex-col items-center justify-center space-y-2 rounded-xl cursor-pointer p-2 px-3 pt-4 w-24 md:w-30 h-24 md:h-30 group focus:outline-none ${
-                    metaverse === Metaverse.AXIE_INFINITY
-                      ? "border-opacity-100 text-gray-200"
-                      : "text-gray-400 hover:text-gray-200 border-opacity-40 hover:border-opacity-100"
-                  } border border-gray-400 focus:border-opacity-100 transition duration-300 ease-in-out`}
-                >
-                  <img
-                    src="/images/axie-infinity-axs-logo.png"
-                    className={`h-12 md:h-14 ${
-                      metaverse === Metaverse.AXIE_INFINITY
-                        ? "grayscale-0"
-                        : "grayscale"
-                    } group-hover:grayscale-0 transition duration-300 ease-in-out`}
-                  />
-                  <p className="font-medium text-xs md:text-sm pt-1">
-                    Axie Infinity
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Valuation Form */}
-            <div className="flex flex-col items-start gray-box">
-              {/* Find by Token ID */}
-              <div className="relative flex flex-wrap items-center mb-3 pl-1 text-left w-full max-w-sm">
-                <p className="font-medium text-gray-300">Find by Token ID</p>
-                <BsQuestionCircle className="text-gray-300 cursor-pointer peer ml-3 -mt-1" />
-                <p className="absolute -top-7 -left-6 xs:left-0 pl-2 px-2 py-1 rounded-lg bg-black bg-opacity-10 backdrop-filter backdrop-blur font-medium text-xs text-gray-400 hidden peer-hover:block w-70">
-                  Find LAND on Opensea &gt; Details &gt; Token ID
-                </p>
-              </div>
-              <form
-                onSubmit={handleIDSubmit}
-                onInput={() => {
-                  setIdError("");
-                  setCoordinatesError("");
-                }}
-                className="relative flex items-stretch justify-between space-x-3 lg:space-x-5 w-full rounded-xl max-w-sm"
-              >
-                <input
-                  required
-                  id="tokenID"
-                  value={tokenId}
-                  onChange={(e) => setTokenId(e.target.value)}
-                  type="text"
-                  placeholder="e.g. 72792"
-                  className={`bg-transparent w-full text-white font-medium p-4 focus:outline-none border border-white/40 hover:border-white/100 focus:border-white/100 ${
-                    idError && "border-red-500/100"
-                  } transition duration-300 ease-in-out rounded-xl placeholder-white placeholder-opacity-75`}
-                />
-
-                <button
-                  type="submit"
-                  className="flex flex-none items-center justify-around bg-gray-200 hover:bg-white transition ease-in-out duration-500 rounded-xl m-1 ml-2 lg:ml-1 shadow-dark hover:shadow-button w-12 xs:w-16 sm:w-12 lg:w-28"
-                >
-                  <svg
-                    className={`${
-                      idProcessing ? "block" : "hidden"
-                    } animate-spin-slow h-6 w-6 border-4 border-t-gray-300 border-l-gray-300 border-gray-800 rounded-full " viewBox="0 0 24 24`}
-                  />
-                  <span className="text-black font-medium pt-1 hidden lg:block">
-                    Search
-                  </span>
-                  <HiOutlineSearch
-                    className={`${
-                      idProcessing ? "hidden" : "block"
-                    } lg:hidden text-2xl`}
-                  />
-                </button>
-              </form>
-              <p className="font-medium text-xs text-red-500 mt-1 pl-2 text-left w-full max-w-sm">
-                {idError}
-              </p>
-
-              {/* Find by Coordinatess */}
-              <p className="font-medium  text-gray-300 mb-3 pl-1 text-left w-full max-w-sm mt-8">
-                Find by Coordinates
-              </p>
-              <form
-                onSubmit={handleCoordinatesSubmit}
-                onInput={() => {
-                  setIdError("");
-                  setCoordinatesError("");
-                }}
-                className="relative flex items-stretch justify-between space-x-3 lg:space-x-5 w-full rounded-xl max-w-sm"
-              >
-                <input
-                  required
-                  id="X"
-                  type="text"
-                  placeholder="X"
-                  className={`bg-transparent w-full text-white font-medium p-4 focus:outline-none border border-white/40 hover:border-white/100 focus:border-white/100 ${
-                    idError && "border-red-500/100"
-                  } transition duration-300 ease-in-out rounded-xl placeholder-white placeholder-opacity-75`}
-                />
-                <input
-                  required
-                  id="Y"
-                  type="text"
-                  placeholder="Y"
-                  className={`bg-transparent w-full text-white font-medium p-4 focus:outline-none border border-white/40 hover:border-white/100 focus:border-white/100 ${
-                    idError && "border-red-500/100"
-                  } transition duration-300 ease-in-out rounded-xl placeholder-white placeholder-opacity-75`}
-                />
-
-                <button
-                  type="submit"
-                  className="flex flex-none items-center justify-around bg-gray-200 hover:bg-white transition ease-in-out duration-500 rounded-xl m-1 ml-2 lg:ml-1 shadow-dark hover:shadow-button w-12 xs:w-16 sm:w-12 lg:w-28"
-                >
-                  <svg
-                    className={`${
-                      coordinatesProcessing ? "block" : "hidden"
-                    } animate-spin-slow h-6 w-6 border-4 border-t-gray-300 border-l-gray-300 border-gray-800 rounded-full " viewBox="0 0 24 24`}
-                  />
-                  <span className="text-black font-medium pt-1 hidden lg:block">
-                    Search
-                  </span>
-                  <HiOutlineSearch
-                    className={`${
-                      coordinatesProcessing ? "hidden" : "block"
-                    } lg:hidden text-2xl`}
-                  />
-                </button>
-              </form>
-              <p className="font-medium text-xs text-red-500 mt-1 pl-2 text-left w-full max-w-sm">
-                {coordinatesError}
-              </p>
-            </div>
-          </div>
-
-          {/* Price Card */}
-          <div className="flex flex-col items-start gray-box max-w-full sm:max-w-sm text-left">
-            <PriceCard
-              showCard={showCard}
-              processing={idProcessing || coordinatesProcessing}
-              apiData={apiData}
-              predictions={predictions}
-            />
-          </div>
-        </div>
-
-        {/* Tier 1 - Most Undervalued Land */}
-        {/* <MostUnderValuedLand verticalUnder="sm" predictions={undefined} processing={false} showCard={true} apiData={undefined} /> */}
-        {/* Daily Volume and Floor Price Wrapper */}
-        <div className="flex flex-col sm:flex-row space-y-5 sm:space-y-0 space-x-0 sm:space-x-5 md:space-x-10 items-stretch justify-between w-full">
-          {/* Daily Volume */}
-          <SalesVolumeDaily metaverse={metaverse} coinPrices={prices} />
-          {/* Floor Price */}
-          <div className="flex flex-col justify-between w-full space-y-5 md:space-y-10 lg:space-y-5">
-            <FloorPriceTracker metaverse={metaverse} coinPrices={prices} />
-          </div>
-        </div>
-        {/*Graph*/}
-        <div className="flex flex-col shadow-blck rounded-xl py-3 px-4 w-full bg-grey-dark bg-opacity-20 ">
-          <FloorAndVolumeChart metaverse={metaverse} />
-        </div>
-        <div className="flex flex-col items-start shadow-blck rounded-xl py-3 px-4 w-full bg-grey-dark bg-opacity-20 text-left">
-          <p className={`text-xs sm:text-sm text-gray-400`}>
-            The MGH DAO does not provide, personalized investment
-            recommendations or advisory services. Any information provided
-            through the land evaluation tool and others is not, and should not
-            be, considered as advice of any kind and is for information purposes
-            only. That land is “valuated” does not mean, that it is in any way
-            approved, checked audited, and/or has a real or correct value. In no
-            event shall the MGH DAO be liable for any special, indirect, or
-            consequential damages, or any other damages of any kind, including
-            but not limited to loss of use, loss of profits, or loss of data,
-            arising out of or in any way connected with the use of or inability
-            to use the Service, including without limitation any damages
-            resulting from reliance by you on any information obtained from
-            using the Service.
-          </p>
+    <section ref={sectionRef} className='w-full h-2/4 min-h-[50vh] relative'>
+      {/* Main Header */}
+      <div className='gray-box flex flex-col sm:flex-row justify-between items-center mb-8'>
+        <h1 className='text-transparent bg-clip-text lg:text-5xl text-3xl bg-gradient-to-br from-blue-500 via-green-400 to-green-500 mb-0 sm:mb-2'>
+          LAND Valuation
+        </h1>
+        {/* Watchlist and Portfolio Button's wrapper */}
+        <div className='flex gap-5'>
+          {/* Portfolio */}
+          {['portfolio', 'watchlist', 'valuations-dashboard', 'analytics'].map(
+            (option) => (
+              <Link href={`/${option}`}>
+                <a className='hover:scale-105 font-medium text-white px-5 py-3 flex items-center justify-center rounded-xl bg-gradient-to-br from-blue-500/30 to-green-500/30 transition-all duration-300'>
+                  <span className='pt-1 text-xl'>{formatName(option)}</span>
+                </a>
+              </Link>
+            )
+          )}
         </div>
       </div>
-    </>
-  );
-};
 
-export async function getStaticProps() {
-  const res = await fetch(
-    "https://api.coingecko.com/api/v3/simple/price?ids=ethereum%2Cthe-sandbox%2Cdecentraland%2Caxie-infinity&vs_currencies=usd"
-  );
-  const prices = await res.json();
+      {/* Heatmap */}
+      <div className='relative mb-8'>
+        {loading && (
+          <HeatmapLoader landsLoaded={landsLoaded} metaverse={metaverse} />
+        )}
+        {atlas && heatmapSize && !loading && (
+          <>
+            <div className='absolute top-0 z-20 flex gap-4 p-2 w-fit'>
+              <div>
+                {/* Top left Coordinates */}
+                <div className='mb-2 w-[177px]'>
+                  <MapLandSummary coordinates={hovered} metaverse={metaverse} />
+                </div>
+                {/* Search Forms */}
+                <div>
+                  <MapSearch
+                    handleMapSelection={handleMapSelection}
+                    metaverse={metaverse}
+                  />
+                </div>
+              </div>
+              {/* Metaverse Selection */}
+              <MapChooseMetaverse
+                metaverse={metaverse}
+                setMetaverse={setMetaverse}
+              />
+              {/* Metaverse Selection */}
+              <MapChooseFilter filterBy={filterBy} setFilterBy={setFilterBy} />
+              {/* Color Guide */}
+              {filterBy !== 'basic' && <ColorGuide />}
+            </div>
+            {/*  Map */}
+            <TileMap
+              minX={heatmapSize.minX}
+              maxX={heatmapSize.maxX}
+              minY={heatmapSize.minY}
+              maxY={heatmapSize.maxY}
+              x={selected?.x || heatmapSize.initialY}
+              y={selected?.y || heatmapSize.initialX}
+              filter={filterBy}
+              atlas={atlas}
+              className='atlas'
+              width={dims.width}
+              height={dims.height}
+              layers={[
+                decentralandAPILayer,
+                filteredLayer,
+                selectedStrokeLayer,
+                selectedFillLayer,
+                hoverLayer,
+              ]}
+              onHover={(x, y) => {
+                setHovered({ x, y })
+              }}
+              onClick={(x, y) => {
+                if (isSelected(x, y)) {
+                  setSelected(undefined)
+                } else {
+                  handleMapSelection(x, y)
+                }
+              }}
+            />
+          </>
+        )}
+        {/* Predictions Card */}
+        {isVisible && (
+          <div ref={ref} className='absolute bottom-2 right-8'>
+            <Fade duration={300}>
+              <MapCard
+                setIsVisible={setIsVisible}
+                metaverse={metaverse}
+                currentPrice={cardData?.currentPrice}
+                apiData={cardData?.apiData}
+                predictions={cardData?.predictions}
+                landCoords={cardData?.landCoords}
+                mapState={mapState}
+              />
+            </Fade>
+          </div>
+        )}
+      </div>
+
+      {/* Tier 1 - Most Undervalued Land */}
+      {/* <MostUnderValuedLand verticalUnder="sm" predictions={undefined} processing={false} showCard={true} apiData={undefined} /> */}
+      {/* Daily Volume and Floor Price Wrapper */}
+      <div className='flex flex-col sm:flex-row space-y-5 sm:space-y-0 space-x-0 sm:space-x-5 md:space-x-10 items-stretch justify-between w-full'>
+        {/* Daily Volume */}
+        <SalesVolumeDaily metaverse={metaverse} coinPrices={prices} />
+        {/* Floor Price */}
+        <div className='flex flex-col justify-between w-full space-y-5 md:space-y-10 lg:space-y-5'>
+          <FloorPriceTracker metaverse={metaverse} coinPrices={prices} />
+        </div>
+      </div>
+      {/*Graph*/}
+      <div className='flex flex-col shadow-blck rounded-xl py-3 px-4 w-full bg-grey-dark bg-opacity-20 '>
+        <FloorAndVolumeChart metaverse={metaverse} />
+      </div>
+      <div className='flex flex-col items-start shadow-blck rounded-xl py-3 px-4 w-full bg-grey-dark bg-opacity-20 text-left'>
+        <p className={`text-xs sm:text-sm text-gray-400`}>
+          The MGH DAO does not provide, personalized investment recommendations
+          or advisory services. Any information provided through the land
+          evaluation tool and others is not, and should not be, considered as
+          advice of any kind and is for information purposes only. That land is
+          “valuated” does not mean, that it is in any way approved, checked
+          audited, and/or has a real or correct value. In no event shall the MGH
+          DAO be liable for any special, indirect, or consequential damages, or
+          any other damages of any kind, including but not limited to loss of
+          use, loss of profits, or loss of data, arising out of or in any way
+          connected with the use of or inability to use the Service, including
+          without limitation any damages resulting from reliance by you on any
+          information obtained from using the Service.
+        </p>
+      </div>
+    </section>
+  )
+}
+
+export async function getServerSideProps() {
+  const coin = await fetch(
+    'https://api.coingecko.com/api/v3/simple/price?ids=ethereum%2Cthe-sandbox%2Cdecentraland%2Caxie-infinity&vs_currencies=usd'
+  )
+  const prices: ICoinPrices = await coin.json()
 
   return {
     props: {
       prices,
     },
-  };
+  }
 }
-
-export default ValuationPage;
+export default Valuation

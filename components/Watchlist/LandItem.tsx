@@ -13,7 +13,7 @@ import {
 } from '../../lib/valuation/valuationUtils'
 import { BsTwitter } from 'react-icons/bs'
 import { SocialMediaOptions } from '../../lib/socialMediaOptions'
-import { formatMetaverseName } from '../../lib/utilities'
+import { formatName } from '../../lib/utilities'
 interface IWatchListCard extends IPriceCard {
   currentPrice?: number
   remove: (landId: string, metaverse: Metaverse) => Promise<void>
@@ -115,7 +115,7 @@ const LandItem = ({
                 )}
                 <ExternalLink
                   href={external_link}
-                  text={formatMetaverseName(metaverse)}
+                  text={formatName(metaverse)}
                 />
               </nav>
               {/* Remove Button */}

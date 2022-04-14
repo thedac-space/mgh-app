@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { getCollectionData } from '../../backend/services/openSeaDataManager'
 import { Metaverse } from '../../lib/enums'
 import { IPredictions } from '../../lib/types'
-import { formatMetaverseName } from '../../lib/utilities'
+import { formatName } from '../../lib/utilities'
 import { ICoinPrices } from '../../lib/valuation/valuationTypes'
 import { getAxieDailyTradeVolume } from '../../lib/valuation/valuationUtils'
 import { PriceList } from '../General'
@@ -49,8 +49,8 @@ const SalesVolumeDaily = ({ coinPrices, metaverse }: Props) => {
     <>
       <div className='flex flex-col items-start gray-box'>
         <p className={`text-lg xl:text-xl font-medium text-gray-300`}>
-          We couldn't obtain Daily Volume for the{' '}
-          {formatMetaverseName(metaverse)} lands collection. Check{' '}
+          We couldn't obtain Daily Volume for the {formatName(metaverse)} lands
+          collection. Check{' '}
           <a
             href='https://opensea.io/collection'
             target='_blank'

@@ -12,7 +12,7 @@ import { IPredictions } from '../lib/types'
 import { useAppSelector } from '../state/hooks'
 import { Contracts } from '../lib/contracts'
 import { useRouter } from 'next/router'
-import { ellipseAddress, formatMetaverseName } from '../lib/utilities'
+import { ellipseAddress, formatName } from '../lib/utilities'
 import { Loader, WalletModal } from '../components'
 import { Fade } from 'react-awesome-reveal'
 import { Metaverse } from '../lib/enums'
@@ -302,7 +302,7 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
               <article key={option} className='mb-8 sm:mb-12'>
                 <Fade>
                   <h3 className='text-center gray-box green-text-gradient mb-8 sm:mb-12'>
-                    {formatMetaverseName(option, true)}
+                    {formatName(option, true)}
                   </h3>
                 </Fade>
                 <PortfolioList

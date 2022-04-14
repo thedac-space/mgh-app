@@ -24,7 +24,7 @@ import {
 import { useAppSelector } from '../state/hooks'
 import { Contracts } from '../lib/contracts'
 import { Fade } from 'react-awesome-reveal'
-import { formatMetaverseName, typedKeys } from '../lib/utilities'
+import { formatName, typedKeys } from '../lib/utilities'
 
 export type WatchListState =
   | 'loadingFirst'
@@ -286,7 +286,7 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                 <article key={key} className='mb-8 w-full'>
                   <Fade>
                     <h3 className='gray-box xs:w-[22rem] sm:w-fit mx-auto  sm:ml-0 green-text-gradient mb-4'>
-                      {formatMetaverseName(key, true)}
+                      {formatName(key, true)}
                     </h3>
                   </Fade>
                   <LandList

@@ -1,9 +1,8 @@
 import React, { useState } from 'react'
 import { Fade } from 'react-awesome-reveal'
-import { BsArrowDown } from 'react-icons/bs'
-import { IoIosArrowDown, IoIosArrowUp } from 'react-icons/io'
+import { IoIosArrowDown } from 'react-icons/io'
 import { Metaverse } from '../../lib/enums'
-import { formatMetaverseName, typedKeys } from '../../lib/utilities'
+import { formatName, typedKeys } from '../../lib/utilities'
 import { OptimizedImage } from '../General'
 
 interface Props {
@@ -25,7 +24,7 @@ const MapChooseMetaverse = ({ metaverse, setMetaverse }: Props) => {
         className='h-16 gray-box bg-opacity-100 mb-2 items-center w-56 tracking-wider font-semibold text-gray-200 hover:text-white flex justify-between cursor-pointer transition-all'
       >
         <OptimizedImage height={25} width={25} src={mvOptions[metaverse].src} />
-        <span>{formatMetaverseName(metaverse)}</span>
+        <span>{formatName(metaverse)}</span>
         <IoIosArrowDown
           className={
             (opened ? 'rotate-180' : '') +
@@ -51,7 +50,7 @@ const MapChooseMetaverse = ({ metaverse, setMetaverse }: Props) => {
                       width={25}
                       src={mvOptions[mv].src}
                     />
-                    <span>{formatMetaverseName(mv)}</span>
+                    <span>{formatName(mv)}</span>
                   </button>
                 </Fade>
               )
