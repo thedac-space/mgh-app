@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react'
 import { Metaverse } from '../../lib/enums'
 import { createChart, UTCTimestamp } from 'lightweight-charts'
 import { typedKeys } from '../../lib/utilities'
-import {IChartValues,symbolPredictions} from '../../lib/types'
+import {IChartValues, symbolPredictions} from '../../lib/types'
 
 interface SymbolProperties {
   key: string
@@ -72,7 +72,7 @@ const FloorAndVolumeChart = ({
 areaSeries.setData(
       data.map((currentData) => {
         return {
-          time: (currentData.time / 1000) as UTCTimestamp,
+          time: (parseInt(currentData.time) / 1000) as UTCTimestamp,
           value: symbolOptions && typeof data == 'object'
             ? (currentData.data as Record<symbolPredictions,number>)[symbolOptions[symbol].key as symbolPredictions] 
             : currentData.data,
@@ -87,6 +87,7 @@ areaSeries.setData(
       chart.remove()
     }
   }, [data, symbol])
+  console.log(data)
 
   return (
     <div className="flex flex-col shadow-blck rounded-xl py-3 px-4 w-full bg-grey-dark bg-opacity-20 ">

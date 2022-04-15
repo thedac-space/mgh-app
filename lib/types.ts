@@ -71,7 +71,7 @@ export interface IPredictions {
 }
 
 export interface IChartValues {
-  time: number
+  time: string
   data: Record<symbolPredictions, number> | number
 }
 

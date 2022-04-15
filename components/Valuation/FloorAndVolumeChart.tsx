@@ -65,6 +65,9 @@ const FloorAndVolumeChart = ({ metaverse }: { metaverse: Metaverse }) => {
       bottomColor: 'rgba(38,198,218, 0.04)',
       lineColor: 'rgba(38,198,218, 1)',
       lineWidth: 2,
+      priceFormat: {
+        type: 'volume',
+      },
       title: 'Daily Volume',
     })
 

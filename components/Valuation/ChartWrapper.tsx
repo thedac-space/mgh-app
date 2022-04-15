@@ -3,6 +3,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { Metaverse } from "../../lib/enums";
 import { getValuationDailyData } from "../../lib/FirebaseUtilities";
 import { IChartValues, symbolPredictions } from "../../lib/types";
+import {doomies} from './floorPrice'
 const AreaChart = dynamic(() => import("./AreaChart"), {
   ssr: false,
 });
@@ -36,10 +37,8 @@ const ChartWrapper = ({ metaverse }: { metaverse: Metaverse }) => {
       />
       <AreaChart
         metaverse={metaverse}
-        data={values.map((value:IChartValues) => {
-          return { time: value.time, data: (value.data as Record<symbolPredictions,number>).metaversePrediction };
-        })}
-        label="Daily Volume"
+        data={doomies as IChartValues[]}
+        label="Floor Price"
       />
     </>
   );
