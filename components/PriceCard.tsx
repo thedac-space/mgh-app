@@ -7,7 +7,7 @@ import { ellipseAddress } from "../lib/utilities";
 import { useAppSelector } from "../state/hooks";
 import { PriceList } from "./General";
 import { AddToWatchlistButton, LandLikeBox } from "./Valuation";
-import DataComparisonCard from "./Valuation/DataComparison/DataComparisonCard";
+import DataComparisonBox from "./Valuation/DataComparison/DataComparisonBox";
 
 export interface PriceCardProps {
     showCard: boolean;
@@ -92,7 +92,7 @@ const PriceCard = ({ showCard, processing, apiData, predictions }: PriceCardProp
                 <PriceList predictions={predictions} metaverse={apiData.metaverse} />
               </div>
               <div> 
-                <DataComparisonCard apiData={apiData} predictions={predictions}/>
+                <DataComparisonBox apiData={apiData} predictions={predictions}/>
               </div>
             </div>
 
