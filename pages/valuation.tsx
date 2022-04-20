@@ -13,6 +13,7 @@ import {
   HeatmapSize,
   Layer,
   MapFilter,
+  PercentFilter,
 } from '../lib/heatmap/heatmapCommonTypes'
 import { useVisible } from '../lib/hooks'
 import { formatName, getState, typedKeys } from '../lib/utilities'
@@ -74,6 +75,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   const { ref, isVisible, setIsVisible } = useVisible(false)
   const [metaverse, setMetaverse] = useState<Metaverse>(Metaverse.DECENTRALAND)
   const [filterBy, setFilterBy] = useState<MapFilter>('basic')
+  const [percentFilter, setPercentFilter] = useState<PercentFilter>()
   const [atlas, setAtlas] = useState<Atlas>()
   const [landsLoaded, setLandsLoaded] = useState<number>(0)
   const [heatmapSize, setHeatmapSize] = useState<HeatmapSize>()
@@ -177,7 +179,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
       setAtlas({ ...atlas, ITRM: atlasWithColours })
     }
     changeColours()
-  }, [filterBy])
+  }, [filterBy, percentFilter])
 
   return (
     <section className='w-full h-full relative'>
@@ -230,7 +232,12 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
               {/* Metaverse Selection */}
               <MapChooseFilter filterBy={filterBy} setFilterBy={setFilterBy} />
               {/* Color Guide */}
-              {filterBy !== 'basic' && <ColorGuide />}
+              {filterBy !== 'basic' && (
+                <ColorGuide
+                  percentFilter={percentFilter}
+                  setPercentFilter={setPercentFilter}
+                />
+              )}
             </div>
             {/*  Map */}
             <TileMap
@@ -241,6 +248,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
               x={selected?.x || heatmapSize.initialY}
               y={selected?.y || heatmapSize.initialX}
               filter={filterBy}
+              percentFilter={percentFilter}
               atlas={atlas}
               className='atlas'
               width={dims.width}

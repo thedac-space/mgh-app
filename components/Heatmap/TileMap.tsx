@@ -388,7 +388,8 @@ export class TileMap extends React.PureComponent<Props, State> {
       return
     }
 
-    const { width, height, layers, renderMap, atlas, filter } = this.props
+    const { width, height, layers, renderMap, atlas, filter, percentFilter } =
+      this.props
     const { nw, se, pan, size, center } = this.state
     const ctx = this.canvas.getContext('2d')!
 
@@ -404,6 +405,7 @@ export class TileMap extends React.PureComponent<Props, State> {
       layers,
       atlas,
       filter,
+      percentFilter,
     })
   }
 

@@ -3,6 +3,7 @@ import {
   Coord,
   Layer,
   MapFilter,
+  PercentFilter,
   ValuationTile,
 } from '../../lib/heatmap/heatmapCommonTypes'
 import { Viewport } from '../../lib/heatmap/viewport'
@@ -12,6 +13,8 @@ export type Props = {
   atlas: Atlas
   /** Filters to render on map */
   filter: MapFilter
+  /** Filters to render on map based on % */
+  percentFilter: PercentFilter
   /** layer to render on the map */
   layers: Layer[]
   /** custom class name */
@@ -99,4 +102,5 @@ export type MapRenderer = (args: {
   layers: Layer[]
   atlas: Atlas
   filter: MapFilter
+  percentFilter: PercentFilter
 }) => void

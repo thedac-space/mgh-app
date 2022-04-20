@@ -4,6 +4,7 @@ import {
   Coord,
   Layer,
   MapFilter,
+  PercentFilter,
 } from '../../lib/heatmap/heatmapCommonTypes'
 
 export function renderMap(args: {
@@ -18,6 +19,7 @@ export function renderMap(args: {
   layers: Layer[]
   atlas: Atlas
   filter: MapFilter
+  percentFilter: PercentFilter
 }) {
   const {
     ctx,
@@ -31,6 +33,7 @@ export function renderMap(args: {
     layers,
     atlas,
     filter,
+    percentFilter,
   } = args
 
   ctx.clearRect(0, 0, width, height)
@@ -44,7 +47,7 @@ export function renderMap(args: {
         const offsetX = (center.x - x) * size + (pan ? pan.x : 0)
         const offsetY = (y - center.y) * size + (pan ? pan.y : 0)
 
-        const tile = layer(x, y, atlas, filter)
+        const tile = layer(x, y, atlas, filter, percentFilter)
         if (!tile) {
           continue
         }

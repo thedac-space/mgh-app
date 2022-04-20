@@ -1,5 +1,5 @@
 import { typedKeys } from '../utilities'
-import { MapFilter, ValuationTile } from './heatmapCommonTypes'
+import { MapFilter, PercentFilter, ValuationTile } from './heatmapCommonTypes'
 
 export const getMax = (array: (number | undefined)[]) => {
   const filteredArray = array.filter((e) => typeof e === 'number') as number[]
@@ -80,6 +80,7 @@ export const TILE_COLORS = {
   1: 'rgb(0,255,255)', // Min
   0: 'rgb(50,50,50)', // None
 
+  // TODO ADD 100 Colors
   // if (percent > 100) return 'rgb(120,0,0)'
   // if (between(percent, 100, 90)) return 'rgb(255,0,0)'
   // if (between(percent, 89, 80)) return 'rgb(255,95,0)'
@@ -95,12 +96,19 @@ export const TILE_COLORS = {
   // if (between(percent, 4, 1)) return 'rgb(230,255,255)'
   // else return 'rgb(10,10,10)'
 }
-
-export const getTileColor = (percent: number) => {
-  if (between(percent, 100, 20)) return TILE_COLORS[5]
-  if (between(percent, 19, 15)) return TILE_COLORS[4]
-  if (between(percent, 14, 10)) return TILE_COLORS[3]
-  if (between(percent, 9, 5)) return TILE_COLORS[2]
-  if (between(percent, 4, 1)) return TILE_COLORS[1]
+const filterIs = (number: PercentFilter, percentFilter: PercentFilter) => {
+  return percentFilter === number || !percentFilter
+}
+export const getTileColor = (percent: number, percentFilter: PercentFilter) => {
+  if (between(percent, 100, 20))
+    return filterIs(100, percentFilter) ? TILE_COLORS[5] : TILE_COLORS[0]
+  if (between(percent, 19, 15))
+    return filterIs(80, percentFilter) ? TILE_COLORS[4] : TILE_COLORS[0]
+  if (between(percent, 14, 10))
+    return filterIs(60, percentFilter) ? TILE_COLORS[3] : TILE_COLORS[0]
+  if (between(percent, 9, 5))
+    return filterIs(40, percentFilter) ? TILE_COLORS[2] : TILE_COLORS[0]
+  if (between(percent, 4, 1))
+    return filterIs(20, percentFilter) ? TILE_COLORS[1] : TILE_COLORS[0]
   else return TILE_COLORS[0]
 }

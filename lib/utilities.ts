@@ -62,3 +62,9 @@ export function typedKeys<O extends object, K extends keyof O = keyof O>(
 ): K[] {
   return Object.keys(obj) as K[]
 }
+
+/**
+ * Use as `keyof` keyword but of values from an object
+ * @example ValueOf<typeof object>
+ */
+export type ValueOf<T> = T[keyof T]

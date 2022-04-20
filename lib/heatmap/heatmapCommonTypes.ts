@@ -11,7 +11,8 @@ export type Layer = (
   x: number,
   y: number,
   atlas?: Atlas,
-  filter?: MapFilter
+  filter?: MapFilter,
+  percentFilter?: PercentFilter
 ) => Tile | null
 
 export type Tile = {
@@ -73,3 +74,5 @@ export type HeatmapSize = {
   initialY: number
   initialX: number
 }
+
+export type PercentFilter = 20 | 40 | 60 | 80 | 100 | undefined
