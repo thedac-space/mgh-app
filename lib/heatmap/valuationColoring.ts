@@ -112,9 +112,11 @@ const filterKey = (mapFilter: MapFilter | undefined) => {
  * so If max number was 20 and min was 5 and we wanted to calculate what % is 10
  * we would do ((10-5)/(20-5)) * 100 = colorFromPercentage
  * we multiply by 255 if we wanted the result to be a number between 0 and 255 for RGB colors
- * and if we want it to end up being a number between 255 and 170 to fit a certain color,
+ * and if we want it to end up being a number between Y = 255 and Z = 170 to fit a certain color,
+ *              ((X−Min%)/(Max%−Min%)) * (Y - Z) + Z = colorFromPercentage
  * we could do  ((10-5)/(20-5)) * (255 - 170) + 170 = colorFromPercentage. The higher the number the closer to 255.
  * If we want to do it so that the lower the number the closer to 255 and the higher the closer to 170
+ *                     Y - ((X−Min%)/(Max%−Min%)) * (Y - Z) = colorFromReversePercentage
  *  then we can do: 255 - ((10-5)/ (20-5)) * (255 - 170) = colorFromReversePercentage
  * */
 export const generateColor = (percent: number, mapFilter?: MapFilter) => {
