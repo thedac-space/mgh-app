@@ -28,7 +28,7 @@ const MapChooseFilter = ({ filterBy, setFilterBy }: Props) => {
       icon: <BiTransferAlt />,
     },
     current_price: {
-      name: 'Current Price',
+      name: 'Price Difference',
       shortName: undefined,
       icon: <MdAttachMoney />,
     },
