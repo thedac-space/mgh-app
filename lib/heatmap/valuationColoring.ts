@@ -110,50 +110,61 @@ const filterKey = (mapFilter: MapFilter | undefined) => {
 /**
  *  We calculate percentages within a range with the formula ((X−Min%)/(Max%−Min%)) × 100
  * so If max number was 20 and min was 5 and we wanted to calculate what % is 10
- * we would do (10-5/20-5) * 100 = Percentage
+ * we would do ((10-5)/(20-5)) * 100 = colorFromPercentage
  * we multiply by 255 if we wanted the result to be a number between 0 and 255 for RGB colors
- * and if we want it to end up beeing a number between 255 and 170 to fit a certain color,
- * we could do  (10-5/20-5) * (255 - 170) + 170 = Percentage.
+ * and if we want it to end up being a number between 255 and 170 to fit a certain color,
+ * we could do  ((10-5)/(20-5)) * (255 - 170) + 170 = colorFromPercentage. The higher the number the closer to 255.
+ * If we want to do it so that the lower the number the closer to 255 and the higher the closer to 170
+ *  then we can do: 255 - ((10-5)/ (20-5)) * (255 - 170) = colorFromReversePercentage
  * */
 export const generateColor = (percent: number, mapFilter?: MapFilter) => {
   if (percent === 0 || !mapFilter) return 'rgb(50,50,50)'
   const colors = {
     // CAREFUL WITH FORGETTING THE COMAS BETWEEN NUMBERS ON THE RGB!!!
 
-    // RED: rgb(170..255, 0,0)
-    5: `rgb(${Math.ceil(
-      ((percent - filterPercentages[filterKey(mapFilter)][4]) /
-        (100 - filterPercentages[filterKey(mapFilter)][4])) *
-        (255 - 170) +
-        170
-    )},0,0)`,
+    // RED: rgb(255, 0..70, 0)
+    5: `rgb(255, ${
+      70 -
+      Math.ceil(
+        ((percent - filterPercentages[filterKey(mapFilter)][4]) /
+          (100 - filterPercentages[filterKey(mapFilter)][4])) *
+          70
+      )
+    },0)`,
     // ORANGE: rgb(255, 100..170, 0)
-    4: `rgb(255,${Math.ceil(
-      ((percent - filterPercentages[filterKey(mapFilter)][3]) /
-        (filterPercentages[filterKey(mapFilter)][4] -
-          filterPercentages[filterKey(mapFilter)][3])) *
-        (170 - 100) +
-        100
-    )},0)`,
+    4: `rgb(255,${
+      170 -
+      Math.ceil(
+        ((percent - filterPercentages[filterKey(mapFilter)][3]) /
+          (filterPercentages[filterKey(mapFilter)][4] -
+            filterPercentages[filterKey(mapFilter)][3])) *
+          (170 - 100)
+      )
+    },0)`,
     // YELLOW: rgb(255, 190..255, 0)
-    3: `rgb(255,${Math.ceil(
-      ((percent - filterPercentages[filterKey(mapFilter)][2]) /
-        (filterPercentages[filterKey(mapFilter)][3] -
-          filterPercentages[filterKey(mapFilter)][2])) *
-        (255 - 190) +
-        190
-    )},0)`,
-    // GREEN: rgb(0..150, 255, 0)
+    3: `rgb(255,${
+      255 -
+      Math.ceil(
+        ((percent - filterPercentages[filterKey(mapFilter)][2]) /
+          (filterPercentages[filterKey(mapFilter)][3] -
+            filterPercentages[filterKey(mapFilter)][2])) *
+          (255 - 190)
+      )
+    },0)`,
+    // GREEN: rgb(0..170, 255, 0)
     2: `rgb(${Math.ceil(
       ((percent - filterPercentages[filterKey(mapFilter)][1]) /
         (filterPercentages[filterKey(mapFilter)][2] -
           filterPercentages[filterKey(mapFilter)][1])) *
-        150
+        170
     )},255,0)`,
     // LIGHT-BLUE: rgb(0, 255, 160..255)
-    1: `rgb(0,255,${Math.ceil(
-      (percent / filterPercentages[filterKey(mapFilter)][1]) * (255 - 160) + 160
-    )})`,
+    1: `rgb(0,255,${
+      255 -
+      Math.ceil(
+        (percent / filterPercentages[filterKey(mapFilter)][1]) * (255 - 160)
+      )
+    })`,
   }
 
   if (between(percent, 100, filterPercentages[filterKey(mapFilter)][4]))
