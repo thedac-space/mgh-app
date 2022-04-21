@@ -22,7 +22,7 @@ export const getPercentage = (
   totalValue: number | undefined
 ) => {
   if (!partialValue || !totalValue) return 0
-  return parseInt(((partialValue * 100) / totalValue).toFixed(0))
+  return Math.floor((partialValue * 100) / totalValue)
 }
 
 export const setColours = async (
@@ -69,46 +69,92 @@ export const setColours = async (
   return valuationAtlas
 }
 const between = (x: number, max: number, min: number) => {
-  return x >= min && x <= max
+  return x <= max && x > min
 }
 
-export const TILE_COLORS = {
+export const FILTER_COLORS = {
   5: 'rgb(255,0,0)', // Max
   4: 'rgb(255,137,0)',
   3: 'rgb(255,255,0)',
   2: 'rgb(0,255,0)',
   1: 'rgb(0,255,255)', // Min
   0: 'rgb(50,50,50)', // None
-
-  // TODO ADD 100 Colors
-  // if (percent > 100) return 'rgb(120,0,0)'
-  // if (between(percent, 100, 90)) return 'rgb(255,0,0)'
-  // if (between(percent, 89, 80)) return 'rgb(255,95,0)'
-  // if (between(percent, 79, 70)) return 'rgb(255,175,0)'
-  // if (between(percent, 69, 60)) return 'rgb(255,255,0)'
-  // if (between(percent, 59, 50)) return 'rgb(205,255,0)'
-  // if (between(percent, 49, 40)) return 'rgb(130,255,0)'
-  // if (between(percent, 39, 30)) return 'rgb(0,255,155)'
-  // if (between(percent, 29, 20)) return 'rgb(0,230,255)'
-  // if (between(percent, 19, 15)) return 'rgb(0,155,255)'
-  // if (between(percent, 14, 10)) return 'rgb(0,85,255)'
-  // if (between(percent, 9, 5)) return 'rgb(135,0,255)'
-  // if (between(percent, 4, 1)) return 'rgb(230,255,255)'
-  // else return 'rgb(10,10,10)'
 }
+
+const filterPercentages = {
+  eth_predicted_price: { 4: 30, 3: 10, 2: 5, 1: 2 },
+  normal: { 4: 80, 3: 60, 2: 40, 1: 20 },
+}
+
+const filterKey = (mapFilter: MapFilter | undefined) => {
+  return mapFilter === 'eth_predicted_price' ? 'eth_predicted_price' : 'normal'
+}
+
+export const generateColor = (percent: number, mapFilter?: MapFilter) => {
+  if (percent === 0 || !mapFilter) return 'rgb(50,50,50)'
+
+  const colors = {
+    3: `rgb(255,${255 - Math.ceil((percent - 60 / 100 - 60) * 255)},0)`, // Orange and Red (until 60%) - MAX
+    2: `rgb(${Math.ceil((percent - 20 / 60 - 20) * 255)},255,0)`, // Yello and Green (until 20%)
+    1: `rgb(0,255,${255 - Math.ceil((percent / 20) * 255)})`, // Light-blue
+  }
+  // const colors = {
+  //   3: `rgb(255,${255 - Math.ceil((percent - 60 / 100 - 60) * 255)},0)`, // Orange and Red (until 60%) - MAX
+  //   2: `rgb(${Math.ceil((percent - 20 / 60 - 20) * 255)},255,0)`, // Yello and Green (until 20%)
+  //   1: `rgb(0,255,${255 - Math.ceil((percent / 20) * 255)})`, // Light-blue
+  // }
+  if (between(percent, 100, 60)) return colors[3]
+  if (between(percent, 60, 20)) return colors[2]
+  if (between(percent, 20, 0)) return colors[1]
+  else return 'rgb(50,50,50)'
+}
+
 const filterIs = (number: PercentFilter, percentFilter: PercentFilter) => {
   return percentFilter === number || !percentFilter
 }
-export const getTileColor = (percent: number, percentFilter: PercentFilter) => {
-  if (between(percent, 100, 20))
-    return filterIs(100, percentFilter) ? TILE_COLORS[5] : TILE_COLORS[0]
-  if (between(percent, 19, 15))
-    return filterIs(80, percentFilter) ? TILE_COLORS[4] : TILE_COLORS[0]
-  if (between(percent, 14, 10))
-    return filterIs(60, percentFilter) ? TILE_COLORS[3] : TILE_COLORS[0]
-  if (between(percent, 9, 5))
-    return filterIs(40, percentFilter) ? TILE_COLORS[2] : TILE_COLORS[0]
-  if (between(percent, 4, 1))
-    return filterIs(20, percentFilter) ? TILE_COLORS[1] : TILE_COLORS[0]
-  else return TILE_COLORS[0]
+
+export const getTileColor = (
+  percent: number,
+  percentFilter: PercentFilter,
+  mapFilter?: MapFilter
+) => {
+  if (between(percent, 100, filterPercentages[filterKey(mapFilter)][4]))
+    return filterIs(100, percentFilter)
+      ? generateColor(percent, mapFilter)
+      : generateColor(0)
+  if (
+    between(
+      percent,
+      filterPercentages[filterKey(mapFilter)][4],
+      filterPercentages[filterKey(mapFilter)][3]
+    )
+  )
+    return filterIs(80, percentFilter)
+      ? generateColor(percent, mapFilter)
+      : generateColor(0)
+  if (
+    between(
+      percent,
+      filterPercentages[filterKey(mapFilter)][3],
+      filterPercentages[filterKey(mapFilter)][2]
+    )
+  )
+    return filterIs(60, percentFilter)
+      ? generateColor(percent, mapFilter)
+      : generateColor(0)
+  if (
+    between(
+      percent,
+      filterPercentages[filterKey(mapFilter)][2],
+      filterPercentages[filterKey(mapFilter)][1]
+    )
+  )
+    return filterIs(40, percentFilter)
+      ? generateColor(percent, mapFilter)
+      : generateColor(0)
+  if (between(percent, filterPercentages[filterKey(mapFilter)][1], 0))
+    return filterIs(20, percentFilter)
+      ? generateColor(percent, mapFilter)
+      : generateColor(0)
+  else return generateColor(0)
 }

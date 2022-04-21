@@ -1,7 +1,7 @@
 import { Layer } from './heatmapCommonTypes'
 import { getTileColor } from './valuationColoring'
 
-export const filteredLayer: Layer = (x, y, atlas, filter, percentFilter) => {
+export const filteredLayer: Layer = (x, y, atlas, mapFilter, percentFilter) => {
   const id = x + ',' + y
   if (!atlas || !atlas.ITRM || !(id in atlas.ITRM)) return null
   /** This second Statement checks that in Decentraland
@@ -14,11 +14,11 @@ export const filteredLayer: Layer = (x, y, atlas, filter, percentFilter) => {
   )
     return null
   /* Don't show a layer if user is tier0 and metaverse is decentraland. (we already have decentralands Map for that)  */
-  if (filter === 'basic' && atlas.decentraland) return null
+  if (mapFilter === 'basic' && atlas.decentraland) return null
   const color =
-    filter === 'basic'
+    mapFilter === 'basic'
       ? '#12b630'
-      : getTileColor(atlas.ITRM[id].percent ?? 0, percentFilter)
+      : getTileColor(atlas.ITRM[id].percent ?? 0, percentFilter, mapFilter)
   const top = undefined
   const left = undefined
   const topLeft = undefined

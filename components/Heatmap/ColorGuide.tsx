@@ -1,6 +1,6 @@
 import React from 'react'
 import { PercentFilter } from '../../lib/heatmap/heatmapCommonTypes'
-import { TILE_COLORS } from '../../lib/heatmap/valuationColoring'
+import { FILTER_COLORS } from '../../lib/heatmap/valuationColoring'
 import { typedKeys, ValueOf } from '../../lib/utilities'
 
 interface Props {
@@ -26,12 +26,12 @@ const ColorGuide = ({ percentFilter, setPercentFilter }: Props) => {
   return (
     <div className='flex gap-2 gray-box h-16 bg-opacity-100 items-baseline w-max'>
       <span className='text-gray-200 text-sm font-semibold'>Min</span>
-      {typedKeys(TILE_COLORS).map(
+      {typedKeys(FILTER_COLORS).map(
         (color, i) =>
           i !== 0 && (
             <span key={color} className='relative'>
               <div
-                style={{ background: TILE_COLORS[color] }}
+                style={{ background: FILTER_COLORS[color] }}
                 className={
                   'w-4 h-4 top-[2px] peer cursor-pointer ' +
                   (percentFilter &&
