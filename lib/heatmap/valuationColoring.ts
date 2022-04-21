@@ -25,6 +25,7 @@ export const getPercentage = (
   return Math.floor((partialValue * 100) / totalValue)
 }
 
+// Calculating Percentages depending on the current chosen filter.
 export const setColours = async (
   valuationAtlas: Record<string, ValuationTile>,
   element: MapFilter
@@ -54,6 +55,7 @@ export const setColours = async (
           valuationAtlas[valuation].current_price,
           valuationAtlas[valuation].predicted_price
         )
+        // This just makes all lands have 20 as their percent in order to make them all green.
       } else if (element === 'basic') {
         percent = 20
       } else {
@@ -68,19 +70,34 @@ export const setColours = async (
   )
   return valuationAtlas
 }
+
+// Calculate if number is within a certain range
 const between = (x: number, max: number, min: number) => {
   return x <= max && x > min
 }
 
+// Using this to display those 5 squares on the map to use as filter buttons
 export const FILTER_COLORS = {
-  5: 'rgb(255,0,0)', // Max
-  4: 'rgb(255,137,0)',
-  3: 'rgb(255,255,0)',
-  2: 'rgb(0,255,0)',
-  1: 'rgb(0,255,255)', // Min
-  0: 'rgb(50,50,50)', // None
+  5: 'rgb(255,0,0)', //RED - Max
+  4: 'rgb(255,137,0)', // ORANGE
+  3: 'rgb(255,255,0)', // YELLOW
+  2: 'rgb(0,255,0)', // GREEN
+  1: 'rgb(0,255,255)', // BLUE -  Min
+  0: 'rgb(50,50,50)', // GRAY - None
 }
 
+/**
+ * Sadly, some prices on the eth_predicted_price are super high, making all the other lands very low
+ * priced in % compared to them. If we were to divide lands into colors by percentage,
+ * the high lands would be on 100% and the rest of them would end up on the lower 30/20%.
+ * If we used normal percentages, most lands would be blue the higher ones red, defeating the purpose of the map since there would barely be
+ * any yellow/orange or green.
+ * To balance this out and make the map have more contrast between the lower lands we write that
+ * lands using RED color are the ones that spawn from 100% til 30%. ORANGE from 10% til 5%. YELLOW from 5% til 2%
+ * and Light-Blue from 2% till 0%. For the other filters we just use normal percentage, but with any case were the high numbers
+ * are way too high compared to the other ones it might make the map more worthy of using to switch the % like we are doing with
+ * eth_predicted_price.
+ */
 const filterPercentages = {
   eth_predicted_price: { 4: 30, 3: 10, 2: 5, 1: 2 },
   normal: { 4: 80, 3: 60, 2: 40, 1: 20 },
@@ -90,25 +107,88 @@ const filterKey = (mapFilter: MapFilter | undefined) => {
   return mapFilter === 'eth_predicted_price' ? 'eth_predicted_price' : 'normal'
 }
 
+/**
+ *  We calculate percentages within a range with the formula ((X−Min%)/(Max%−Min%)) × 100
+ * so If max number was 20 and min was 5 and we wanted to calculate what % is 10
+ * we would do (10-5/20-5) * 100 = Percentage
+ * we multiply by 255 if we wanted the result to be a number between 0 and 255 for RGB colors
+ * and if we want it to end up beeing a number between 255 and 170 to fit a certain color,
+ * we could do  (10-5/20-5) * (255 - 170) + 170 = Percentage.
+ * */
 export const generateColor = (percent: number, mapFilter?: MapFilter) => {
   if (percent === 0 || !mapFilter) return 'rgb(50,50,50)'
-
   const colors = {
-    3: `rgb(255,${255 - Math.ceil((percent - 60 / 100 - 60) * 255)},0)`, // Orange and Red (until 60%) - MAX
-    2: `rgb(${Math.ceil((percent - 20 / 60 - 20) * 255)},255,0)`, // Yello and Green (until 20%)
-    1: `rgb(0,255,${255 - Math.ceil((percent / 20) * 255)})`, // Light-blue
+    // CAREFUL WITH FORGETTING THE COMAS BETWEEN NUMBERS ON THE RGB!!!
+
+    // RED: rgb(170..255, 0,0)
+    5: `rgb(${Math.ceil(
+      ((percent - filterPercentages[filterKey(mapFilter)][4]) /
+        (100 - filterPercentages[filterKey(mapFilter)][4])) *
+        (255 - 170) +
+        170
+    )},0,0)`,
+    // ORANGE: rgb(255, 100..170, 0)
+    4: `rgb(255,${Math.ceil(
+      ((percent - filterPercentages[filterKey(mapFilter)][3]) /
+        (filterPercentages[filterKey(mapFilter)][4] -
+          filterPercentages[filterKey(mapFilter)][3])) *
+        (170 - 100) +
+        100
+    )},0)`,
+    // YELLOW: rgb(255, 190..255, 0)
+    3: `rgb(255,${Math.ceil(
+      ((percent - filterPercentages[filterKey(mapFilter)][2]) /
+        (filterPercentages[filterKey(mapFilter)][3] -
+          filterPercentages[filterKey(mapFilter)][2])) *
+        (255 - 190) +
+        190
+    )},0)`,
+    // GREEN: rgb(0..150, 255, 0)
+    2: `rgb(${Math.ceil(
+      ((percent - filterPercentages[filterKey(mapFilter)][1]) /
+        (filterPercentages[filterKey(mapFilter)][2] -
+          filterPercentages[filterKey(mapFilter)][1])) *
+        150
+    )},255,0)`,
+    // LIGHT-BLUE: rgb(0, 255, 160..255)
+    1: `rgb(0,255,${Math.ceil(
+      (percent / filterPercentages[filterKey(mapFilter)][1]) * (255 - 160) + 160
+    )})`,
   }
-  // const colors = {
-  //   3: `rgb(255,${255 - Math.ceil((percent - 60 / 100 - 60) * 255)},0)`, // Orange and Red (until 60%) - MAX
-  //   2: `rgb(${Math.ceil((percent - 20 / 60 - 20) * 255)},255,0)`, // Yello and Green (until 20%)
-  //   1: `rgb(0,255,${255 - Math.ceil((percent / 20) * 255)})`, // Light-blue
-  // }
-  if (between(percent, 100, 60)) return colors[3]
-  if (between(percent, 60, 20)) return colors[2]
-  if (between(percent, 20, 0)) return colors[1]
-  else return 'rgb(50,50,50)'
+
+  if (between(percent, 100, filterPercentages[filterKey(mapFilter)][4]))
+    return colors[5] // REDS
+  if (
+    between(
+      percent,
+      filterPercentages[filterKey(mapFilter)][4],
+      filterPercentages[filterKey(mapFilter)][3]
+    )
+  )
+    return colors[4] // ORANGES
+  if (
+    between(
+      percent,
+      filterPercentages[filterKey(mapFilter)][3],
+      filterPercentages[filterKey(mapFilter)][2]
+    )
+  )
+    return colors[3] // YELLOWS
+  if (
+    between(
+      percent,
+      filterPercentages[filterKey(mapFilter)][2],
+      filterPercentages[filterKey(mapFilter)][1]
+    )
+  )
+    return colors[2] // GREENS
+  if (between(percent, filterPercentages[filterKey(mapFilter)][1], 0))
+    return colors[1]
+  // LIGHT-BLUES
+  else return 'rgb(50,50,50)' // GRAY
 }
 
+// Checking if A) the filter corresponds to the current range/color. B) if there is any filter at all
 const filterIs = (number: PercentFilter, percentFilter: PercentFilter) => {
   return percentFilter === number || !percentFilter
 }
@@ -119,6 +199,12 @@ export const getTileColor = (
   mapFilter?: MapFilter
 ) => {
   if (between(percent, 100, filterPercentages[filterKey(mapFilter)][4]))
+    /**
+     *  If filter is 100 show only this RED tiles.
+     * If no filter all color tiles will show
+     * If filter is a different number then only tiles from that number/color
+     * will show.
+     * */
     return filterIs(100, percentFilter)
       ? generateColor(percent, mapFilter)
       : generateColor(0)
