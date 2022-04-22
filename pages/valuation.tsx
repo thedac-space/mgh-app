@@ -4,7 +4,6 @@ import { Fade } from 'react-awesome-reveal'
 import MapCard from '../components/Heatmap/MapCard'
 import MapChooseFilter from '../components/Heatmap/MapChooseFilter'
 import MapChooseMetaverse from '../components/Heatmap/MapChooseMetaverse'
-import MapLandSummary from '../components/Heatmap/MapLandSummary'
 import { TileMap } from '../components/Heatmap/TileMap'
 import { Metaverse } from '../lib/enums'
 import {
@@ -36,7 +35,7 @@ import { IAPIData, IPredictions } from '../lib/types'
 import { FloorPriceTracker, SalesVolumeDaily } from '../components/Valuation'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
-import { useRouter } from 'next/router'
+import MapCoordinates from '../components/Heatmap/MapCoordinates'
 const FloorAndVolumeChart = dynamic(
   () => import('../components/Valuation/FloorAndVolumeChart'),
   {
@@ -214,7 +213,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
               <div>
                 {/* Top left Coordinates */}
                 <div className='mb-2 w-[177px]'>
-                  <MapLandSummary coordinates={hovered} metaverse={metaverse} />
+                  <MapCoordinates coordinates={hovered} />
                 </div>
                 {/* Search Forms */}
                 <div>
