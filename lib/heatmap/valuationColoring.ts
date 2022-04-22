@@ -86,7 +86,7 @@ export const FILTER_COLORS = {
   0: 'rgb(50,50,50)', // GRAY - None
 }
 
-/**
+/*
  * Sadly, some prices on the eth_predicted_price are super high, making all the other lands very low
  * priced in % compared to them. If we were to divide lands into colors by percentage,
  * the high lands would be on 100% and the rest of them would end up on the lower 30/20%.
@@ -107,7 +107,7 @@ const filterKey = (mapFilter: MapFilter | undefined) => {
   return mapFilter === 'eth_predicted_price' ? 'eth_predicted_price' : 'normal'
 }
 
-/**
+/*
  *  We calculate percentages within a range with the formula ((X−Min%)/(Max%−Min%)) × 100
  * so If max number was 20 and min was 5 and we wanted to calculate what % is 10
  * we would do ((10-5)/(20-5)) * 100 = colorFromPercentage
@@ -211,6 +211,15 @@ export const getTileColor = (
   percentFilter: PercentFilter,
   mapFilter?: MapFilter
 ) => {
+  if (percent > 100)
+    return filterIs(100, percentFilter) ? 'rgb(120,0,0)' : generateColor(0)
+  /**
+   *  If filter is 100 show only this RED tiles.
+   * If no filter all color tiles will show
+   * If filter is a different number then only tiles from that number/color
+   * will show.
+   * */
+
   if (between(percent, 100, filterPercentages[filterKey(mapFilter)][4]))
     /**
      *  If filter is 100 show only this RED tiles.

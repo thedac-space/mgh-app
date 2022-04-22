@@ -234,6 +234,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
               {/* Color Guide */}
               {filterBy !== 'basic' && (
                 <ColorGuide
+                  filterBy={filterBy}
                   percentFilter={percentFilter}
                   setPercentFilter={setPercentFilter}
                 />

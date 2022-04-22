@@ -1,14 +1,15 @@
 import React from 'react'
-import { PercentFilter } from '../../lib/heatmap/heatmapCommonTypes'
+import { MapFilter, PercentFilter } from '../../lib/heatmap/heatmapCommonTypes'
 import { FILTER_COLORS } from '../../lib/heatmap/valuationColoring'
 import { typedKeys, ValueOf } from '../../lib/utilities'
 
 interface Props {
   setPercentFilter: React.Dispatch<React.SetStateAction<PercentFilter>>
   percentFilter: PercentFilter
+  filterBy: MapFilter
 }
 
-const ColorGuide = ({ percentFilter, setPercentFilter }: Props) => {
+const ColorGuide = ({ percentFilter, setPercentFilter, filterBy }: Props) => {
   const colorOptions: Record<number, PercentFilter> = {
     1: 20,
     2: 40,
@@ -25,7 +26,9 @@ const ColorGuide = ({ percentFilter, setPercentFilter }: Props) => {
   }
   return (
     <div className='flex gap-2 gray-box h-16 bg-opacity-100 items-baseline w-max'>
-      <span className='text-gray-200 text-sm font-semibold'>Min</span>
+      <span className='text-gray-200 text-sm font-semibold'>
+        {filterBy === 'current_price' ? 'Best' : 'Min'}
+      </span>
       {typedKeys(FILTER_COLORS).map(
         (color, i) =>
           i !== 0 && (
@@ -46,7 +49,9 @@ const ColorGuide = ({ percentFilter, setPercentFilter }: Props) => {
             </span>
           )
       )}
-      <span className='text-gray-200 text-sm font-semibold'>Max</span>
+      <span className='text-gray-200 text-sm font-semibold'>
+        {filterBy === 'current_price' ? 'Worst' : 'Max'}
+      </span>
     </div>
   )
 }
