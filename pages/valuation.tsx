@@ -10,6 +10,7 @@ import {
   Atlas,
   AtlasTile,
   HeatmapSize,
+  LandCoords,
   Layer,
   MapFilter,
   PercentFilter,
@@ -66,7 +67,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
     useState<keyof typeof VALUATION_STATE>('loading')
   const [loading] = getState(mapState, typedKeys(VALUATION_STATE))
 
-  const [selected, setSelected] = useState<{ x: number; y: number }>()
+  const [selected, setSelected] = useState<LandCoords>()
   const [hovered, setHovered] = useState<{ x: number; y: number }>({
     x: NaN,
     y: NaN,
@@ -118,21 +119,27 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
     y?: number,
     tokenId?: string
   ) => {
+    if (!atlas || !atlas?.ITRM) return
     x && y && setSelected({ x: x, y: y })
     setCardData(undefined)
     setMapState('loadingQuery')
     setIsVisible(true)
-    const landData = await fetchHeatmapLand(prices, metaverse, tokenId, {
-      x: x,
-      y: y,
-    })
+    const landData = await fetchHeatmapLand(
+      atlas.ITRM,
+      prices,
+      metaverse,
+      tokenId,
+      {
+        x: x,
+        y: y,
+      }
+    )
     if (!landData) {
       setMapState('errorQuery')
       return setTimeout(() => setIsVisible(false), 1100)
     }
     const id = landData?.landCoords.x + ',' + landData?.landCoords.y
     if (
-      !atlas?.ITRM ||
       !(id in atlas.ITRM) ||
       (atlas.decentraland &&
         (!(id in atlas.decentraland) ||
@@ -260,8 +267,8 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
               maxX={heatmapSize.maxX}
               minY={heatmapSize.minY}
               maxY={heatmapSize.maxY}
-              x={selected?.x || heatmapSize.initialY}
-              y={selected?.y || heatmapSize.initialX}
+              x={Number(selected?.x || heatmapSize.initialY)}
+              y={Number(selected?.y || heatmapSize.initialX)}
               filter={filterBy}
               percentFilter={percentFilter}
               atlas={atlas}
@@ -298,7 +305,6 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
               <MapCard
                 setIsVisible={setIsVisible}
                 metaverse={metaverse}
-                currentPrice={cardData?.currentPrice}
                 apiData={cardData?.apiData}
                 predictions={cardData?.predictions}
                 landCoords={cardData?.landCoords}

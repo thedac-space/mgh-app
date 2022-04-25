@@ -17,7 +17,6 @@ import { SocialMediaOptions } from '../../lib/socialMediaOptions'
 interface Props {
   apiData?: IAPIData
   predictions?: IPredictions
-  currentPrice?: number
   landCoords?: { x: string | number; y: string | number }
   metaverse: Metaverse
   setIsVisible: React.Dispatch<React.SetStateAction<boolean>>
@@ -26,7 +25,6 @@ interface Props {
 const MapCard = ({
   apiData,
   predictions,
-  currentPrice,
   landCoords,
   metaverse,
   setIsVisible,
@@ -38,7 +36,7 @@ const MapCard = ({
     'loadedQuery',
     'errorQuery',
   ])
-  const notListed = !currentPrice || isNaN(currentPrice)
+  const notListed = !apiData?.current_price || isNaN(apiData?.current_price)
   const { address } = useAppSelector((state) => state.account)
   const options = SocialMediaOptions(apiData, predictions)
 
@@ -140,9 +138,9 @@ const MapCard = ({
                     : 'text-gray-400 '
                 }`}
               >
-                {!currentPrice || isNaN(currentPrice)
+                {!apiData.current_price || isNaN(apiData.current_price)
                   ? 'Not Listed'
-                  : `Listed: ${currentPrice.toFixed(2)} USDC`}
+                  : `Listed: ${apiData.current_price.toFixed(2)} ETH`}
               </p>
             </div>
             {/* Likes */}

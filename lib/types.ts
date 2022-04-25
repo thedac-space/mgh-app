@@ -54,18 +54,15 @@ export interface IAPIData {
     image_url: string
   }
   tokenId: string
+  current_price?: number
   prices: {
     predicted_price: number
     eth_predicted_price: number
-    history: { price: number; timestamp: number }[] | never[]
-    variation_last_four_weeks?: number
-    variation_last_six_months?: number
-    variation_last_week?: number
   }
 }
 
 export interface IPredictions {
-    ethPrediction: number;
-    usdPrediction: number;
-    metaversePrediction?: number;
+  ethPrediction: number
+  usdPrediction: number
+  metaversePrediction?: number
 }

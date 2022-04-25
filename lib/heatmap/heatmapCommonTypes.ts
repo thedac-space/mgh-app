@@ -42,6 +42,8 @@ type valuationTransfer = {
   priceUsd: number
   owner: string
 }
+
+// This is how the End Valuation Tile looks, some information is added after the API Request
 export type ValuationTile = {
   predicted_price: number
   eth_predicted_price: number
@@ -54,6 +56,10 @@ export type ValuationTile = {
   coords: { x: number; y: number }
   current_price?: number
   percent?: number
+  land_id?: string
+  images: { image_url: string }
+  owner: string
+  external_link: string
 }
 // export type ValidFilter =
 
@@ -76,3 +82,6 @@ export type HeatmapSize = {
 }
 
 export type PercentFilter = 20 | 40 | 60 | 80 | 100 | undefined
+
+// For Clicks and Searches
+export type LandCoords = { x?: string | number; y?: string | number }

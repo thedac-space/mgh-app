@@ -34,6 +34,7 @@ export const fetchITRMAtlas = async (
               valuations[key]?.coords.x + ',' + valuations[key]?.coords.y
             // // Setting the land info in the valuation atlas
             valuationAtlas[name] = valuations[key]!
+            valuationAtlas[name].land_id = key
           }
         })
       } catch (e) {

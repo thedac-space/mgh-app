@@ -96,7 +96,7 @@ const MapSearch = ({ mapState, handleMapSelection }: Props) => {
             <div className='flex flex-col gap-2 mb-4'>
               {/* Mapping through search options */}
               {typedKeys(searchOptions).map((filter) => (
-                <span className='flex gap-2 items-center relative'>
+                <span key={filter} className='flex gap-2 items-center relative'>
                   <input
                     type='radio'
                     name={filter}
