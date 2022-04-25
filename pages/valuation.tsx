@@ -297,10 +297,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
         )}
         {/* Predictions Card */}
         {isVisible && (
-          <div
-            ref={ref}
-            className='absolute bottom-2 right-8 left-auto 3xl:left-2 3xl:right-auto'
-          >
+          <div ref={ref} className='absolute bottom-2 right-8'>
             <Fade duration={300}>
               <MapCard
                 setIsVisible={setIsVisible}
