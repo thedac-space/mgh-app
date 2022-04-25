@@ -17,14 +17,24 @@ const MapChooseMetaverse = ({ metaverse, setMetaverse }: Props) => {
     decentraland: { src: '/images/decentraland-mana-logo.png' },
     'axie-infinity': { src: '/images/axie-infinity-axs-logo.png' },
   }
+
   return (
-    <div>
+    <div className='relative z-50'>
       <button
         onClick={() => setOpened(!opened)}
-        className='h-16 gray-box bg-opacity-100 mb-2 items-center w-56 tracking-wider font-semibold text-gray-200 hover:text-white flex justify-between cursor-pointer transition-all'
+        className='h-16 gray-box bg-opacity-100 mb-2 items-center w-70  md:w-56 tracking-wider font-semibold text-gray-200 hover:text-white flex justify-between cursor-pointer transition-all'
       >
-        <OptimizedImage height={25} width={25} src={mvOptions[metaverse].src} />
-        <span>{formatName(metaverse)}</span>
+        <div className='hidden sm:block'>
+          <OptimizedImage
+            height={25}
+            width={25}
+            src={mvOptions[metaverse].src}
+          />
+        </div>
+        <span className='text-base hidden sm:block'>
+          {formatName(metaverse)}
+        </span>
+        <span className='text-base block sm:hidden'>Metaverse</span>
         <IoIosArrowDown
           className={
             (opened ? 'rotate-180' : '') +
@@ -32,14 +42,14 @@ const MapChooseMetaverse = ({ metaverse, setMetaverse }: Props) => {
           }
         />
       </button>
-      <div className='flex flex-col gap-2'>
+      <div className='flex flex-col gap-2 md:absolute w-full'>
         {opened &&
           typedKeys(mvOptions).map(
             (mv) =>
               mv !== metaverse && (
                 <Fade duration={500} key={mv} direction='down'>
                   <button
-                    className='flex gray-box gap-4 bg-opacity-100 items-center text-gray-200 hover:text-white font-semibold'
+                    className='flex gray-box gap-2 md:gap-4 bg-opacity-100 items-center text-gray-200 hover:text-white font-semibold whitespace-nowrap w-70 md:w-56'
                     onClick={() => {
                       setMetaverse(mv as Metaverse)
                       setOpened(false)
@@ -50,7 +60,9 @@ const MapChooseMetaverse = ({ metaverse, setMetaverse }: Props) => {
                       width={25}
                       src={mvOptions[mv].src}
                     />
-                    <span>{formatName(mv)}</span>
+                    <span className='text-sm md:text-base'>
+                      {formatName(mv)}
+                    </span>
                   </button>
                 </Fade>
               )

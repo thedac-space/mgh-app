@@ -50,14 +50,23 @@ const MapChooseFilter = ({ filterBy, setFilterBy }: Props) => {
   }
   return (
     <div>
+      {/* Filter Button + Name */}
       <button
         onClick={() => setOpened(!opened)}
         className='h-16 gray-box bg-opacity-100 mb-2 items-center w-70 tracking-wider font-semibold text-gray-200 hover:text-white flex justify-between cursor-pointer transition-all'
       >
-        <span className='text-lg'>{filterOptions[filterBy].icon}</span>
-        <p>
+        {/* Icon */}
+        <span className='hidden sm:block text-lg'>
+          {filterOptions[filterBy].icon}
+        </span>
+
+        {/* Name */}
+        <p className='hidden sm:block'>
           {filterOptions[filterBy].shortName ?? filterOptions[filterBy].name}
         </p>
+        {/* Mobile Name */}
+        <p className='block sm:hidden'>Stats</p>
+        {/* Down/Up Arrow */}
         <IoIosArrowDown
           className={
             (opened ? 'rotate-180' : '') +
@@ -65,14 +74,19 @@ const MapChooseFilter = ({ filterBy, setFilterBy }: Props) => {
           }
         />
       </button>
-      <div className='absolute flex flex-col gap-2'>
+      {/* FilterOptions */}
+      <div
+        className={
+          (opened && 'mb-1 md:mb-0') + 'md:absolute flex flex-col gap-2'
+        }
+      >
         {opened &&
           typedKeys(filterOptions).map(
             (filter) =>
               filter !== filterBy && (
                 <Fade duration={500} key={filter} direction='down'>
                   <button
-                    className='flex gray-box gap-4 bg-opacity-100 items-center text-gray-200 hover:text-white font-semibold w-70'
+                    className='flex gray-box gap-4 bg-opacity-100 items-center text-gray-200 hover:text-white font-semibold w-70 text-sm md:text-base'
                     onClick={() => {
                       setFilterBy(filter)
                       setOpened(false)

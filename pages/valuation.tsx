@@ -36,6 +36,7 @@ import { FloorPriceTracker, SalesVolumeDaily } from '../components/Valuation'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
 import MapCoordinates from '../components/Heatmap/MapCoordinates'
+import MapMobileFilters from '../components/Heatmap/MapMobileFilters'
 const FloorAndVolumeChart = dynamic(
   () => import('../components/Valuation/FloorAndVolumeChart'),
   {
@@ -203,42 +204,56 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
       </div>
 
       {/* Heatmap */}
-      <div className='relative mb-8 min-h-[55vh]' ref={mapDivRef}>
+      <div className='relative mb-8 h-[55vh]' ref={mapDivRef}>
         {loading && (
           <HeatmapLoader landsLoaded={landsLoaded} metaverse={metaverse} />
         )}
         {atlas && heatmapSize && !loading && (
           <>
-            <div className='absolute top-0 z-20 flex gap-4 p-2 w-fit'>
+            <div className='absolute top-0 z-20 flex gap-4 p-2 md:w-fit w-full'>
               <div>
                 {/* Top left Coordinates */}
-                <div className='mb-2 w-[177px]'>
+                <div className='mb-2 w-[177px] hidden md:block'>
                   <MapCoordinates coordinates={hovered} />
                 </div>
-                {/* Search Forms */}
-                <div>
-                  <MapSearch
-                    mapState={mapState}
-                    handleMapSelection={handleMapSelection}
-                  />
-                </div>
+                {/* 'Search By' Forms */}
+                <MapSearch
+                  mapState={mapState}
+                  handleMapSelection={handleMapSelection}
+                />
               </div>
-              {/* Metaverse Selection */}
-              <MapChooseMetaverse
-                metaverse={metaverse}
-                setMetaverse={setMetaverse}
-              />
-              {/* Metaverse Selection */}
-              <MapChooseFilter filterBy={filterBy} setFilterBy={setFilterBy} />
-              {/* Color Guide */}
-              {filterBy !== 'basic' && (
+              {/* Main Filter Button. Only for small screens  */}
+              <div className='md:hidden w-2/4'>
+                <MapMobileFilters
+                  metaverse={metaverse}
+                  setMetaverse={setMetaverse}
+                  filterBy={filterBy}
+                  setFilterBy={setFilterBy}
+                />
+              </div>
+              <div className='md:flex gap-2 md:gap-4 hidden'>
+                {/* Metaverse Selection */}
+                <MapChooseMetaverse
+                  metaverse={metaverse}
+                  setMetaverse={setMetaverse}
+                />
+                {/* Filter Selection */}
+                <MapChooseFilter
+                  filterBy={filterBy}
+                  setFilterBy={setFilterBy}
+                />
+              </div>
+            </div>
+            {/* Color Guide */}
+            {filterBy !== 'basic' && (
+              <div className='absolute z-20 bottom-2 left-2'>
                 <ColorGuide
                   filterBy={filterBy}
                   percentFilter={percentFilter}
                   setPercentFilter={setPercentFilter}
                 />
-              )}
-            </div>
+              </div>
+            )}
             {/*  Map */}
             <TileMap
               minX={heatmapSize.minX}
