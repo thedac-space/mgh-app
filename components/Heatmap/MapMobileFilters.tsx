@@ -10,7 +10,7 @@ import MapChooseMetaverse from './MapChooseMetaverse'
 
 interface Props {
   metaverse: Metaverse
-  setMetaverse: React.Dispatch<React.SetStateAction<Metaverse>>
+  setMetaverse: React.Dispatch<React.SetStateAction<Metaverse | undefined>>
   filterBy: MapFilter
   setFilterBy: React.Dispatch<React.SetStateAction<MapFilter>>
 }
@@ -36,7 +36,7 @@ const MapMobileFilters = ({
           }
         />
       </button>
-      {opened && (
+      {opened && metaverse && (
         <div className='flex flex-col items-center gap-1 fixed top-0 left-0 h-screen w-screen bg-black bg-opacity-30 backdrop-filter backdrop-blur-sm z-30 overflow-hidden py-20 px-8'>
           <Fade direction='right' duration={800}>
             <MapChooseFilter filterBy={filterBy} setFilterBy={setFilterBy} />

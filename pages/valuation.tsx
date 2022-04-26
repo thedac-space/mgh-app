@@ -1,10 +1,6 @@
 import { NextPage } from 'next'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Fade } from 'react-awesome-reveal'
-import MapCard from '../components/Heatmap/MapCard'
-import MapChooseFilter from '../components/Heatmap/MapChooseFilter'
-import MapChooseMetaverse from '../components/Heatmap/MapChooseMetaverse'
-import { TileMap } from '../components/Heatmap/TileMap'
 import { Metaverse } from '../lib/enums'
 import {
   Atlas,
@@ -27,17 +23,25 @@ import {
   fetchITRMAtlas,
 } from '../lib/heatmap/fetchAtlas'
 import { setColours } from '../lib/heatmap/valuationColoring'
-import HeatmapLoader from '../components/Heatmap/HeatmapLoader'
 import { getHeatmapSize } from '../lib/heatmap/getHeatmapSize'
-import ColorGuide from '../components/Heatmap/ColorGuide'
-import MapSearch from '../components/Heatmap/MapSearch'
+
 import { fetchHeatmapLand } from '../lib/heatmap/fetchHeatmapLand'
 import { IAPIData, IPredictions } from '../lib/types'
 import { FloorPriceTracker, SalesVolumeDaily } from '../components/Valuation'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
-import MapLandSummary from '../components/Heatmap/MapLandSummary'
-import MapMobileFilters from '../components/Heatmap/MapMobileFilters'
+import {
+  ColorGuide,
+  HeatmapLoader,
+  MapCard,
+  MapChooseFilter,
+  MapChooseMetaverse,
+  MapInitMvChoice,
+  MapLandSummary,
+  MapMobileFilters,
+  MapSearch,
+  TileMap,
+} from '../components/Heatmap'
 const FloorAndVolumeChart = dynamic(
   () => import('../components/Valuation/FloorAndVolumeChart'),
   {
@@ -65,7 +69,7 @@ interface CardData {
 const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   const [mapState, setMapState] =
     useState<keyof typeof VALUATION_STATE>('loading')
-  const [loading] = getState(mapState, typedKeys(VALUATION_STATE))
+  const [loading] = getState(mapState, ['loading'])
 
   const [selected, setSelected] = useState<LandCoords>()
   const [hovered, setHovered] = useState<{ x: number; y: number }>({
@@ -74,7 +78,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   })
   // Hook for Popup
   const { ref, isVisible, setIsVisible } = useVisible(false)
-  const [metaverse, setMetaverse] = useState<Metaverse>(Metaverse.DECENTRALAND)
+  const [metaverse, setMetaverse] = useState<Metaverse>()
   const [filterBy, setFilterBy] = useState<MapFilter>('basic')
   const [percentFilter, setPercentFilter] = useState<PercentFilter>()
   const [atlas, setAtlas] = useState<Atlas>()
@@ -118,7 +122,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
     y?: number,
     tokenId?: string
   ) => {
-    if (!atlas || !atlas?.ITRM) return
+    if (!atlas || !atlas?.ITRM || !metaverse) return
     x && y && setSelected({ x: x, y: y })
     setCardData(undefined)
     setMapState('loadingQuery')
@@ -155,6 +159,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   // Use Effect for Metaverse Fetching and Map creation
   useEffect(() => {
     const setData = async () => {
+      if (!metaverse) return
       setLandsLoaded(0)
       setSelected(undefined)
       setMapState('loading')
@@ -211,10 +216,13 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 
       {/* Heatmap */}
       <div className='relative mb-8 h-[55vh]' ref={mapDivRef}>
-        {loading && (
+        {!metaverse && (
+          <MapInitMvChoice metaverse={metaverse} setMetaverse={setMetaverse} />
+        )}
+        {loading && metaverse && (
           <HeatmapLoader landsLoaded={landsLoaded} metaverse={metaverse} />
         )}
-        {atlas && heatmapSize && !loading && (
+        {atlas && heatmapSize && !loading && metaverse && (
           <>
             <div className='absolute top-0 z-20 flex gap-4 p-2 md:w-fit w-full'>
               <div>
@@ -292,54 +300,59 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                 }
               }}
             />
+            {isVisible && (
+              <div ref={ref} className='absolute bottom-2 right-8'>
+                <Fade duration={300}>
+                  <MapCard
+                    setIsVisible={setIsVisible}
+                    metaverse={metaverse}
+                    apiData={cardData?.apiData}
+                    predictions={cardData?.predictions}
+                    landCoords={cardData?.landCoords}
+                    mapState={mapState}
+                  />
+                </Fade>
+              </div>
+            )}
           </>
         )}
         {/* Predictions Card */}
-        {isVisible && (
-          <div ref={ref} className='absolute bottom-2 right-8'>
-            <Fade duration={300}>
-              <MapCard
-                setIsVisible={setIsVisible}
-                metaverse={metaverse}
-                apiData={cardData?.apiData}
-                predictions={cardData?.predictions}
-                landCoords={cardData?.landCoords}
-                mapState={mapState}
-              />
-            </Fade>
-          </div>
-        )}
       </div>
 
       {/* Daily Volume and Floor Price Wrapper */}
-      <div className='flex flex-col sm:flex-row space-y-5 sm:space-y-0 space-x-0 sm:space-x-5 md:space-x-10 items-stretch justify-between w-full'>
-        {/* Daily Volume */}
-        <SalesVolumeDaily metaverse={metaverse} coinPrices={prices} />
-        {/* Floor Price */}
-        <div className='flex flex-col justify-between w-full space-y-5 md:space-y-10 lg:space-y-5'>
-          <FloorPriceTracker metaverse={metaverse} coinPrices={prices} />
-        </div>
-      </div>
-      {/*Graph*/}
-      <div className='flex flex-col shadow-blck rounded-xl py-3 px-4 w-full bg-grey-dark bg-opacity-20 '>
-        <FloorAndVolumeChart metaverse={metaverse} />
-      </div>
-      <div className='flex flex-col items-start shadow-blck rounded-xl py-3 px-4 w-full bg-grey-dark bg-opacity-20 text-left'>
-        <p className={`text-xs sm:text-sm text-gray-400`}>
-          The MGH DAO does not provide, personalized investment recommendations
-          or advisory services. Any information provided through the land
-          evaluation tool and others is not, and should not be, considered as
-          advice of any kind and is for information purposes only. That land is
-          “valuated” does not mean, that it is in any way approved, checked
-          audited, and/or has a real or correct value. In no event shall the MGH
-          DAO be liable for any special, indirect, or consequential damages, or
-          any other damages of any kind, including but not limited to loss of
-          use, loss of profits, or loss of data, arising out of or in any way
-          connected with the use of or inability to use the Service, including
-          without limitation any damages resulting from reliance by you on any
-          information obtained from using the Service.
-        </p>
-      </div>
+      {metaverse && (
+        <Fade duration={600} className='w-full'>
+          <div className='flex flex-col sm:flex-row space-y-5 sm:space-y-0 space-x-0 sm:space-x-5 md:space-x-10 items-stretch justify-between w-full'>
+            {/* Daily Volume */}
+            <SalesVolumeDaily metaverse={metaverse} coinPrices={prices} />
+            {/* Floor Price */}
+            <div className='flex flex-col justify-between w-full space-y-5 md:space-y-10 lg:space-y-5'>
+              <FloorPriceTracker metaverse={metaverse} coinPrices={prices} />
+            </div>
+          </div>
+          {/*Floor and Volume Graph*/}
+          <div className='flex flex-col shadow-blck rounded-xl py-3 px-4 w-full bg-grey-dark bg-opacity-20 '>
+            <FloorAndVolumeChart metaverse={metaverse} />
+          </div>
+          <div className='flex flex-col items-start shadow-blck rounded-xl py-3 px-4 w-full bg-grey-dark bg-opacity-20 text-left'>
+            <p className={`text-xs sm:text-sm text-gray-400`}>
+              The MGH DAO does not provide, personalized investment
+              recommendations or advisory services. Any information provided
+              through the land evaluation tool and others is not, and should not
+              be, considered as advice of any kind and is for information
+              purposes only. That land is “valuated” does not mean, that it is
+              in any way approved, checked audited, and/or has a real or correct
+              value. In no event shall the MGH DAO be liable for any special,
+              indirect, or consequential damages, or any other damages of any
+              kind, including but not limited to loss of use, loss of profits,
+              or loss of data, arising out of or in any way connected with the
+              use of or inability to use the Service, including without
+              limitation any damages resulting from reliance by you on any
+              information obtained from using the Service.
+            </p>
+          </div>
+        </Fade>
+      )}
     </section>
   )
 }

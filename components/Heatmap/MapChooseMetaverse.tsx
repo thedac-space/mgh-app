@@ -7,7 +7,7 @@ import { OptimizedImage } from '../General'
 
 interface Props {
   metaverse: Metaverse
-  setMetaverse: React.Dispatch<React.SetStateAction<Metaverse>>
+  setMetaverse: React.Dispatch<React.SetStateAction<Metaverse | undefined>>
 }
 
 const MapChooseMetaverse = ({ metaverse, setMetaverse }: Props) => {
