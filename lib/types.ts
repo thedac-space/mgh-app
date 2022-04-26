@@ -54,7 +54,8 @@ export interface IAPIData {
     image_url: string
   }
   tokenId: string
-  current_price?: number
+  current_price_eth?: number
+  best_offered_price_eth?: number
   prices: {
     predicted_price: number
     eth_predicted_price: number

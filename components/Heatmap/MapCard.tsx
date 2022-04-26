@@ -30,13 +30,15 @@ const MapCard = ({
   setIsVisible,
   mapState,
 }: Props) => {
+  console.log({ apiData })
   const imgSize = 150
   const [loadingQuery, loadedQuery, errorQuery] = getState(mapState, [
     'loadingQuery',
     'loadedQuery',
     'errorQuery',
   ])
-  const notListed = !apiData?.current_price || isNaN(apiData?.current_price)
+  const notListed =
+    !apiData?.current_price_eth || isNaN(apiData?.current_price_eth)
   const { address } = useAppSelector((state) => state.account)
   const options = SocialMediaOptions(apiData, predictions)
 
@@ -138,9 +140,10 @@ const MapCard = ({
                     : 'text-gray-400 '
                 }`}
               >
-                {!apiData.current_price || isNaN(apiData.current_price)
+                {!apiData?.current_price_eth ||
+                isNaN(apiData?.current_price_eth)
                   ? 'Not Listed'
-                  : `Listed: ${apiData.current_price.toFixed(2)} ETH`}
+                  : `Listed: ${apiData?.current_price_eth.toFixed(2)} ETH`}
               </p>
             </div>
             {/* Likes */}

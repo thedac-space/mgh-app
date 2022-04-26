@@ -1,5 +1,5 @@
 import { NextPage } from 'next'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Fade } from 'react-awesome-reveal'
 import MapCard from '../components/Heatmap/MapCard'
 import MapChooseFilter from '../components/Heatmap/MapChooseFilter'
@@ -81,7 +81,6 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   const [landsLoaded, setLandsLoaded] = useState<number>(0)
   const [heatmapSize, setHeatmapSize] = useState<HeatmapSize>()
   const [cardData, setCardData] = useState<CardData>()
-
   function isSelected(x: number, y: number) {
     return selected?.x === x && selected?.y === y
   }
