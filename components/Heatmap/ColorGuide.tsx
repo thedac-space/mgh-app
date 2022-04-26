@@ -43,7 +43,7 @@ const ColorGuide = ({ percentFilter, setPercentFilter, filterBy }: Props) => {
                 }
                 onClick={() => handleColorClick(colorOptions[i])}
               />
-              <span className='hidden peer-hover:block absolute top-5 text-gray-200 font-semibold text-xs'>
+              <span className='hidden peer-hover:block absolute -top-5 text-gray-200 font-semibold text-xs'>
                 {colorOptions[i]}%
               </span>
             </span>
