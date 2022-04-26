@@ -202,15 +202,13 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
         {/* Links Wrapper */}
         <div className='flex gap-5'>
           {/* Links */}
-          {['portfolio', 'watchlist', 'valuations-dashboard', 'analytics'].map(
-            (option) => (
-              <Link key={option} href={`/${option}`}>
-                <a className='hover:scale-105 font-medium text-white px-5 py-3 flex items-center justify-center rounded-xl bg-gradient-to-br from-blue-500/30 to-green-500/30 transition-all duration-300'>
-                  <span className='pt-1 text-xl'>{formatName(option)}</span>
-                </a>
-              </Link>
-            )
-          )}
+          {['portfolio', 'watchlist', 'analytics'].map((option) => (
+            <Link key={option} href={`/${option}`}>
+              <a className='hover:scale-105 font-medium text-white px-5 py-3 flex items-center justify-center rounded-xl bg-gradient-to-br from-blue-500/30 to-green-500/30 transition-all duration-300'>
+                <span className='pt-1 text-xl'>{formatName(option)}</span>
+              </a>
+            </Link>
+          ))}
         </div>
       </div>
 
