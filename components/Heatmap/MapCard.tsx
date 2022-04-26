@@ -30,7 +30,6 @@ const MapCard = ({
   setIsVisible,
   mapState,
 }: Props) => {
-  console.log({ apiData })
   const imgSize = 150
   const [loadingQuery, loadedQuery, errorQuery] = getState(mapState, [
     'loadingQuery',

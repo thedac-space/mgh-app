@@ -41,7 +41,6 @@ const LandItem = ({
     tokenId,
   } = apiData
 
-  console.log({ apiData })
   // SocialMediaOptions contains all options with their texts, icons, etc..
   const options = SocialMediaOptions(apiData, predictions)
 
