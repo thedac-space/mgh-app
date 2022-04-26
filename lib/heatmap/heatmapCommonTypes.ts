@@ -81,6 +81,10 @@ export type HeatmapSize = {
   initialX: number
 }
 
+/**
+ * Percent Filter triggers when a user clicks on a colored squared.
+ * Once clicked, only the lands on that percentage/number range will display
+ */
 export type PercentFilter = 20 | 40 | 60 | 80 | 100 | undefined
 
 // For Clicks and Searches
