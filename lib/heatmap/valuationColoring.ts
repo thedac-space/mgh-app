@@ -22,7 +22,7 @@ export const getPercentage = (
   totalValue: number | undefined
 ) => {
   if (!partialValue || !totalValue) return 0
-  return Math.floor((partialValue * 100) / totalValue)
+  return Math.ceil((partialValue * 100) / totalValue)
 }
 
 // Calculating Percentages depending on the current chosen filter.
@@ -30,13 +30,22 @@ export const setColours = async (
   valuationAtlas: Record<string, ValuationTile>,
   element: MapFilter
 ) => {
+  // Pretty ugly code, will fix later.
   let predictions: (number | undefined)[]
   if (element === 'transfers') {
     predictions = typedKeys(valuationAtlas).map(
       (valuation) => valuationAtlas[valuation].history?.length
     )
+  } else if (element === 'price_difference') {
+    predictions = typedKeys(valuationAtlas).map(
+      (valuation) => valuationAtlas[valuation].current_price_eth
+    )
   } else if (element === 'basic') {
     predictions = []
+  } else if (element === 'listed_lands') {
+    predictions = typedKeys(valuationAtlas).map(
+      (valuation) => valuationAtlas[valuation].eth_predicted_price
+    )
   } else {
     predictions = typedKeys(valuationAtlas).map(
       (valuation) => valuationAtlas[valuation][element]
@@ -50,14 +59,19 @@ export const setColours = async (
       let percent = NaN
       if (element === 'transfers') {
         percent = getPercentage(valuationAtlas[valuation].history?.length, max)
-      } else if (element === 'current_price') {
+      } else if (element === 'price_difference') {
         percent = getPercentage(
-          valuationAtlas[valuation].current_price,
-          valuationAtlas[valuation].predicted_price
+          valuationAtlas[valuation].current_price_eth,
+          valuationAtlas[valuation].eth_predicted_price
         )
+        console.log({ percent })
         // This just makes all lands have 20 as their percent in order to make them all green.
       } else if (element === 'basic') {
         percent = 20
+      } else if (element === 'listed_lands') {
+        percent = valuationAtlas[valuation].current_price_eth
+          ? getPercentage(valuationAtlas[valuation].eth_predicted_price, max)
+          : NaN
       } else {
         percent = getPercentage(valuationAtlas[valuation][element], max)
       }
@@ -99,12 +113,15 @@ export const FILTER_COLORS = {
  * eth_predicted_price.
  */
 const filterPercentages = {
-  eth_predicted_price: { 4: 30, 3: 10, 2: 5, 1: 2 },
+  predictedPricePercentage: { 4: 30, 3: 10, 2: 5, 1: 2 },
   normal: { 4: 80, 3: 60, 2: 40, 1: 20 },
 }
 
 const filterKey = (mapFilter: MapFilter | undefined) => {
-  return mapFilter === 'eth_predicted_price' ? 'eth_predicted_price' : 'normal'
+  return mapFilter &&
+    ['eth_predicted_price', 'listed_lands'].includes(mapFilter)
+    ? 'predictedPricePercentage'
+    : 'normal'
 }
 
 /*
@@ -211,15 +228,9 @@ export const getTileColor = (
   percentFilter: PercentFilter,
   mapFilter?: MapFilter
 ) => {
+  // If land's percent is more than 100 then show dark-red
   if (percent > 100)
     return filterIs(100, percentFilter) ? 'rgb(120,0,0)' : generateColor(0)
-  /**
-   *  If filter is 100 show only this RED tiles.
-   * If no filter all color tiles will show
-   * If filter is a different number then only tiles from that number/color
-   * will show.
-   * */
-
   if (between(percent, 100, filterPercentages[filterKey(mapFilter)][4]))
     /**
      *  If filter is 100 show only this RED tiles.

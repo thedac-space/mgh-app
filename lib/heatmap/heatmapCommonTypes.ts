@@ -54,7 +54,8 @@ export type ValuationTile = {
   manipulation_index: number
   suggested_operation?: string
   coords: { x: number; y: number }
-  current_price?: number
+  current_price_eth?: number
+  best_offered_price_eth?: number
   percent?: number
   land_id?: string
   images: { image_url: string }
@@ -68,9 +69,10 @@ export type MapFilter =
   | 'variation_last_week'
   | 'variation_last_four_weeks'
   | 'variation_last_six_months'
-  | 'current_price'
+  | 'price_difference'
   | 'transfers'
   | 'basic'
+  | 'listed_lands'
 
 export type HeatmapSize = {
   maxX: number

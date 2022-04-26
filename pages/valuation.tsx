@@ -108,6 +108,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
     width: mapDivRef.current?.offsetWidth,
   })
 
+  // Function for resizing heatmap
   const resize = () => {
     if (!mapDivRef.current) return
     setDims({

@@ -22,12 +22,17 @@ const MapChooseFilter = ({ filterBy, setFilterBy }: Props) => {
       shortName: undefined,
       icon: <BiTargetLock />,
     },
+    listed_lands: {
+      name: 'Listed Lands',
+      shortName: undefined,
+      icon: <VscGraphLine />,
+    },
     transfers: {
       name: 'Transfers',
       shortName: undefined,
       icon: <BiTransferAlt />,
     },
-    current_price: {
+    price_difference: {
       name: 'Price Difference',
       shortName: undefined,
       icon: <MdAttachMoney />,

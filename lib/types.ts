@@ -54,6 +54,7 @@ export interface IAPIData {
     image_url: string
   }
   tokenId: string
+  // Some of these belong in ValuationTile, will need to reestructure some things
   current_price_eth?: number
   best_offered_price_eth?: number
   prices: {
