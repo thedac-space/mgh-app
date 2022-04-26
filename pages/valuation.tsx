@@ -36,7 +36,7 @@ import { IAPIData, IPredictions } from '../lib/types'
 import { FloorPriceTracker, SalesVolumeDaily } from '../components/Valuation'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
-import MapCoordinates from '../components/Heatmap/MapCoordinates'
+import MapLandSummary from '../components/Heatmap/MapLandSummary'
 import MapMobileFilters from '../components/Heatmap/MapMobileFilters'
 const FloorAndVolumeChart = dynamic(
   () => import('../components/Valuation/FloorAndVolumeChart'),
@@ -220,7 +220,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
               <div>
                 {/* Top left Coordinates */}
                 <div className='mb-2 w-[177px] hidden md:block'>
-                  <MapCoordinates coordinates={hovered} />
+                  <MapLandSummary coordinates={hovered} />
                 </div>
                 {/* 'Search By' Forms */}
                 <MapSearch
