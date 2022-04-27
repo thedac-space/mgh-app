@@ -26,14 +26,14 @@ const ColorGuide = ({ percentFilter, setPercentFilter, filterBy }: Props) => {
   }
   return (
     <ul className='flex gap-2 gray-box h-16 bg-opacity-100 items-baseline w-max'>
-      <span className='text-gray-200 text-sm font-semibold'>
+      <li className='text-gray-200 text-sm font-semibold'>
         {filterBy === 'price_difference' ? 'Best' : 'Min'}
-      </span>
+      </li>
       {typedKeys(FILTER_COLORS).map(
         (color, i) =>
           i !== 0 && (
             <li key={color} className='relative'>
-              <div
+              <button
                 style={{ background: FILTER_COLORS[color] }}
                 className={
                   'w-4 h-4 top-[2px] peer cursor-pointer ' +
@@ -49,9 +49,9 @@ const ColorGuide = ({ percentFilter, setPercentFilter, filterBy }: Props) => {
             </li>
           )
       )}
-      <span className='text-gray-200 text-sm font-semibold'>
+      <li className='text-gray-200 text-sm font-semibold'>
         {filterBy === 'price_difference' ? 'Worst' : 'Max'}
-      </span>
+      </li>
     </ul>
   )
 }
