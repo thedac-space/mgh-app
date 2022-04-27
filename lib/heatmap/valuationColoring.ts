@@ -100,6 +100,35 @@ export const FILTER_COLORS = {
   0: 'rgb(50,50,50)', // GRAY - None
 }
 
+// Colors for dictionary filters
+export const DICTIONARY_COLORS = {
+  watchlist: 'rgb(255,255,255)', // On User's Watchlist
+  portfolio: 'rgb(30,94,255)', // Owned by User (On their portfolio)
+  'on-sale': 'rgb(255,50,202)', // On sale
+
+  // Decentraland Only
+  roads: '#716C7A', // roads
+  plazas: '#70AC76', // plazas
+}
+
+// Colors for Tiles in Decentraland Api Basic Map
+export const DECENTRALAND_API_COLORS: Record<number, string> = Object.freeze({
+  0: '#ff9990', // my parcels
+  1: 'rgb(255,50,202)', // my parcels on sale
+  2: '#ff9990', // my estates
+  3: '#ff4053', // my estates on sale
+  4: '#ffbd33', // parcels/estates where I have permissions
+  5: '#5054D4', // districts
+  6: '#563db8', // contributions
+  7: '#716C7A', // roads
+  8: '#70AC76', // plazas
+  9: '#3D3A46', // owned parcel/estate
+  10: '#3D3A46', // parcels on sale (we show them as owned parcels)
+  11: '#09080A', // unowned pacel/estate
+  12: '#18141a', // background
+  13: '#110e13', // loading odd
+  14: '#0d0b0e', // loading even
+})
 /*
  * Sadly, some prices on the eth_predicted_price are super high, making all the other lands very low
  * priced in % compared to them. If we were to divide lands into colors by percentage,

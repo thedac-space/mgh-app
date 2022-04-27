@@ -1,7 +1,8 @@
 import React from 'react'
 import { MapFilter, PercentFilter } from '../../lib/heatmap/heatmapCommonTypes'
 import { FILTER_COLORS } from '../../lib/heatmap/valuationColoring'
-import { typedKeys, ValueOf } from '../../lib/utilities'
+import { ValueOf } from '../../lib/types'
+import { typedKeys } from '../../lib/utilities'
 
 interface Props {
   setPercentFilter: React.Dispatch<React.SetStateAction<PercentFilter>>

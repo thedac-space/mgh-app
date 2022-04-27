@@ -1,5 +1,9 @@
 import { Layer } from './heatmapCommonTypes'
-import { getTileColor } from './valuationColoring'
+import {
+  DECENTRALAND_API_COLORS,
+  DICTIONARY_COLORS,
+  getTileColor,
+} from './valuationColoring'
 
 export const filteredLayer: Layer = (x, y, atlas, mapFilter, percentFilter) => {
   const id = x + ',' + y
@@ -14,11 +18,22 @@ export const filteredLayer: Layer = (x, y, atlas, mapFilter, percentFilter) => {
   )
     return null
   /* Don't show a layer if user is tier0 and metaverse is decentraland. (we already have decentralands Map for that)  */
-  if (mapFilter === 'basic' && atlas.decentraland) return null
-  const color =
-    mapFilter === 'basic'
-      ? '#12b630'
-      : getTileColor(atlas.ITRM[id].percent ?? 0, percentFilter, mapFilter)
+  // if (mapFilter === 'basic' && atlas.decentraland) return null
+  let color: string
+  if (mapFilter === 'basic') {
+    if (atlas.ITRM[id].portfolio) {
+      color = DICTIONARY_COLORS.portfolio
+    } else if (atlas.ITRM[id].watchlist) {
+      color = DICTIONARY_COLORS.watchlist
+    } else if (atlas.ITRM[id].current_price_eth) {
+      color = DICTIONARY_COLORS['on-sale']
+    } else {
+      color = '#12b630'
+    }
+  } else {
+    color = getTileColor(atlas.ITRM[id].percent ?? 0, percentFilter, mapFilter)
+  }
+
   const top = undefined
   const left = undefined
   const topLeft = undefined
@@ -31,27 +46,10 @@ export const filteredLayer: Layer = (x, y, atlas, mapFilter, percentFilter) => {
 }
 
 export const decentralandAPILayer: Layer = (x, y, atlas) => {
-  const COLOR_BY_TYPE: Record<number, string> = Object.freeze({
-    0: '#ff9990', // my parcels
-    1: '#ff4053', // my parcels on sale
-    2: '#ff9990', // my estates
-    3: '#ff4053', // my estates on sale
-    4: '#ffbd33', // parcels/estates where I have permissions
-    5: '#5054D4', // districts
-    6: '#563db8', // contributions
-    7: '#716C7A', // roads
-    8: '#70AC76', // plazas
-    9: '#3D3A46', // owned parcel/estate
-    10: '#3D3A46', // parcels on sale (we show them as owned parcels)
-    11: '#09080A', // unowned pacel/estate
-    12: '#18141a', // background
-    13: '#110e13', // loading odd
-    14: '#0d0b0e', // loading even
-  })
   const id = x + ',' + y
   if (atlas && atlas.decentraland && id in atlas.decentraland) {
     const tile = atlas.decentraland[id]
-    const color = COLOR_BY_TYPE[tile.type]
+    const color = DECENTRALAND_API_COLORS[tile.type]
 
     const top = !!tile.top
     const left = !!tile.left
@@ -65,7 +63,10 @@ export const decentralandAPILayer: Layer = (x, y, atlas) => {
     }
   } else {
     return {
-      color: (x + y) % 2 === 0 ? COLOR_BY_TYPE[12] : COLOR_BY_TYPE[13],
+      color:
+        (x + y) % 2 === 0
+          ? DECENTRALAND_API_COLORS[12]
+          : DECENTRALAND_API_COLORS[13],
     }
   }
 }

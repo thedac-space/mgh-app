@@ -1,7 +1,9 @@
 import { ethers } from 'ethers'
 import { ERC721, TransferEvent } from '../types/ethers-contracts/ERC721'
 import ERC721ABI from '../backend/abi/ERC721.json'
-import { Interface } from 'ethers/lib/utils'
+import { getAddress, Interface } from 'ethers/lib/utils'
+import { Contracts } from './contracts'
+import { Metaverse } from './enums'
 type Provider = ethers.providers.BaseProvider
 
 // Using a Generic ERC721 ABI!!
@@ -59,21 +61,28 @@ export const getAxieLands = async (address: string) => {
 
 /**
  *  @dev Fetch User's Current NFTs. Should work with any Valid ERC-721
- *  @returns Array of tokenIds of User's NFTs
+ *  @returns Array of tokenIds (as strings) of User's NFTs
  * */
 export const getUserNFTs = async (
   provider: Provider,
   address: string,
-  contractAddress: string
+  metaverse: Metaverse
 ) => {
   if (!address.startsWith('0x')) return
-  const contract = createNFTContract(provider, contractAddress)
+
+  const contracts = {
+    sandbox: Contracts.LAND.ETHEREUM_MAINNET.newAddress,
+    decentraland: Contracts.PARCEL.ETHEREUM_MAINNET.address,
+    'axie-infinity': Contracts.AXIE_LANDS.RONIN_MAINNET.address,
+  }
+  const contract = createNFTContract(provider, contracts[metaverse])
   // Getting al transfer events that involve the user
   const event = contract.filters.Transfer(undefined, address)
 
   const transferEvents = (await contract.queryFilter(event)) as
     | never[]
     | TransferEvent[]
+
   /* Looping through all transfer events and retrieving
     only the tokenId that user currently owns */
   const currentOwners = await Promise.all(
@@ -90,7 +99,7 @@ export const getUserNFTs = async (
   let filteredIds: string[] = []
   for (let nft of currentOwners) {
     if (
-      nft.ownerAddress === address &&
+      nft.ownerAddress === getAddress(address) &&
       nft.tokenId &&
       !filteredIds.includes(nft.tokenId)
     ) {

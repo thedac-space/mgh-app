@@ -25,7 +25,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig)
 const db = getFirestore(app)
 
-// Getting User Instance
+// Getting User Instance (WatchList Lands)
 export async function getUserInfo(walletAddress: string) {
   const userRef = doc(db, 'users', walletAddress)
   const user = await getDoc(userRef)
@@ -107,20 +107,6 @@ export async function createValuationScore(
     likes: [],
     dislikes: [],
   })
-}
-
-export async function setFirebaseLands(lands: any[], metaverse: Metaverse) {
-  const heatmap = doc(db, 'heatmaps', metaverse)
-  await updateDoc(heatmap, {
-    values: arrayUnion(lands),
-  })
-}
-
-export async function getFirebaseLands(metaverse: Metaverse) {
-  const heatmap = doc(db, 'heatmaps', metaverse)
-  const heatmapData = (await getDoc(heatmap)).data()
-  if (!heatmapData) return
-  return heatmapData.values
 }
 
 // Like Land Valuation

@@ -68,3 +68,14 @@ export interface IPredictions {
   usdPrediction: number
   metaversePrediction?: number
 }
+
+/**
+ * Use as `keyof` keyword but of values from an object
+ * @example ValueOf<typeof object>
+ */
+export type ValueOf<T> = T[keyof T]
+
+export interface UserData {
+  watchlist?: string[]
+  portfolio?: string[]
+}

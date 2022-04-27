@@ -26,7 +26,7 @@ import { setColours } from '../lib/heatmap/valuationColoring'
 import { getHeatmapSize } from '../lib/heatmap/getHeatmapSize'
 
 import { fetchHeatmapLand } from '../lib/heatmap/fetchHeatmapLand'
-import { IAPIData, IPredictions } from '../lib/types'
+import { IAPIData, IPredictions, UserData } from '../lib/types'
 import { FloorPriceTracker, SalesVolumeDaily } from '../components/Valuation'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
@@ -36,12 +36,18 @@ import {
   MapCard,
   MapChooseFilter,
   MapChooseMetaverse,
+  MapColorDictionary,
   MapInitMvChoice,
   MapLandSummary,
   MapMobileFilters,
   MapSearch,
   TileMap,
 } from '../components/Heatmap'
+import { getUserInfo } from '../lib/FirebaseUtilities'
+import { useAppSelector } from '../state/hooks'
+import { getUserNFTs } from '../lib/nftUtils'
+import useConnectWeb3 from '../backend/connectWeb3'
+import { Chains } from '../lib/chains'
 const FloorAndVolumeChart = dynamic(
   () => import('../components/Valuation/FloorAndVolumeChart'),
   {
@@ -67,6 +73,10 @@ interface CardData {
 }
 
 const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
+  const { address: adresss, chainId } = useAppSelector((state) => state.account)
+  const address = '0x2a9da28bcbf97a8c008fd211f5127b860613922d'
+  const { web3Provider } = useConnectWeb3()
+
   const [mapState, setMapState] =
     useState<keyof typeof VALUATION_STATE>('loading')
   const [loading] = getState(mapState, ['loading'])
@@ -85,6 +95,10 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   const [landsLoaded, setLandsLoaded] = useState<number>(0)
   const [heatmapSize, setHeatmapSize] = useState<HeatmapSize>()
   const [cardData, setCardData] = useState<CardData>()
+  const [userData, setUserData] = useState<UserData>({
+    watchlist: [],
+    portfolio: [],
+  })
   function isSelected(x: number, y: number) {
     return selected?.x === x && selected?.y === y
   }
@@ -164,8 +178,33 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
       setLandsLoaded(0)
       setSelected(undefined)
       setMapState('loading')
-
       const ITRMAtlas = await fetchITRMAtlas(metaverse, setLandsLoaded)
+
+      if (address && web3Provider) {
+        // Lands in User's Watchlist
+        const watchlistData = await getUserInfo(
+          '0x2CE9f1CA1650B495fF8F7A81BB55828A53bfdd5A'
+        )
+        // Lands Owned by user
+        let userNFTs: string[] | undefined
+        chainId === Chains.ETHEREUM_MAINNET.chainId &&
+          (userNFTs = await getUserNFTs(web3Provider, address, metaverse))
+        const userLands: UserData = {
+          portfolio: userNFTs,
+          watchlist: watchlistData && watchlistData[metaverse + '-watchlist'],
+        }
+        // Iterating through User's Portfolio and Watchlist
+        for (let key of typedKeys(userLands)) {
+          // Iterating through Map
+          typedKeys(ITRMAtlas).forEach((land) => {
+            // For each Land in user's Portfolio/Watchlist
+            userLands[key]?.forEach((stateLandId) => {
+              ITRMAtlas[land].land_id === stateLandId &&
+                (ITRMAtlas[land][key] = true)
+            })
+          })
+        }
+      }
       let decentralandAtlas: Record<string, AtlasTile> | undefined
       if (metaverse === 'decentraland') {
         decentralandAtlas = await fetchDecentralandAtlas()
@@ -181,12 +220,22 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
     window.addEventListener('resize', resize)
 
     return () => window.removeEventListener('resize', resize)
-  }, [metaverse])
+  }, [metaverse, address])
 
   // Use Effect for changing filters
   useEffect(() => {
     if (!atlas) return
     const changeColours = async () => {
+      // Creating this copy for easier handling rather than destructuring and setting the state again
+      // const ITRMCopy = atlas.ITRM
+      // /* Mapping through User's Portfolio and Watchlist
+      // and adding corresponding info to Map*/
+      // for (let key of typedKeys(userData)) {
+      //   userData[key]?.forEach((landId) => {
+      //     if (!(landId in ITRMCopy)) return
+      //     ITRMCopy[landId][key] = true
+      //   })
+      // }
       const atlasWithColours = await setColours(atlas.ITRM, filterBy)
       setAtlas({ ...atlas, ITRM: atlasWithColours })
     }
@@ -267,6 +316,10 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                 />
               </div>
             )}
+            {/* Color Dictionary */}
+            <div className='absolute z-20 bottom-2 right-2'>
+              <MapColorDictionary />
+            </div>
             {/*  Map */}
             <TileMap
               minX={heatmapSize.minX}

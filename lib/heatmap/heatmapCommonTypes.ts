@@ -58,6 +58,8 @@ export type ValuationTile = {
   best_offered_price_eth?: number
   percent?: number
   land_id?: string
+  watchlist?: boolean
+  portfolio?: boolean
   images: { image_url: string }
   owner: string
   external_link: string
