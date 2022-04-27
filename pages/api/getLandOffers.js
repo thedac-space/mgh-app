@@ -6,31 +6,27 @@ export default async function handler(req, res) {
 	const flag = req.query?.flag;
 	let response;
 	try {
+		console.log(process.env, flag)
 		if (flag) {
-      response = await fetch(`https://api.opensea.io/api/v1/asset/${metaverse}/${tokenID}/offers`, {
-				method: "GET",
-				headers: {
-					"Content-Type": "application/json",
-					"X-API-KEY": process.env.OPENSEA,
-				},
-			});
-    }
-		else if (tokenID) {
-				response = await fetch(
-					`https://services.itrmachines.com/${metaverse}/predict?tokenId=${tokenID}`,
-					{
-						method: "GET",
-					}
-				);
-			} else {
-				response = await fetch(
-					`https://services.itrmachines.com/${metaverse}/predict?x=${X}&y=${Y}`,
-					{
-						method: "GET",
-					}
-				);
-			}
-		
+			response = await fetch(
+				`https://api.opensea.io/api/v1/asset/${metaverse}/${tokenID}/offers`,
+				{
+					headers: {
+						"Content-Type": "application/json",
+						"X-API-KEY": process.env.OPENSEA,
+					},
+				}
+			);
+		} else if (tokenID) {
+			response = await fetch(
+				`https://services.itrmachines.com/${metaverse}/predict?tokenId=${tokenID}`,
+			);
+		} else {
+			response = await fetch(
+				`https://services.itrmachines.com/${metaverse}/predict?x=${X}&y=${Y}`,
+			);
+		}
+
 		const data = await response.json();
 		res.json({ ...data, metaverse });
 	} catch (err) {

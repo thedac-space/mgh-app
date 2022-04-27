@@ -8,13 +8,13 @@ interface Props {
 }
 
 function getAssetData(apiData: IAPIData | undefined) {
-  let metaverse = apiData?.metaverse;
+  const metaverse = apiData?.metaverse;
   let tokenID: String | undefined;
   if (metaverse != "axie-infinity") {
     tokenID = apiData?.tokenId
   }
-  let X = apiData?.coords.x
-  let Y = apiData?.coords.y
+  const X = apiData?.coords.x
+  const Y = apiData?.coords.y
   return { metaverse, tokenID, X, Y };
 }
 
@@ -24,11 +24,11 @@ function getAssetData(apiData: IAPIData | undefined) {
  * @returns
  */
 const DataComparisonBox = ({ apiData, predictions }: Props) => {
-  const [lastPrice, setLastPrice] = useState<number | undefined>();
+  const [lastPrice, setLastPrice] = useState<number>();
   const [showOffer, setShowOffer] = useState<Boolean>(false);
   const usdPredictionPrice = predictions?.ethPrediction;
 
-  const handleData = async (getOffer: Boolean) => {
+  const handleData = async (getOffer: boolean) => {
     let { metaverse, tokenID, X, Y } = getAssetData(apiData);
     let res
     // if getOffer search offers on opensea, else search last sale price on itrm
@@ -85,7 +85,6 @@ const DataComparisonBox = ({ apiData, predictions }: Props) => {
             setLastPrice(offerPrice);
             setShowOffer(true)
           } else {
-            console.log("tgere")
             setLastPrice(0);
           }
         })
