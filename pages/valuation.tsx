@@ -36,7 +36,7 @@ import {
   MapCard,
   MapChooseFilter,
   MapChooseMetaverse,
-  MapColorDictionary,
+  MapLegend,
   MapInitMvChoice,
   MapLandSummary,
   MapMobileFilters,
@@ -318,7 +318,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
             )}
             {/* Color Dictionary */}
             <div className='absolute z-20 bottom-2 right-2'>
-              <MapColorDictionary />
+              <MapLegend />
             </div>
             {/*  Map */}
             <TileMap

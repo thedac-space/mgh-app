@@ -2,7 +2,7 @@ import React from 'react'
 import { DICTIONARY_COLORS } from '../../lib/heatmap/valuationColoring'
 import { formatName, typedKeys } from '../../lib/utilities'
 
-const MapColorDictionary = () => {
+const MapLegend = () => {
   return (
     <ul className='flex flex-col gap-2 gray-box bg-opacity-100 '>
       {typedKeys(DICTIONARY_COLORS).map((key) => (
@@ -23,4 +23,4 @@ const MapColorDictionary = () => {
   )
 }
 
-export default MapColorDictionary
+export default MapLegend
