@@ -6,7 +6,6 @@ export default async function handler(req, res) {
 	const flag = req.query?.flag;
 	let response;
 	try {
-		console.log(process.env, flag)
 		if (flag) {
 			response = await fetch(
 				`https://api.opensea.io/api/v1/asset/${metaverse}/${tokenID}/offers`,
