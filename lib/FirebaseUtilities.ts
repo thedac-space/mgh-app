@@ -11,9 +11,6 @@ import {
 } from 'firebase/firestore/lite'
 import { Score } from '../components/Valuation/LandLikeBox'
 import { Metaverse } from './enums'
-import { ValuationTile } from './heatmap/heatmapCommonTypes'
-import { mapLand } from './heatmap/heatmapTypes'
-import { typedKeys } from './utilities'
 
 // Firebase Init
 const firebaseConfig = {
@@ -169,7 +166,6 @@ export async function dislikeLand(
     likes: arrayRemove(address),
   })
 }
-
 
 // Retrieve valuation daily data
 export async function getValuationDailyData(metaverse: Metaverse) {
