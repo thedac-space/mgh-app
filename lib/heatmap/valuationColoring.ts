@@ -1,3 +1,4 @@
+import { ValueOf } from '../types'
 import { typedKeys } from '../utilities'
 import { MapFilter, PercentFilter, ValuationTile } from './heatmapCommonTypes'
 
@@ -30,25 +31,29 @@ export const setColours = async (
   valuationAtlas: Record<string, ValuationTile>,
   element: MapFilter
 ) => {
-  // Pretty ugly code, will fix later.
-  let predictions: (number | undefined)[]
-  if (element === 'transfers') {
-    predictions = typedKeys(valuationAtlas).map(
+  const elementOptions = {
+    transfers: typedKeys(valuationAtlas).map(
       (valuation) => valuationAtlas[valuation].history?.length
-    )
-  } else if (element === 'price_difference') {
-    predictions = typedKeys(valuationAtlas).map(
+    ),
+    price_difference: typedKeys(valuationAtlas).map(
       (valuation) => valuationAtlas[valuation].current_price_eth
-    )
-  } else if (element === 'basic') {
-    predictions = []
-  } else if (element === 'listed_lands') {
-    predictions = typedKeys(valuationAtlas).map(
+    ),
+    listed_lands: typedKeys(valuationAtlas).map(
       (valuation) => valuationAtlas[valuation].eth_predicted_price
-    )
+    ),
+    basic: [],
+  }
+  let predictions: (number | undefined)[]
+  if (
+    ['transfers', 'price_difference', 'basic', 'listed_lands'].includes(element)
+  ) {
+    predictions = elementOptions[element as keyof typeof elementOptions]
   } else {
     predictions = typedKeys(valuationAtlas).map(
-      (valuation) => valuationAtlas[valuation][element]
+      (valuation) =>
+        valuationAtlas[valuation][
+          element as keyof ValueOf<typeof valuationAtlas> & MapFilter
+        ]
     )
   }
   let max = NaN

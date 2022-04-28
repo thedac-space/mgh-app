@@ -57,14 +57,15 @@ const FloorAndVolumeChart = dynamic(
 )
 
 // Making this state as an object in order to iterate easily through it
-export const VALUATION_STATE = {
-  loading: 'loading',
-  loaded: 'loaded',
-  error: 'error',
-  loadingQuery: 'loadingQuery',
-  loadedQuery: 'loadedQuery',
-  errorQuery: 'errorQuery',
-}
+export const VALUATION_STATE_OPTIONS = [
+  'loading',
+  'loaded',
+  'error',
+  'loadingQuery',
+  'loadedQuery',
+  'errorQuery',
+] as const
+export type ValuationState = typeof VALUATION_STATE_OPTIONS[number]
 
 interface CardData {
   apiData: IAPIData
@@ -77,8 +78,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   const { address, chainId } = useAppSelector((state) => state.account)
   const { web3Provider } = useConnectWeb3()
 
-  const [mapState, setMapState] =
-    useState<keyof typeof VALUATION_STATE>('loading')
+  const [mapState, setMapState] = useState<ValuationState>('loading')
   const [loading] = getState(mapState, ['loading'])
 
   const [selected, setSelected] = useState<LandCoords>()

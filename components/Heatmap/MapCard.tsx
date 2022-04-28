@@ -12,7 +12,7 @@ import { formatName, getState } from '../../lib/utilities'
 import { AddToWatchlistButton, LandLikeBox } from '../Valuation'
 import { useAppSelector } from '../../state/hooks'
 import { IoClose } from 'react-icons/io5'
-import { VALUATION_STATE } from '../../pages/valuation'
+import { ValuationState } from '../../pages/valuation'
 import { SocialMediaOptions } from '../../lib/socialMediaOptions'
 interface Props {
   apiData?: IAPIData
@@ -20,7 +20,7 @@ interface Props {
   landCoords?: { x: string | number; y: string | number }
   metaverse: Metaverse
   setIsVisible: React.Dispatch<React.SetStateAction<boolean>>
-  mapState: keyof typeof VALUATION_STATE
+  mapState: ValuationState
 }
 const MapCard = ({
   apiData,

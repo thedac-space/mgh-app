@@ -14,25 +14,25 @@ interface Props {
   metaverse: Metaverse
 }
 
-const WatchlistButtonState = {
-  alreadyInWatchlist: 'alreadyInWatchlist',
-  limitReached: 'limitReached',
-  canAddToWatchlist: 'canAddToWatchlist',
-  landAdded: 'landAdded',
-  loading: 'loading',
-}
+const WatchlistButtonState = [
+  'alreadyInWatchlist',
+  'limitReached',
+  'canAddToWatchlist',
+  'landAdded',
+  'loading',
+] as const
 
 const AddToWatchlistButton = ({ landId, metaverse }: Props) => {
   const { push } = useRouter()
   const { address } = useAppSelector((state) => state.account)
-  const [state, setState] = useState<keyof typeof WatchlistButtonState>()
+  const [state, setState] = useState<typeof WatchlistButtonState[number]>()
   const [
     alreadyInWatchlist,
     limitReached,
     canAddToWatchlist,
     landAdded,
     loading,
-  ] = getState(state, typedKeys(WatchlistButtonState))
+  ] = getState(state, [...WatchlistButtonState])
   const [refetch, setRefetch] = useState(false)
 
   type Key =
