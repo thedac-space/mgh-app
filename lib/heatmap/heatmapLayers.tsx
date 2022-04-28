@@ -2,10 +2,18 @@ import { Layer } from './heatmapCommonTypes'
 import {
   DECENTRALAND_API_COLORS,
   DICTIONARY_COLORS,
+  FILTER_COLORS,
   getTileColor,
 } from './valuationColoring'
 
-export const filteredLayer: Layer = (x, y, atlas, mapFilter, percentFilter) => {
+export const filteredLayer: Layer = (
+  x,
+  y,
+  atlas,
+  mapFilter,
+  percentFilter,
+  legendFilter
+) => {
   const id = x + ',' + y
   if (!atlas || !atlas.ITRM || !(id in atlas.ITRM)) return null
   /** This second Statement checks that in Decentraland
@@ -20,15 +28,41 @@ export const filteredLayer: Layer = (x, y, atlas, mapFilter, percentFilter) => {
   /* Don't show a layer if user is tier0 and metaverse is decentraland. (we already have decentralands Map for that)  */
   // if (mapFilter === 'basic' && atlas.decentraland) return null
   let color: string
-  if (mapFilter === 'basic') {
-    if (atlas.ITRM[id].portfolio) {
+
+  if (legendFilter === 'on-sale') {
+    color = atlas.ITRM[id].current_price_eth
+      ? mapFilter === 'basic'
+        ? DICTIONARY_COLORS['on-sale']
+        : getTileColor(atlas.ITRM[id].percent ?? 0, percentFilter, mapFilter)
+      : FILTER_COLORS[0]
+  } else if (legendFilter === 'watchlist') {
+    color = atlas.ITRM[id].watchlist
+      ? mapFilter === 'basic'
+        ? DICTIONARY_COLORS.watchlist
+        : getTileColor(atlas.ITRM[id].percent ?? 0, percentFilter, mapFilter)
+      : FILTER_COLORS[0]
+  } else if (legendFilter === 'portfolio') {
+    color = atlas.ITRM[id].portfolio
+      ? mapFilter === 'basic'
+        ? DICTIONARY_COLORS.portfolio
+        : getTileColor(atlas.ITRM[id].percent ?? 0, percentFilter, mapFilter)
+      : FILTER_COLORS[0]
+  } else if (mapFilter === 'basic') {
+    if (
+      atlas.decentraland &&
+      !atlas.ITRM[id].portfolio &&
+      !atlas.ITRM[id].watchlist &&
+      !atlas.ITRM[id].current_price_eth
+    ) {
+      return null
+    } else if (atlas.ITRM[id].portfolio) {
       color = DICTIONARY_COLORS.portfolio
     } else if (atlas.ITRM[id].watchlist) {
       color = DICTIONARY_COLORS.watchlist
     } else if (atlas.ITRM[id].current_price_eth) {
       color = DICTIONARY_COLORS['on-sale']
     } else {
-      color = '#12b630'
+      color = '#43ba58' //'#12b630' // Green color for basic view with no filters
     }
   } else {
     color = getTileColor(atlas.ITRM[id].percent ?? 0, percentFilter, mapFilter)

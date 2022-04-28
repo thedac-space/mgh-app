@@ -3,6 +3,7 @@ import {
   Atlas,
   Coord,
   Layer,
+  LegendFilter,
   MapFilter,
   PercentFilter,
 } from '../../lib/heatmap/heatmapCommonTypes'
@@ -20,6 +21,7 @@ export function renderMap(args: {
   atlas: Atlas
   filter: MapFilter
   percentFilter: PercentFilter
+  legendFilter: LegendFilter
 }) {
   const {
     ctx,
@@ -34,6 +36,7 @@ export function renderMap(args: {
     atlas,
     filter,
     percentFilter,
+    legendFilter,
   } = args
 
   ctx.clearRect(0, 0, width, height)
@@ -47,7 +50,7 @@ export function renderMap(args: {
         const offsetX = (center.x - x) * size + (pan ? pan.x : 0)
         const offsetY = (y - center.y) * size + (pan ? pan.y : 0)
 
-        const tile = layer(x, y, atlas, filter, percentFilter)
+        const tile = layer(x, y, atlas, filter, percentFilter, legendFilter)
         if (!tile) {
           continue
         }

@@ -50,7 +50,7 @@ export const formatName = (name: string, uppercase?: boolean) => {
  * @returns array of state options as booleans. Destructure them
  * @example const [loading, loaded, error] = getState(state, ['loading', 'loaded', 'error'])
  */
-export const getState = (state: string, stateOptions: string[]) => {
+export const getState = (state: string | undefined, stateOptions: string[]) => {
   return stateOptions.map((option) => state === option)
 }
 

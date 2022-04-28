@@ -8,6 +8,7 @@ import {
   HeatmapSize,
   LandCoords,
   Layer,
+  LegendFilter,
   MapFilter,
   PercentFilter,
 } from '../lib/heatmap/heatmapCommonTypes'
@@ -73,8 +74,7 @@ interface CardData {
 }
 
 const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
-  const { address: adresss, chainId } = useAppSelector((state) => state.account)
-  const address = '0x2a9da28bcbf97a8c008fd211f5127b860613922d'
+  const { address, chainId } = useAppSelector((state) => state.account)
   const { web3Provider } = useConnectWeb3()
 
   const [mapState, setMapState] =
@@ -91,14 +91,11 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   const [metaverse, setMetaverse] = useState<Metaverse>()
   const [filterBy, setFilterBy] = useState<MapFilter>('basic')
   const [percentFilter, setPercentFilter] = useState<PercentFilter>()
+  const [legendFilter, setLegendFilter] = useState<LegendFilter>()
   const [atlas, setAtlas] = useState<Atlas>()
   const [landsLoaded, setLandsLoaded] = useState<number>(0)
   const [heatmapSize, setHeatmapSize] = useState<HeatmapSize>()
   const [cardData, setCardData] = useState<CardData>()
-  const [userData, setUserData] = useState<UserData>({
-    watchlist: [],
-    portfolio: [],
-  })
   function isSelected(x: number, y: number) {
     return selected?.x === x && selected?.y === y
   }
@@ -182,9 +179,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 
       if (address && web3Provider) {
         // Lands in User's Watchlist
-        const watchlistData = await getUserInfo(
-          '0x2CE9f1CA1650B495fF8F7A81BB55828A53bfdd5A'
-        )
+        const watchlistData = await getUserInfo(address)
         // Lands Owned by user
         let userNFTs: string[] | undefined
         chainId === Chains.ETHEREUM_MAINNET.chainId &&
@@ -226,16 +221,6 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   useEffect(() => {
     if (!atlas) return
     const changeColours = async () => {
-      // Creating this copy for easier handling rather than destructuring and setting the state again
-      // const ITRMCopy = atlas.ITRM
-      // /* Mapping through User's Portfolio and Watchlist
-      // and adding corresponding info to Map*/
-      // for (let key of typedKeys(userData)) {
-      //   userData[key]?.forEach((landId) => {
-      //     if (!(landId in ITRMCopy)) return
-      //     ITRMCopy[landId][key] = true
-      //   })
-      // }
       const atlasWithColours = await setColours(atlas.ITRM, filterBy)
       setAtlas({ ...atlas, ITRM: atlasWithColours })
     }
@@ -316,9 +301,12 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                 />
               </div>
             )}
-            {/* Color Dictionary */}
+            {/* Map Legend */}
             <div className='absolute z-20 bottom-2 right-2'>
-              <MapLegend />
+              <MapLegend
+                legendFilter={legendFilter}
+                setLegendFilter={setLegendFilter}
+              />
             </div>
             {/*  Map */}
             <TileMap
@@ -330,6 +318,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
               y={Number(selected?.y || heatmapSize.initialX)}
               filter={filterBy}
               percentFilter={percentFilter}
+              legendFilter={legendFilter}
               atlas={atlas}
               className='atlas'
               width={dims.width}

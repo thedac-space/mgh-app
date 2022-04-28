@@ -64,7 +64,6 @@ export const setColours = async (
           valuationAtlas[valuation].current_price_eth,
           valuationAtlas[valuation].eth_predicted_price
         )
-        console.log({ percent })
         // This just makes all lands have 20 as their percent in order to make them all green.
       } else if (element === 'basic') {
         percent = 20
@@ -97,14 +96,14 @@ export const FILTER_COLORS = {
   3: 'rgb(255,255,0)', // YELLOW
   2: 'rgb(0,255,0)', // GREEN
   1: 'rgb(0,255,255)', // BLUE -  Min
-  0: 'rgb(50,50,50)', // GRAY - None
+  0: 'rgb(61,58,70)', // GRAY - None
 }
 
 // Colors for dictionary filters
 export const DICTIONARY_COLORS = {
   watchlist: 'rgb(255,255,255)', // On User's Watchlist
   portfolio: 'rgb(30,94,255)', // Owned by User (On their portfolio)
-  'on-sale': 'rgb(255,50,202)', // On sale
+  'on-sale': 'rgb(248, 66, 201)', // On sale
 
   // Decentraland Only
   roads: '#716C7A', // roads
@@ -244,7 +243,7 @@ export const generateColor = (percent: number, mapFilter?: MapFilter) => {
   if (between(percent, filterPercentages[filterKey(mapFilter)][1], 0))
     return colors[1]
   // LIGHT-BLUES
-  else return 'rgb(50,50,50)' // GRAY
+  else return FILTER_COLORS[0] // GRAY
 }
 
 // Checking if A) the filter corresponds to the current range/color. B) if there is any filter at all

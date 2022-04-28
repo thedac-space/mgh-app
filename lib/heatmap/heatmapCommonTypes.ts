@@ -12,7 +12,8 @@ export type Layer = (
   y: number,
   atlas?: Atlas,
   filter?: MapFilter,
-  percentFilter?: PercentFilter
+  percentFilter?: PercentFilter,
+  legendFilter?: LegendFilter
 ) => Tile | null
 
 export type Tile = {
@@ -90,6 +91,11 @@ export type HeatmapSize = {
  * Once clicked, only the lands on that percentage/number range will display
  */
 export type PercentFilter = 20 | 40 | 60 | 80 | 100 | undefined
+/**
+ * Legend Filter triggers when a user clicks on a colored squared on the Legend (bottom Right).
+ * Once clicked, only the lands inside that legend (portfolio,watchlist, ...etc) will display
+ */
+export type LegendFilter = 'portfolio' | 'watchlist' | 'on-sale' | undefined
 
 // For Clicks and Searches
 export type LandCoords = { x?: string | number; y?: string | number }

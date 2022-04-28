@@ -2,6 +2,7 @@ import {
   Atlas,
   Coord,
   Layer,
+  LegendFilter,
   MapFilter,
   PercentFilter,
   ValuationTile,
@@ -15,6 +16,8 @@ export type Props = {
   filter: MapFilter
   /** Filters to render on map based on % */
   percentFilter: PercentFilter
+  /** Filters to render on map based on the legend */
+  legendFilter: LegendFilter
   /** layer to render on the map */
   layers: Layer[]
   /** custom class name */
@@ -103,4 +106,5 @@ export type MapRenderer = (args: {
   atlas: Atlas
   filter: MapFilter
   percentFilter: PercentFilter
+  legendFilter: LegendFilter
 }) => void
