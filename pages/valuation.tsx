@@ -301,13 +301,15 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                 />
               </div>
             )}
-            {/* Map Legend */}
-            <div className='absolute z-20 bottom-2 right-2'>
-              <MapLegend
-                legendFilter={legendFilter}
-                setLegendFilter={setLegendFilter}
-              />
-            </div>
+            {/* Map Legend - Hides when Map card is showing..might change */}
+            {!isVisible && (
+              <div className='absolute z-20 bottom-2 right-2'>
+                <MapLegend
+                  legendFilter={legendFilter}
+                  setLegendFilter={setLegendFilter}
+                />
+              </div>
+            )}
             {/*  Map */}
             <TileMap
               minX={heatmapSize.minX}
