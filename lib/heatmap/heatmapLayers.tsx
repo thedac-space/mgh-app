@@ -26,9 +26,9 @@ export const filteredLayer: Layer = (
   )
     return null
   /* Don't show a layer if user is tier0 and metaverse is decentraland. (we already have decentralands Map for that)  */
-  // if (mapFilter === 'basic' && atlas.decentraland) return null
   let color: string
 
+  // Will make this prettier at some stage.. but works fine for now
   if (legendFilter === 'on-sale') {
     color = atlas.ITRM[id].current_price_eth
       ? mapFilter === 'basic'

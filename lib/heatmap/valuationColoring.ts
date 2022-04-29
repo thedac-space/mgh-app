@@ -1,6 +1,11 @@
 import { ValueOf } from '../types'
 import { typedKeys } from '../utilities'
-import { MapFilter, PercentFilter, ValuationTile } from './heatmapCommonTypes'
+import {
+  MapFilter,
+  PercentFilter,
+  PERCENT_FILTER_ARRAY,
+  ValuationTile,
+} from './heatmapCommonTypes'
 
 export const getMax = (array: (number | undefined)[]) => {
   const filteredArray = array.filter((e) => typeof e === 'number') as number[]
@@ -32,22 +37,30 @@ export const setColours = async (
   element: MapFilter
 ) => {
   const elementOptions = {
-    transfers: typedKeys(valuationAtlas).map(
-      (valuation) => valuationAtlas[valuation].history?.length
-    ),
-    price_difference: typedKeys(valuationAtlas).map(
-      (valuation) => valuationAtlas[valuation].current_price_eth
-    ),
-    listed_lands: typedKeys(valuationAtlas).map(
-      (valuation) => valuationAtlas[valuation].eth_predicted_price
-    ),
-    basic: [],
+    transfers: {
+      predictions: typedKeys(valuationAtlas).map(
+        (valuation) => valuationAtlas[valuation].history?.length
+      ),
+    },
+    price_difference: {
+      predictions: typedKeys(valuationAtlas).map(
+        (valuation) => valuationAtlas[valuation].current_price_eth
+      ),
+    },
+    listed_lands: {
+      predictions: typedKeys(valuationAtlas).map(
+        (valuation) => valuationAtlas[valuation].eth_predicted_price
+      ),
+    },
+    basic: { predictions: [] },
   }
   let predictions: (number | undefined)[]
-  if (
-    ['transfers', 'price_difference', 'basic', 'listed_lands'].includes(element)
-  ) {
-    predictions = elementOptions[element as keyof typeof elementOptions]
+  // Making an Array of Numbers to get the Max and use that for Percentages on lower Iteration
+
+  // I would prefer to use typedKeys(elementOptions) here but typescript complains so using Object.keys instead
+  if (Object.keys(elementOptions).includes(element)) {
+    predictions =
+      elementOptions[element as keyof typeof elementOptions].predictions
   } else {
     predictions = typedKeys(valuationAtlas).map(
       (valuation) =>
@@ -59,33 +72,36 @@ export const setColours = async (
   let max = NaN
 
   max = getMax(predictions)
-  await Promise.all(
-    typedKeys(valuationAtlas).map((valuation) => {
-      let percent = NaN
-      if (element === 'transfers') {
-        percent = getPercentage(valuationAtlas[valuation].history?.length, max)
-      } else if (element === 'price_difference') {
-        percent = getPercentage(
-          valuationAtlas[valuation].current_price_eth,
-          valuationAtlas[valuation].eth_predicted_price
-        )
-        // This just makes all lands have 20 as their percent in order to make them all green.
-      } else if (element === 'basic') {
-        percent = 20
-      } else if (element === 'listed_lands') {
-        percent = valuationAtlas[valuation].current_price_eth
-          ? getPercentage(valuationAtlas[valuation].eth_predicted_price, max)
-          : NaN
-      } else {
-        percent = getPercentage(valuationAtlas[valuation][element], max)
-      }
-      valuationAtlas[valuation] = {
-        ...valuationAtlas[valuation],
-        percent: percent,
-      }
-      return true
-    })
-  )
+  // Adding Percent to each land depending on the max number from previous iteration.
+  typedKeys(valuationAtlas).map((valuation) => {
+    const valuationOptions = {
+      transfers: getPercentage(valuationAtlas[valuation].history?.length, max),
+      price_difference: getPercentage(
+        valuationAtlas[valuation].current_price_eth,
+        valuationAtlas[valuation].eth_predicted_price
+      ),
+      basic: 20,
+      listed_lands: valuationAtlas[valuation].current_price_eth
+        ? getPercentage(valuationAtlas[valuation].eth_predicted_price, max)
+        : NaN,
+    }
+
+    let percent = NaN
+    if (Object.keys(valuationOptions).includes(element)) {
+      percent = valuationOptions[element as keyof typeof valuationOptions]
+    } else {
+      percent = getPercentage(
+        valuationAtlas[valuation][
+          element as keyof ValueOf<typeof valuationAtlas> & MapFilter
+        ],
+        max
+      )
+    }
+    valuationAtlas[valuation] = {
+      ...valuationAtlas[valuation],
+      percent: percent,
+    }
+  })
   return valuationAtlas
 }
 
@@ -146,8 +162,8 @@ export const DECENTRALAND_API_COLORS: Record<number, string> = Object.freeze({
  * eth_predicted_price.
  */
 const filterPercentages = {
-  predictedPricePercentage: { 4: 30, 3: 10, 2: 5, 1: 2 },
-  normal: { 4: 80, 3: 60, 2: 40, 1: 20 },
+  predictedPricePercentage: [0, 2, 5, 10, 30, 100],
+  normal: [0, 20, 40, 60, 80, 100],
 }
 
 const filterKey = (mapFilter: MapFilter | undefined) => {
@@ -171,30 +187,27 @@ const filterKey = (mapFilter: MapFilter | undefined) => {
  * */
 export const generateColor = (percent: number, mapFilter?: MapFilter) => {
   if (percent === 0 || !mapFilter) return 'rgb(50,50,50)'
-  const colors = {
+  const colors = [
     // CAREFUL WITH FORGETTING THE COMAS BETWEEN NUMBERS ON THE RGB!!!
 
-    // RED: rgb(255, 0..70, 0)
-    5: `rgb(255, ${
-      70 -
+    // LIGHT-BLUE: rgb(0, 255, 160..255)
+    `rgb(0,255,${
+      255 -
       Math.ceil(
-        ((percent - filterPercentages[filterKey(mapFilter)][4]) /
-          (100 - filterPercentages[filterKey(mapFilter)][4])) *
-          70
+        (percent / filterPercentages[filterKey(mapFilter)][1]) * (255 - 160)
       )
-    },0)`,
-    // ORANGE: rgb(255, 100..170, 0)
-    4: `rgb(255,${
-      170 -
-      Math.ceil(
-        ((percent - filterPercentages[filterKey(mapFilter)][3]) /
-          (filterPercentages[filterKey(mapFilter)][4] -
-            filterPercentages[filterKey(mapFilter)][3])) *
-          (170 - 100)
-      )
-    },0)`,
+    })`,
+
+    // GREEN: rgb(0..170, 255, 0)
+    `rgb(${Math.ceil(
+      ((percent - filterPercentages[filterKey(mapFilter)][1]) /
+        (filterPercentages[filterKey(mapFilter)][2] -
+          filterPercentages[filterKey(mapFilter)][1])) *
+        170
+    )},255,0)`,
+
     // YELLOW: rgb(255, 190..255, 0)
-    3: `rgb(255,${
+    `rgb(255,${
       255 -
       Math.ceil(
         ((percent - filterPercentages[filterKey(mapFilter)][2]) /
@@ -203,52 +216,42 @@ export const generateColor = (percent: number, mapFilter?: MapFilter) => {
           (255 - 190)
       )
     },0)`,
-    // GREEN: rgb(0..170, 255, 0)
-    2: `rgb(${Math.ceil(
-      ((percent - filterPercentages[filterKey(mapFilter)][1]) /
-        (filterPercentages[filterKey(mapFilter)][2] -
-          filterPercentages[filterKey(mapFilter)][1])) *
-        170
-    )},255,0)`,
-    // LIGHT-BLUE: rgb(0, 255, 160..255)
-    1: `rgb(0,255,${
-      255 -
-      Math.ceil(
-        (percent / filterPercentages[filterKey(mapFilter)][1]) * (255 - 160)
-      )
-    })`,
-  }
 
-  if (between(percent, 100, filterPercentages[filterKey(mapFilter)][4]))
-    return colors[5] // REDS
-  if (
-    between(
-      percent,
-      filterPercentages[filterKey(mapFilter)][4],
-      filterPercentages[filterKey(mapFilter)][3]
-    )
-  )
-    return colors[4] // ORANGES
-  if (
-    between(
-      percent,
-      filterPercentages[filterKey(mapFilter)][3],
-      filterPercentages[filterKey(mapFilter)][2]
-    )
-  )
-    return colors[3] // YELLOWS
-  if (
-    between(
-      percent,
-      filterPercentages[filterKey(mapFilter)][2],
-      filterPercentages[filterKey(mapFilter)][1]
-    )
-  )
-    return colors[2] // GREENS
-  if (between(percent, filterPercentages[filterKey(mapFilter)][1], 0))
-    return colors[1]
-  // LIGHT-BLUES
-  else return FILTER_COLORS[0] // GRAY
+    // ORANGE: rgb(255, 100..170, 0)
+    `rgb(255,${
+      170 -
+      Math.ceil(
+        ((percent - filterPercentages[filterKey(mapFilter)][3]) /
+          (filterPercentages[filterKey(mapFilter)][4] -
+            filterPercentages[filterKey(mapFilter)][3])) *
+          (170 - 100)
+      )
+    },0)`,
+
+    // RED: rgb(255, 0..70, 0)
+    `rgb(255, ${
+      70 -
+      Math.ceil(
+        ((percent - filterPercentages[filterKey(mapFilter)][4]) /
+          (100 - filterPercentages[filterKey(mapFilter)][4])) *
+          70
+      )
+    },0)`,
+  ]
+  let color!: string
+  if (between(percent, 100, 0)) {
+    colors.map((_, i) => {
+      if (
+        between(
+          percent,
+          filterPercentages[filterKey(mapFilter)][i + 1],
+          filterPercentages[filterKey(mapFilter)][i]
+        )
+      )
+        color = colors[i]
+    })
+  } else color = FILTER_COLORS[0] // GRAY
+  return color
 }
 
 // Checking if A) the filter corresponds to the current range/color. B) if there is any filter at all
@@ -261,52 +264,25 @@ export const getTileColor = (
   percentFilter: PercentFilter,
   mapFilter?: MapFilter
 ) => {
+  let color!: string
+
   // If land's percent is more than 100 then show dark-red
-  if (percent > 100)
-    return filterIs(100, percentFilter) ? 'rgb(120,0,0)' : generateColor(0)
-  if (between(percent, 100, filterPercentages[filterKey(mapFilter)][4]))
-    /**
-     *  If filter is 100 show only this RED tiles.
-     * If no filter all color tiles will show
-     * If filter is a different number then only tiles from that number/color
-     * will show.
-     * */
-    return filterIs(100, percentFilter)
-      ? generateColor(percent, mapFilter)
-      : generateColor(0)
-  if (
-    between(
-      percent,
-      filterPercentages[filterKey(mapFilter)][4],
-      filterPercentages[filterKey(mapFilter)][3]
-    )
-  )
-    return filterIs(80, percentFilter)
-      ? generateColor(percent, mapFilter)
-      : generateColor(0)
-  if (
-    between(
-      percent,
-      filterPercentages[filterKey(mapFilter)][3],
-      filterPercentages[filterKey(mapFilter)][2]
-    )
-  )
-    return filterIs(60, percentFilter)
-      ? generateColor(percent, mapFilter)
-      : generateColor(0)
-  if (
-    between(
-      percent,
-      filterPercentages[filterKey(mapFilter)][2],
-      filterPercentages[filterKey(mapFilter)][1]
-    )
-  )
-    return filterIs(40, percentFilter)
-      ? generateColor(percent, mapFilter)
-      : generateColor(0)
-  if (between(percent, filterPercentages[filterKey(mapFilter)][1], 0))
-    return filterIs(20, percentFilter)
-      ? generateColor(percent, mapFilter)
-      : generateColor(0)
-  else return generateColor(0)
+  if (percent > 100) {
+    color = filterIs(100, percentFilter) ? 'rgb(120,0,0)' : generateColor(0)
+  } else if (between(percent, 100, 0)) {
+    PERCENT_FILTER_ARRAY.map((percentFromArray, i) => {
+      if (
+        between(
+          percent,
+          filterPercentages[filterKey(mapFilter)][i + 1],
+          filterPercentages[filterKey(mapFilter)][i]
+        )
+      )
+        color = filterIs(percentFromArray, percentFilter)
+          ? generateColor(percent, mapFilter)
+          : generateColor(0)
+    })
+  } else color = generateColor(0)
+
+  return color
 }
