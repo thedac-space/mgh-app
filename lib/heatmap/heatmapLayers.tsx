@@ -26,27 +26,44 @@ export const filteredLayer: Layer = (
   )
     return null
   /* Don't show a layer if user is tier0 and metaverse is decentraland. (we already have decentralands Map for that)  */
-  let color: string
-
+  let color!: string
+  const scaleOptions = {
+    big: 1.4,
+    mid: 1.2,
+    base: 1,
+  }
+  let scale!: number
   // Will make this prettier at some stage.. but works fine for now
   if (legendFilter === 'on-sale') {
-    color = atlas.ITRM[id].current_price_eth
+    atlas.ITRM[id].current_price_eth
       ? mapFilter === 'basic'
-        ? DICTIONARY_COLORS['on-sale']
-        : getTileColor(atlas.ITRM[id].percent ?? 0, percentFilter, mapFilter)
-      : FILTER_COLORS[0]
+        ? (color = DICTIONARY_COLORS['on-sale'])
+        : (color = getTileColor(
+            atlas.ITRM[id].percent ?? 0,
+            percentFilter,
+            mapFilter
+          ))
+      : (color = FILTER_COLORS[0])
   } else if (legendFilter === 'watchlist') {
-    color = atlas.ITRM[id].watchlist
+    atlas.ITRM[id].watchlist
       ? mapFilter === 'basic'
-        ? DICTIONARY_COLORS.watchlist
-        : getTileColor(atlas.ITRM[id].percent ?? 0, percentFilter, mapFilter)
-      : FILTER_COLORS[0]
+        ? (color = DICTIONARY_COLORS.watchlist) && (scale = scaleOptions.big)
+        : (color = getTileColor(
+            atlas.ITRM[id].percent ?? 0,
+            percentFilter,
+            mapFilter
+          )) && (scale = scaleOptions.big)
+      : (color = FILTER_COLORS[0])
   } else if (legendFilter === 'portfolio') {
-    color = atlas.ITRM[id].portfolio
+    atlas.ITRM[id].portfolio
       ? mapFilter === 'basic'
-        ? DICTIONARY_COLORS.portfolio
-        : getTileColor(atlas.ITRM[id].percent ?? 0, percentFilter, mapFilter)
-      : FILTER_COLORS[0]
+        ? (color = DICTIONARY_COLORS.portfolio) && (scale = scaleOptions.big)
+        : (color = getTileColor(
+            atlas.ITRM[id].percent ?? 0,
+            percentFilter,
+            mapFilter
+          )) && (scale = scaleOptions.big)
+      : (color = FILTER_COLORS[0])
   } else if (mapFilter === 'basic') {
     if (
       atlas.decentraland &&
@@ -57,8 +74,10 @@ export const filteredLayer: Layer = (
       return null
     } else if (atlas.ITRM[id].portfolio) {
       color = DICTIONARY_COLORS.portfolio
+      scale = scaleOptions.mid
     } else if (atlas.ITRM[id].watchlist) {
       color = DICTIONARY_COLORS.watchlist
+      scale = scaleOptions.mid
     } else if (atlas.ITRM[id].current_price_eth) {
       color = DICTIONARY_COLORS['on-sale']
     } else {
@@ -72,6 +91,7 @@ export const filteredLayer: Layer = (
   const left = undefined
   const topLeft = undefined
   return {
+    scale,
     color,
     top,
     left,
