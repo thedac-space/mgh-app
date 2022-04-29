@@ -301,7 +301,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                 />
               </div>
             )}
-            {/* Map Legend - Hides when Map card is showing..might change */}
+            {/* Map Legend - Hides when MapCard is showing */}
             {!isVisible && (
               <div className='absolute z-20 bottom-2 right-2'>
                 <MapLegend
