@@ -293,7 +293,12 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
             </div>
             {/* Color Guide */}
             {filterBy !== 'basic' && (
-              <div className='absolute z-20 bottom-2 left-2'>
+              <div
+                className={
+                  (isVisible && 'hidden') +
+                  ' md:block absolute z-20 bottom-2 left-2'
+                }
+              >
                 <ColorGuide
                   filterBy={filterBy}
                   percentFilter={percentFilter}
