@@ -14,6 +14,7 @@ import { useAppSelector } from '../../state/hooks'
 import { IoClose } from 'react-icons/io5'
 import { ValuationState } from '../../pages/valuation'
 import { SocialMediaOptions } from '../../lib/socialMediaOptions'
+import DataComparisonBox from '../Valuation/DataComparison/DataComparisonBox'
 interface Props {
   apiData?: IAPIData
   predictions?: IPredictions
@@ -30,6 +31,7 @@ const MapCard = ({
   setIsVisible,
   mapState,
 }: Props) => {
+  console.log({ apiData })
   const imgSize = 150
   const [loadingQuery, loadedQuery, errorQuery] = getState(mapState, [
     'loadingQuery',
@@ -76,7 +78,7 @@ const MapCard = ({
                 <OptimizedImage
                   height={imgSize}
                   width={imgSize}
-                  src={apiData.images.image_url}
+                  src={apiData.images?.image_url}
                   rounded='lg'
                 />
                 <FiExternalLink className='absolute top-0 right-0 text-white text-xs backdrop-filter backdrop-blur-sm rounded-xl w-6 h-6 p-1' />
@@ -144,6 +146,9 @@ const MapCard = ({
                   ? 'Not Listed'
                   : `Listed: ${apiData?.current_price_eth.toFixed(2)} ETH`}
               </p>
+            </div>
+            <div>
+              <DataComparisonBox apiData={apiData} predictions={predictions} />
             </div>
             {/* Likes */}
             <div className='flex flex-start w-full'>
