@@ -1,23 +1,31 @@
 import React from 'react'
 import { typedKeys } from '../../lib/utilities'
 
+
 interface Props {
   coordinates: { x: number; y: number }
+  ownerId: string,
+  parcelName: string
 }
 
-const MapLandSummary = ({ coordinates }: Props) => {
+const MapLandSummary = ({ownerId, parcelName }: Props) => {
+  console.log(ownerId,"Owner")
+  console.log(parcelName,"Name")
   return (
-    <div className='gray-box bg-opacity-100 h-16'>
-      <div className='flex gap-4 w-30'>
-        {typedKeys(coordinates).map((coord) => (
+    <div className='gray-box bg-opacity-100 '>
+      <div className='flex gap-4 flex-col block'>
           <span
-            key={coord}
+          className='text-white font-semibold'
+        >
+          
+          {"Owner:"+(ownerId && ownerId || "none")}
+        </span>
+          <span
             className='text-white font-semibold whitespace-nowrap'
           >
-            {coord.toUpperCase()}:{' '}
-            {isNaN(coordinates[coord]) ? 'xx' : coordinates[coord]}
+            
+            {"Name:"+parcelName}
           </span>
-        ))}
       </div>
     </div>
   )

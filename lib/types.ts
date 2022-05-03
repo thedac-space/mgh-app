@@ -45,6 +45,7 @@ export interface IPoolData {
 }
 
 export interface IAPIData {
+  owner: string,
   coords: { x: number; y: number }
   metaverse: Metaverse
   name?: string

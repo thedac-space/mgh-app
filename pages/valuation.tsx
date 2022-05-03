@@ -42,6 +42,7 @@ import {
   MapSearch,
   TileMap,
 } from '../components/Heatmap'
+import { handleLandName } from '../lib/valuation/valuationUtils'
 const FloorAndVolumeChart = dynamic(
   () => import('../components/Valuation/FloorAndVolumeChart'),
   {
@@ -85,6 +86,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   const [landsLoaded, setLandsLoaded] = useState<number>(0)
   const [heatmapSize, setHeatmapSize] = useState<HeatmapSize>()
   const [cardData, setCardData] = useState<CardData>()
+
   function isSelected(x: number, y: number) {
     return selected?.x === x && selected?.y === y
   }
@@ -157,6 +159,8 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
     setCardData(landData)
   }
 
+  useEffect(() => {},[hovered])
+
   // Use Effect for Metaverse Fetching and Map creation
   useEffect(() => {
     const setData = async () => {
@@ -226,8 +230,8 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
             <div className='absolute top-0 z-20 flex gap-4 p-2 md:w-fit w-full'>
               <div>
                 {/* Top left Coordinates */}
-                <div className='mb-2 w-[177px] hidden md:block'>
-                  <MapLandSummary coordinates={hovered} />
+                <div className='mb-2 w-[200px] hidden md:block'>
+                  <MapLandSummary coordinates={hovered} ownerId={cardData?.apiData.owner as string} parcelName={handleLandName(metaverse,hovered,cardData?.apiData.name)} />
                 </div>
                 {/* 'Search By' Forms */}
                 <MapSearch
@@ -290,6 +294,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
               ]}
               onHover={(x, y) => {
                 setHovered({ x, y })
+                
               }}
               onClick={(x, y) => {
                 if (isSelected(x, y)) {
