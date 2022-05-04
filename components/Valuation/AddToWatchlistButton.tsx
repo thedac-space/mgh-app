@@ -6,7 +6,7 @@ import {
   createUser,
   getUserInfo,
 } from '../../lib/FirebaseUtilities'
-import { getState, typedKeys } from '../../lib/utilities'
+import { getState } from '../../lib/utilities'
 import { useAppSelector } from '../../state/hooks'
 
 interface Props {

@@ -8,9 +8,15 @@ interface Props {
   legendFilter: LegendFilter
   setLegendFilter: React.Dispatch<React.SetStateAction<LegendFilter>>
   metaverse: Metaverse
+  className?: string
 }
 
-const MapLegend = ({ legendFilter, setLegendFilter, metaverse }: Props) => {
+const MapLegend = ({
+  legendFilter,
+  setLegendFilter,
+  metaverse,
+  className,
+}: Props) => {
   const colors = typedKeys(LEGEND_COLORS).filter((element) => {
     return metaverse === 'decentraland'
       ? true
@@ -25,7 +31,11 @@ const MapLegend = ({ legendFilter, setLegendFilter, metaverse }: Props) => {
   }
 
   return (
-    <ul className='flex flex-col gap-2 gray-box bg-opacity-100 '>
+    <ul
+      className={
+        'flex flex-col gap-2 gray-box bg-opacity-100 w-fit ' + className
+      }
+    >
       {colors.map((key) => (
         <li className='flex gap-6 items-center' key={key}>
           <button

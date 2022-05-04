@@ -49,6 +49,7 @@ import { useAppSelector } from '../state/hooks'
 import { getUserNFTs } from '../lib/nftUtils'
 import useConnectWeb3 from '../backend/connectWeb3'
 import { Chains } from '../lib/chains'
+import { FullScreenButton } from '../components/General'
 const FloorAndVolumeChart = dynamic(
   () => import('../components/Valuation/FloorAndVolumeChart'),
   {
@@ -291,7 +292,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                 />
               </div>
             </div>
-            {/* Color Guide */}
+            {/* Color Guide - Hides when MapCard is showing (only mobile) */}
             {filterBy !== 'basic' && (
               <div
                 className={
@@ -306,13 +307,13 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                 />
               </div>
             )}
-            {/* Map Legend - Hides when MapCard is showing */}
+
+            {/* Full screen button - Hides when MapCard is showing (all screens) */}
             {!isVisible && (
-              <div className='absolute z-20 bottom-2 right-2'>
-                <MapLegend
-                  legendFilter={legendFilter}
-                  setLegendFilter={setLegendFilter}
-                  metaverse={metaverse}
+              <div className='absolute z-20 bottom-2 right-2 gray-box bg-opacity-100 w-fit h-15'>
+                <FullScreenButton
+                  fullScreenRef={mapDivRef}
+                  className='text-lg text-gray-200 hover:text-white'
                 />
               </div>
             )}
@@ -349,8 +350,12 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                 }
               }}
             />
+            {/* Selected Land Card */}
             {isVisible && (
-              <div ref={ref} className='absolute bottom-2 right-8'>
+              <div
+                ref={ref}
+                className='absolute bottom-2 right-8 flex flex-col gap-4'
+              >
                 <Fade duration={300}>
                   <MapCard
                     setIsVisible={setIsVisible}
@@ -363,9 +368,18 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                 </Fade>
               </div>
             )}
+
+            {/* Map Legend - Hides when MapCard is showing (all screens) */}
+            {!isVisible && (
+              <MapLegend
+                className='absolute top-2 right-2'
+                legendFilter={legendFilter}
+                setLegendFilter={setLegendFilter}
+                metaverse={metaverse}
+              />
+            )}
           </>
         )}
-        {/* Predictions Card */}
       </div>
 
       {/* Daily Volume and Floor Price Wrapper */}

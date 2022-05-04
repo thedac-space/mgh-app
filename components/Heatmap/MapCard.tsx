@@ -44,13 +44,13 @@ const MapCard = ({
   const options = SocialMediaOptions(apiData, predictions)
 
   return errorQuery ? (
-    <div className='gray-box bg-opacity-100'>
+    <div className='gray-box bg-opacity-100 z-30'>
       <p className='text-lg font-semibold text-center text-gray-200'>
         No a Valid Land or not enough Data yet!
       </p>
     </div>
   ) : (
-    <div className='gray-box py-4 px-4 flex flex-col cursor-pointer text-white items-start justify-between gap-4 bg-opacity-100 md:min-h-[362px] md:min-w-[359px] relative'>
+    <div className='gray-box py-4 px-4 flex flex-col cursor-pointer text-white items-start justify-between gap-4 bg-opacity-100 md:min-h-[362px] md:min-w-[359px] relative z-30'>
       {loadingQuery ? (
         <div className='w-full flex flex-col gap-14 absolute top-2/4 left-2/4 -translate-x-2/4 -translate-y-2/4'>
           <Loader />
