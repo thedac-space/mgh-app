@@ -312,6 +312,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                 <MapLegend
                   legendFilter={legendFilter}
                   setLegendFilter={setLegendFilter}
+                  metaverse={metaverse}
                 />
               </div>
             )}

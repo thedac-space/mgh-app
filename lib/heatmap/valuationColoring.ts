@@ -121,7 +121,7 @@ export const FILTER_COLORS = {
 }
 
 // Colors for dictionary filters
-export const DICTIONARY_COLORS = {
+export const LEGEND_COLORS = {
   watchlist: 'rgb(255,255,255)', // On User's Watchlist
   portfolio: 'rgb(30,94,255)', // Owned by User (On their portfolio)
   'on-sale': 'rgb(248, 66, 201)', // On sale
@@ -129,6 +129,7 @@ export const DICTIONARY_COLORS = {
   // Decentraland Only
   roads: '#716C7A', // roads
   plazas: '#70AC76', // plazas
+  districts: '#584D6D', // districts
 }
 
 // Colors for Tiles in Decentraland Api Basic Map
@@ -138,7 +139,7 @@ export const DECENTRALAND_API_COLORS: Record<number, string> = Object.freeze({
   2: '#ff9990', // my estates
   3: '#ff4053', // my estates on sale
   4: '#ffbd33', // parcels/estates where I have permissions
-  5: '#5054D4', // districts
+  5: '#584D6D', // districts
   6: '#563db8', // contributions
   7: '#716C7A', // roads
   8: '#70AC76', // plazas

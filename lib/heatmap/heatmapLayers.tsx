@@ -1,7 +1,7 @@
 import { Layer } from './heatmapCommonTypes'
 import {
   DECENTRALAND_API_COLORS,
-  DICTIONARY_COLORS,
+  LEGEND_COLORS,
   FILTER_COLORS,
   getTileColor,
 } from './valuationColoring'
@@ -37,7 +37,7 @@ export const filteredLayer: Layer = (
   if (legendFilter === 'on-sale') {
     atlas.ITRM[id].current_price_eth
       ? mapFilter === 'basic'
-        ? (color = DICTIONARY_COLORS['on-sale'])
+        ? (color = LEGEND_COLORS['on-sale'])
         : (color = getTileColor(
             atlas.ITRM[id].percent ?? 0,
             percentFilter,
@@ -47,7 +47,7 @@ export const filteredLayer: Layer = (
   } else if (legendFilter === 'watchlist') {
     atlas.ITRM[id].watchlist
       ? mapFilter === 'basic'
-        ? (color = DICTIONARY_COLORS.watchlist) && (scale = scaleOptions.big)
+        ? (color = LEGEND_COLORS.watchlist) && (scale = scaleOptions.big)
         : (color = getTileColor(
             atlas.ITRM[id].percent ?? 0,
             percentFilter,
@@ -57,7 +57,7 @@ export const filteredLayer: Layer = (
   } else if (legendFilter === 'portfolio') {
     atlas.ITRM[id].portfolio
       ? mapFilter === 'basic'
-        ? (color = DICTIONARY_COLORS.portfolio) && (scale = scaleOptions.big)
+        ? (color = LEGEND_COLORS.portfolio) && (scale = scaleOptions.big)
         : (color = getTileColor(
             atlas.ITRM[id].percent ?? 0,
             percentFilter,
@@ -73,13 +73,13 @@ export const filteredLayer: Layer = (
     ) {
       return null
     } else if (atlas.ITRM[id].portfolio) {
-      color = DICTIONARY_COLORS.portfolio
+      color = LEGEND_COLORS.portfolio
       scale = scaleOptions.mid
     } else if (atlas.ITRM[id].watchlist) {
-      color = DICTIONARY_COLORS.watchlist
+      color = LEGEND_COLORS.watchlist
       scale = scaleOptions.mid
     } else if (atlas.ITRM[id].current_price_eth) {
-      color = DICTIONARY_COLORS['on-sale']
+      color = LEGEND_COLORS['on-sale']
     } else {
       color = '#43ba58' //'#12b630' // Green color for basic view with no filters
     }
