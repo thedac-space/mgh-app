@@ -310,7 +310,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 
             {/* Full screen button - Hides when MapCard is showing (all screens) */}
             {!isVisible && (
-              <div className='absolute z-20 bottom-2 right-2 gray-box bg-opacity-100 w-fit h-15'>
+              <div className='absolute z-20 top-2 right-2 gray-box bg-opacity-100 w-fit h-15'>
                 <FullScreenButton
                   fullScreenRef={mapDivRef}
                   className='text-lg text-gray-200 hover:text-white'
@@ -372,7 +372,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
             {/* Map Legend - Hides when MapCard is showing (all screens) */}
             {!isVisible && (
               <MapLegend
-                className='absolute top-2 right-2'
+                className='absolute bottom-2 right-2'
                 legendFilter={legendFilter}
                 setLegendFilter={setLegendFilter}
                 metaverse={metaverse}
