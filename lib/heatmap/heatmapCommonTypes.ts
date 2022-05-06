@@ -32,6 +32,7 @@ export type AtlasTile = {
   estate_id?: number
   left?: number
   top?: number
+  name?: string
   topLeft?: number
   price?: number
 }
