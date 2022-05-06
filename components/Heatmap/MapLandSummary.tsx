@@ -15,7 +15,7 @@ const MapLandSummary = ({ownerId, parcelName }: Props) => {
     <div className='gray-box bg-opacity-100 '>
       <div className='flex gap-4 flex-col block'>
           <span
-          className='text-white font-semibold'
+          className='text-white font-semibold break-words'
         >
           
           {"Owner:"+(ownerId && ownerId || "none")}
