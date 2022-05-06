@@ -12,15 +12,16 @@ import { formatName, getState } from '../../lib/utilities'
 import { AddToWatchlistButton, LandLikeBox } from '../Valuation'
 import { useAppSelector } from '../../state/hooks'
 import { IoClose } from 'react-icons/io5'
-import { VALUATION_STATE } from '../../pages/valuation'
+import { ValuationState } from '../../pages/valuation'
 import { SocialMediaOptions } from '../../lib/socialMediaOptions'
+import DataComparisonBox from '../Valuation/DataComparison/DataComparisonBox'
 interface Props {
   apiData?: IAPIData
   predictions?: IPredictions
   landCoords?: { x: string | number; y: string | number }
   metaverse: Metaverse
   setIsVisible: React.Dispatch<React.SetStateAction<boolean>>
-  mapState: keyof typeof VALUATION_STATE
+  mapState: ValuationState
 }
 const MapCard = ({
   apiData,
@@ -30,6 +31,7 @@ const MapCard = ({
   setIsVisible,
   mapState,
 }: Props) => {
+  console.log({ apiData })
   const imgSize = 150
   const [loadingQuery, loadedQuery, errorQuery] = getState(mapState, [
     'loadingQuery',
@@ -42,13 +44,13 @@ const MapCard = ({
   const options = SocialMediaOptions(apiData, predictions)
 
   return errorQuery ? (
-    <div className='gray-box bg-opacity-100'>
+    <div className='gray-box bg-opacity-100 z-30'>
       <p className='text-lg font-semibold text-center text-gray-200'>
         No a Valid Land or not enough Data yet!
       </p>
     </div>
   ) : (
-    <div className='gray-box py-4 px-4 flex flex-col cursor-pointer text-white items-start justify-between gap-4 bg-opacity-100 md:min-h-[362px] md:min-w-[359px] relative'>
+    <div className='gray-box py-4 px-4 flex flex-col cursor-pointer text-white items-start justify-between gap-4 bg-opacity-100 md:min-h-[362px] md:min-w-[359px] relative z-30'>
       {loadingQuery ? (
         <div className='w-full flex flex-col gap-14 absolute top-2/4 left-2/4 -translate-x-2/4 -translate-y-2/4'>
           <Loader />
@@ -76,7 +78,7 @@ const MapCard = ({
                 <OptimizedImage
                   height={imgSize}
                   width={imgSize}
-                  src={apiData.images.image_url}
+                  src={apiData.images?.image_url}
                   rounded='lg'
                 />
                 <FiExternalLink className='absolute top-0 right-0 text-white text-xs backdrop-filter backdrop-blur-sm rounded-xl w-6 h-6 p-1' />
@@ -144,6 +146,9 @@ const MapCard = ({
                   ? 'Not Listed'
                   : `Listed: ${apiData?.current_price_eth.toFixed(2)} ETH`}
               </p>
+            </div>
+            <div>
+              <DataComparisonBox apiData={apiData} predictions={predictions} />
             </div>
             {/* Likes */}
             <div className='flex flex-start w-full'>

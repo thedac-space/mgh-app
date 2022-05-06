@@ -1,13 +1,14 @@
-import { NextPage } from "next";
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Fade } from "react-awesome-reveal";
-import { Metaverse } from "../lib/enums";
+import { NextPage } from 'next'
+import React, { useEffect, useRef, useState } from 'react'
+import { Fade } from 'react-awesome-reveal'
+import { Metaverse } from '../lib/enums'
 import {
   Atlas,
   AtlasTile,
   HeatmapSize,
   LandCoords,
   Layer,
+  LegendFilter,
   MapFilter,
   PercentFilter,
 } from "../lib/heatmap/heatmapCommonTypes";
@@ -25,24 +26,31 @@ import {
 import { setColours } from "../lib/heatmap/valuationColoring";
 import { getHeatmapSize } from "../lib/heatmap/getHeatmapSize";
 
-import { fetchHeatmapLand } from "../lib/heatmap/fetchHeatmapLand";
-import { IAPIData, IPredictions } from "../lib/types";
-import { FloorPriceTracker, SalesVolumeDaily } from "../components/Valuation";
-import Link from "next/link";
-import dynamic from "next/dynamic";
+import { fetchHeatmapLand } from '../lib/heatmap/fetchHeatmapLand'
+import { IAPIData, IPredictions, UserData } from '../lib/types'
+import { FloorPriceTracker, SalesVolumeDaily } from '../components/Valuation'
+import Link from 'next/link'
+import dynamic from 'next/dynamic'
 import {
   ColorGuide,
   HeatmapLoader,
   MapCard,
   MapChooseFilter,
   MapChooseMetaverse,
+  MapLegend,
   MapInitMvChoice,
   MapLandSummary,
   MapMobileFilters,
   MapSearch,
   TileMap,
-} from "../components/Heatmap";
-import { handleLandName } from "../lib/valuation/valuationUtils";
+} from '../components/Heatmap'
+import { getUserInfo } from '../lib/FirebaseUtilities'
+import { useAppSelector } from '../state/hooks'
+import { getUserNFTs } from '../lib/nftUtils'
+import useConnectWeb3 from '../backend/connectWeb3'
+import { Chains } from '../lib/chains'
+import { FullScreenButton } from '../components/General'
+import { handleLandName } from '../lib/valuation/valuationUtils';
 const FloorAndVolumeChart = dynamic(
   () => import("../components/Valuation/FloorAndVolumeChart"),
   {
@@ -51,14 +59,15 @@ const FloorAndVolumeChart = dynamic(
 );
 
 // Making this state as an object in order to iterate easily through it
-export const VALUATION_STATE = {
-  loading: "loading",
-  loaded: "loaded",
-  error: "error",
-  loadingQuery: "loadingQuery",
-  loadedQuery: "loadedQuery",
-  errorQuery: "errorQuery",
-};
+export const VALUATION_STATE_OPTIONS = [
+  'loading',
+  'loaded',
+  'error',
+  'loadingQuery',
+  'loadedQuery',
+  'errorQuery',
+] as const
+export type ValuationState = typeof VALUATION_STATE_OPTIONS[number]
 
 interface CardData {
   apiData: IAPIData;
@@ -68,10 +77,11 @@ interface CardData {
 }
 
 const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
-  const [mapState, setMapState] =
-    useState<keyof typeof VALUATION_STATE>("loading");
-  const [loading] = getState(mapState, ["loading"]);
+  const { address, chainId } = useAppSelector((state) => state.account)
+  const { web3Provider } = useConnectWeb3()
 
+  const [mapState, setMapState] = useState<ValuationState>('loading')
+  const [loading] = getState(mapState, ['loading'])
   const [selected, setSelected] = useState<LandCoords>();
 
   const [hovered, setHovered] = useState<{ x: number; y: number }>({
@@ -80,15 +90,15 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   });
   const [landOwner, setLandOwner] = useState<any>();
   // Hook for Popup
-  const { ref, isVisible, setIsVisible } = useVisible(false);
-  const [metaverse, setMetaverse] = useState<Metaverse>();
-  const [filterBy, setFilterBy] = useState<MapFilter>("basic");
-  const [percentFilter, setPercentFilter] = useState<PercentFilter>();
-  const [atlas, setAtlas] = useState<Atlas>();
-  const [landsLoaded, setLandsLoaded] = useState<number>(0);
-  const [heatmapSize, setHeatmapSize] = useState<HeatmapSize>();
-  const [cardData, setCardData] = useState<CardData>();
-
+  const { ref, isVisible, setIsVisible } = useVisible(false)
+  const [metaverse, setMetaverse] = useState<Metaverse>()
+  const [filterBy, setFilterBy] = useState<MapFilter>('basic')
+  const [percentFilter, setPercentFilter] = useState<PercentFilter>()
+  const [legendFilter, setLegendFilter] = useState<LegendFilter>()
+  const [atlas, setAtlas] = useState<Atlas>()
+  const [landsLoaded, setLandsLoaded] = useState<number>(0)
+  const [heatmapSize, setHeatmapSize] = useState<HeatmapSize>()
+  const [cardData, setCardData] = useState<CardData>()
   function isSelected(x: number, y: number) {
     return selected?.x === x && selected?.y === y;
   }
@@ -164,15 +174,38 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   // Use Effect for Metaverse Fetching and Map creation
   useEffect(() => {
     const setData = async () => {
-      if (!metaverse) return;
-      setLandsLoaded(0);
-      setSelected(undefined);
-      setMapState("loading");
+      if (!metaverse) return
+      setLandsLoaded(0)
+      setSelected(undefined)
+      setMapState('loading')
+      const ITRMAtlas = await fetchITRMAtlas(metaverse, setLandsLoaded)
 
-      const ITRMAtlas = await fetchITRMAtlas(metaverse, setLandsLoaded);
-      let decentralandAtlas: Record<string, AtlasTile> | undefined;
-      if (metaverse === "decentraland") {
-        decentralandAtlas = await fetchDecentralandAtlas();
+      if (address && web3Provider) {
+        // Lands in User's Watchlist
+        const watchlistData = await getUserInfo(address)
+        // Lands Owned by user
+        let userNFTs: string[] | undefined
+        chainId === Chains.ETHEREUM_MAINNET.chainId &&
+          (userNFTs = await getUserNFTs(web3Provider, address, metaverse))
+        const userLands: UserData = {
+          portfolio: userNFTs,
+          watchlist: watchlistData && watchlistData[metaverse + '-watchlist'],
+        }
+        // Iterating through User's Portfolio and Watchlist
+        for (let key of typedKeys(userLands)) {
+          // Iterating through Map
+          typedKeys(ITRMAtlas).forEach((land) => {
+            // For each Land in user's Portfolio/Watchlist
+            userLands[key]?.forEach((stateLandId) => {
+              ITRMAtlas[land].land_id === stateLandId &&
+                (ITRMAtlas[land][key] = true)
+            })
+          })
+        }
+      }
+      let decentralandAtlas: Record<string, AtlasTile> | undefined
+      if (metaverse === 'decentraland') {
+        decentralandAtlas = await fetchDecentralandAtlas()
       }
       const atlasWithColours = await setColours(ITRMAtlas, filterBy);
       const heatmapSize = getHeatmapSize({ ITRM: ITRMAtlas });
@@ -184,8 +217,8 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
     resize();
     window.addEventListener("resize", resize);
 
-    return () => window.removeEventListener("resize", resize);
-  }, [metaverse]);
+    return () => window.removeEventListener('resize', resize)
+  }, [metaverse, address])
 
   // Use Effect for changing filters
   useEffect(() => {
@@ -269,13 +302,28 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                 />
               </div>
             </div>
-            {/* Color Guide */}
-            {filterBy !== "basic" && (
-              <div className="absolute z-20 bottom-2 left-2">
+            {/* Color Guide - Hides when MapCard is showing (only mobile) */}
+            {filterBy !== 'basic' && (
+              <div
+                className={
+                  (isVisible && 'hidden') +
+                  ' md:block absolute z-20 bottom-2 left-2'
+                }
+              >
                 <ColorGuide
                   filterBy={filterBy}
                   percentFilter={percentFilter}
                   setPercentFilter={setPercentFilter}
+                />
+              </div>
+            )}
+
+            {/* Full screen button - Hides when MapCard is showing (all screens) */}
+            {!isVisible && (
+              <div className='absolute z-20 top-2 right-2 gray-box bg-opacity-100 w-fit h-15'>
+                <FullScreenButton
+                  fullScreenRef={mapDivRef}
+                  className='text-lg text-gray-200 hover:text-white'
                 />
               </div>
             )}
@@ -289,6 +337,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
               y={Number(selected?.y || heatmapSize.initialX)}
               filter={filterBy}
               percentFilter={percentFilter}
+              legendFilter={legendFilter}
               atlas={atlas}
               className="atlas"
               width={dims.width}
@@ -323,8 +372,12 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                 }
               }}
             />
+            {/* Selected Land Card */}
             {isVisible && (
-              <div ref={ref} className="absolute bottom-2 right-8">
+              <div
+                ref={ref}
+                className='absolute bottom-2 right-8 flex flex-col gap-4'
+              >
                 <Fade duration={300}>
                   <MapCard
                     setIsVisible={setIsVisible}
@@ -337,9 +390,18 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                 </Fade>
               </div>
             )}
+
+            {/* Map Legend - Hides when MapCard is showing (all screens) */}
+            {!isVisible && (
+              <MapLegend
+                className='absolute bottom-2 right-2'
+                legendFilter={legendFilter}
+                setLegendFilter={setLegendFilter}
+                metaverse={metaverse}
+              />
+            )}
           </>
         )}
-        {/* Predictions Card */}
       </div>
 
       {/* Daily Volume and Floor Price Wrapper */}

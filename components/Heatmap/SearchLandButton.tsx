@@ -2,10 +2,10 @@ import React from 'react'
 import { MdAddLocationAlt } from 'react-icons/md'
 import { RiLoader3Fill } from 'react-icons/ri'
 import { getState } from '../../lib/utilities'
-import { VALUATION_STATE } from '../../pages/valuation'
+import { ValuationState } from '../../pages/valuation'
 
 interface Props {
-  mapState: keyof typeof VALUATION_STATE
+  mapState: ValuationState
   searchBy: 'id' | 'coordinates'
 }
 

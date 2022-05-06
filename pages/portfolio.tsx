@@ -144,7 +144,7 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
               rawIds = await getUserNFTs(
                 provider,
                 formatAddress((externalWallet as string) ?? address),
-                landOptions[option].contract
+                option as Metaverse
               )
             }
             rawIds &&

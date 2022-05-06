@@ -1,7 +1,19 @@
 import { Layer } from './heatmapCommonTypes'
-import { getTileColor } from './valuationColoring'
+import {
+  DECENTRALAND_API_COLORS,
+  LEGEND_COLORS,
+  FILTER_COLORS,
+  getTileColor,
+} from './valuationColoring'
 
-export const filteredLayer: Layer = (x, y, atlas, mapFilter, percentFilter) => {
+export const filteredLayer: Layer = (
+  x,
+  y,
+  atlas,
+  mapFilter,
+  percentFilter,
+  legendFilter
+) => {
   const id = x + ',' + y
   if (!atlas || !atlas.ITRM || !(id in atlas.ITRM)) return null
   /** This second Statement checks that in Decentraland
@@ -14,15 +26,72 @@ export const filteredLayer: Layer = (x, y, atlas, mapFilter, percentFilter) => {
   )
     return null
   /* Don't show a layer if user is tier0 and metaverse is decentraland. (we already have decentralands Map for that)  */
-  if (mapFilter === 'basic' && atlas.decentraland) return null
-  const color =
-    mapFilter === 'basic'
-      ? '#12b630'
-      : getTileColor(atlas.ITRM[id].percent ?? 0, percentFilter, mapFilter)
+  let color!: string
+  const scaleOptions = {
+    big: 1.4,
+    mid: 1.2,
+    base: 1,
+  }
+  let scale!: number
+  // Will make this prettier at some stage.. but works fine for now
+  if (legendFilter === 'on-sale') {
+    atlas.ITRM[id].current_price_eth
+      ? mapFilter === 'basic'
+        ? (color = LEGEND_COLORS['on-sale'])
+        : (color = getTileColor(
+            atlas.ITRM[id].percent ?? 0,
+            percentFilter,
+            mapFilter
+          ))
+      : (color = FILTER_COLORS[0])
+  } else if (legendFilter === 'watchlist') {
+    atlas.ITRM[id].watchlist
+      ? mapFilter === 'basic'
+        ? (color = LEGEND_COLORS.watchlist) && (scale = scaleOptions.big)
+        : (color = getTileColor(
+            atlas.ITRM[id].percent ?? 0,
+            percentFilter,
+            mapFilter
+          )) && (scale = scaleOptions.big)
+      : (color = FILTER_COLORS[0])
+  } else if (legendFilter === 'portfolio') {
+    atlas.ITRM[id].portfolio
+      ? mapFilter === 'basic'
+        ? (color = LEGEND_COLORS.portfolio) && (scale = scaleOptions.big)
+        : (color = getTileColor(
+            atlas.ITRM[id].percent ?? 0,
+            percentFilter,
+            mapFilter
+          )) && (scale = scaleOptions.big)
+      : (color = FILTER_COLORS[0])
+  } else if (mapFilter === 'basic') {
+    if (
+      atlas.decentraland &&
+      !atlas.ITRM[id].portfolio &&
+      !atlas.ITRM[id].watchlist &&
+      !atlas.ITRM[id].current_price_eth
+    ) {
+      return null
+    } else if (atlas.ITRM[id].portfolio) {
+      color = LEGEND_COLORS.portfolio
+      scale = scaleOptions.mid
+    } else if (atlas.ITRM[id].watchlist) {
+      color = LEGEND_COLORS.watchlist
+      scale = scaleOptions.mid
+    } else if (atlas.ITRM[id].current_price_eth) {
+      color = LEGEND_COLORS['on-sale']
+    } else {
+      color = '#43ba58' //'#12b630' // Green color for basic view with no filters
+    }
+  } else {
+    color = getTileColor(atlas.ITRM[id].percent ?? 0, percentFilter, mapFilter)
+  }
+
   const top = undefined
   const left = undefined
   const topLeft = undefined
   return {
+    scale,
     color,
     top,
     left,
@@ -31,27 +100,10 @@ export const filteredLayer: Layer = (x, y, atlas, mapFilter, percentFilter) => {
 }
 
 export const decentralandAPILayer: Layer = (x, y, atlas) => {
-  const COLOR_BY_TYPE: Record<number, string> = Object.freeze({
-    0: '#ff9990', // my parcels
-    1: '#ff4053', // my parcels on sale
-    2: '#ff9990', // my estates
-    3: '#ff4053', // my estates on sale
-    4: '#ffbd33', // parcels/estates where I have permissions
-    5: '#5054D4', // districts
-    6: '#563db8', // contributions
-    7: '#716C7A', // roads
-    8: '#70AC76', // plazas
-    9: '#3D3A46', // owned parcel/estate
-    10: '#3D3A46', // parcels on sale (we show them as owned parcels)
-    11: '#09080A', // unowned pacel/estate
-    12: '#18141a', // background
-    13: '#110e13', // loading odd
-    14: '#0d0b0e', // loading even
-  })
   const id = x + ',' + y
   if (atlas && atlas.decentraland && id in atlas.decentraland) {
     const tile = atlas.decentraland[id]
-    const color = COLOR_BY_TYPE[tile.type]
+    const color = DECENTRALAND_API_COLORS[tile.type]
 
     const top = !!tile.top
     const left = !!tile.left
@@ -65,7 +117,10 @@ export const decentralandAPILayer: Layer = (x, y, atlas) => {
     }
   } else {
     return {
-      color: (x + y) % 2 === 0 ? COLOR_BY_TYPE[12] : COLOR_BY_TYPE[13],
+      color:
+        (x + y) % 2 === 0
+          ? DECENTRALAND_API_COLORS[12]
+          : DECENTRALAND_API_COLORS[13],
     }
   }
 }

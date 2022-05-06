@@ -50,7 +50,7 @@ export const formatName = (name: string, uppercase?: boolean) => {
  * @returns array of state options as booleans. Destructure them
  * @example const [loading, loaded, error] = getState(state, ['loading', 'loaded', 'error'])
  */
-export const getState = (state: string, stateOptions: string[]) => {
+export const getState = (state: string | undefined, stateOptions: string[]) => {
   return stateOptions.map((option) => state === option)
 }
 
@@ -62,9 +62,3 @@ export function typedKeys<O extends object, K extends keyof O = keyof O>(
 ): K[] {
   return Object.keys(obj) as K[]
 }
-
-/**
- * Use as `keyof` keyword but of values from an object
- * @example ValueOf<typeof object>
- */
-export type ValueOf<T> = T[keyof T]

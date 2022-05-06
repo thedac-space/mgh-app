@@ -3,11 +3,11 @@ import { Fade } from 'react-awesome-reveal'
 import { BsQuestionCircle } from 'react-icons/bs'
 import { IoIosArrowDown } from 'react-icons/io'
 import { getState, typedKeys } from '../../lib/utilities'
-import { VALUATION_STATE } from '../../pages/valuation'
+import { ValuationState } from '../../pages/valuation'
 import SearchLandButton from './SearchLandButton'
 
 interface Props {
-  mapState: keyof typeof VALUATION_STATE
+  mapState: ValuationState
   handleMapSelection: (
     x?: number | undefined,
     y?: number | undefined,
