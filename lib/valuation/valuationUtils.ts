@@ -97,6 +97,8 @@ export const handleLandName = (
   }
 }
 
+
+
 /**
  * @param listings Array of listing objects from each OpenSea Asset
  * @returns current price for asset
