@@ -85,6 +85,7 @@ export type MapFilterMessage = {
   price_difference : string
   transfers : string
   listed_lands : string
+  basic : string
 }
 
 

@@ -27,7 +27,8 @@ const ColorGuide = ({ percentFilter, setPercentFilter, filterBy }: Props) => {
     price_difference: 'price difference',
     variation_last_week: 'variation las week',
     variation_last_four_weeks: 'variation mounth',
-    variation_last_six_months: 'variation semester'
+    variation_last_six_months: 'variation semester',
+    basic: 'basic'
   }
 
   const handleColorClick = (percent: ValueOf<typeof colorOptions>) => {
