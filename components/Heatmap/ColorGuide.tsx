@@ -1,6 +1,6 @@
 import React from 'react'
 import { BsQuestionCircle } from 'react-icons/bs'
-import { MapFilter, PercentFilter, MapFilterMessage } from '../../lib/heatmap/heatmapCommonTypes'
+import { PercentFilter, MapFilterMessage } from '../../lib/heatmap/heatmapCommonTypes'
 import { FILTER_COLORS } from '../../lib/heatmap/valuationColoring'
 import { ValueOf } from '../../lib/types'
 import { typedKeys } from '../../lib/utilities'
