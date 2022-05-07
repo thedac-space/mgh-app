@@ -66,7 +66,6 @@ export type ValuationTile = {
   external_link: string
 }
 // export type ValidFilter =
-
 export type MapFilter =
   | 'eth_predicted_price'
   | 'variation_last_week'
@@ -76,6 +75,18 @@ export type MapFilter =
   | 'transfers'
   | 'basic'
   | 'listed_lands'
+
+//
+export type MapFilterMessage = {
+  eth_predicted_price : string
+  variation_last_week : string
+  variation_last_four_weeks : string
+  variation_last_six_months : string
+  price_difference : string
+  transfers : string
+  listed_lands : string
+}
+
 
 export type HeatmapSize = {
   maxX: number

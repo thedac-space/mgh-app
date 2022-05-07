@@ -1,6 +1,6 @@
 import React from 'react'
 import { BsQuestionCircle } from 'react-icons/bs'
-import { MapFilter, PercentFilter } from '../../lib/heatmap/heatmapCommonTypes'
+import { MapFilter, PercentFilter, MapFilterMessage } from '../../lib/heatmap/heatmapCommonTypes'
 import { FILTER_COLORS } from '../../lib/heatmap/valuationColoring'
 import { ValueOf } from '../../lib/types'
 import { typedKeys } from '../../lib/utilities'
@@ -8,7 +8,7 @@ import { typedKeys } from '../../lib/utilities'
 interface Props {
   setPercentFilter: React.Dispatch<React.SetStateAction<PercentFilter>>
   percentFilter: PercentFilter
-  filterBy: MapFilter
+  filterBy: keyof MapFilterMessage
 }
 
 const ColorGuide = ({ percentFilter, setPercentFilter, filterBy }: Props) => {
@@ -20,14 +20,14 @@ const ColorGuide = ({ percentFilter, setPercentFilter, filterBy }: Props) => {
     5: 100,
   }
 
-  const MESSAGE_BY_FILTER : any = {
-    'eth_predicted_price': 'predicted price',
-    'listed_lands': 'listed lands',
-    'transfers': 'transfers',
-    'price_difference': 'price difference',
-    'variation_last_week': 'variation las week',
-    'variation_last_four_weeks': 'variation mounth',
-    'variation_last_six_months': 'variation semester'
+  const MESSAGE_BY_FILTER : MapFilterMessage = {
+    eth_predicted_price: 'predicted price',
+    listed_lands: 'listed lands',
+    transfers: 'transfers',
+    price_difference: 'price difference',
+    variation_last_week: 'variation las week',
+    variation_last_four_weeks: 'variation mounth',
+    variation_last_six_months: 'variation semester'
   }
 
   const handleColorClick = (percent: ValueOf<typeof colorOptions>) => {
