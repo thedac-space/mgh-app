@@ -124,7 +124,7 @@ const AddLandForm = ({ state, addToWatchList, ids, landKeys }: Props) => {
               type='number'
               onChange={(e) => setLandId(e.target.value)}
               value={landId}
-              placeholder='14271'
+              placeholder='e.g. 14271'
               className={
                 (state === 'successId'
                   ? 'border-green-500 placeholder-green-500'

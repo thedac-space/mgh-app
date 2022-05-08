@@ -111,7 +111,7 @@ const PolygonStaking: NextPage = () => {
 
                     <div className="flex flex-col space-y-5 w-full lg:w-7/12">
 
-                        <div className="relative flex flex-col space-y-5 h-full items-center justify-between border-t border-l border-opacity-10 shadow-dark rounded-xl p-2 pb-10 sm:p-5 sm:pb-12 w-full bg-grey-dark bg-opacity-30">
+                        <div className="relative flex flex-col space-y-5 h-full items-center justify-between p-2 pb-10 sm:p-5 sm:pb-12 gray-box">
                             {(!web3Provider || !+allowance || chainId !== Chains.MATIC_MAINNET.chainId) && <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-0 backdrop-blur-sm rounded-xl z-20"></div>}
                             <div className="self-start flex items-center justify-center space-x-2 sm:space-x-4 w-full pr-2 mb-2 z-30">
                                 <img src="/images/mgh_logo.png" className="object-scale-down h-10 sm:h-14 p-1" />
@@ -125,7 +125,7 @@ const PolygonStaking: NextPage = () => {
                                         <p onClick={() => setStakeInput(MGHBalance)} className="text-gray-400 cursor-pointer font-medium hover:text-gray-300 transition ease-in-out duration-300">Max: {(+MGHBalance) ? (+MGHBalance).toFixed(1) : ""}</p>
                                     </div>
 
-                                    <input onChange={(e) => { setStakeInput(e.target.value) }} value={stakeInput} autoComplete="off" required id={Tokens.MGH} type="number" placeholder="0.0" className={`text-right w-full bg-grey-dark shadow-dark hover:shadow-colorbottom focus:shadow-colorbottom bg-opacity-70 text-gray-200 font-medium text-lg sm:text-xl p-3 sm:p-4 pt-4 sm:pt-5 focus:outline-none border border-opacity-10 hover:border-opacity-30 focus:border-opacity-60 transition duration-300 ease-in-out rounded-xl placeholder-white placeholder-opacity-75`} />
+                                    <input onChange={(e) => { setStakeInput(e.target.value) }} value={stakeInput} autoComplete="off" required id={Tokens.MGH} type="number" placeholder="0.0" className={`text-right w-full bg-grey-dark shadow-dark hover:shadow-colorbottom focus:shadow-colorbottom bg-opacity-70 text-gray-200 font-medium text-lg sm:text-xl p-3 sm:p-4 pt-4 sm:pt-5 focus:outline-none border border-white/10 hover:border-white/30 focus:border-white/60 transition duration-300 ease-in-out rounded-xl placeholder-white placeholder-opacity-75`} />
 
                                     <button disabled={stakeInput ? (+stakeInput > +MGHBalance ? true : false) : true} onClick={stake} className={`disabled:opacity-30 disabled:hover:shadow-dark disabled:cursor-default mt-2 sm:mt-4 flex justify-center items-center border border-pink-600 shadow-dark hover:shadow-button transition ease-in-out duration-500 rounded-xl w-full py-3 sm:py-4`}>
                                         <p className="pt-1 z-10 text-pink-600 font-medium text-lg sm:text-xl">Stake $MGH</p>
@@ -138,7 +138,7 @@ const PolygonStaking: NextPage = () => {
                                         <p onClick={() => (+totalStaked) && setUnstakeInput(totalStaked)} className="text-gray-400 cursor-pointer font-medium pt-1 hover:text-gray-300 transition ease-in-out duration-300">Max: {(+totalStaked) ? (+totalStaked).toFixed(1) : ""}</p>
                                     </div>
 
-                                    <input onChange={(e) => { setUnstakeInput(e.target.value) }} value={unstakeInput} required id={Tokens.MGH} type="number" autoComplete="off" placeholder="0.0" className={`text-right w-full bg-grey-dark shadow-dark hover:shadow-colorbottom focus:shadow-colorbottom bg-opacity-70 text-gray-200 font-medium text-lg sm:text-xl p-3 sm:p-4 pt-4 sm:pt-5 focus:outline-none border border-opacity-10 hover:border-opacity-30 focus:border-opacity-60 transition duration-300 ease-in-out rounded-xl placeholder-white placeholder-opacity-75`} />
+                                    <input onChange={(e) => { setUnstakeInput(e.target.value) }} value={unstakeInput} required id={Tokens.MGH} type="number" autoComplete="off" placeholder="0.0" className={`text-right w-full bg-grey-dark shadow-dark hover:shadow-colorbottom focus:shadow-colorbottom bg-opacity-70 text-gray-200 font-medium text-lg sm:text-xl p-3 sm:p-4 pt-4 sm:pt-5 focus:outline-none border border-white/10 hover:border-white/30 focus:border-white/60 transition duration-300 ease-in-out rounded-xl placeholder-white placeholder-opacity-75`} />
 
                                     <button disabled={unstakeInput ? (+unstakeInput > +totalStaked ? true : false) : true} onClick={unstake} className={`mt-2 sm:mt-4 disabled:opacity-30 disabled:hover:shadow-dark disabled:cursor-default flex justify-center items-center border border-pink-600 shadow-dark hover:shadow-button transition ease-in-out duration-500 rounded-xl w-full py-3 sm:py-4`}>
                                         <p className="pt-1 z-10 text-pink-600 font-medium text-lg sm:text-xl">Unstake $MGH</p>
@@ -175,7 +175,7 @@ const PolygonStaking: NextPage = () => {
 
                     <div className="flex flex-col space-y-5 justify-between w-full lg:w-5/12 min-w-0 lg:min-w-max">
 
-                        <div className="flex flex-col space-y-5 items-center border-t border-l border-opacity-0 shadow-dark rounded-xl p-2 sm:p-5 w-full bg-grey-dark bg-opacity-30 max-w-4xl">
+                        <div className="flex flex-col space-y-5 items-center gray-box p-2 sm:p-5 max-w-4xl">
                             <h3 className="text-gray-300 pb-0">Rewards</h3>
 
                             <div className="flex flex-col items-center w-full max-w-sm">
