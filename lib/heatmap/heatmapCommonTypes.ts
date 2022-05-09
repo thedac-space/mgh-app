@@ -67,7 +67,6 @@ export type ValuationTile = {
   external_link: string
 }
 // export type ValidFilter =
-
 export type MapFilter =
   | 'eth_predicted_price'
   | 'variation_last_week'

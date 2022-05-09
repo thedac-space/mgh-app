@@ -1,5 +1,6 @@
 import React from 'react'
-import { MapFilter, PercentFilter } from '../../lib/heatmap/heatmapCommonTypes'
+import { BsQuestionCircle } from 'react-icons/bs'
+import { PercentFilter, MapFilter } from '../../lib/heatmap/heatmapCommonTypes'
 import { FILTER_COLORS } from '../../lib/heatmap/valuationColoring'
 import { ValueOf } from '../../lib/types'
 import { typedKeys } from '../../lib/utilities'
@@ -18,6 +19,18 @@ const ColorGuide = ({ percentFilter, setPercentFilter, filterBy }: Props) => {
     4: 80,
     5: 100,
   }
+
+  const MESSAGE_BY_FILTER: Record<MapFilter, string> = {
+    eth_predicted_price: 'predicted price',
+    listed_lands: 'listed lands',
+    transfers: 'transfers',
+    price_difference: 'price difference',
+    variation_last_week: 'variation las week',
+    variation_last_four_weeks: 'variation mounth',
+    variation_last_six_months: 'variation semester',
+    basic: 'basic'
+  }
+
   const handleColorClick = (percent: ValueOf<typeof colorOptions>) => {
     if (percentFilter === percent) {
       setPercentFilter(undefined)
@@ -57,6 +70,10 @@ const ColorGuide = ({ percentFilter, setPercentFilter, filterBy }: Props) => {
       <li className='text-gray-200 text-sm font-semibold'>
         {filterBy === 'price_difference' ? 'Worst' : 'Max'}
       </li>
+      <BsQuestionCircle className='text-gray-300 cursor-pointer peer relative bottom-[2px]' />
+      <p className='absolute -top-7 border border-gray-500 -left-6 xs:left-0 p-2 rounded-lg bg-black bg-opacity-10 backdrop-filter backdrop-blur font-medium text-xs text-gray-200 hidden peer-hover:block w-70'>
+        Message for {MESSAGE_BY_FILTER[filterBy]}
+      </p>
     </ul>
   )
 }
