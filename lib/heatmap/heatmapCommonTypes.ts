@@ -76,19 +76,6 @@ export type MapFilter =
   | 'basic'
   | 'listed_lands'
 
-//
-export type MapFilterMessage = {
-  eth_predicted_price : string
-  variation_last_week : string
-  variation_last_four_weeks : string
-  variation_last_six_months : string
-  price_difference : string
-  transfers : string
-  listed_lands : string
-  basic : string
-}
-
-
 export type HeatmapSize = {
   maxX: number
   maxY: number

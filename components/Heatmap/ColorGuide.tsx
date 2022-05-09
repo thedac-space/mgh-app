@@ -1,6 +1,6 @@
 import React from 'react'
 import { BsQuestionCircle } from 'react-icons/bs'
-import { PercentFilter, MapFilterMessage } from '../../lib/heatmap/heatmapCommonTypes'
+import { PercentFilter, MapFilter } from '../../lib/heatmap/heatmapCommonTypes'
 import { FILTER_COLORS } from '../../lib/heatmap/valuationColoring'
 import { ValueOf } from '../../lib/types'
 import { typedKeys } from '../../lib/utilities'
@@ -8,7 +8,7 @@ import { typedKeys } from '../../lib/utilities'
 interface Props {
   setPercentFilter: React.Dispatch<React.SetStateAction<PercentFilter>>
   percentFilter: PercentFilter
-  filterBy: keyof MapFilterMessage
+  filterBy: MapFilter
 }
 
 const ColorGuide = ({ percentFilter, setPercentFilter, filterBy }: Props) => {
@@ -20,7 +20,7 @@ const ColorGuide = ({ percentFilter, setPercentFilter, filterBy }: Props) => {
     5: 100,
   }
 
-  const MESSAGE_BY_FILTER : MapFilterMessage = {
+  const MESSAGE_BY_FILTER: Record<MapFilter, string> = {
     eth_predicted_price: 'predicted price',
     listed_lands: 'listed lands',
     transfers: 'transfers',
