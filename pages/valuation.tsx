@@ -17,11 +17,9 @@ import {
 } from "../lib/valuation/valuationUtils";
 import { useRouter } from "next/router";
 import dynamic from "next/dynamic";
-import ChartWrapper  from "../components/Valuation/ChartWrapper";
-const FloorAndVolumeChart = dynamic(() => import("../components/Valuation/FloorAndVolumeChart"), {
-    ssr: false
-  });
-  
+import ChartWrapper from "../components/Valuation/ChartWrapper";
+
+
 const ValuationPage: NextPage = ({ prices }: any) => {
   const { query } = useRouter();
   const [apiData, setAPIData] = useState<IAPIData>();
@@ -380,11 +378,7 @@ const ValuationPage: NextPage = ({ prices }: any) => {
             <FloorPriceTracker metaverse={metaverse} coinPrices={prices} />
           </div>
         </div>
-        {/*Graph*/}
-        <div className="flex flex-col shadow-blck rounded-xl py-3 px-4 w-full bg-grey-dark bg-opacity-20 ">
-          <FloorAndVolumeChart metaverse={metaverse} />
-        </div>
-        <ChartWrapper metaverse={metaverse}/>
+        <ChartWrapper metaverse={metaverse} />
         <div className="flex flex-col items-start shadow-blck rounded-xl py-3 px-4 w-full bg-grey-dark bg-opacity-20 text-left">
           <p className={`text-xs sm:text-sm text-gray-400`}>
             The MGH DAO does not provide, personalized investment
