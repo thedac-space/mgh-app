@@ -21,7 +21,7 @@ interface Props {
   label:string
 }
 
-const FloorAndVolumeChart = ({
+const AreaChart = ({
   metaverse,
   data,
   symbolOptions,
@@ -39,7 +39,7 @@ const FloorAndVolumeChart = ({
       timeScale: {
         fixLeftEdge: true,
         fixRightEdge: true,
-        timeVisible: true,
+        timeVisible: false,
       },
       rightPriceScale: {
         scaleMargins: {
@@ -68,11 +68,11 @@ const FloorAndVolumeChart = ({
       lineWidth: 2,
       title: label,
     })
-
+//TODO: Fix time 
 areaSeries.setData(
       data.map((currentData) => {
         return {
-          time: (parseInt(currentData.time) / 1000) as UTCTimestamp,
+          time: (parseInt(currentData.time) ) as UTCTimestamp,   ///maybe there's a problem here
           value: symbolOptions && typeof data == 'object'
             ? (currentData.data as Record<symbolPredictions,number>)[symbolOptions[symbol].key as symbolPredictions] 
             : currentData.data,
@@ -115,4 +115,4 @@ areaSeries.setData(
     </div>
   )
 }
-export default FloorAndVolumeChart
+export default AreaChart
