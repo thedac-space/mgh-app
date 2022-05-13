@@ -2,44 +2,34 @@ import { useEffect, useState } from 'react'
 import { ExternalLink, OptimizedImage, PriceList } from '../General'
 import { IPredictions } from '../../lib/types'
 import { FiExternalLink } from 'react-icons/fi'
-import { IPriceCard } from '../../lib/valuation/valuationTypes'
+import {
+  IPriceCard,
+  SingleLandAPIResponse,
+} from '../../lib/valuation/valuationTypes'
 import React from 'react'
 import { FaTrash } from 'react-icons/fa'
-// import { useVisible } from '../../lib/hooks'
 import { Metaverse } from '../../lib/enums'
 import {
   handleLandName,
   handleTokenID,
+  convertETHPrediction,
 } from '../../lib/valuation/valuationUtils'
 import { BsTwitter } from 'react-icons/bs'
 import { SocialMediaOptions } from '../../lib/socialMediaOptions'
 import { formatName } from '../../lib/utilities'
-interface IWatchListCard extends IPriceCard {
-  currentPrice?: number
+interface IWatchListCard {
+  land: SingleLandAPIResponse
+  landId: string
   remove: (landId: string, metaverse: Metaverse) => Promise<void>
 }
-const LandItem = ({
-  apiData,
-  predictions,
-  currentPrice,
-  remove,
-}: IWatchListCard) => {
+const LandItem = ({ land, landId, remove }: IWatchListCard) => {
+  const predictions = convertETHPrediction()
   const mobile = window.innerWidth < 640
   const [expanded, setExpanded] = useState(mobile)
   const imgSize = mobile ? 170 : expanded ? 170 : 70
   const [prices, setPrices] = useState<Partial<IPredictions>>({
     usdPrediction: predictions?.usdPrediction,
   })
-
-  const {
-    images,
-    metaverse,
-    coords,
-    opensea_link,
-    name,
-    external_link,
-    tokenId,
-  } = apiData
 
   // SocialMediaOptions contains all options with their texts, icons, etc..
   const options = SocialMediaOptions(apiData, predictions)
@@ -48,7 +38,7 @@ const LandItem = ({
   const handleExpanded = () => {
     window.innerWidth < 640 ? setExpanded(true) : setExpanded(!expanded)
   }
-  const notListed = isNaN(currentPrice!)
+  const notListed = isNaN(land.current_price)
   const isAxie = metaverse === 'axie-infinity'
 
   useEffect(() => {
