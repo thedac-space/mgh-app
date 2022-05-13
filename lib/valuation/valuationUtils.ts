@@ -5,7 +5,7 @@ import { ICoinPrices, IPriceCard } from './valuationTypes'
 
 export const convertETHPrediction = (
   coinPrices: ICoinPrices,
-  ethPrediction: number
+  ethPrediction: number = 0
 ) => {
   const ethUSD = coinPrices.ethereum.usd
   const sandUSD = coinPrices['the-sandbox'].usd
@@ -16,7 +16,7 @@ export const convertETHPrediction = (
 
 export const convertMANAPrediction = (
   coinPrices: ICoinPrices,
-  manaPrediction: number
+  manaPrediction = 0
 ) => {
   const ethUSD = coinPrices.ethereum.usd
   const manaUSD = coinPrices.decentraland.usd
@@ -67,11 +67,11 @@ export const formatLandAsset = async (
 
   if (metaverse === 'sandbox') {
     Object.defineProperty(formattedAsset, 'predictions', {
-      value: convertETHPrediction(coinPrices, apiData.prices!.predicted_price),
+      value: convertETHPrediction(coinPrices, apiData.prices?.predicted_price),
     })
   } else if (metaverse === 'decentraland') {
     Object.defineProperty(formattedAsset, 'predictions', {
-      value: convertMANAPrediction(coinPrices, apiData.prices!.predicted_price),
+      value: convertMANAPrediction(coinPrices, apiData.prices?.predicted_price),
     })
   }
   return formattedAsset as IPriceCard
