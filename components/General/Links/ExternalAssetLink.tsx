@@ -19,7 +19,7 @@ const ExternalAssetLink = ({ apiData, width, height, layout }: Props) => {
         className='hover:shadow-dark block relative w-[50vw] xs:w-32 sm:w-36 lg:w-full h-full'
       >
         <OptimizedImage
-          src={apiData.images.image_url}
+          src={apiData.images?.image_url || '/images/mgh_logo.png'}
           rounded='lg'
           layout={layout}
           width={width || 150}
