@@ -208,7 +208,8 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
         {state !== 'loadingFirst' &&
           landKeys.map(
             (metaverse) =>
-              lands && (
+              lands &&
+              typedKeys(lands[metaverse]).length > 0 && (
                 <article key={metaverse} className='mb-8 w-full'>
                   <Fade>
                     <h3 className='gray-box xs:w-[22rem] sm:w-fit mx-auto  sm:ml-0 green-text-gradient mb-4'>
