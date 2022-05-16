@@ -130,7 +130,7 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   useEffect(() => {
     const getLands = async () => {
       try {
-        // getting user watchlist data
+        // getting user watchlist data (We add ! for address because if there's no address we don't call this function)
         const userData = await getUserInfo(address!)
         // If no User Data but user is logged in create them a watchlist
         if (!userData) {
