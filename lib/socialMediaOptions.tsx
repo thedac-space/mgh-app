@@ -5,13 +5,13 @@ import { IAPIData, IPredictions } from './types'
 /**
  *
  * @returns List of Social Media Options
- * @param wallet Optional. only necessary for portfolio cards
+ * @param wallet only necessary for portfolio cards
  * @param externalLink Not needed unless we enable whatsapp sharing
  */
 export const SocialMediaOptions = (
-  tokenId: string,
-  metaverse: Metaverse,
-  predictions: IPredictions,
+  tokenId?: string,
+  metaverse?: Metaverse,
+  predictions?: IPredictions,
   wallet?: string,
   externalLink?: string
 ) => {

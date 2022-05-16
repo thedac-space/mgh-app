@@ -117,22 +117,12 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
     async (landId: string, metaverse: Metaverse) => {
       // Removing Land from Database
       await removeLandFromWatchList(landId, address!, metaverse)
-
-      // Updating Lands for selected Metaverse
-      // landOptions[metaverse].setList((previous) =>
-      //   previous.filter((land) => {
-      //     return land.apiData.tokenId !== landId
-      //   })
-      // )
       const metaverseLandsObject = lands?.[metaverse]
       delete metaverseLandsObject?.[landId]
       setLands({
         ...lands!,
         [metaverse]: metaverseLandsObject,
       })
-
-      // Updating Ids
-      setIds((previous) => previous.filter((id) => id !== landId))
     },
     [lands]
   )
@@ -169,67 +159,6 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
               setLands((previous) => {
                 return { ...previous!, [metaverse]: metaverseLandsObject }
               })
-
-              // await Promise.all(
-              // // Mapping through all Assets in Watchlist from User
-
-              // userData[landOptions[landKey].firebase].map(
-              //   async (land: string) => {
-              //     // If we already fetched Item, do not refetch it
-              //     if (ids.includes(land)) return
-              //     // Retrieving Data from our API for each Asset
-              //     const landData = await getLandData(
-              //       landKey as Metaverse,
-              //       land
-              //     )
-              //     let currentPriceUSD = NaN
-              //     if (landKey === 'axie-infinity') {
-              //       // Retrieving data from Axie Marketplace
-              //       const axieLandData = await getAxieLandData(
-              //         landData.coords.x,
-              //         landData.coords.y
-              //       )
-              //       currentPriceUSD = Number(
-              //         axieLandData.auction?.currentPriceUSD
-              //       )
-              //     }
-              //     if (landKey !== 'axie-infinity') {
-              //       // Retrieving data from OpenSea (Comes in ETH)
-              //       const res = await fetch(
-              //         `/api/fetchSingleAsset/${landOptions[landKey].contract}/${landData.tokenId}`
-              //       )
-
-              //       // Retrieving Latest Orders for each Asset
-              //       const listings = (await res.json()).listings
-              //       // Getting Current Price for each Asset
-
-              //       currentPriceUSD =
-              //         getCurrentPrice(listings) * prices.ethereum.usd
-              //     }
-
-              //     const predictions = convertETHPrediction(
-              //       prices,
-              //       landData.prices.eth_predicted_price,
-              //       landKey as Metaverse
-              //     )
-              //     // Creating FormattedLand Instance
-              //     const formattedLand = {
-              //       apiData: landData,
-              //       predictions: predictions,
-              //       currentPrice: currentPriceUSD,
-              //     }
-              //     // Pushing it to State Array
-              //     landOptions[landKey].setList((previous) => [
-              //       formattedLand,
-              //       ...previous,
-              //     ])
-              //     setIds((previous) => [
-              //       ...previous,
-              //       formattedLand.apiData.tokenId,
-              //     ])
-              //   }
-              // )
-              // )
             })
           ))
         setState('loaded')
