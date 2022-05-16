@@ -6,15 +6,17 @@ import { ICoinPrices, IPriceCard, LandListAPIResponse } from './valuationTypes'
 
 export const convertETHPrediction = (
   coinPrices: ICoinPrices,
-  ethPrediction: number,
+
+  ethPrediction: number = 0,
   metaverse: Metaverse
+
 ) => {
   const ethUSD = coinPrices.ethereum.usd
   const usdPrediction = ethPrediction * ethUSD
   const formattedMetaverse = metaverse === 'sandbox' ? 'the-sandbox' : metaverse
   const metaverseUSD = coinPrices[formattedMetaverse].usd
   const metaversePrediction = usdPrediction / metaverseUSD
-
+  
   return { ethPrediction, usdPrediction, metaversePrediction }
 }
 
@@ -65,6 +67,7 @@ export const formatLandAsset = async (
       metaverse
     ),
   })
+
 
   return formattedAsset as IPriceCard
 }
