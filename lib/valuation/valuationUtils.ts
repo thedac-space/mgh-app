@@ -1,5 +1,5 @@
 import { formatEther } from 'ethers/lib/utils'
-import { Metaverse } from '../enums'
+import { Metaverse } from '../metaverse'
 import { IAPIData } from '../types'
 import { ellipseAddress } from '../utilities'
 import { ICoinPrices, IPriceCard, LandListAPIResponse } from './valuationTypes'

@@ -3,7 +3,7 @@ import { ERC721, TransferEvent } from '../types/ethers-contracts/ERC721'
 import ERC721ABI from '../backend/abi/ERC721.json'
 import { getAddress, Interface } from 'ethers/lib/utils'
 import { Contracts } from './contracts'
-import { Metaverse } from './enums'
+import { Metaverse } from './metaverse'
 type Provider = ethers.providers.BaseProvider
 
 // Using a Generic ERC721 ABI!!

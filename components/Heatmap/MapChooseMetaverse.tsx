@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Fade } from 'react-awesome-reveal'
 import { IoIosArrowDown } from 'react-icons/io'
-import { Metaverse } from '../../lib/enums'
+import { Metaverse } from '../../lib/metaverse'
 import { formatName, typedKeys } from '../../lib/utilities'
 import { OptimizedImage } from '../General'
 
@@ -51,7 +51,7 @@ const MapChooseMetaverse = ({ metaverse, setMetaverse }: Props) => {
                   <button
                     className='flex gray-box gap-2 md:gap-4 bg-opacity-100 items-center text-gray-200 hover:text-white font-semibold whitespace-nowrap w-70 md:w-56'
                     onClick={() => {
-                      setMetaverse(mv as Metaverse)
+                      setMetaverse(mv)
                       setOpened(false)
                     }}
                   >

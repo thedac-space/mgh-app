@@ -1,4 +1,5 @@
-import { Metaverse, Network } from './enums'
+import { Network } from './enums'
+import { Metaverse } from './metaverse'
 
 export interface NetworkState {
   value: Network

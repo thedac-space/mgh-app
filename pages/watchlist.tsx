@@ -7,7 +7,6 @@ import {
   LandListAPIResponse,
 } from '../lib/valuation/valuationTypes'
 import { fetchLandList, getLandData } from '../lib/valuation/valuationUtils'
-import { Metaverse } from '../lib/enums'
 import {
   addLandToWatchList,
   addMissingWatchlist,
@@ -19,6 +18,7 @@ import { useAppSelector } from '../state/hooks'
 import { Contracts } from '../lib/contracts'
 import { Fade } from 'react-awesome-reveal'
 import { formatName, typedKeys } from '../lib/utilities'
+import { Metaverse } from '../lib/metaverse'
 
 const watchlistState = [
   'loadingFirst',
@@ -153,7 +153,7 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
               ] as string[] // array of land Ids
               // Object of Lands of corresponding Metaverse
               const metaverseLandsObject = await fetchLandList(
-                metaverse as Metaverse,
+                metaverse,
                 watchlistIds
               )
               setLands((previous) => {
@@ -218,7 +218,7 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                   <LandList
                     coinPrices={prices}
                     lands={lands[metaverse]}
-                    metaverse={metaverse as Metaverse}
+                    metaverse={metaverse}
                     removeFromWatchList={removeFromWatchList}
                   />
                 </article>

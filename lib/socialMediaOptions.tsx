@@ -1,6 +1,6 @@
 import { FaTelegram, FaTwitter, FaWhatsapp } from 'react-icons/fa'
 import { FiCopy } from 'react-icons/fi'
-import { Metaverse } from './enums'
+import { Metaverse } from './metaverse'
 import { IAPIData, IPredictions } from './types'
 /**
  *

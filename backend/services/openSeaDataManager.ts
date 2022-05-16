@@ -1,5 +1,5 @@
 import { Contracts } from '../../lib/contracts'
-import { Metaverse } from '../../lib/enums'
+import { Metaverse } from '../../lib/metaverse'
 
 async function getCollectionStats(collectionName: string) {
   if (collectionName === 'axie-infinity') {

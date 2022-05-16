@@ -1,4 +1,4 @@
-import { Metaverse } from '../../lib/enums'
+import { Metaverse } from '../../lib/metaverse'
 import { IPredictions } from '../../lib/types'
 import { typedKeys } from '../../lib/utilities'
 
@@ -27,7 +27,6 @@ const COINS = {
   },
 }
 
-type coinKey = 'metaversePrediction' | 'usdPrediction' | 'ethPrediction'
 type metaverseKey =
   | 'sandboxPrediction'
   | 'decentralandPrediction'

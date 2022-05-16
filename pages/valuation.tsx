@@ -1,7 +1,6 @@
 import { NextPage } from 'next'
 import React, { useEffect, useRef, useState } from 'react'
 import { Fade } from 'react-awesome-reveal'
-import { Metaverse } from '../lib/enums'
 import {
   Atlas,
   AtlasTile,
@@ -50,6 +49,7 @@ import { getUserNFTs } from '../lib/nftUtils'
 import useConnectWeb3 from '../backend/connectWeb3'
 import { Chains } from '../lib/chains'
 import { FullScreenButton } from '../components/General'
+import { Metaverse } from '../lib/metaverse'
 const FloorAndVolumeChart = dynamic(
   () => import('../components/Valuation/FloorAndVolumeChart'),
   {

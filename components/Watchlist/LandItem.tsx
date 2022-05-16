@@ -9,7 +9,6 @@ import {
 } from '../../lib/valuation/valuationTypes'
 import React from 'react'
 import { FaTrash } from 'react-icons/fa'
-import { Metaverse } from '../../lib/enums'
 import {
   handleLandName,
   handleTokenID,
@@ -19,6 +18,7 @@ import { BsTwitter } from 'react-icons/bs'
 import { SocialMediaOptions } from '../../lib/socialMediaOptions'
 import { formatName } from '../../lib/utilities'
 import { createOpenSeaLink } from '../../backend/services/openSeaDataManager'
+import { Metaverse } from '../../lib/metaverse'
 interface IWatchListCard {
   land: SingleLandAPIResponse
   landId: string

@@ -1,5 +1,5 @@
 import { Fade } from 'react-awesome-reveal'
-import { Metaverse } from '../../lib/enums'
+import { Metaverse } from '../../lib/metaverse'
 import { typedKeys } from '../../lib/utilities'
 import {
   ICoinPrices,

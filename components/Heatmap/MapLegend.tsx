@@ -1,7 +1,7 @@
 import React from 'react'
-import { Metaverse } from '../../lib/enums'
 import { LegendFilter } from '../../lib/heatmap/heatmapCommonTypes'
 import { LEGEND_COLORS } from '../../lib/heatmap/valuationColoring'
+import { Metaverse } from '../../lib/metaverse'
 import { formatName, typedKeys } from '../../lib/utilities'
 
 interface Props {

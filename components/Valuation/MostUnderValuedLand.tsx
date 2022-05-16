@@ -1,4 +1,3 @@
-import { Metaverse } from '../../lib/enums'
 import { IPriceCard } from '../../lib/valuation/valuationTypes'
 import { HorizontalPriceCard } from '../General'
 
@@ -15,7 +14,7 @@ const MostUnderValuedLand = ({
       image_url:
         'https://api.sandbox.game/lands/919eda05-50f0-497b-bb0f-0c600b82dbf8/preview-500px-x-500px.jpg',
     },
-    metaverse: Metaverse.SANDBOX,
+    metaverse: 'sandbox',
     name: 'LAND (136, 4)',
     opensea_link:
       'https://opensea.io/assets/0x50f5474724e0ee42d9a4e711ccfb275809fd6d4a/85204',
