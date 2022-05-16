@@ -37,8 +37,7 @@ const MapCard = ({
     'loadedQuery',
     'errorQuery',
   ])
-  const notListed =
-    !apiData?.current_price_eth || isNaN(apiData?.current_price_eth)
+
   const { address } = useAppSelector((state) => state.account)
   const options = SocialMediaOptions(
     apiData?.tokenId,
@@ -136,23 +135,9 @@ const MapCard = ({
                   <RiLoader3Fill className='animate-spin-slow h-5 w-5 xs:h-6 xs:w-6' />
                 </span>
               )}
-              {/* Current Listing Price */}
-              <p
-                className={`text-md text-left pt-2 relative left-1 ${
-                  !notListed
-                    ? 'relative top-2 font-medium text-green-500'
-                    : 'text-gray-400 '
-                }`}
-              >
-                {!apiData?.current_price_eth ||
-                isNaN(apiData?.current_price_eth)
-                  ? 'Not Listed'
-                  : `Listed: ${apiData?.current_price_eth.toFixed(2)} ETH`}
-              </p>
-            </div>
-            <div>
               <DataComparisonBox apiData={apiData} predictions={predictions} />
             </div>
+
             {/* Likes */}
             <div className='flex flex-start w-full'>
               <LandLikeBox
