@@ -276,13 +276,10 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
           addToWatchList={addToWatchList}
         />
         {/* Lands List */}
-        {ids.length > 0 &&
-          state !== 'loadingFirst' &&
+        {state !== 'loadingFirst' &&
           landKeys.map(
             (metaverse) =>
-              lands &&
-              lands[metaverse] &&
-              typedKeys(lands?.[metaverse]).length > 0 && (
+              lands && (
                 <article key={metaverse} className='mb-8 w-full'>
                   <Fade>
                     <h3 className='gray-box xs:w-[22rem] sm:w-fit mx-auto  sm:ml-0 green-text-gradient mb-4'>
@@ -290,7 +287,9 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                     </h3>
                   </Fade>
                   <LandList
+                    coinPrices={prices}
                     lands={lands[metaverse]}
+                    metaverse={metaverse as Metaverse}
                     removeFromWatchList={removeFromWatchList}
                   />
                 </article>

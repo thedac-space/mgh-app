@@ -2,22 +2,30 @@ import { Fade } from 'react-awesome-reveal'
 import { Metaverse } from '../../lib/enums'
 import { typedKeys } from '../../lib/utilities'
 import {
-  IWatchListCard,
+  ICoinPrices,
   LandListAPIResponse,
-  LandsKey,
 } from '../../lib/valuation/valuationTypes'
 import LandItem from './LandItem'
 
 interface Props {
   lands: LandListAPIResponse
+  metaverse: Metaverse
+  coinPrices: ICoinPrices
   removeFromWatchList: (landId: string, metaverse: Metaverse) => Promise<void>
 }
-const LandList = ({ lands, removeFromWatchList }: Props) => {
+const LandList = ({
+  coinPrices,
+  lands,
+  removeFromWatchList,
+  metaverse,
+}: Props) => {
   return (
     <ul className='w-full flex lg:flex-col flex-wrap justify-center gap-4'>
       <Fade duration={550} className='w-full flex justify-center'>
         {typedKeys(lands).map((land) => (
           <LandItem
+            coinPrices={coinPrices}
+            metaverse={metaverse}
             remove={removeFromWatchList}
             land={lands[land]}
             landId={land}
