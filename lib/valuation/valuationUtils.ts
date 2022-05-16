@@ -1,8 +1,8 @@
 import { formatEther } from 'ethers/lib/utils'
-import { Metaverse } from '../enums'
+import { Metaverse } from '../metaverse'
 import { IAPIData } from '../types'
 import { ellipseAddress } from '../utilities'
-import { ICoinPrices, IPriceCard } from './valuationTypes'
+import { ICoinPrices, IPriceCard, LandListAPIResponse } from './valuationTypes'
 
 export const convertETHPrediction = (
   coinPrices: ICoinPrices,
@@ -180,4 +180,13 @@ export const getAxieDailyTradeVolume = async () => {
   })
   const dailyVolume = await res.json()
   return formatEther(dailyVolume.data.marketStats.last24Hours.volume)
+}
+
+export const fetchLandList = async (metaverse: Metaverse, lands: string[]) => {
+  let link = `https://services.itrmachines.com/${metaverse}/requestMap?tokenId=`
+  lands.forEach((land, i) => {
+    link = link + land + (i !== lands.length - 1 ? ',' : '')
+  })
+  const res = await fetch(link)
+  return (await res.json()) as LandListAPIResponse
 }

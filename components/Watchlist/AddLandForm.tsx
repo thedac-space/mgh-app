@@ -3,7 +3,7 @@ import { BsQuestionCircle } from 'react-icons/bs'
 import { AddLandButton } from '.'
 import { WalletModal } from '..'
 import useConnectWeb3 from '../../backend/connectWeb3'
-import { Metaverse } from '../../lib/enums'
+import { Metaverse } from '../../lib/metaverse'
 import { formatName } from '../../lib/utilities'
 import { LandsKey } from '../../lib/valuation/valuationTypes'
 import { WatchListState } from '../../pages/watchlist'
@@ -30,7 +30,7 @@ const AddLandForm = ({ state, addToWatchList, ids, landKeys }: Props) => {
     X: '',
     Y: '',
   })
-  const [metaverse, setMetaverse] = useState<Metaverse>(Metaverse.SANDBOX)
+  const [metaverse, setMetaverse] = useState<Metaverse>('sandbox')
   const [openModal, setOpenModal] = useState(false)
   const { disconnectWallet } = useConnectWeb3()
 
@@ -81,7 +81,7 @@ const AddLandForm = ({ state, addToWatchList, ids, landKeys }: Props) => {
             <button
               disabled={limitReached}
               key={landKey}
-              onClick={() => setMetaverse(landKey as Metaverse)}
+              onClick={() => setMetaverse(landKey)}
               className={`flex flex-col items-center justify-center space-y-2 rounded-xl cursor-pointer p-2 px-3 pt-4 md:w-30 md:h-[9.7rem] w-24 h-24 group focus:outline-none ${
                 metaverse === landKey
                   ? 'border-opacity-100 text-gray-200'

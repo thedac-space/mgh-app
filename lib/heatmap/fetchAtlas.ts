@@ -1,4 +1,4 @@
-import { Metaverse } from '../enums'
+import { Metaverse } from '../metaverse'
 import { typedKeys } from '../utilities'
 import { AtlasTile, ValuationTile } from './heatmapCommonTypes'
 import { heatmapMvOptions } from './heatmapMvOptions'

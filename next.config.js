@@ -18,6 +18,7 @@ module.exports = {
   },
   images: {
     domains: [
+      'img.seadn.io',
       'api.sandbox.game',
       'lh3.googleusercontent.com',
       'cdn.axieinfinity.com',

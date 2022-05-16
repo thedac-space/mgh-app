@@ -1,11 +1,11 @@
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import { Metaverse } from '../../lib/enums'
 import {
   addLandToWatchList,
   createUser,
   getUserInfo,
 } from '../../lib/FirebaseUtilities'
+import { Metaverse } from '../../lib/metaverse'
 import { getState } from '../../lib/utilities'
 import { useAppSelector } from '../../state/hooks'
 

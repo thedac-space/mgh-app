@@ -1,6 +1,6 @@
 import React from 'react'
-import { Metaverse } from '../../lib/enums'
 import { heatmapMvOptions } from '../../lib/heatmap/heatmapMvOptions'
+import { Metaverse } from '../../lib/metaverse'
 import ProgressBar from '../General/ProgressBar'
 import Loader from '../Loader'
 

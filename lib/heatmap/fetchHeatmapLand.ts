@@ -1,5 +1,5 @@
 import { Contracts } from '../contracts'
-import { Metaverse } from '../enums'
+import { Metaverse } from '../metaverse'
 import { IAPIData, IPredictions } from '../types'
 import { typedKeys } from '../utilities'
 import { ICoinPrices } from '../valuation/valuationTypes'

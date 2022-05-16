@@ -4,7 +4,6 @@ import { ExternalLink, OptimizedImage, PriceList } from '../General'
 import { IAPIData, IPredictions } from '../../lib/types'
 import { FiExternalLink } from 'react-icons/fi'
 import React from 'react'
-import { Metaverse } from '../../lib/enums'
 import { handleLandName } from '../../lib/valuation/valuationUtils'
 import { BsTwitter } from 'react-icons/bs'
 import Loader from '../Loader'
@@ -15,6 +14,7 @@ import { IoClose } from 'react-icons/io5'
 import { ValuationState } from '../../pages/valuation'
 import { SocialMediaOptions } from '../../lib/socialMediaOptions'
 import DataComparisonBox from '../Valuation/DataComparison/DataComparisonBox'
+import { Metaverse } from '../../lib/metaverse'
 interface Props {
   apiData?: IAPIData
   predictions?: IPredictions
@@ -31,7 +31,6 @@ const MapCard = ({
   setIsVisible,
   mapState,
 }: Props) => {
-  console.log({ apiData })
   const imgSize = 150
   const [loadingQuery, loadedQuery, errorQuery] = getState(mapState, [
     'loadingQuery',
@@ -41,7 +40,11 @@ const MapCard = ({
   const notListed =
     !apiData?.current_price_eth || isNaN(apiData?.current_price_eth)
   const { address } = useAppSelector((state) => state.account)
-  const options = SocialMediaOptions(apiData, predictions)
+  const options = SocialMediaOptions(
+    apiData?.tokenId,
+    apiData?.metaverse,
+    predictions
+  )
 
   return errorQuery ? (
     <div className='gray-box bg-opacity-100 z-30'>
@@ -96,7 +99,7 @@ const MapCard = ({
                     {/* ID: {handleTokenID(apiData.tokenId)}{' '} */}
                     <BsTwitter
                       title='Share Valuation'
-                      // onClick={() => window.open(options.twitter.valuationLink)}
+                      onClick={() => window.open(options.twitter.valuationLink)}
                       className=' hidden relative bottom-[0.17rem] left-1  h-4 w-4 z-50 text-gray-200 hover:text-blue-400 transition ease-in-out duration-300 cursor-pointer'
                     />{' '}
                   </p>

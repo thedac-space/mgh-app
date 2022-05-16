@@ -1,4 +1,5 @@
-import { Metaverse } from '../../lib/enums'
+import { Contracts } from '../../lib/contracts'
+import { Metaverse } from '../../lib/metaverse'
 
 async function getCollectionStats(collectionName: string) {
   if (collectionName === 'axie-infinity') {
@@ -40,4 +41,14 @@ export async function getETHExchangeValue() {
     console.log('problem getting exchange rate for eth', error)
     return {}
   }
+}
+
+export const createOpenSeaLink = (metaverse: Metaverse, landId: string) => {
+  if (metaverse === 'axie-infinity') return
+  const contracts = {
+    decentraland: Contracts.PARCEL.ETHEREUM_MAINNET.address,
+    sandbox: Contracts.LAND.ETHEREUM_MAINNET.newAddress,
+  }
+
+  return `https://opensea.io/assets/${contracts[metaverse]}/${landId}`
 }

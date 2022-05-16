@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { getCollectionData } from '../../backend/services/openSeaDataManager'
-import { Metaverse } from '../../lib/enums'
+import { Metaverse } from '../../lib/metaverse'
 import { IPredictions } from '../../lib/types'
 import { formatName } from '../../lib/utilities'
 import { ICoinPrices } from '../../lib/valuation/valuationTypes'
