@@ -11,15 +11,10 @@ interface Props {
  */
 const DataComparisonBox = ({ currentPriceEth, predictions }: Props) => {
   const ethPredictionPrice = predictions?.ethPrediction
-
-  const getComparedValue = () => {
-    if (!ethPredictionPrice || !currentPriceEth) return NaN
-    let comparedValue = (currentPriceEth / ethPredictionPrice) * 100
-
-    return parseFloat(comparedValue.toFixed())
-  }
-
-  const comparedValue = getComparedValue()
+  const comparedValue =
+    !ethPredictionPrice || !currentPriceEth
+      ? NaN
+      : (currentPriceEth / ethPredictionPrice) * 100
   const isUnderValued = comparedValue < 100
 
   return (
@@ -32,7 +27,7 @@ const DataComparisonBox = ({ currentPriceEth, predictions }: Props) => {
       </p>
       {currentPriceEth && (
         <p className={isUnderValued ? 'text-blue-400' : 'text-red-400'}>
-          {comparedValue}% of Predicted Price
+          {comparedValue.toFixed()}% of Predicted Price
         </p>
       )}
     </div>
