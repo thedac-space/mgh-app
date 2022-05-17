@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import { RiLoader3Fill } from 'react-icons/ri'
 import { ExternalLink, OptimizedImage, PriceList } from '../General'
 import { IAPIData, IPredictions } from '../../lib/types'
@@ -135,7 +134,10 @@ const MapCard = ({
                   <RiLoader3Fill className='animate-spin-slow h-5 w-5 xs:h-6 xs:w-6' />
                 </span>
               )}
-              <DataComparisonBox apiData={apiData} predictions={predictions} />
+              <DataComparisonBox
+                currentPriceEth={apiData.current_price_eth}
+                predictions={predictions}
+              />
             </div>
 
             {/* Likes */}
