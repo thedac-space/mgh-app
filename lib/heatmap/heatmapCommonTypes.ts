@@ -66,16 +66,16 @@ export type ValuationTile = {
   owner: string
   external_link: string
 }
-// export type ValidFilter =
 export type MapFilter =
   | 'eth_predicted_price'
-  | 'variation_last_week'
-  | 'variation_last_four_weeks'
-  | 'variation_last_six_months'
   | 'price_difference'
   | 'transfers'
   | 'basic'
   | 'listed_lands'
+// Not using this filters for now..will delete if permanent
+// | 'variation_last_week'
+// | 'variation_last_four_weeks'
+// | 'variation_last_six_months'
 
 export type HeatmapSize = {
   maxX: number

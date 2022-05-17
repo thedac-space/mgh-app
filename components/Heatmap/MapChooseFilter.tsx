@@ -37,21 +37,23 @@ const MapChooseFilter = ({ filterBy, setFilterBy }: Props) => {
       shortName: undefined,
       icon: <MdAttachMoney />,
     },
-    variation_last_week: {
-      name: 'Weekly Price Variation',
-      shortName: 'W.P.V.',
-      icon: <VscGraphLine />,
-    },
-    variation_last_four_weeks: {
-      name: 'Monthly Price Variation',
-      shortName: 'M.P.V.',
-      icon: <VscGraphLine />,
-    },
-    variation_last_six_months: {
-      name: 'Semestral Price Variation',
-      shortName: 'S.P.V.',
-      icon: <VscGraphLine />,
-    },
+
+    // Not using this filters for now..Will delete if decision is permanent
+    // variation_last_week: {
+    //   name: 'Weekly Price Variation',
+    //   shortName: 'W.P.V.',
+    //   icon: <VscGraphLine />,
+    // },
+    // variation_last_four_weeks: {
+    //   name: 'Monthly Price Variation',
+    //   shortName: 'M.P.V.',
+    //   icon: <VscGraphLine />,
+    // },
+    // variation_last_six_months: {
+    //   name: 'Semestral Price Variation',
+    //   shortName: 'S.P.V.',
+    //   icon: <VscGraphLine />,
+    // },
   }
   return (
     <div>

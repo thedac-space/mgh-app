@@ -25,10 +25,12 @@ const ColorGuide = ({ percentFilter, setPercentFilter, filterBy }: Props) => {
     listed_lands: 'listed lands',
     transfers: 'transfers',
     price_difference: 'price difference',
-    variation_last_week: 'variation las week',
-    variation_last_four_weeks: 'variation mounth',
-    variation_last_six_months: 'variation semester',
-    basic: 'basic'
+    basic: 'basic',
+
+    // Not using this filters for now.. will delete if permanent
+    // variation_last_week: 'variation las week',
+    // variation_last_four_weeks: 'variation mounth',
+    // variation_last_six_months: 'variation semester',
   }
 
   const handleColorClick = (percent: ValueOf<typeof colorOptions>) => {
