@@ -7,20 +7,15 @@ import {
   ValuationTile,
 } from './heatmapCommonTypes'
 
+/* We were using Math.max(), but it can take up to 100k elements only and we are inputting more, therefore we
+  make this simple loop instead 
+*/
 export const getMax = (array: (number | undefined)[]) => {
-  const filteredArray = array.filter((e) => typeof e === 'number') as number[]
-  return Math.max(...filteredArray.sort((a, b) => a + b).slice(1))
-}
-
-export const getMin = (array: (number | undefined)[]) => {
-  const filteredArray = array.filter((e) => typeof e === 'number') as number[]
-  return Math.min(...filteredArray.sort((a, b) => a + b).slice(1))
-}
-
-export const getAvg = (array: (number | undefined)[]) => {
-  const filteredArray = array.filter((e) => typeof e === 'number') as number[]
-  const sum = filteredArray.reduce((prev, current) => prev + current)
-  return sum / array.length
+  let max = 0
+  array.forEach((number) => {
+    number && number > max && (max = number)
+  })
+  return max
 }
 
 export const getPercentage = (
