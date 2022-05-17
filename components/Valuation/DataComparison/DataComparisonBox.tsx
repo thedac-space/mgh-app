@@ -24,20 +24,17 @@ const DataComparisonBox = ({ currentPriceEth, predictions }: Props) => {
 
   return (
     /* Current Listing Price || Not Listed Message */
-    <div>
-      <div className='relative left-1  flex gap-2 flex-col pt-4 text-md text-left font-medium '>
-        <p className={currentPriceEth ? 'text-green-500' : 'text-gray-400 '}>
-          {currentPriceEth
-            ? `Listed: ${currentPriceEth?.toFixed(2)} ETH`
-            : 'Not Listed'}
+    <div className='relative left-1  flex gap-2 flex-col pt-4 text-md text-left font-medium '>
+      <p className={currentPriceEth ? 'text-green-500' : 'text-gray-400 '}>
+        {currentPriceEth
+          ? `Listed: ${currentPriceEth?.toFixed(2)} ETH`
+          : 'Not Listed'}
+      </p>
+      {currentPriceEth && (
+        <p className={isUnderValued ? 'text-blue-400' : 'text-red-400'}>
+          {comparedValue}% of Predicted Price
         </p>
-
-        {currentPriceEth && (
-          <p className={isUnderValued ? 'text-blue-400' : 'text-red-400'}>
-            {comparedValue}% of Predicted Price
-          </p>
-        )}
-      </div>
+      )}
     </div>
   )
 }
