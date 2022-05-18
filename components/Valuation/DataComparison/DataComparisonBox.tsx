@@ -14,8 +14,8 @@ const DataComparisonBox = ({ currentPriceEth, predictions }: Props) => {
   const comparedValue =
     !ethPredictionPrice || !currentPriceEth
       ? NaN
-      : (currentPriceEth / ethPredictionPrice) * 100
-  const isUnderValued = comparedValue < 100
+      : ((currentPriceEth - ethPredictionPrice) / ethPredictionPrice) * 100
+  const isUnderValued = comparedValue < 0
 
   return (
     //Current Listing Price || Not Listed Message
@@ -28,7 +28,8 @@ const DataComparisonBox = ({ currentPriceEth, predictions }: Props) => {
       {/* Comparison Percentage  */}
       {currentPriceEth && (
         <p className={isUnderValued ? 'text-blue-400' : 'text-red-400'}>
-          {comparedValue.toFixed()}% of Predicted Price
+          {Math.abs(comparedValue).toFixed()}%{' '}
+          {isUnderValued ? 'Undervalued' : 'Overvalued'}
         </p>
       )}
     </div>
