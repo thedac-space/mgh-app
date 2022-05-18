@@ -17,10 +17,18 @@ export const fetchHeatmapLand = async (
     sandbox: { contract: Contracts.LAND.ETHEREUM_MAINNET.newAddress },
     decentraland: { contract: Contracts.PARCEL.ETHEREUM_MAINNET.address },
   }
+
+  const setOpenSeaLink = (key: string) => {
+    if (apiData && metaverse !== 'axie-infinity') {
+      apiData.opensea_link = `https://opensea.io/assets/${landOptions[metaverse].contract}/${map[key].land_id}`
+    }
+  }
+
   let currentPrice = NaN
   let apiData!: IAPIData
   let landCoords = { x: NaN, y: NaN }
-  typedKeys(map).map((key) => {
+
+  typedKeys(map).find((key) => {
     // When user searches by Coords (using != null here to handle if user types/clicks on a 0)
     if (coords?.x != null && coords.y != null) {
       const name = coords.x + ',' + coords.y
@@ -35,9 +43,7 @@ export const fetchHeatmapLand = async (
           },
         }
         landCoords = { x: Number(coords.x), y: Number(coords.y) }
-        if (metaverse !== 'axie-infinity') {
-          apiData.opensea_link = `https://opensea.io/assets/${landOptions[metaverse].contract}/${map[key].land_id}`
-        }
+        setOpenSeaLink(key)
       }
     }
 
@@ -54,6 +60,7 @@ export const fetchHeatmapLand = async (
           },
         }
         landCoords = { x: map[key].coords.x, y: map[key].coords.y }
+        setOpenSeaLink(key)
       }
     }
   })
