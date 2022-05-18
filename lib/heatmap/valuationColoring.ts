@@ -7,7 +7,7 @@ import {
   ValuationTile,
 } from './heatmapCommonTypes'
 
-/* We were using Math.max(), but it can take up to 100k elements only and we are inputting more, therefore we
+/* We were using Math.max(), but it can take up to 100k arguments only and we are inputting more, therefore we
   make this simple loop instead 
 */
 export const getMax = (array: (number | undefined)[]) => {
@@ -31,6 +31,12 @@ export const setColours = async (
   valuationAtlas: Record<string, ValuationTile>,
   element: MapFilter
 ) => {
+  /**
+   * Some Lands are listed for way too high prices.
+   * To keep the price_difference filter consistent, we will consider
+   that have a price difference of less than the number below
+   */
+  const MAX_DIFF = 400
   const elementOptions = {
     transfers: {
       predictions: typedKeys(valuationAtlas).map(
@@ -38,9 +44,17 @@ export const setColours = async (
       ),
     },
     price_difference: {
-      predictions: typedKeys(valuationAtlas).map(
-        (valuation) => valuationAtlas[valuation].current_price_eth
-      ),
+      predictions: typedKeys(valuationAtlas).map((valuation) => {
+        if (typeof valuationAtlas[valuation].current_price_eth === 'undefined')
+          return
+        const landPercentage = getPercentage(
+          valuationAtlas[valuation].current_price_eth,
+          valuationAtlas[valuation].eth_predicted_price
+        )
+        if (landPercentage < MAX_DIFF) {
+          return landPercentage
+        }
+      }),
     },
     listed_lands: {
       predictions: typedKeys(valuationAtlas).map(
@@ -49,8 +63,8 @@ export const setColours = async (
     },
     basic: { predictions: [] },
   }
-  let predictions: (number | undefined)[]
   // Making an Array of Numbers to get the Max and use that for Percentages on lower Iteration
+  let predictions: (number | undefined)[]
 
   // I would prefer to use typedKeys(elementOptions) here but typescript complains so using Object.keys instead
   if (Object.keys(elementOptions).includes(element)) {
@@ -69,12 +83,18 @@ export const setColours = async (
   max = getMax(predictions)
   // Adding Percent to each land depending on the max number from previous iteration.
   typedKeys(valuationAtlas).map((valuation) => {
+    const priceDiffPercentage = getPercentage(
+      valuationAtlas[valuation].current_price_eth,
+      valuationAtlas[valuation].eth_predicted_price
+    )
     const valuationOptions = {
       transfers: getPercentage(valuationAtlas[valuation].history?.length, max),
-      price_difference: getPercentage(
-        valuationAtlas[valuation].current_price_eth,
-        valuationAtlas[valuation].eth_predicted_price
-      ),
+      price_difference:
+        typeof valuationAtlas[valuation].current_price_eth !== 'number'
+          ? 0
+          : priceDiffPercentage < MAX_DIFF
+          ? getPercentage(priceDiffPercentage, max)
+          : 101, // If land's price difference is higher than MAX_DIFF make their percentage 101, this will show them as dark red.
       basic: 20,
       listed_lands: valuationAtlas[valuation].current_price_eth
         ? getPercentage(valuationAtlas[valuation].eth_predicted_price, max)

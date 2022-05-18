@@ -27,15 +27,15 @@ const MapChooseFilter = ({ filterBy, setFilterBy }: Props) => {
       shortName: undefined,
       icon: <VscGraphLine />,
     },
-    transfers: {
-      name: 'Transfers',
-      shortName: undefined,
-      icon: <BiTransferAlt />,
-    },
     price_difference: {
       name: 'Price Difference',
       shortName: undefined,
       icon: <MdAttachMoney />,
+    },
+    transfers: {
+      name: 'Transfers',
+      shortName: undefined,
+      icon: <BiTransferAlt />,
     },
 
     // Not using this filters for now..Will delete if decision is permanent

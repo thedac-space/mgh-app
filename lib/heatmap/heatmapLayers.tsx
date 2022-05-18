@@ -22,7 +22,7 @@ export const filteredLayer: Layer = (
   if (
     atlas.decentraland &&
     (!(id in atlas.decentraland) ||
-      [5, 6, 7, 8, 12].includes(atlas.decentraland[id].type))
+      new Set([5, 6, 7, 8, 12]).has(atlas.decentraland[id].type))
   )
     return null
   /* Don't show a layer if user is tier0 and metaverse is decentraland. (we already have decentralands Map for that)  */
