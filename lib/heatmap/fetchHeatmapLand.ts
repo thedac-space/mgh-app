@@ -20,10 +20,9 @@ export const fetchHeatmapLand = async (
   let currentPrice = NaN
   let apiData!: IAPIData
   let landCoords = { x: NaN, y: NaN }
-  // let predictions: IPredictions
   typedKeys(map).map((key) => {
-    // When user searches by Coords
-    if (coords?.x && coords.y) {
+    // When user searches by Coords (using != null here to handle if user types/clicks on a 0)
+    if (coords?.x != null && coords.y != null) {
       const name = coords.x + ',' + coords.y
       if (key === name) {
         apiData = {
