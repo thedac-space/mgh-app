@@ -1,18 +1,20 @@
 import { Contracts } from '../contracts'
 import { Metaverse } from '../metaverse'
-import { IAPIData, IPredictions } from '../types'
+import { IAPIData } from '../types'
 import { typedKeys } from '../utilities'
 import { ICoinPrices } from '../valuation/valuationTypes'
 import { convertETHPrediction } from '../valuation/valuationUtils'
 import { LandCoords, ValuationTile } from './heatmapCommonTypes'
 
-export const fetchHeatmapLand = async (
+export const fetchHeatmapLand = (
   map: Record<string, ValuationTile>,
   prices: ICoinPrices,
   metaverse: Metaverse,
   tokenId?: string,
   coords?: LandCoords
 ) => {
+  console.time('fetchHeatmapLand')
+
   const landOptions = {
     sandbox: { contract: Contracts.LAND.ETHEREUM_MAINNET.newAddress },
     decentraland: { contract: Contracts.PARCEL.ETHEREUM_MAINNET.address },
@@ -70,5 +72,6 @@ export const fetchHeatmapLand = async (
     apiData.prices.eth_predicted_price,
     metaverse
   )
+  console.timeEnd('fetchHeatmapLand')
   return { apiData, predictions, currentPrice, landCoords }
 }

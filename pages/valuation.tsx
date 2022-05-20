@@ -262,7 +262,11 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
               <div>
                 {/* Top left Coordinates */}
                 <div className='mb-2 w-[177px] hidden md:block'>
-                  <MapLandSummary coordinates={hovered} />
+                  <MapLandSummary
+                    metaverse={metaverse}
+                    map={atlas.ITRM}
+                    coordinates={hovered}
+                  />
                 </div>
                 {/* 'Search By' Forms */}
                 <MapSearch
@@ -422,9 +426,29 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 
 export async function getServerSideProps() {
   const coin = await fetch(
+    // 'https://api.coingecko.com/api/v3/simple/price?ids=ethereum%2Cthe-sandbox%2Cdecentraland%2Caxie-infinity&vs_currencies=usd'
     'https://api.coingecko.com/api/v3/simple/price?ids=ethereum%2Cthe-sandbox%2Cdecentraland%2Caxie-infinity&vs_currencies=usd'
   )
-  const prices: ICoinPrices = await coin.json()
+  console.log({ coin })
+  let prices: ICoinPrices
+  try {
+    prices = await coin.json()
+  } catch (e) {
+    prices = {
+      'axie-infinity': {
+        usd: 21.29,
+      },
+      decentraland: {
+        usd: 1.11,
+      },
+      ethereum: {
+        usd: 2029.6,
+      },
+      'the-sandbox': {
+        usd: 1.31,
+      },
+    }
+  }
 
   return {
     props: {
