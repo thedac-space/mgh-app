@@ -1,26 +1,27 @@
 import { Metaverse } from '../metaverse'
-import { typedKeys } from '../utilities'
-import { LandCoords, ValuationTile } from './heatmapCommonTypes'
+import { handleLongLandName, typedKeys } from '../utilities'
+import { handleTokenID } from '../valuation/valuationUtils'
+import { Atlas } from './heatmapCommonTypes'
 
 export const getLandSummary = (
-  map: Record<string, ValuationTile>,
-  // metaverse: Metaverse,
-  coords?: LandCoords
+  atlas: Atlas,
+  coords: { x: number; y: number },
+  metaverse?: Metaverse
 ) => {
-  console.time('getLandSummary')
-  let landCoords: LandCoords | undefined
-  let owner: string | undefined
-
-  typedKeys(map).find((key) => {
-    // When user searches by Coords (using != null here to handle if user types/clicks on a 0)
-    if (coords?.x != null && coords.y != null) {
-      const name = coords.x + ',' + coords.y
-      if (key === name) {
-        owner = map[key].owner
-      }
-      landCoords = { x: Number(coords.x), y: Number(coords.y) }
-    }
+  const land = typedKeys(atlas.ITRM).find((key) => {
+    const landKey = coords.x + ',' + coords.y
+    return key === landKey
   })
-  console.timeEnd('getLandSummary')
-  return { owner, landCoords }
+  if (!land) {
+    return { name: undefined, owner: undefined, coords }
+  }
+  const owner =
+    metaverse === 'axie-infinity'
+      ? handleLongLandName(atlas.ITRM[land].owner || 'None', 10)
+      : metaverse === 'decentraland'
+      ? handleTokenID(atlas.decentraland?.[land].owner || 'None')
+      : handleTokenID(atlas.ITRM[land].owner || 'None')
+  const name = atlas.decentraland?.[land].name
+
+  return { name, owner, coords }
 }

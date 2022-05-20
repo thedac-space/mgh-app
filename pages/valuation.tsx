@@ -25,7 +25,6 @@ import {
 import { setColours } from '../lib/heatmap/valuationColoring'
 import { getHeatmapSize } from '../lib/heatmap/getHeatmapSize'
 
-import { fetchHeatmapLand } from '../lib/heatmap/fetchHeatmapLand'
 import { IAPIData, IPredictions, UserData } from '../lib/types'
 import { FloorPriceTracker, SalesVolumeDaily } from '../components/Valuation'
 import Link from 'next/link'
@@ -50,6 +49,8 @@ import useConnectWeb3 from '../backend/connectWeb3'
 import { Chains } from '../lib/chains'
 import { FullScreenButton } from '../components/General'
 import { Metaverse } from '../lib/metaverse'
+import { getLandSummary } from '../lib/heatmap/getLandSummary'
+import { findHeatmapLand } from '../lib/heatmap/findHeatmapLand'
 const FloorAndVolumeChart = dynamic(
   () => import('../components/Valuation/FloorAndVolumeChart'),
   {
@@ -71,8 +72,13 @@ export type ValuationState = typeof VALUATION_STATE_OPTIONS[number]
 interface CardData {
   apiData: IAPIData
   predictions: IPredictions
-  currentPrice: number
   landCoords: { x: string | number; y: string | number }
+}
+
+interface Hovered {
+  name?: string
+  coords: { x: number; y: number }
+  owner?: string
 }
 
 const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
@@ -83,9 +89,8 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   const [loading] = getState(mapState, ['loading'])
 
   const [selected, setSelected] = useState<LandCoords>()
-  const [hovered, setHovered] = useState<{ x: number; y: number }>({
-    x: NaN,
-    y: NaN,
+  const [hovered, setHovered] = useState<Hovered>({
+    coords: { x: NaN, y: NaN },
   })
   // Hook for Popup
   const { ref, isVisible, setIsVisible } = useVisible(false)
@@ -105,7 +110,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   }
 
   const hoverLayer: Layer = (x, y) => {
-    return hovered?.x === x && hovered?.y === y
+    return hovered?.coords?.x === x && hovered?.coords?.y === y
       ? { color: '#db2777', scale: 1.4 }
       : null
   }
@@ -129,6 +134,13 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
     })
   }
 
+  const handleHover = (x: number, y: number) => {
+    if (!atlas) return
+    const map = metaverse === 'decentraland' ? atlas.decentraland : atlas.ITRM
+    const { name, owner, coords } = getLandSummary(atlas, { x, y }, metaverse)
+    setHovered({ coords, owner, name })
+  }
+
   // Main Search Function through Clicks,Form inputs.
   const handleMapSelection = async (
     x?: number,
@@ -140,16 +152,10 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
     setCardData(undefined)
     setMapState('loadingQuery')
     setIsVisible(true)
-    const landData = await fetchHeatmapLand(
-      atlas.ITRM,
-      prices,
-      metaverse,
-      tokenId,
-      {
-        x: x,
-        y: y,
-      }
-    )
+    const landData = findHeatmapLand(atlas.ITRM, prices, metaverse, tokenId, {
+      x: x,
+      y: y,
+    })
     if (!landData) {
       setMapState('errorQuery')
       return setTimeout(() => setIsVisible(false), 1100)
@@ -261,11 +267,12 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
             <div className='absolute top-0 z-20 flex gap-4 p-2 md:w-fit w-full'>
               <div>
                 {/* Top left Coordinates */}
-                <div className='mb-2 w-[177px] hidden md:block'>
+                <div className='mb-2 w- hidden md:block w-[190px]'>
                   <MapLandSummary
+                    owner={hovered.owner}
+                    name={hovered.name}
+                    coordinates={hovered.coords}
                     metaverse={metaverse}
-                    map={atlas.ITRM}
-                    coordinates={hovered}
                   />
                 </div>
                 {/* 'Search By' Forms */}
@@ -296,6 +303,14 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                 />
               </div>
             </div>
+            {/* <div className='absolute bottom-12 z-20'>
+              {metaverse === 'decentraland' && (
+                <MapLandNameOwner show='name' name={hovered.name} />
+              )}
+              {metaverse !== 'sandbox' && (
+                <MapLandNameOwner show='owner' owner={hovered.owner} />
+              )}
+            </div> */}
             {/* Color Guide - Hides when MapCard is showing (only mobile) */}
             {filterBy !== 'basic' && (
               <div
@@ -344,7 +359,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                 hoverLayer,
               ]}
               onHover={(x, y) => {
-                setHovered({ x, y })
+                handleHover(x, y)
               }}
               onClick={(x, y) => {
                 if (isSelected(x, y)) {
@@ -429,27 +444,7 @@ export async function getServerSideProps() {
     // 'https://api.coingecko.com/api/v3/simple/price?ids=ethereum%2Cthe-sandbox%2Cdecentraland%2Caxie-infinity&vs_currencies=usd'
     'https://api.coingecko.com/api/v3/simple/price?ids=ethereum%2Cthe-sandbox%2Cdecentraland%2Caxie-infinity&vs_currencies=usd'
   )
-  console.log({ coin })
-  let prices: ICoinPrices
-  try {
-    prices = await coin.json()
-  } catch (e) {
-    prices = {
-      'axie-infinity': {
-        usd: 21.29,
-      },
-      decentraland: {
-        usd: 1.11,
-      },
-      ethereum: {
-        usd: 2029.6,
-      },
-      'the-sandbox': {
-        usd: 1.31,
-      },
-    }
-  }
-
+  const prices = await coin.json()
   return {
     props: {
       prices,

@@ -35,6 +35,7 @@ export type AtlasTile = {
   name?: string
   topLeft?: number
   price?: number
+  owner?: string
 }
 
 type valuationTransfer = {
@@ -63,7 +64,7 @@ export type ValuationTile = {
   watchlist?: boolean
   portfolio?: boolean
   images: { image_url: string }
-  owner: string
+  owner?: string
   external_link: string
 }
 export type MapFilter =

@@ -1,39 +1,46 @@
 import React from 'react'
-import { fetchHeatmapLand } from '../../lib/heatmap/fetchHeatmapLand'
-import { getLandSummary } from '../../lib/heatmap/getLandSummary'
-import { ValuationTile } from '../../lib/heatmap/heatmapCommonTypes'
 import { Metaverse } from '../../lib/metaverse'
-import { typedKeys } from '../../lib/utilities'
-import { ICoinPrices } from '../../lib/valuation/valuationTypes'
+import { handleLongLandName, typedKeys } from '../../lib/utilities'
 
 interface Props {
-  map: Record<string, ValuationTile>
-
-  metaverse: Metaverse
   coordinates: { x: number; y: number }
+  metaverse: Metaverse
+  owner?: string
+  name?: string
 }
 
-const MapLandSummary = ({ map, metaverse, coordinates }: Props) => {
-  const { owner } = getLandSummary(map, coordinates)
+const MapLandSummary = ({ name, owner, coordinates, metaverse }: Props) => {
   return (
-    <div className='gray-box bg-opacity-100'>
+    <div className='gray-box bg-opacity-100 flex flex-col gap-2 text-sm overflow-auto'>
       <div className='flex gap-4'>
+        {/* <span className='text-white font-semibold whitespace-nowrap'>
+          Coords:
+        </span> */}
         {typedKeys(coordinates).map((coord) => (
           <span
             key={coord}
-            className='text-white font-semibold whitespace-nowrap'
+            className='text-white font-semibold whitespace-nowrap text-base'
           >
             {coord.toUpperCase()}:{' '}
             {isNaN(coordinates[coord]) ? 'xx' : coordinates[coord]}
           </span>
         ))}
-
-        {/* {land?. &&       <span>{land?.apiData.name }</span>} */}
       </div>
 
-      <span className='text-white font-semibold'>
-        Owner: {owner ? owner : 'None'}
-      </span>
+      {metaverse !== 'sandbox' && (
+        <>
+          {metaverse === 'decentraland' && (
+            <p className='text-white font-semibold whitespace-nowrap'>
+              {name
+                ? handleLongLandName(name, 13)
+                : `Parcel ${coordinates.x}, ${coordinates.y}`}
+            </p>
+          )}
+          <p className='text-white font-semibold whitespace-nowrap'>
+            Owner: {owner ? owner : 'None'}
+          </p>
+        </>
+      )}
     </div>
   )
 }
