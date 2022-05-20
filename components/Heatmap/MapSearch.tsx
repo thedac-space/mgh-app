@@ -61,7 +61,7 @@ const MapSearch = ({ mapState, handleMapSelection }: Props) => {
   }, [])
 
   return (
-    <div className='flex flex-col gap-6 md:absolute h-16 md:h-auto w-[177px] md:w-auto'>
+    <div className='flex flex-col gap-6 md:absolute h-16 md:h-auto w-[190px]'>
       {/* Search */}
       <form
         className='gray-box bg-opacity-100'

@@ -62,6 +62,7 @@ export interface IAPIData {
     predicted_price: number
     eth_predicted_price: number
   }
+  owner?: string
 }
 
 export interface IPredictions {
