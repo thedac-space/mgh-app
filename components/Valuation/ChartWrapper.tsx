@@ -25,7 +25,6 @@ const ChartWrapper = ({ metaverse }: { metaverse: Metaverse }) => {
     { route: "avgPriceParcel", label: "Average Price per Parcel" },
     { route: "floorPrice", label: "Floor Price" },
     { route: "avgPriceParcelPerArea", label: "Average Price per Area" },
-    { route: "individualOwners", label: "Indivual Owners" },
     { route: "maxPrice", label: "Max Price" },
     { route: "totalNumberOfSales", label: "Total Sales" },
     { route: "stdSalesPrices", label: "std Sales Prices" },
@@ -38,23 +37,19 @@ const ChartWrapper = ({ metaverse }: { metaverse: Metaverse }) => {
   ];
   ///////////
   useEffect(() => {
-    console.log("inciando");
     const salesVolumeCall = async () => {
       const routesValues: any = {};
-      console.log("foreach");
       for (let element in routes) {
         routesValues[routes[element]["route"]] = await test(
           metaverse,
           routes[element]["route"]
         );
-        console.log(routesValues);
+        (routesValues);
       }
-      console.log(routesValues, "routes");
       setValues(routesValues);
       setMarkCap(await test(metaverse, "mCap"));
       setRichList(await test(metaverse, "richList"));
     };
-    console.log("terminado");
     salesVolumeCall();
   }, [metaverse]);
   return (
