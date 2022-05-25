@@ -9,6 +9,7 @@ export interface AccountState {
   connected: boolean
   address: string | undefined
   chainId: number | undefined
+  role: Role | undefined
 }
 
 export interface AddEthereumChainParameter {
@@ -79,4 +80,15 @@ export type ValueOf<T> = T[keyof T]
 export interface UserData {
   watchlist?: string[]
   portfolio?: string[]
+}
+
+export type Role = {
+  id: 0 | 1 | 2
+  tier: 5
+  expiration: number
+  calls: number
+}
+export interface LoginJWT {
+  address: string
+  roles: Role[] | never[]
 }

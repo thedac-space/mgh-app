@@ -3,10 +3,11 @@ import { Fade } from 'react-awesome-reveal'
 import { BiTargetLock, BiTransferAlt } from 'react-icons/bi'
 import { FiMap } from 'react-icons/fi'
 import { IoIosArrowDown } from 'react-icons/io'
-import { MdAttachMoney, MdOutlineLocalOffer } from 'react-icons/md'
+import { MdAttachMoney } from 'react-icons/md'
 import { VscGraphLine } from 'react-icons/vsc'
 import { MapFilter } from '../../lib/heatmap/heatmapCommonTypes'
 import { typedKeys } from '../../lib/utilities'
+import { useAppSelector } from '../../state/hooks'
 
 interface Props {
   filterBy: MapFilter
@@ -14,6 +15,9 @@ interface Props {
 }
 
 const MapChooseFilter = ({ filterBy, setFilterBy }: Props) => {
+  const { role } = useAppSelector((state) => state.account)
+  const isPremium = role
+
   const [opened, setOpened] = useState(false)
   const filterOptions = {
     basic: { name: 'Basic', shortName: undefined, icon: <FiMap /> },
@@ -74,10 +78,12 @@ const MapChooseFilter = ({ filterBy, setFilterBy }: Props) => {
         {/* Mobile Name */}
         <p className='block sm:hidden'>Stats</p>
         {/* Down/Up Arrow */}
+
         <IoIosArrowDown
           className={
-            (opened ? 'rotate-180' : '') +
-            ' transition-all duration-500 relative bottom-[1px]'
+            (isPremium ? '' : 'opacity-0 ') +
+            (opened ? 'rotate-180 ' : '') +
+            'transition-all duration-500 relative bottom-[1px]'
           }
         />
       </button>
@@ -88,6 +94,7 @@ const MapChooseFilter = ({ filterBy, setFilterBy }: Props) => {
         }
       >
         {opened &&
+          isPremium &&
           typedKeys(filterOptions).map(
             (filter) =>
               filter !== filterBy && (
