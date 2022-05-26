@@ -21,7 +21,7 @@ interface Props {
   label: string
 }
 
-const setChartInterval = (data: any, interval: any) => {
+/*const setChartInterval = (data: any, interval: any) => {
   if (interval === 'daily') return data
   if (interval === 'weekly') {
     let intervaledData = []
@@ -61,6 +61,23 @@ const setChartInterval = (data: any, interval: any) => {
     })
     return intervaledData
   }
+}*/
+
+const setChartInterval = (data: any, interval: any) => {
+  if (interval === 'all') return data
+  if (interval === 'week') {
+    return data.slice(data.length-7,data.lenght)
+  }
+  if (interval === 'month') {
+    let date=new Date(data[data.length-1].time*1000)
+    console.log(data[data.length-1])
+    console.log(date,date.getFullYear(),date.getMonth())
+    console.log(new Date(date.getFullYear(), date.getMonth(), 0).getDate())
+    return data.slice(data.length-new Date(date.getFullYear(), date.getMonth(), 0).getDate()+2,data.lenght)
+  }
+  if (interval === 'year') {
+    return data.slice(data.length-366,data.lenght)
+  }
 }
 
 const AreaChart = ({
@@ -76,8 +93,11 @@ const AreaChart = ({
       defaultSymbol ? defaultSymbol : 'ETH',
     ) //Supposing price is always eth
 
-  const [interval, setInterval] = useState<'daily' | 'weekly' | 'monthly'>('daily')
-  const intervals = {daily:{label:"1D"},weekly:{label:"1W"},monthly:{label:"1M"}}
+  /*const [interval, setInterval] = useState<'daily' | 'weekly' | 'monthly'>('daily')
+  const intervals = {daily:{label:"1D"},weekly:{label:"1W"},monthly:{label:"1M"}}*/
+
+  const [interval, setInterval] = useState<'week' | 'month'|'year'|'all' >('all')
+  const intervals = {week:{label:"1W"},month:{label:"1M"},year:{label:"1Y"},all:{label:"ALL"}}
   useEffect(() => {
     if (!chartElement.current) return
     const chart = createChart(chartElement.current, {
