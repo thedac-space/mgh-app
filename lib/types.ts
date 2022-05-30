@@ -9,6 +9,7 @@ export interface AccountState {
   connected: boolean
   address: string | undefined
   chainId: number | undefined
+  role: Role | undefined
 }
 
 export interface AddEthereumChainParameter {
@@ -82,6 +83,7 @@ export interface UserData {
   portfolio?: string[]
 }
 
+<<<<<<< HEAD
 export interface IChartValues {
   time: string
   data: Record<symbolPredictions, number> | number
@@ -91,3 +93,15 @@ export type symbolPredictions =
   | 'ethPrediction'
   | 'usdPrediction'
   | 'metaversePrediction'
+=======
+export type Role = {
+  id: 0 | 1 | 2
+  tier: 5
+  expiration: number
+  calls: number
+}
+export interface LoginJWT {
+  address: string
+  roles: Role[] | never[]
+}
+>>>>>>> 1cf044ac00074382064d082bc4db28bcb9c8148c
