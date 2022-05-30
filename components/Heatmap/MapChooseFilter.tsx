@@ -16,7 +16,7 @@ interface Props {
 
 const MapChooseFilter = ({ filterBy, setFilterBy }: Props) => {
   const { role } = useAppSelector((state) => state.account)
-  const isPremium = role
+  const isPremium = !role //This will be changed once we finish role setup
 
   const [opened, setOpened] = useState(false)
   const filterOptions = {
