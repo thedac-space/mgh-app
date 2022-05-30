@@ -2,7 +2,6 @@ import { NextPage } from 'next'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
-import { PriceList } from '../components/General'
 import {
   ChartInfo,
   fetchChartData,
@@ -11,6 +10,7 @@ import {
 import { Metaverse } from '../lib/metaverse'
 import { formatName } from '../lib/utilities'
 import Head from 'next/head'
+import AnalyticsMvChoice from '../components/Analytics/AnalyticsMvChoice'
 const AnalyticsChart = dynamic(
   () => import('../components/Analytics/AnalyticsChart'),
   {
@@ -40,20 +40,22 @@ const Analytics: NextPage = () => {
     { route: 'avgPriceParcelPerArea', label: 'Average Price per Area' },
     { route: 'maxPrice', label: 'Max Price' },
     { route: 'totalNumberOfSales', label: 'Total Sales' },
-    { route: 'stdSalesPrices', label: 'std Sales Prices' },
+    { route: 'stdSalesPrices', label: 'Sales Prices' },
     { route: 'salesVolume', label: 'Sales Volume' },
-  ] as const
+  ]
 
   useEffect(() => {
     const salesVolumeCall = async () => {
       const routesValues: RouteValues = {}
-      for (let element in routes) {
-        routesValues[routes[element]['route']] = (await fetchChartData(
-          metaverse,
-          routes[element]['route']
-        )) as ChartInfo[]
-        routesValues
-      }
+      await Promise.all(
+        routes.map(async (_, i) => {
+          routesValues[routes[i].route] = (await fetchChartData(
+            metaverse,
+            routes[i].route
+          )) as ChartInfo[]
+        })
+      )
+
       setValues(routesValues)
       setMarkCap((await fetchChartData(metaverse, 'mCap')) as number)
       setRichList((await fetchChartData(metaverse, 'richList')) as RichList)
@@ -84,40 +86,49 @@ const Analytics: NextPage = () => {
             ))}
           </div>
         </div>
-        <div className='flex flex-col sm:flex-row space-y-5 sm:space-y-0 space-x-0 sm:space-x-5 md:space-x-10 items-stretch justify-between w-full'>
-          <div className='flex flex-col shadow-blck rounded-xl py-3 px-4 w-full bg-grey-dark bg-opacity-20 '>
-            <p className='text-lg xl:text-xl font-medium text-gray-300 mb-4'>
-              Market Cap:
+        {/* Wrapper Metaverse Buttons - MarketCap/Owners */}
+        <div className='flex flex-col sm:flex-row gap-5 gray-box bg-opacity-5 w-fit m-auto mb-8'>
+          {/* Metaverse Choice Buttons */}
+          <AnalyticsMvChoice
+            metaverse={metaverse}
+            setMetaverse={setMetaverse}
+          />
+          {/* Market Cap - Owners Land % */}
+          <div className='w-fit flex flex-col justify-center '>
+            <p className='text-lg font-medium text-cyan-300 mb-8 whitespace-nowrap'>
+              Lands held by the top 1% of holders:{' '}
+              {richList?.pctParcels && (richList.pctParcels * 100).toFixed()}%
             </p>
-            <PriceList
-              predictions={{ ethPrediction: markCap }}
-              metaverse={metaverse}
-            />
+            <p className='text-lg font-medium text-cyan-300'>
+              Market Cap: {markCap.toFixed(2)} ETH
+            </p>
           </div>
-          <div className='flex flex-col justify-between w-full space-y-5 md:space-y-10 lg:space-y-5'>
-            <div className='flex flex-col shadow-blck rounded-xl py-3 px-4 bg-grey-dark bg-opacity-20'>
-              <p
-                className={`text-lg xl:text-xl font-medium text-cyan-300 mb-8`}
-              >
-                Lands held by the top 1% of holders:{' '}
-                {richList?.pctParcels && (richList.pctParcels * 100).toFixed()}%
-              </p>
+        </div>
+
+        {/* Charts Wrapper */}
+        <ul className='flex flex-col gap-4'>
+          {/* Floor Volume Chart */}
+          <li>
+            <h3 className='text-gray-200 text-2xl'>Floor and Volume Price</h3>
+            <div className='gray-box'>
+              <FloorAndVolumeChart metaverse={metaverse} />
             </div>
-          </div>
-        </div>
-        <div className='flex flex-col shadow-blck rounded-xl py-3 px-4 w-full bg-grey-dark bg-opacity-20 '>
-          <FloorAndVolumeChart metaverse={metaverse} />
-        </div>
-        {routes.map((element) => {
-          if (values[element.route])
-            return (
-              <AnalyticsChart
-                metaverse={metaverse}
-                data={values[element.route]!}
-                label={element.label}
-              />
-            )
-        })}
+          </li>
+          {/* Rest of Charts */}
+          {routes.map((element) => {
+            if (values[element.route])
+              return (
+                <li>
+                  <h3 className='text-gray-200 text-2xl'>{element.label}</h3>
+                  <AnalyticsChart
+                    metaverse={metaverse}
+                    data={values[element.route]!}
+                    label={element.label}
+                  />
+                </li>
+              )
+          })}
+        </ul>
       </section>
     </>
   )

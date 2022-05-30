@@ -89,7 +89,7 @@ const AnalyticsChart = ({ data, label }: Props) => {
   }, [data, interval])
 
   return (
-    <div className='flex flex-col shadow-blck rounded-xl py-3 px-4 w-full bg-grey-dark bg-opacity-20 '>
+    <div className='gray-box'>
       <div className='max-w-full h-full relative' ref={chartElement}>
         <div className='absolute top-1 left-1 z-10 flex gap-2'>
           {typedKeys(intervalLabels).map((arrInterval) => (
