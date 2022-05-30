@@ -92,25 +92,6 @@ const AreaChart = ({ data, label }: Props) => {
     <div className='flex flex-col shadow-blck rounded-xl py-3 px-4 w-full bg-grey-dark bg-opacity-20 '>
       <div className='max-w-full h-full relative' ref={chartElement}>
         <div className='absolute top-1 left-1 z-10 flex gap-2'>
-          {/* {symbolOptions &&
-            typedKeys(symbolOptions).map((arrSymbol) => (
-              <button
-                key={arrSymbol}
-                className={
-                  'gray-box font-semibold rounded-lg p-2 text-xs text-gray-400' +
-                  (symbol === arrSymbol
-                    ? ' text-gray-300 bg-opacity-80 '
-                    : ' hover:text-gray-300 hover:bg-opacity-80')
-                }
-                onClick={() => setSymbol(arrSymbol)}
-              >
-                {arrSymbol === 'METAVERSE'
-                  ? symbolOptions[arrSymbol][metaverse]
-                  : arrSymbol}
-              </button>
-            ))} */}
-        </div>
-        <div className='absolute top-1 left-1 z-10 flex gap-2'>
           {typedKeys(intervalLabels).map((arrInterval) => (
             <button
               key={arrInterval}
@@ -131,45 +112,3 @@ const AreaChart = ({ data, label }: Props) => {
   )
 }
 export default AreaChart
-
-/*const setChartInterval = (data: any, interval: any) => {
-  if (interval === 'daily') return data
-  if (interval === 'weekly') {
-    let intervaledData = []
-    let valueSum = 0
-    let dayCounter = 0
-    data.forEach((date: any) => {
-      valueSum += date.data
-      dayCounter++
-      if (dayCounter === 7) {
-        intervaledData.push({
-          time: date.time,
-          data: valueSum / dayCounter,
-        })
-
-        dayCounter = 0
-        valueSum = 0
-      }
-    })
-    return intervaledData
-  }
-  if (interval === 'monthly') {
-    let intervaledData = []
-    let valueSum = 0
-    let dayCounter = 0
-    data.forEach((date: any) => {
-      valueSum += date.data
-      dayCounter++
-      if (dayCounter === 30) {
-        intervaledData.push({
-          time: date.time,
-          data: valueSum / dayCounter,
-        })
-
-        dayCounter = 0
-        valueSum = 0
-      }
-    })
-    return intervaledData
-  }
-}*/
