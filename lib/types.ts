@@ -80,3 +80,13 @@ export interface UserData {
   watchlist?: string[]
   portfolio?: string[]
 }
+
+export interface IChartValues {
+  time: string
+  data: Record<symbolPredictions, number> | number
+}
+
+export type symbolPredictions =
+  | 'ethPrediction'
+  | 'usdPrediction'
+  | 'metaversePrediction'

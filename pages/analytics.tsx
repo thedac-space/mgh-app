@@ -2,12 +2,14 @@ import { NextPage } from 'next'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import { BiPlus } from 'react-icons/bi'
+import ChartWrapper from '../components/Valuation/ChartWrapper'
+import { Metaverse } from '../lib/metaverse'
 import { formatName } from '../lib/utilities'
 import { useAppSelector } from '../state/hooks'
 
 const Analytics: NextPage = () => {
   const [userGraphs, setUserGraphs] = useState<any[]>(['floorprice', 'another'])
-
+  const [metaverse, setMetaverse] = useState<Metaverse>('sandbox')
   const { address } = useAppSelector((state) => state.account)
   useEffect(() => {
     if (!address) return
@@ -49,7 +51,7 @@ const Analytics: NextPage = () => {
           ))}
         </div>
       </div>
-
+      <ChartWrapper metaverse={metaverse} />
       {/* Graphs loop */}
       {userGraphs?.map((graph) => (
         // Graph Component with graph info.. Logic for Fetching should be inside component.

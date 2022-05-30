@@ -50,6 +50,7 @@ import useConnectWeb3 from '../backend/connectWeb3'
 import { Chains } from '../lib/chains'
 import { FullScreenButton } from '../components/General'
 import { Metaverse } from '../lib/metaverse'
+import ChartWrapper from '../components/Valuation/ChartWrapper'
 const FloorAndVolumeChart = dynamic(
   () => import('../components/Valuation/FloorAndVolumeChart'),
   {
