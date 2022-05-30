@@ -41,7 +41,7 @@ const ColorGuide = ({ percentFilter, setPercentFilter, filterBy }: Props) => {
     }
   }
   return (
-    <ul className='flex gap-2 gray-box h-16 bg-opacity-100 items-baseline w-max'>
+    <ul className='flex gap-2 gray-box h-16 bg-opacity-100 items-baseline w-[248px]'>
       {/* Best/Min */}
       <li className='text-gray-200 text-sm font-semibold'>
         {filterBy === 'price_difference' ? 'Best' : 'Min'}
