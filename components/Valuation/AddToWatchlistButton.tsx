@@ -63,7 +63,8 @@ const AddToWatchlistButton = ({ landId, metaverse }: Props) => {
         if (!user) return createUser(address)
         const metaverseKey = Object.keys(user).find((key) =>
           key.includes(metaverse)
-        ) as Key
+        ) as Key | undefined
+        if (!metaverseKey) return
         if (user[metaverseKey].includes(landId))
           return setState('alreadyInWatchlist')
         if (user[metaverseKey].length === 10) return setState('limitReached')
