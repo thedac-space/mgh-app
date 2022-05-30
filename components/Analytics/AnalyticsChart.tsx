@@ -14,7 +14,7 @@ interface Props {
   label: string
 }
 
-const AreaChart = ({ data, label }: Props) => {
+const AnalyticsChart = ({ data, label }: Props) => {
   const intervalLabels = {
     week: { label: '7D', days: 7 },
     month: { label: '30D', days: 30 },
@@ -111,4 +111,4 @@ const AreaChart = ({ data, label }: Props) => {
     </div>
   )
 }
-export default AreaChart
+export default AnalyticsChart
