@@ -51,6 +51,7 @@ import { FullScreenButton } from '../components/General'
 import { Metaverse } from '../lib/metaverse'
 import { getLandSummary } from '../lib/heatmap/getLandSummary'
 import { findHeatmapLand } from '../lib/heatmap/findHeatmapLand'
+import Head from 'next/head'
 const FloorAndVolumeChart = dynamic(
   () => import('../components/Valuation/FloorAndVolumeChart'),
   {
@@ -235,199 +236,211 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   }, [filterBy, percentFilter])
 
   return (
-    <section className='w-full h-full relative'>
-      {/* Main Header */}
-      <div className='gray-box flex flex-col sm:flex-row justify-between items-center mb-8'>
-        <h1 className='text-transparent bg-clip-text lg:text-5xl text-3xl bg-gradient-to-br from-blue-500 via-green-400 to-green-500 mb-0 sm:mb-2'>
-          LAND Valuation
-        </h1>
-        {/* Links Wrapper */}
-        <div className='flex gap-5'>
-          {/* Links */}
-          {['portfolio', 'watchlist', 'analytics'].map((option) => (
-            <Link key={option} href={`/${option}`}>
-              <a className='hover:scale-105 font-medium text-white px-5 py-3 flex items-center justify-center rounded-xl bg-gradient-to-br from-blue-500/30 to-green-500/30 transition-all duration-300'>
-                <span className='pt-1 text-xl'>{formatName(option)}</span>
-              </a>
-            </Link>
-          ))}
+    <>
+      <Head>
+        <title>MGH | Valuation</title>
+        <meta
+          name='description'
+          content='Land Valuation with our Custom Heatmap'
+        />
+      </Head>
+      <section className='w-full h-full relative'>
+        {/* Main Header */}
+        <div className='gray-box flex flex-col sm:flex-row justify-between items-center mb-8'>
+          <h1 className='text-transparent bg-clip-text lg:text-5xl text-3xl bg-gradient-to-br from-blue-500 via-green-400 to-green-500 mb-0 sm:mb-2'>
+            LAND Valuation
+          </h1>
+          {/* Links Wrapper */}
+          <div className='flex gap-5'>
+            {/* Links */}
+            {['portfolio', 'watchlist', 'analytics'].map((option) => (
+              <Link key={option} href={`/${option}`}>
+                <a className='hover:scale-105 font-medium text-white px-5 py-3 flex items-center justify-center rounded-xl bg-gradient-to-br from-blue-500/30 to-green-500/30 transition-all duration-300'>
+                  <span className='pt-1 text-xl'>{formatName(option)}</span>
+                </a>
+              </Link>
+            ))}
+          </div>
         </div>
-      </div>
 
-      {/* Heatmap */}
-      <div className='relative mb-8 h-[55vh]' ref={mapDivRef}>
-        {!metaverse && (
-          <MapInitMvChoice metaverse={metaverse} setMetaverse={setMetaverse} />
-        )}
-        {loading && metaverse && (
-          <HeatmapLoader landsLoaded={landsLoaded} metaverse={metaverse} />
-        )}
-        {atlas && heatmapSize && !loading && metaverse && (
-          <>
-            <div className='absolute top-0 z-20 flex gap-4 p-2 md:w-fit w-full'>
-              <div>
-                {/* Top left Coordinates */}
-                <div className='mb-2 w- hidden md:block w-[190px]'>
-                  <MapLandSummary
-                    owner={hovered.owner}
-                    name={hovered.name}
-                    coordinates={hovered.coords}
-                    metaverse={metaverse}
+        {/* Heatmap */}
+        <div className='relative mb-8 h-[55vh]' ref={mapDivRef}>
+          {!metaverse && (
+            <MapInitMvChoice
+              metaverse={metaverse}
+              setMetaverse={setMetaverse}
+            />
+          )}
+          {loading && metaverse && (
+            <HeatmapLoader landsLoaded={landsLoaded} metaverse={metaverse} />
+          )}
+          {atlas && heatmapSize && !loading && metaverse && (
+            <>
+              <div className='absolute top-0 z-20 flex gap-4 p-2 md:w-fit w-full'>
+                <div>
+                  {/* Top left Coordinates */}
+                  <div className='mb-2 w- hidden md:block w-[190px]'>
+                    <MapLandSummary
+                      owner={hovered.owner}
+                      name={hovered.name}
+                      coordinates={hovered.coords}
+                      metaverse={metaverse}
+                    />
+                  </div>
+                  {/* 'Search By' Forms */}
+                  <MapSearch
+                    mapState={mapState}
+                    handleMapSelection={handleMapSelection}
                   />
                 </div>
-                {/* 'Search By' Forms */}
-                <MapSearch
-                  mapState={mapState}
-                  handleMapSelection={handleMapSelection}
-                />
-              </div>
-              {/* Main Filter Button. Only for small screens  */}
-              <div className='md:hidden w-2/4'>
-                <MapMobileFilters
-                  metaverse={metaverse}
-                  setMetaverse={setMetaverse}
-                  filterBy={filterBy}
-                  setFilterBy={setFilterBy}
-                />
-              </div>
-              <div className='md:flex gap-2 md:gap-4 hidden'>
-                {/* Metaverse Selection */}
-                <MapChooseMetaverse
-                  metaverse={metaverse}
-                  setMetaverse={setMetaverse}
-                />
-                {/* Filter Selection */}
-                <MapChooseFilter
-                  filterBy={filterBy}
-                  setFilterBy={setFilterBy}
-                />
-              </div>
-            </div>
-            {/* Color Guide - Hides when MapCard is showing (only mobile) */}
-            {filterBy !== 'basic' && (
-              <div
-                className={
-                  (isVisible && 'hidden') +
-                  ' md:block absolute z-20 bottom-2 left-2'
-                }
-              >
-                <ColorGuide
-                  filterBy={filterBy}
-                  percentFilter={percentFilter}
-                  setPercentFilter={setPercentFilter}
-                />
-              </div>
-            )}
-
-            {/* Full screen button - Hides when MapCard is showing (all screens) */}
-            {!isVisible && (
-              <div className='absolute z-20 top-2 right-2 gray-box bg-opacity-100 w-fit h-15'>
-                <FullScreenButton
-                  fullScreenRef={mapDivRef}
-                  className='text-lg text-gray-200 hover:text-white'
-                />
-              </div>
-            )}
-            {/*  Map */}
-            <TileMap
-              minX={heatmapSize.minX}
-              maxX={heatmapSize.maxX}
-              minY={heatmapSize.minY}
-              maxY={heatmapSize.maxY}
-              x={Number(selected?.x || heatmapSize.initialY)}
-              y={Number(selected?.y || heatmapSize.initialX)}
-              filter={filterBy}
-              percentFilter={percentFilter}
-              legendFilter={legendFilter}
-              atlas={atlas}
-              className='atlas'
-              width={dims.width}
-              height={dims.height}
-              layers={[
-                decentralandAPILayer,
-                filteredLayer,
-                selectedStrokeLayer,
-                selectedFillLayer,
-                hoverLayer,
-              ]}
-              onHover={(x, y) => {
-                handleHover(x, y)
-              }}
-              onClick={(x, y) => {
-                if (isSelected(x, y)) {
-                  setSelected(undefined)
-                } else {
-                  handleMapSelection(x, y)
-                }
-              }}
-            />
-            {/* Selected Land Card */}
-            {isVisible && (
-              <div
-                ref={ref}
-                className='absolute bottom-2 right-8 flex flex-col gap-4'
-              >
-                <Fade duration={300}>
-                  <MapCard
-                    setIsVisible={setIsVisible}
+                {/* Main Filter Button. Only for small screens  */}
+                <div className='md:hidden w-2/4'>
+                  <MapMobileFilters
                     metaverse={metaverse}
-                    apiData={cardData?.apiData}
-                    predictions={cardData?.predictions}
-                    landCoords={cardData?.landCoords}
-                    mapState={mapState}
+                    setMetaverse={setMetaverse}
+                    filterBy={filterBy}
+                    setFilterBy={setFilterBy}
                   />
-                </Fade>
+                </div>
+                <div className='md:flex gap-2 md:gap-4 hidden'>
+                  {/* Metaverse Selection */}
+                  <MapChooseMetaverse
+                    metaverse={metaverse}
+                    setMetaverse={setMetaverse}
+                  />
+                  {/* Filter Selection */}
+                  <MapChooseFilter
+                    filterBy={filterBy}
+                    setFilterBy={setFilterBy}
+                  />
+                </div>
               </div>
-            )}
+              {/* Color Guide - Hides when MapCard is showing (only mobile) */}
+              {filterBy !== 'basic' && (
+                <div
+                  className={
+                    (isVisible && 'hidden') +
+                    ' md:block absolute z-20 bottom-2 left-2'
+                  }
+                >
+                  <ColorGuide
+                    filterBy={filterBy}
+                    percentFilter={percentFilter}
+                    setPercentFilter={setPercentFilter}
+                  />
+                </div>
+              )}
 
-            {/* Map Legend - Hides when MapCard is showing (all screens) */}
-            {!isVisible && (
-              <MapLegend
-                className='absolute bottom-2 right-2'
+              {/* Full screen button - Hides when MapCard is showing (all screens) */}
+              {!isVisible && (
+                <div className='absolute z-20 top-2 right-2 gray-box bg-opacity-100 w-fit h-15'>
+                  <FullScreenButton
+                    fullScreenRef={mapDivRef}
+                    className='text-lg text-gray-200 hover:text-white'
+                  />
+                </div>
+              )}
+              {/*  Map */}
+              <TileMap
+                minX={heatmapSize.minX}
+                maxX={heatmapSize.maxX}
+                minY={heatmapSize.minY}
+                maxY={heatmapSize.maxY}
+                x={Number(selected?.x || heatmapSize.initialY)}
+                y={Number(selected?.y || heatmapSize.initialX)}
+                filter={filterBy}
+                percentFilter={percentFilter}
                 legendFilter={legendFilter}
-                setLegendFilter={setLegendFilter}
-                metaverse={metaverse}
+                atlas={atlas}
+                className='atlas'
+                width={dims.width}
+                height={dims.height}
+                layers={[
+                  decentralandAPILayer,
+                  filteredLayer,
+                  selectedStrokeLayer,
+                  selectedFillLayer,
+                  hoverLayer,
+                ]}
+                onHover={(x, y) => {
+                  handleHover(x, y)
+                }}
+                onClick={(x, y) => {
+                  if (isSelected(x, y)) {
+                    setSelected(undefined)
+                  } else {
+                    handleMapSelection(x, y)
+                  }
+                }}
               />
-            )}
-          </>
-        )}
-      </div>
+              {/* Selected Land Card */}
+              {isVisible && (
+                <div
+                  ref={ref}
+                  className='absolute bottom-2 right-8 flex flex-col gap-4'
+                >
+                  <Fade duration={300}>
+                    <MapCard
+                      setIsVisible={setIsVisible}
+                      metaverse={metaverse}
+                      apiData={cardData?.apiData}
+                      predictions={cardData?.predictions}
+                      landCoords={cardData?.landCoords}
+                      mapState={mapState}
+                    />
+                  </Fade>
+                </div>
+              )}
 
-      {/* Daily Volume and Floor Price Wrapper */}
-      {metaverse && (
-        <Fade duration={600} className='w-full'>
-          <div className='flex flex-col sm:flex-row space-y-5 sm:space-y-0 space-x-0 sm:space-x-5 md:space-x-10 items-stretch justify-between w-full'>
-            {/* Daily Volume */}
-            <SalesVolumeDaily metaverse={metaverse} coinPrices={prices} />
-            {/* Floor Price */}
-            <div className='flex flex-col justify-between w-full space-y-5 md:space-y-10 lg:space-y-5'>
-              <FloorPriceTracker metaverse={metaverse} coinPrices={prices} />
+              {/* Map Legend - Hides when MapCard is showing (all screens) */}
+              {!isVisible && (
+                <MapLegend
+                  className='absolute bottom-2 right-2'
+                  legendFilter={legendFilter}
+                  setLegendFilter={setLegendFilter}
+                  metaverse={metaverse}
+                />
+              )}
+            </>
+          )}
+        </div>
+
+        {/* Daily Volume and Floor Price Wrapper */}
+        {metaverse && (
+          <Fade duration={600} className='w-full'>
+            <div className='flex flex-col sm:flex-row space-y-5 sm:space-y-0 space-x-0 sm:space-x-5 md:space-x-10 items-stretch justify-between w-full'>
+              {/* Daily Volume */}
+              <SalesVolumeDaily metaverse={metaverse} coinPrices={prices} />
+              {/* Floor Price */}
+              <div className='flex flex-col justify-between w-full space-y-5 md:space-y-10 lg:space-y-5'>
+                <FloorPriceTracker metaverse={metaverse} coinPrices={prices} />
+              </div>
             </div>
-          </div>
-          {/*Floor and Volume Graph*/}
-          <div className='flex flex-col shadow-blck rounded-xl py-3 px-4 w-full bg-grey-dark bg-opacity-20 '>
-            <FloorAndVolumeChart metaverse={metaverse} />
-          </div>
-          <div className='flex flex-col items-start shadow-blck rounded-xl py-3 px-4 w-full bg-grey-dark bg-opacity-20 text-left'>
-            <p className={`text-xs sm:text-sm text-gray-400`}>
-              The MGH DAO does not provide, personalized investment
-              recommendations or advisory services. Any information provided
-              through the land evaluation tool and others is not, and should not
-              be, considered as advice of any kind and is for information
-              purposes only. That land is “valuated” does not mean, that it is
-              in any way approved, checked audited, and/or has a real or correct
-              value. In no event shall the MGH DAO be liable for any special,
-              indirect, or consequential damages, or any other damages of any
-              kind, including but not limited to loss of use, loss of profits,
-              or loss of data, arising out of or in any way connected with the
-              use of or inability to use the Service, including without
-              limitation any damages resulting from reliance by you on any
-              information obtained from using the Service.
-            </p>
-          </div>
-        </Fade>
-      )}
-    </section>
+            {/*Floor and Volume Graph*/}
+            <div className='flex flex-col shadow-blck rounded-xl py-3 px-4 w-full bg-grey-dark bg-opacity-20 '>
+              <FloorAndVolumeChart metaverse={metaverse} />
+            </div>
+            <div className='flex flex-col items-start shadow-blck rounded-xl py-3 px-4 w-full bg-grey-dark bg-opacity-20 text-left'>
+              <p className={`text-xs sm:text-sm text-gray-400`}>
+                The MGH DAO does not provide, personalized investment
+                recommendations or advisory services. Any information provided
+                through the land evaluation tool and others is not, and should
+                not be, considered as advice of any kind and is for information
+                purposes only. That land is “valuated” does not mean, that it is
+                in any way approved, checked audited, and/or has a real or
+                correct value. In no event shall the MGH DAO be liable for any
+                special, indirect, or consequential damages, or any other
+                damages of any kind, including but not limited to loss of use,
+                loss of profits, or loss of data, arising out of or in any way
+                connected with the use of or inability to use the Service,
+                including without limitation any damages resulting from reliance
+                by you on any information obtained from using the Service.
+              </p>
+            </div>
+          </Fade>
+        )}
+      </section>
+    </>
   )
 }
 
