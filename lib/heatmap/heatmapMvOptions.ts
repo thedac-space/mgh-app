@@ -3,7 +3,7 @@ export const heatmapMvOptions = {
     lands: 166604,
   },
   decentraland: {
-    lands: 92473,
+    lands: 92573,
   },
   'axie-infinity': { lands: 90601 },
 }
