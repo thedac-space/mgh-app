@@ -7,7 +7,7 @@ import {
   RichList,
 } from '../components/Analytics/fetchChartData'
 import { Metaverse } from '../lib/metaverse'
-import { formatName } from '../lib/utilities'
+import { formatName, getState } from '../lib/utilities'
 import Head from 'next/head'
 import {
   AnalyticsChart,
@@ -16,6 +16,10 @@ import {
   chartRoutes,
 } from '../components/Analytics'
 import { ICoinPrices } from '../lib/valuation/valuationTypes'
+import { RiLoader3Fill } from 'react-icons/ri'
+
+const analyticsState = ['loading', 'loaded', 'error'] as const
+type AnalyticsState = typeof analyticsState[number]
 
 interface Props {
   prices: ICoinPrices
@@ -27,11 +31,14 @@ const Analytics: NextPage<Props> = ({ prices }) => {
     Record<typeof chartRoutes[number]['route'], ChartInfo[]>
   >
   const [values, setValues] = useState<RouteValues>({})
+  const [state, setState] = useState<AnalyticsState>('loading')
+  const [loading, loaded, error] = getState(state, [...analyticsState])
   const [markCap, setMarkCap] = useState(0)
   const [richList, setRichList] = useState<RichList>()
 
   useEffect(() => {
     const salesVolumeCall = async () => {
+      setState('loading')
       const routesValues: RouteValues = {}
       await Promise.all(
         chartRoutes.map(async (_, i) => {
@@ -45,6 +52,7 @@ const Analytics: NextPage<Props> = ({ prices }) => {
       setValues(routesValues)
       setMarkCap((await fetchChartData(metaverse, 'mCap')) as number)
       setRichList((await fetchChartData(metaverse, 'richList')) as RichList)
+      setState('loaded')
     }
     salesVolumeCall()
   }, [metaverse])
@@ -54,7 +62,7 @@ const Analytics: NextPage<Props> = ({ prices }) => {
         <title>MGH | Analytics</title>
         <meta name='description' content='Analytics Dashboard' />
       </Head>
-      <section className='w-full'>
+      <section className='w-full max-w-7xl'>
         {/* Main Header */}
         <div className='gray-box flex flex-col sm:flex-row justify-between items-center mb-8'>
           <h1 className='text-transparent bg-clip-text lg:text-5xl text-3xl bg-gradient-to-br green-text-gradient mb-0 sm:mb-2'>
@@ -81,12 +89,22 @@ const Analytics: NextPage<Props> = ({ prices }) => {
           />
           {/* Market Cap - Owners Land % */}
           <div className='w-fit flex flex-col justify-center '>
-            <p className='text-lg font-medium text-cyan-300 mb-8 whitespace-nowrap'>
+            <p className='text-lg font-medium text-cyan-300 mb-8 whitespace-nowrap flex gap-1'>
               Lands held by the top 1% of holders:{' '}
-              {richList?.pctParcels && (richList.pctParcels * 100).toFixed()}%
+              {loaded ? (
+                richList?.pctParcels &&
+                (richList.pctParcels * 100).toFixed() + '%'
+              ) : (
+                <RiLoader3Fill className='animate-spin-slow h-5 w-5 xs:h-6 xs:w-6' />
+              )}
             </p>
-            <p className='text-lg font-medium text-cyan-300'>
-              Market Cap: {markCap.toFixed(2)} ETH
+            <p className='text-lg font-medium text-cyan-300 flex whitespace-nowrap gap-1'>
+              Market Cap:{' '}
+              {loaded ? (
+                `${markCap.toFixed(2)} ETH`
+              ) : (
+                <RiLoader3Fill className='animate-spin-slow h-5 w-5 xs:h-6 xs:w-6' />
+              )}
             </p>
           </div>
         </div>
