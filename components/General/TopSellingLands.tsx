@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import searchTopSellings from '../../backend/services/topSellingLands'
-import TopSellingFilter from "./TopSelling/TopSellingFilter"
-import TableStructure from "./TopSelling/TableStructure"
+import TopSellingFilter from "./TopSellingTable/TopSellingFilter"
+import TableStructure from "./TopSellingTable/TableStructure"
 
 const TopSellingLands = (props : any) => {
   const [topSellings, setTopSellings] = useState<any>({})
