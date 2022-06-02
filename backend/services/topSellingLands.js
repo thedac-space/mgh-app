@@ -1,6 +1,6 @@
-const fetch = (...args : any) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
-const filterHistoryByDate = (history: {} , date: Date) => {
+const filterHistoryByDate = (history, date) => {
   //date settings
   let yesterday = new Date(date).setDate(date.getDate() - 1)
   let prevMonth = new Date(date).setMonth(date.getMonth() - 1)
@@ -23,7 +23,7 @@ const filterHistoryByDate = (history: {} , date: Date) => {
   return [ yesterdayCounter, prevMonthCounter, prevYearCounter ]
 }
 
-const sort = (Top: {}[], Aux: Number[], historyLenght: Number, data: {}) => {
+const sort = (Top, Aux, historyLenght, data) => {
   for (let i = 0; i < Aux.length; i++) {
     if (Aux[i] < historyLenght){
       Aux[i] = historyLenght
@@ -33,7 +33,7 @@ const sort = (Top: {}[], Aux: Number[], historyLenght: Number, data: {}) => {
   }
 }
 
-async function downloadMap(metaverse: string) {
+async function downloadMap(metaverse) {
 	let response = {}, from = 0
   let totalTop = [{}, {}, {}, {}, {}], totalAux = [-1, -1, -1, -1, -1]
   let yesterdayTop = [{}, {}, {}, {}, {}], yesterdayAux = [-1, -1, -1, -1, -1]
@@ -54,14 +54,16 @@ async function downloadMap(metaverse: string) {
       const data = {
         tokenId: key,
         requestDate: date,
+        dataLand: response[key],
         dataTable: {
           owner: response[key].owner ? response[key].owner : 'anonymous',
           asset: response[key].coords ? `(x:${response[key].coords.x}, y:${response[key].coords.y})` : `no-asset`,
           from: response[key].last_transaction ? response[key].last_transaction.seller.address : 'anonymous',
-          price: response[key].history ? response[key].history[0] ? response[key].history[totalCounter - 1].price : 0 : 0,
+          price: response[key].history ? response[key].history[0] ? response[key].history[totalCounter - 1].price.toFixed(2) : 0 : 0,
           date: response[key].history ? response[key].history[0] ? response[key].history[totalCounter - 1].time : '00-00-0000' : '00-00-0000',
           symbol: response[key].last_transaction ? response[key].last_transaction.symbol : '(symbol)',
           external_link: response[key].external_link ? response[key].external_link : 'https://opensea.io/',
+          image: response[key].images ? response[key].images.image_url : false
         },
         yesterdayCounter,
         prevMonthCounter,
@@ -77,6 +79,6 @@ async function downloadMap(metaverse: string) {
 	return {totalTop, yesterdayTop, monthTop, yearTop};
 }
 
-export default async function searchTopSellings (metaverse: string) {
+export default async function searchTopSellings (metaverse) {
   return await downloadMap(metaverse)
 }
