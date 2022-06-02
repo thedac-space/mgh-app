@@ -2,6 +2,9 @@ import React, { useEffect, useState, useRef } from 'react'
 import { createChart, UTCTimestamp } from 'lightweight-charts'
 import { typedKeys } from '../../lib/utilities'
 import { Metaverse } from '../../lib/metaverse'
+import { chartSymbolOptions } from '.'
+import { convertETHPrediction } from '../../lib/valuation/valuationUtils'
+import { ICoinPrices } from '../../lib/valuation/valuationTypes'
 
 type ChartData = {
   time: string
@@ -9,12 +12,14 @@ type ChartData = {
 }
 
 interface Props {
+  prices: ICoinPrices
   metaverse: Metaverse
   data: ChartData[]
   label: string
 }
 
-const AnalyticsChart = ({ data, label }: Props) => {
+const AnalyticsChart = ({ data, label, metaverse, prices }: Props) => {
+  const [symbol, setSymbol] = useState<keyof typeof chartSymbolOptions>('ETH')
   const intervalLabels = {
     week: { label: '7D', days: 7 },
     month: { label: '30D', days: 30 },
@@ -71,9 +76,14 @@ const AnalyticsChart = ({ data, label }: Props) => {
       title: label,
     })
     const slicedData = sliceTimeData(data, interval).map((currentData) => {
+      const predictions = convertETHPrediction(
+        prices,
+        currentData.data,
+        metaverse
+      )
       return {
         time: parseInt(currentData.time) as UTCTimestamp,
-        value: currentData.data,
+        value: predictions[chartSymbolOptions[symbol].key],
       }
     })
     areaSeries.setData(slicedData)
@@ -86,26 +96,50 @@ const AnalyticsChart = ({ data, label }: Props) => {
       window.removeEventListener('resize', resizeGraph)
       chart.remove()
     }
-  }, [data, interval])
+  }, [data, interval, metaverse, symbol])
 
   return (
     <div className='gray-box'>
       <div className='max-w-full h-full relative' ref={chartElement}>
-        <div className='absolute top-1 left-1 z-10 flex gap-2'>
-          {typedKeys(intervalLabels).map((arrInterval) => (
-            <button
-              key={arrInterval}
-              className={
-                'gray-box font-semibold rounded-lg p-2 text-xs text-gray-400' +
-                (interval === arrInterval
-                  ? ' text-gray-300 bg-opacity-80 '
-                  : ' hover:text-gray-300 hover:bg-opacity-80')
-              }
-              onClick={() => setInterval(arrInterval)}
-            >
-              {intervalLabels[arrInterval]['label']}
-            </button>
-          ))}
+        {/* Chart Options Wrapper */}
+        <div className='absolute top-1 z-10 flex w-full justify-between'>
+          {/* Interval Buttons */}
+          <div className='flex gap-2 relative left-1'>
+            {typedKeys(intervalLabels).map((arrInterval) => (
+              <button
+                key={arrInterval}
+                className={
+                  'gray-box font-semibold rounded-lg p-2 text-xs text-gray-400' +
+                  (interval === arrInterval
+                    ? ' text-gray-300 bg-opacity-80 '
+                    : ' hover:text-gray-300 hover:bg-opacity-80')
+                }
+                onClick={() => setInterval(arrInterval)}
+              >
+                {intervalLabels[arrInterval]['label']}
+              </button>
+            ))}
+          </div>
+
+          {/* Coin Buttons */}
+          <div className='flex gap-2 relative right-18'>
+            {typedKeys(chartSymbolOptions).map((arrSymbol) => (
+              <button
+                key={arrSymbol}
+                className={
+                  'gray-box font-semibold  rounded-lg p-2 text-xs text-gray-400' +
+                  (symbol === arrSymbol
+                    ? ' text-gray-300 bg-opacity-80 '
+                    : ' hover:text-gray-300 hover:bg-opacity-80')
+                }
+                onClick={() => setSymbol(arrSymbol)}
+              >
+                {arrSymbol === 'METAVERSE'
+                  ? chartSymbolOptions[arrSymbol][metaverse]
+                  : arrSymbol}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
     </div>

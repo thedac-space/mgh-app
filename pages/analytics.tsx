@@ -1,5 +1,4 @@
 import { NextPage } from 'next'
-import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import {
@@ -10,48 +9,35 @@ import {
 import { Metaverse } from '../lib/metaverse'
 import { formatName } from '../lib/utilities'
 import Head from 'next/head'
-import AnalyticsMvChoice from '../components/Analytics/AnalyticsMvChoice'
-const AnalyticsChart = dynamic(
-  () => import('../components/Analytics/AnalyticsChart'),
-  {
-    ssr: false,
-  }
-)
+import {
+  AnalyticsChart,
+  AnalyticsMvChoice,
+  FloorAndVolumeChart,
+  chartRoutes,
+} from '../components/Analytics'
+import { ICoinPrices } from '../lib/valuation/valuationTypes'
 
-const FloorAndVolumeChart = dynamic(
-  () => import('../components/Valuation/FloorAndVolumeChart'),
-  {
-    ssr: false,
-  }
-)
+interface Props {
+  prices: ICoinPrices
+}
 
-const Analytics: NextPage = () => {
+const Analytics: NextPage<Props> = ({ prices }) => {
   const [metaverse, setMetaverse] = useState<Metaverse>('sandbox')
   type RouteValues = Partial<
-    Record<typeof routes[number]['route'], ChartInfo[]>
+    Record<typeof chartRoutes[number]['route'], ChartInfo[]>
   >
   const [values, setValues] = useState<RouteValues>({})
   const [markCap, setMarkCap] = useState(0)
   const [richList, setRichList] = useState<RichList>()
 
-  const routes = [
-    { route: 'avgPriceParcel', label: 'Average Price per Parcel' },
-    { route: 'floorPrice', label: 'Floor Price' },
-    { route: 'avgPriceParcelPerArea', label: 'Average Price per Area' },
-    { route: 'maxPrice', label: 'Max Price' },
-    { route: 'totalNumberOfSales', label: 'Total Sales' },
-    { route: 'stdSalesPrices', label: 'Sales Prices' },
-    { route: 'salesVolume', label: 'Sales Volume' },
-  ]
-
   useEffect(() => {
     const salesVolumeCall = async () => {
       const routesValues: RouteValues = {}
       await Promise.all(
-        routes.map(async (_, i) => {
-          routesValues[routes[i].route] = (await fetchChartData(
+        chartRoutes.map(async (_, i) => {
+          routesValues[chartRoutes[i].route] = (await fetchChartData(
             metaverse,
-            routes[i].route
+            chartRoutes[i].route
           )) as ChartInfo[]
         })
       )
@@ -115,12 +101,13 @@ const Analytics: NextPage = () => {
             </div>
           </li>
           {/* Rest of Charts */}
-          {routes.map((element) => {
+          {chartRoutes.map((element) => {
             if (values[element.route])
               return (
                 <li>
                   <h3 className='text-gray-200 text-2xl'>{element.label}</h3>
                   <AnalyticsChart
+                    prices={prices}
                     metaverse={metaverse}
                     data={values[element.route]!}
                     label={element.label}
@@ -134,4 +121,15 @@ const Analytics: NextPage = () => {
   )
 }
 
+export async function getServerSideProps() {
+  const coin = await fetch(
+    'https://api.coingecko.com/api/v3/simple/price?ids=ethereum%2Cthe-sandbox%2Cdecentraland%2Caxie-infinity&vs_currencies=usd'
+  )
+  const prices = await coin.json()
+  return {
+    props: {
+      prices,
+    },
+  }
+}
 export default Analytics
