@@ -246,7 +246,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
       </Head>
       <section className='w-full h-full relative'>
         {/* Main Header */}
-        <div className='gray-box flex flex-col sm:flex-row justify-between items-center mb-8'>
+        <div className='gray-box flex flex-col lg:flex-row justify-between items-center mb-8'>
           <h1 className='text-transparent bg-clip-text lg:text-5xl text-3xl bg-gradient-to-br from-blue-500 via-green-400 to-green-500 mb-0 sm:mb-2'>
             LAND Valuation
           </h1>
@@ -408,7 +408,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
         {/* Daily Volume and Floor Price Wrapper */}
         {metaverse && (
           <Fade duration={600} className='w-full'>
-            <div className='flex flex-col sm:flex-row space-y-5 sm:space-y-0 space-x-0 sm:space-x-5 md:space-x-10 items-stretch justify-between w-full'>
+            <div className='flex flex-col sm:flex-row space-y-5 sm:space-y-0 space-x-0 sm:space-x-5 md:space-x-10 items-stretch justify-between w-full mb-8'>
               {/* Daily Volume */}
               <SalesVolumeDaily metaverse={metaverse} coinPrices={prices} />
               {/* Floor Price */}
@@ -416,12 +416,8 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                 <FloorPriceTracker metaverse={metaverse} coinPrices={prices} />
               </div>
             </div>
-            {/*Floor and Volume Graph*/}
-            <div className='flex flex-col shadow-blck rounded-xl py-3 px-4 w-full bg-grey-dark bg-opacity-20 '>
-              <FloorAndVolumeChart metaverse={metaverse} />
-            </div>
-            <div className='flex flex-col items-start shadow-blck rounded-xl py-3 px-4 w-full bg-grey-dark bg-opacity-20 text-left'>
-              <p className={`text-xs sm:text-sm text-gray-400`}>
+            <div className='flex flex-col items-start shadow-blck rounded-xl py-3 px-4 w-full bg-grey-dark bg-opacity-20 text-left mb-8'>
+              <p className='text-xs sm:text-sm text-gray-400'>
                 The MGH DAO does not provide, personalized investment
                 recommendations or advisory services. Any information provided
                 through the land evaluation tool and others is not, and should

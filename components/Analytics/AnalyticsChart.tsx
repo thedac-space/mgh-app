@@ -5,6 +5,7 @@ import { Metaverse } from '../../lib/metaverse'
 import { chartSymbolOptions } from '.'
 import { convertETHPrediction } from '../../lib/valuation/valuationUtils'
 import { ICoinPrices } from '../../lib/valuation/valuationTypes'
+import ChartLoader from './ChartLoader'
 
 type ChartData = {
   time: string
@@ -15,10 +16,17 @@ interface Props {
   prices: ICoinPrices
   metaverse: Metaverse
   data: ChartData[]
+  fetching: boolean
   label: string
 }
 
-const AnalyticsChart = ({ data, label, metaverse, prices }: Props) => {
+const AnalyticsChart = ({
+  data,
+  label,
+  metaverse,
+  prices,
+  fetching,
+}: Props) => {
   const [symbol, setSymbol] = useState<keyof typeof chartSymbolOptions>('ETH')
   const intervalLabels = {
     week: { label: '7D', days: 7 },
@@ -73,7 +81,7 @@ const AnalyticsChart = ({ data, label, metaverse, prices }: Props) => {
       bottomColor: 'rgba(38,198,218, 0.04)',
       lineColor: 'rgba(38,198,218, 1)',
       lineWidth: 2,
-      title: label,
+      title: window.innerWidth > 500 ? label : undefined,
     })
     const slicedData = sliceTimeData(data, interval).map((currentData) => {
       const predictions = convertETHPrediction(
@@ -101,10 +109,12 @@ const AnalyticsChart = ({ data, label, metaverse, prices }: Props) => {
   return (
     <div className='gray-box'>
       <div className='max-w-full h-full relative' ref={chartElement}>
-        {/* Chart Options Wrapper */}
-        <div className='absolute top-1 z-10 flex w-full justify-between'>
+        {fetching && <ChartLoader />}
+
+        {/* /* Chart Options Wrapper */}
+        <div className='absolute top-1 z-10 flex w-full flex-col gap-4 sm:flex-row justify-between'>
           {/* Interval Buttons */}
-          <div className='flex gap-2 relative left-1'>
+          <div className='flex gap-2 relative left-1 w-fit'>
             {typedKeys(intervalLabels).map((arrInterval) => (
               <button
                 key={arrInterval}
@@ -122,7 +132,7 @@ const AnalyticsChart = ({ data, label, metaverse, prices }: Props) => {
           </div>
 
           {/* Coin Buttons */}
-          <div className='flex gap-2 relative right-18'>
+          <div className='sm:flex gap-2 relative left-1 sm:left-auto sm:right-18 w-fit hidden'>
             {typedKeys(chartSymbolOptions).map((arrSymbol) => (
               <button
                 key={arrSymbol}

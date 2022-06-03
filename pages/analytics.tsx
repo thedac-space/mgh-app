@@ -12,13 +12,13 @@ import Head from 'next/head'
 import {
   AnalyticsChart,
   AnalyticsMvChoice,
-  FloorAndVolumeChart,
   chartRoutes,
 } from '../components/Analytics'
 import { ICoinPrices } from '../lib/valuation/valuationTypes'
 import { RiLoader3Fill } from 'react-icons/ri'
+import { Loader } from '../components'
 
-const analyticsState = ['loading', 'loaded', 'error'] as const
+const analyticsState = ['loading', 'loaded', 'firstLoad'] as const
 type AnalyticsState = typeof analyticsState[number]
 
 interface Props {
@@ -31,14 +31,15 @@ const Analytics: NextPage<Props> = ({ prices }) => {
     Record<typeof chartRoutes[number]['route'], ChartInfo[]>
   >
   const [values, setValues] = useState<RouteValues>({})
-  const [state, setState] = useState<AnalyticsState>('loading')
-  const [loading, loaded, error] = getState(state, [...analyticsState])
+  const [state, setState] = useState<AnalyticsState>('firstLoad')
+  const [loading, loaded, firstLoad] = getState(state, [...analyticsState])
   const [markCap, setMarkCap] = useState(0)
   const [richList, setRichList] = useState<RichList>()
 
   useEffect(() => {
     const salesVolumeCall = async () => {
-      setState('loading')
+      //firstLoad shows loader instead of charts, we use it for the initial Load.
+      state !== 'firstLoad' && setState('loading')
       const routesValues: RouteValues = {}
       await Promise.all(
         chartRoutes.map(async (_, i) => {
@@ -62,9 +63,9 @@ const Analytics: NextPage<Props> = ({ prices }) => {
         <title>MGH | Analytics</title>
         <meta name='description' content='Analytics Dashboard' />
       </Head>
-      <section className='w-full max-w-7xl'>
+      <section className='w-full max-w-7xl py-8 xl:pt-0'>
         {/* Main Header */}
-        <div className='gray-box flex flex-col sm:flex-row justify-between items-center mb-8'>
+        <div className='gray-box flex flex-col md:flex-row justify-between items-center mb-16'>
           <h1 className='text-transparent bg-clip-text lg:text-5xl text-3xl bg-gradient-to-br green-text-gradient mb-0 sm:mb-2'>
             Analytics
           </h1>
@@ -73,23 +74,25 @@ const Analytics: NextPage<Props> = ({ prices }) => {
             {/* Links */}
             {['portfolio', 'watchlist', 'valuation'].map((option) => (
               <Link key={option} href={`/${option}`}>
-                <a className='hover:scale-105 font-medium text-white px-5 py-3 flex items-center justify-center rounded-xl bg-gradient-to-br from-blue-500/30 to-green-500/30 transition-all duration-300'>
-                  <span className='text-xl'>{formatName(option)}</span>
+                <a className='hover:scale-105 font-medium text-white px-3 sm:px-5 py-3 flex items-center justify-center rounded-xl bg-gradient-to-br from-blue-500/30 to-green-500/30 transition-all duration-300'>
+                  <span className='text-base sm:text-lg md:text-xl'>
+                    {formatName(option)}
+                  </span>
                 </a>
               </Link>
             ))}
           </div>
         </div>
         {/* Wrapper Metaverse Buttons - MarketCap/Owners */}
-        <div className='flex flex-col sm:flex-row gap-5 gray-box bg-opacity-5 w-fit m-auto mb-8'>
+        <div className='flex flex-col lg:flex-row gap-5 gray-box bg-opacity-5 w-fit m-auto mb-16 p-3 sm:p-5 '>
           {/* Metaverse Choice Buttons */}
           <AnalyticsMvChoice
             metaverse={metaverse}
             setMetaverse={setMetaverse}
           />
           {/* Market Cap - Owners Land % */}
-          <div className='w-fit flex flex-col justify-center '>
-            <p className='text-lg font-medium text-cyan-300 mb-8 whitespace-nowrap flex gap-1'>
+          <div className='w-fit flex flex-col justify-center text-base  sm:text-lg font-medium text-cyan-300 whitespace-nowrap'>
+            <p className='mb-8 flex gap-1'>
               Lands held by the top 1% of holders:{' '}
               {loaded ? (
                 richList?.pctParcels &&
@@ -98,7 +101,7 @@ const Analytics: NextPage<Props> = ({ prices }) => {
                 <RiLoader3Fill className='animate-spin-slow h-5 w-5 xs:h-6 xs:w-6' />
               )}
             </p>
-            <p className='text-lg font-medium text-cyan-300 flex whitespace-nowrap gap-1'>
+            <p className='flex gap-1'>
               Market Cap:{' '}
               {loaded ? (
                 `${markCap.toFixed(2)} ETH`
@@ -109,31 +112,32 @@ const Analytics: NextPage<Props> = ({ prices }) => {
           </div>
         </div>
 
-        {/* Charts Wrapper */}
-        <ul className='flex flex-col gap-4'>
-          {/* Floor Volume Chart */}
-          <li>
-            <h3 className='text-gray-200 text-2xl'>Floor and Volume Price</h3>
-            <div className='gray-box'>
-              <FloorAndVolumeChart metaverse={metaverse} />
-            </div>
-          </li>
-          {/* Rest of Charts */}
-          {chartRoutes.map((element) => {
-            if (values[element.route])
-              return (
-                <li>
-                  <h3 className='text-gray-200 text-2xl'>{element.label}</h3>
-                  <AnalyticsChart
-                    prices={prices}
-                    metaverse={metaverse}
-                    data={values[element.route]!}
-                    label={element.label}
-                  />
-                </li>
-              )
-          })}
-        </ul>
+        {/* Loader for Initial Fetch */}
+        {firstLoad ? (
+          <Loader />
+        ) : (
+          /* Charts Wrapper */
+          <ul className='flex flex-col gap-12'>
+            {/* Charts */}
+            {chartRoutes.map((element) => {
+              if (values[element.route])
+                return (
+                  <li>
+                    <h3 className='text-gray-300 text-lg md:text-xl lg:text-2xl'>
+                      {element.label}
+                    </h3>
+                    <AnalyticsChart
+                      fetching={loading}
+                      prices={prices}
+                      metaverse={metaverse}
+                      data={values[element.route]!}
+                      label={element.label}
+                    />
+                  </li>
+                )
+            })}
+          </ul>
+        )}
       </section>
     </>
   )

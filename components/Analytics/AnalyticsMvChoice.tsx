@@ -17,7 +17,7 @@ const AnalyticsMvChoice = ({ metaverse, setMetaverse }: Props) => {
   return (
     <div className='w-full h-full p-2'>
       {/* Metaverse Buttons */}
-      <div className='flex justify-center gap-4'>
+      <div className='flex justify-center gap-2 sm:gap-4'>
         {typedKeys(mvOptions).map((landKey) => (
           <button
             key={landKey}
