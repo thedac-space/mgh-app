@@ -1,6 +1,6 @@
-const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+const fetch = (...args: any) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
-const filterHistoryByDate = (history, date) => {
+const filterHistoryByDate = (history: any, date: Date) => {
   //date settings
   let yesterday = new Date(date).setDate(date.getDate() - 1)
   let prevMonth = new Date(date).setMonth(date.getMonth() - 1)
@@ -13,17 +13,17 @@ const filterHistoryByDate = (history, date) => {
 
   //filter function
   for (const keyHistory in history) {
-    if (new Date(history[keyHistory].timestamp) > yesterday)
+    if (parseInt(`${new Date(history[keyHistory].timestamp)}`) > yesterday)
       yesterdayCounter = yesterdayCounter + 1
-    if (new Date(history[keyHistory].timestamp)> prevMonth) 
+    if (parseInt(`${new Date(history[keyHistory].timestamp)}`) > prevMonth) 
       prevMonthCounter = prevMonthCounter + 1
-    if (new Date(history[keyHistory].timestamp) > prevYear)
+    if (parseInt(`${new Date(history[keyHistory].timestamp)}`) > prevYear)
       prevYearCounter = prevYearCounter + 1
   }
   return [ yesterdayCounter, prevMonthCounter, prevYearCounter ]
 }
 
-const sort = (Top, Aux, historyLenght, data) => {
+const sort = (Top: {}[], Aux: any, historyLenght: Number, data: any) => {
   for (let i = 0; i < Aux.length; i++) {
     if (Aux[i] < historyLenght){
       Aux[i] = historyLenght
@@ -33,8 +33,8 @@ const sort = (Top, Aux, historyLenght, data) => {
   }
 }
 
-async function downloadMap(metaverse) {
-	let response = {}, from = 0
+async function downloadMap(metaverse: string) {
+	let response:any = {}, from = 0
   let totalTop = [{}, {}, {}, {}, {}], totalAux = [-1, -1, -1, -1, -1]
   let yesterdayTop = [{}, {}, {}, {}, {}], yesterdayAux = [-1, -1, -1, -1, -1]
   let monthTop = [{}, {}, {}, {}, {}], monthAux = [-1, -1, -1, -1, -1]
@@ -79,6 +79,6 @@ async function downloadMap(metaverse) {
 	return {totalTop, yesterdayTop, monthTop, yearTop};
 }
 
-export default async function searchTopSellings (metaverse) {
+export default async function searchTopSellings (metaverse: string) {
   return await downloadMap(metaverse)
 }

@@ -17,7 +17,6 @@ const TopSellingLands = (props : {metaverse : string}) => {
   async function waitingData(metaverse: string) {
     const data = await searchTopSellings(metaverse)
     setTopSellings(data)
-    console.log(data)
   }
 
   useEffect(() => {
