@@ -2,7 +2,7 @@ import React from 'react'
 
 interface Props {
   filterBy: string
-  setFilterBy: any
+  setFilterBy: Function
 }
 
 const TopSellingFilter = ({ filterBy, setFilterBy }: Props) => {

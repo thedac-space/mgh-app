@@ -1,15 +1,17 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import TableItem from "./TableItem"
 import { handleOrder, handleOrderAsset, handleOrderRank, handleOrderPrice } from "./Order"
+import { TopSellingRequestItem } from "../../../types/TopSelling"
 
-const TableStructure = ({filterby} : {filterby: { element: any, data: any}}) => {
-  const [data, setData] = useState<any>(filterby.data)
+interface filterBy {
+  element: String,
+  data: [key: TopSellingRequestItem]
+}
+
+const TableStructure = ({filterby} : {filterby: filterBy}) => {
+  const [data, setData] = useState<[key: TopSellingRequestItem]>(filterby.data)
   const [sortDir, setSortDir] = useState<boolean>(false)
-  
-  useEffect(() => {
-    console.log(data)
-  }, [data])
-  
+
   const thStyle = "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-slate-800 text-slate-300 border-slate-700 cursor-pointer"
 
   return(
@@ -29,7 +31,7 @@ const TableStructure = ({filterby} : {filterby: { element: any, data: any}}) => 
           </thead>
           <tbody>
             {
-              data.map((value: any) => <TableItem key={value.position} item={value}/>)
+              data.map((value: TopSellingRequestItem) => <TableItem key={value.position} item={value}/>)
             }
           </tbody>
         </ table> :

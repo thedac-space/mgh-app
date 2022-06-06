@@ -1,7 +1,7 @@
-const TableItem = ({ item } : { item: any }) => {
-  let dataTable
-  if (item.data)
-    dataTable = item.data.dataTable
+import { TopSellingDataTable, TopSellingRequestItem } from "../../../types/TopSelling"
+
+const TableItem = ({ item } : { item: TopSellingRequestItem }) => {
+  let dataTable: TopSellingDataTable = item.data.dataTable
     
   return (
     <tr>
