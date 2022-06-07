@@ -11,13 +11,21 @@ const PurchaseOptionButton = ({ option }: Props) => {
     12: { monthlyPrice: 100, discount: 50 },
   }
   return (
-    <button className='gray-box h-full flex-grow'>
-      <h3 className='text-xl'>
+    // Wrapper
+    <button className='gray-box flex flex-col items-center gap-2'>
+      {/* Header */}
+      <h4 className='text-2xl border-0 font-medium'>
         {option} Month{option > 1 ? 's' : ''}
-      </h3>
-      <p>{purchaseSwitch[option].monthlyPrice} per Month</p>
+      </h4>
+      {/* Price per Month */}
+      <p className='font-medium text-gray-300'>
+        {purchaseSwitch[option].monthlyPrice}$/Month
+      </p>
+      {/* Discount (if any) */}
       {purchaseSwitch[option].discount && (
-        <span>Save {purchaseSwitch[option].discount}%</span>
+        <span className='bg-red-800 px-2 text-white'>
+          Save {purchaseSwitch[option].discount}%
+        </span>
       )}{' '}
     </button>
   )
