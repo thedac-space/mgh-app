@@ -4,6 +4,7 @@ import React from 'react'
 import {
   PurchaseKeyFeatures,
   PurchaseOptionButton,
+  PurchaseRoleSign,
 } from '../components/Purchase'
 
 const Purchase: NextPage = () => {
@@ -13,21 +14,19 @@ const Purchase: NextPage = () => {
         <title>MGH | Purchase</title>
         <meta name='description' content='Purchase VIP Status' />
       </Head>
-      <section className='text-gray-200'>
+      <section className='text-gray-200 max-w-7xl'>
         {/* Header */}
-        <h1 className='text-4xl'>Unlock premium Metaverse Tools!</h1>
+        <h1 className='text-center md:text-4xl lg:text-5xl text-3xl green-text-gradient mb-8'>
+          Unlock premium Metaverse Tools!
+        </h1>
         {/* Role Sign */}
-        <div>
-          <h3>Role: "Premium"</h3>
-          <p>Active until: 12.12.2012</p>
-        </div>
+        <PurchaseRoleSign />
         {/* Purchase Options */}
-        <div className='flex gap-4'>
+        <div className='flex gap-4 mb-8 justify-around'>
           {([1, 3, 12] as const).map((option) => (
             <PurchaseOptionButton key={option} option={option} />
           ))}
         </div>
-
         {/* Features */}
         <PurchaseKeyFeatures />
       </section>
