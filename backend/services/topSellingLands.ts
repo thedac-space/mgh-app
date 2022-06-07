@@ -1,5 +1,4 @@
-const fetch = (...args: any) => import('node-fetch').then(({default: fetch}) => fetch(...args));
-
+import { Metaverse } from '../../lib/metaverse';
 const filterHistoryByDate = (history: any, date: Date) => {
   //date settings
   let yesterday = new Date(date).setDate(date.getDate() - 1)
@@ -33,7 +32,7 @@ const sort = (Top: {}[], Aux: any, historyLenght: Number, data: any) => {
   }
 }
 
-async function downloadMap(metaverse: string) {
+async function downloadMap(metaverse: Metaverse) {
 	let response:any = {}, from = 0
   let totalTop = [{}, {}, {}, {}, {}], totalAux = [-1, -1, -1, -1, -1]
   let yesterdayTop = [{}, {}, {}, {}, {}], yesterdayAux = [-1, -1, -1, -1, -1]
@@ -43,7 +42,7 @@ async function downloadMap(metaverse: string) {
 		let url = "https://services.itrmachines.com/" + metaverse + "/requestMap?from=" + from + "&size=2000";
 		from += 2000;
 		console.log("> requesting " + metaverse + ":", from);
-		response = await fetch(url, { method: 'GET' });
+		response = await fetch(url);
 		response = await response.json();
 		for (let key of Object.keys(response)){
       const date = new Date()
@@ -79,6 +78,6 @@ async function downloadMap(metaverse: string) {
 	return {totalTop, yesterdayTop, monthTop, yearTop};
 }
 
-export default async function searchTopSellings (metaverse: string) {
+export default async function TopSellingLands (metaverse: Metaverse) {
   return await downloadMap(metaverse)
 }

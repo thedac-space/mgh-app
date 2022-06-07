@@ -1,21 +1,24 @@
 import { useEffect, useState } from "react"
 import searchTopSellings from '../../backend/services/topSellingLands'
-import TopSellingFilter from "./TopSellingTable/TopSellingFilter"
+
 import TableStructure from "./TopSellingTable/TableStructure"
 import { TopSellings } from "../../types/TopSelling"
+import { Metaverse } from "../../lib/metaverse"
+import TopSellingFilter, { TopSellingFilterBy } from "./TopSellingTable/TopSellingFilter"
 
-const TopSellingLands = (props : {metaverse : string}) => {
+const TopSellingLands = (props : {metaverse : Metaverse}) => {
   const [topSellings, setTopSellings] = useState<TopSellings | any>({})
-  const [metaverse, setMetaverse] = useState<string>(props.metaverse)
-  const [filterBy, setFilterBy] = useState('totalTop')
+  const [metaverse, setMetaverse] = useState<Metaverse>(props.metaverse)
+  const [filterBy, setFilterBy] = useState<TopSellingFilterBy>('totalTop')
   
   if (!(props.metaverse == metaverse)){
     setTopSellings({})
     setMetaverse(props.metaverse)
   }
   
-  async function waitingData(metaverse: string) {
+  async function waitingData(metaverse: Metaverse) {
     const data = await searchTopSellings(metaverse)
+    console.log({data})
     setTopSellings(data)
   }
 
