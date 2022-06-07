@@ -7,7 +7,7 @@ const PurchaseRoleSign = () => {
   return (
     /* Role Sign */
     <div className='m-auto w-fit gray-box bg-opacity-10 mb-8'>
-      <h3 className='text-3xl text-center'>
+      <h3 className='text-2xl text-center'>
         Tier: {role ? role.tier : 'None'}
       </h3>
       {role && <p>Active until: {new Date(role.expiration).toDateString()}</p>}

@@ -2,6 +2,7 @@ import { NextPage } from 'next'
 import Head from 'next/head'
 import React from 'react'
 import {
+  PurchaseCoinList,
   PurchaseKeyFeatures,
   PurchaseOptionButton,
   PurchaseRoleSign,
@@ -29,6 +30,8 @@ const Purchase: NextPage = () => {
         </div>
         {/* Features */}
         <PurchaseKeyFeatures />
+        {/* Coin List */}
+        <PurchaseCoinList />
       </section>
     </>
   )
