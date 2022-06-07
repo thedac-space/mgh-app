@@ -21,6 +21,6 @@
     "**/*.tsx",
     "lib/heatmap/*.d.ts",
     "lib/heatmap/fakeImpetus.js"
-  ],
+, "backend/services/topSellingLands.ts"  ],
   "exclude": ["node_modules"]
 }
