@@ -94,7 +94,7 @@ export type symbolPredictions =
   | 'metaversePrediction'
 export type Role = {
   id: 0 | 1 | 2
-  tier: 5
+  tier: 1 | 5
   expiration: number
   calls: number
 }
