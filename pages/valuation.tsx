@@ -6,23 +6,12 @@ import { HiOutlineSearch } from 'react-icons/hi'
 import { BsQuestionCircle } from 'react-icons/bs'
 import Link from 'next/link'
 import PriceCard from '../components/PriceCard'
-import { Metaverse } from '../lib/enums'
 import { IAPIData, IPredictions } from '../lib/types'
 import FloorPriceTracker from '../components/Valuation/FloorPriceTracker'
 import SalesVolumeDaily from '../components/Valuation/SalesVolumeDaily'
-import { MostUnderValuedLand } from '../components/Valuation'
-import {
-  convertETHPrediction,
-  convertMANAPrediction,
-} from '../lib/valuation/valuationUtils'
+import { convertETHPrediction } from '../lib/valuation/valuationUtils'
 import { useRouter } from 'next/router'
-import dynamic from 'next/dynamic'
-const FloorAndVolumeChart = dynamic(
-  () => import('../components/Valuation/FloorAndVolumeChart'),
-  {
-    ssr: false,
-  }
-)
+import { Metaverse } from '../lib/metaverse'
 
 const ValuationPage: NextPage = ({ prices }: any) => {
   const { query } = useRouter()
@@ -37,7 +26,7 @@ const ValuationPage: NextPage = ({ prices }: any) => {
   const [tokenId, setTokenId] = useState('')
   const [comingFromLink, setComingFromLink] = useState<Boolean>()
 
-  const [metaverse, setMetaverse] = useState<Metaverse>(Metaverse.SANDBOX)
+  const [metaverse, setMetaverse] = useState<Metaverse>('sandbox')
 
   const handleAPIData = (data: any) => {
     setAPIData(data)
@@ -52,17 +41,17 @@ const ValuationPage: NextPage = ({ prices }: any) => {
     console.log(predictions)
     setPredictions(predictions)
 
-    // if (data.metaverse === Metaverse.SANDBOX) {
+    // if (data.metaverse === 'sandbox') {
     //     const ethPrediction = data.prices.predicted_price;
-    //     const predictions = convertETHPrediction(prices, ethPrediction, Metaverse.SANDBOX)
+    //     const predictions = convertETHPrediction(prices, ethPrediction, 'sandbox')
     //     setPredictions(predictions)
-    // } else if (data.metaverse === Metaverse.DECENTRALAND) {
+    // } else if (data.metaverse === 'decentraland') {
     //     const manaPrediction = data.prices.predicted_price;
     //     const predictions = convertMANAPrediction(prices, manaPrediction)
     //     setPredictions(predictions)
-    // } else if (data.metaverse === Metaverse.AXIE_INFINITY) {
+    // } else if (data.metaverse === 'axie-infinity') {
     //     const manaPrediction = data.prices.predicted_price;
-    //     const predictions = convertETHPrediction(prices, manaPrediction, Metaverse.AXIE_INFINITY)
+    //     const predictions = convertETHPrediction(prices, manaPrediction, 'axie-infinity')
     //     setPredictions(predictions)
     // }
 
@@ -191,9 +180,9 @@ const ValuationPage: NextPage = ({ prices }: any) => {
 
               <div className='flex space-x-5'>
                 <div
-                  onClick={() => setMetaverse(Metaverse.SANDBOX)}
+                  onClick={() => setMetaverse('sandbox')}
                   className={`flex flex-col items-center justify-center space-y-2 rounded-xl cursor-pointer p-2 px-3 pt-4 w-24 md:w-30 h-24 md:h-30 group focus:outline-none ${
-                    metaverse === Metaverse.SANDBOX
+                    metaverse === 'sandbox'
                       ? 'border-opacity-100 text-gray-200'
                       : 'border-opacity-40 hover:border-opacity-100 text-gray-400 hover:text-gray-200'
                   } border border-gray-400 focus:border-opacity-100 transition duration-300 ease-in-out`}
@@ -201,17 +190,15 @@ const ValuationPage: NextPage = ({ prices }: any) => {
                   <img
                     src='/images/the-sandbox-sand-logo.png'
                     className={`h-12 md:h-14 ${
-                      metaverse === Metaverse.SANDBOX
-                        ? 'grayscale-0'
-                        : 'grayscale'
+                      metaverse === 'sandbox' ? 'grayscale-0' : 'grayscale'
                     } group-hover:grayscale-0 transition duration-300 ease-in-out`}
                   />
                   <p className='font-medium text-xs md:text-sm pt-1'>Sandbox</p>
                 </div>
                 <div
-                  onClick={() => setMetaverse(Metaverse.DECENTRALAND)}
+                  onClick={() => setMetaverse('decentraland')}
                   className={`flex flex-col items-center justify-center space-y-2 rounded-xl cursor-pointer p-2 px-3 pt-4 w-24 md:w-30 h-24 md:h-30 group focus:outline-none ${
-                    metaverse === Metaverse.DECENTRALAND
+                    metaverse === 'decentraland'
                       ? 'border-opacity-100 text-gray-200'
                       : 'text-gray-400 hover:text-gray-200 border-opacity-40 hover:border-opacity-100'
                   } border border-gray-400 focus:border-opacity-100 transition duration-300 ease-in-out`}
@@ -219,9 +206,7 @@ const ValuationPage: NextPage = ({ prices }: any) => {
                   <img
                     src='/images/decentraland-mana-logo.png'
                     className={`h-12 md:h-14 ${
-                      metaverse === Metaverse.DECENTRALAND
-                        ? 'grayscale-0'
-                        : 'grayscale'
+                      metaverse === 'decentraland' ? 'grayscale-0' : 'grayscale'
                     } group-hover:grayscale-0 transition duration-300 ease-in-out`}
                   />
                   <p className='font-medium text-xs md:text-sm pt-1'>
@@ -229,9 +214,9 @@ const ValuationPage: NextPage = ({ prices }: any) => {
                   </p>
                 </div>
                 <div
-                  onClick={() => setMetaverse(Metaverse.AXIE_INFINITY)}
+                  onClick={() => setMetaverse('axie-infinity')}
                   className={`flex flex-col items-center justify-center space-y-2 rounded-xl cursor-pointer p-2 px-3 pt-4 w-24 md:w-30 h-24 md:h-30 group focus:outline-none ${
-                    metaverse === Metaverse.AXIE_INFINITY
+                    metaverse === 'axie-infinity'
                       ? 'border-opacity-100 text-gray-200'
                       : 'text-gray-400 hover:text-gray-200 border-opacity-40 hover:border-opacity-100'
                   } border border-gray-400 focus:border-opacity-100 transition duration-300 ease-in-out`}
@@ -239,7 +224,7 @@ const ValuationPage: NextPage = ({ prices }: any) => {
                   <img
                     src='/images/axie-infinity-axs-logo.png'
                     className={`h-12 md:h-14 ${
-                      metaverse === Metaverse.AXIE_INFINITY
+                      metaverse === 'axie-infinity'
                         ? 'grayscale-0'
                         : 'grayscale'
                     } group-hover:grayscale-0 transition duration-300 ease-in-out`}

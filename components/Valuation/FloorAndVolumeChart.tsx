@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react'
-import { Metaverse } from '../../lib/enums'
 import { createChart, UTCTimestamp } from 'lightweight-charts'
 import { getValuationDailyData } from '../../lib/FirebaseUtilities'
 import { typedKeys } from '../../lib/utilities'
+import { Metaverse } from '../../lib/metaverse'
 
 interface IChartValues {
   time: number
@@ -27,7 +27,7 @@ const FloorAndVolumeChart = ({ metaverse }: { metaverse: Metaverse }) => {
   const [symbol, setSymbol] = useState<keyof typeof symbolOptions>('ETH')
 
   useEffect(() => {
-    (async () => setValues(await getValuationDailyData(metaverse)))()
+    ;(async () => setValues(await getValuationDailyData(metaverse)))()
   }, [metaverse])
 
   useEffect(() => {
@@ -112,7 +112,7 @@ const FloorAndVolumeChart = ({ metaverse }: { metaverse: Metaverse }) => {
       <div className='absolute top-1 left-1 z-10 flex gap-2'>
         {typedKeys(symbolOptions).map((arrSymbol) => (
           <button
-          key={arrSymbol}
+            key={arrSymbol}
             className={
               'gray-box font-semibold  rounded-lg p-2 text-xs text-gray-400' +
               (symbol === arrSymbol

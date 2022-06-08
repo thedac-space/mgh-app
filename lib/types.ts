@@ -1,4 +1,5 @@
-import { Metaverse, Network } from './enums'
+import { Network } from './enums'
+import { Metaverse } from './metaverse'
 
 export interface NetworkState {
   value: Network
@@ -65,7 +66,7 @@ export interface IAPIData {
 }
 
 export interface IPredictions {
-    ethPrediction: number;
-    usdPrediction: number;
-    metaversePrediction?: number;
+  ethPrediction: number
+  usdPrediction: number
+  metaversePrediction?: number
 }

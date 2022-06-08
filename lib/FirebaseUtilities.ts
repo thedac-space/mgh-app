@@ -10,7 +10,7 @@ import {
   setDoc,
 } from 'firebase/firestore/lite'
 import { Score } from '../components/Valuation/LandLikeBox'
-import { Metaverse } from './enums'
+import { Metaverse } from './metaverse'
 
 // Firebase Init
 const firebaseConfig = {

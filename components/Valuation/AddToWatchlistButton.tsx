@@ -1,22 +1,16 @@
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import { Metaverse } from '../../lib/enums'
 import {
   addLandToWatchList,
   createUser,
   getUserInfo,
 } from '../../lib/FirebaseUtilities'
+import { Metaverse } from '../../lib/metaverse'
 import { useAppSelector } from '../../state/hooks'
 
 interface Props {
   landId: string
   metaverse: Metaverse
-}
-
-interface UserWatchlist {
-  'decentraland-watchlist': string[]
-  'sandbox-watchlist': string[]
-  'axie-infinity-watchlist': string[]
 }
 
 type WatchlistButtonState =
