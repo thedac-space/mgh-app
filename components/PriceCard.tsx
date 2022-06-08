@@ -21,7 +21,11 @@ const PriceCard = ({
   predictions,
 }: PriceCardProps) => {
   const { address } = useAppSelector((state) => state.account)
-  const options = SocialMediaOptions(apiData, predictions)
+  const options = SocialMediaOptions(
+    apiData?.tokenId,
+    apiData?.metaverse,
+    predictions
+  )
 
   if (!apiData || !predictions) {
     return <></>
