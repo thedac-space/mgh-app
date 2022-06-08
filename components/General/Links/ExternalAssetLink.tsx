@@ -2,7 +2,7 @@ import { FiExternalLink } from 'react-icons/fi'
 import { ExternalLink } from '.'
 import { OptimizedImage } from '..'
 import { IAPIData } from '../../../lib/types'
-import { formatMetaverseName } from '../../../lib/utilities'
+import { formatName } from '../../../lib/utilities'
 import {
   handleLandName,
   handleTokenID,
@@ -64,10 +64,7 @@ const ExternalAssetLink = ({ apiData, width, height, layout }: Props) => {
               text='OpenSea'
             />
           )}
-          <ExternalLink
-            href={external_link}
-            text={formatMetaverseName(metaverse)}
-          />
+          <ExternalLink href={external_link} text={formatName(metaverse)} />
         </div>
       </div>
     </div>
