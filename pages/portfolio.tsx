@@ -32,7 +32,10 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   const { query, push } = useRouter()
   const [openModal, setOpenModal] = useState(false)
   const { web3Provider, disconnectWallet } = useConnectWeb3()
-
+  const contractAddresses = {
+    sandbox: '0x5cc5b05a8a13e3fbdb0bb9fccd98d38e50f90c38',
+    decentraland: '0xF87E31492Faf9A91B02Ee0dEAAd50d51d56D5d4d',
+  }
   const initialWorth = {
     ethPrediction: 0,
     usdPrediction: 0,
@@ -120,7 +123,7 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
               rawIds = await getUserNFTs(
                 provider,
                 formatAddress((externalWallet as string) ?? address),
-                metaverse
+                contractAddresses[metaverse]
               )
             }
             if (!rawIds || rawIds.length <= 0) return
