@@ -2,28 +2,42 @@ import { useEffect, useState } from 'react'
 import { ExternalLink, OptimizedImage, PriceList } from '../General'
 import { IPredictions } from '../../lib/types'
 import { FiExternalLink } from 'react-icons/fi'
-import { IPriceCard } from '../../lib/valuation/valuationTypes'
+import {
+  ICoinPrices,
+  SingleLandAPIResponse,
+} from '../../lib/valuation/valuationTypes'
 import React from 'react'
 import { FaTrash } from 'react-icons/fa'
-// import { useVisible } from '../../lib/hooks'
 import {
   handleLandName,
   handleTokenID,
+  convertETHPrediction,
 } from '../../lib/valuation/valuationUtils'
 import { BsTwitter } from 'react-icons/bs'
 import { SocialMediaOptions } from '../../lib/socialMediaOptions'
-import { Metaverse } from '../../lib/metaverse'
 import { formatName } from '../../lib/utilities'
-interface IWatchListCard extends IPriceCard {
-  currentPrice?: number
+import { createOpenSeaLink } from '../../backend/services/openSeaDataManager'
+import { Metaverse } from '../../lib/metaverse'
+interface IWatchListCard {
+  land: SingleLandAPIResponse
+  landId: string
+  metaverse: Metaverse
   remove: (landId: string, metaverse: Metaverse) => Promise<void>
+  coinPrices: ICoinPrices
 }
 const LandItem = ({
-  apiData,
-  predictions,
-  currentPrice,
+  coinPrices,
+  land,
+  landId,
+  metaverse,
   remove,
 }: IWatchListCard) => {
+  const predictions = convertETHPrediction(
+    coinPrices,
+    land.eth_predicted_price,
+    metaverse
+  )
+  const openSeaLink = createOpenSeaLink(metaverse, landId)
   const mobile = window.innerWidth < 640
   const [expanded, setExpanded] = useState(mobile)
   const imgSize = mobile ? 170 : expanded ? 170 : 70
@@ -31,25 +45,14 @@ const LandItem = ({
     usdPrediction: predictions?.usdPrediction,
   })
 
-  const {
-    images,
-    metaverse,
-    coords,
-    opensea_link,
-    name,
-    external_link,
-    tokenId,
-  } = apiData
-
-  console.log({ apiData })
   // SocialMediaOptions contains all options with their texts, icons, etc..
-  const options = SocialMediaOptions(apiData, predictions)
+  const options = SocialMediaOptions(landId, metaverse, predictions)
 
   // Mobile view is always expanded
   const handleExpanded = () => {
     window.innerWidth < 640 ? setExpanded(true) : setExpanded(!expanded)
   }
-  const notListed = isNaN(currentPrice!)
+  const notListed = typeof land.current_price !== 'number'
   const isAxie = metaverse === 'axie-infinity'
 
   useEffect(() => {
@@ -79,14 +82,14 @@ const LandItem = ({
       <div className='flex flex-row sm:justify-start gap-4 sm:w-fit w-full  transition-all'>
         {/* Image Link */}
         <a
-          href={external_link}
+          href={land.external_link || ''}
           target='_blank'
           className='hover:shadow-dark relative flex'
         >
           <OptimizedImage
             height={imgSize}
             width={imgSize}
-            src={images.image_url}
+            src={land.images.image_url || 'images/mgh_logo.png'}
             rounded='lg'
           />
           <FiExternalLink className='absolute top-0 right-0 text-white text-xs backdrop-filter backdrop-blur-sm rounded-xl w-6 h-6 p-1' />
@@ -95,10 +98,10 @@ const LandItem = ({
         <div className='flex flex-col justify-between'>
           <div>
             <h3 className='text-base sm:text-xl font-normal md:text-2xl p-0 leading-4'>
-              {handleLandName(metaverse, coords, name)}
+              {handleLandName(metaverse, land.coords)}
             </h3>
             <p className='text-gray-400'>
-              ID: {handleTokenID(tokenId)}{' '}
+              ID: {handleTokenID(landId)}{' '}
               <BsTwitter
                 title='Share Valuation'
                 onClick={() => window.open(options.twitter.valuationLink)}
@@ -109,19 +112,21 @@ const LandItem = ({
           {expanded && (
             <>
               {/* External Links */}
-              <nav className='flex flex-col md:gap-4 gap-[1.40rem]'>
-                {opensea_link && (
-                  <ExternalLink href={opensea_link} text='OpenSea' />
+              <div className='flex flex-col md:gap-4 gap-[1.40rem]'>
+                {openSeaLink && (
+                  <ExternalLink href={openSeaLink} text='OpenSea' />
                 )}
-                <ExternalLink
-                  href={external_link}
-                  text={formatName(metaverse)}
-                />
-              </nav>
+                {land.external_link && (
+                  <ExternalLink
+                    href={land.external_link}
+                    text={formatName(metaverse)}
+                  />
+                )}
+              </div>
               {/* Remove Button */}
               <button
                 className='relative transition font-medium  ease-in-out flex gap-1 text-sm hover:text-red-500 text-red-600 z-20'
-                onClick={() => remove(tokenId, metaverse)}
+                onClick={() => remove(landId, metaverse)}
               >
                 <span>Remove</span>
                 <FaTrash className='relative -bottom-005' />
@@ -144,7 +149,7 @@ const LandItem = ({
         >
           {notListed
             ? 'Not Listed'
-            : `Listed: ${currentPrice?.toFixed(2)} USDC`}
+            : `Listed: ${land.current_price?.toFixed(2)} ETH`}
         </p>
       </div>
 
