@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import { ICoinPrices } from '../../lib/valuation/valuationTypes'
 import { typedKeys } from '../../lib/utilities'
 import { Metaverse } from '../../lib/metaverse'
 import axios from 'axios'
+import { RiLoader3Fill } from 'react-icons/ri'
 
 interface Props {
   metaverse: Metaverse
-  coinPrices: ICoinPrices
 }
 
-const TopPicksLands = ({ metaverse, coinPrices }: Props) => {
+const TopPicksLands = ({ metaverse }: Props) => {
   const [loading, setLoading] = useState(true)
 
   const [picks, setPicks] = useState({})
@@ -22,12 +21,9 @@ const TopPicksLands = ({ metaverse, coinPrices }: Props) => {
           params: { metaverse: metaverse },
         })
         .then((response) => {
-          console.log(response.data)
           setPicks(response.data)
-          console.log(picks)
           setLoading(false)
         })
-      console.log(picks)
     }
     setData().catch((e) => console.log(e))
   }, [metaverse])
@@ -39,7 +35,10 @@ const TopPicksLands = ({ metaverse, coinPrices }: Props) => {
           Top picks:{' '}
         </p>
         {loading ? (
-          <p>Cargando...</p>
+          <p className='text-gray-300 flex gap-2'>
+            Loading Lands{' '}
+            <RiLoader3Fill className='animate-spin-slow h-5 w-5 xs:h-6 xs:w-6' />
+          </p>
         ) : (
           <table className='text-center w-full'>
             <thead className='bg-transparent flex text-white w-full'>

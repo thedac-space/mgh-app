@@ -413,7 +413,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                 <FloorPriceTracker metaverse={metaverse} coinPrices={prices} />
               </div>
             </div>
-            <TopPicksLands metaverse={metaverse} coinPrices={prices} />
+            <TopPicksLands metaverse={metaverse} />
             <div className='flex flex-col items-start shadow-blck rounded-xl py-3 px-4 w-full bg-grey-dark bg-opacity-20 text-left mb-8'>
               <p className='text-xs sm:text-sm text-gray-400'>
                 The MGH DAO does not provide, personalized investment
