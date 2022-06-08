@@ -3,18 +3,10 @@ import Head from 'next/head'
 import { AddLandForm, LandList } from '../components/Watchlist'
 import { useCallback, useEffect, useState } from 'react'
 import {
-  LandsKey,
   ICoinPrices,
-  IWatchListCard,
+  LandListAPIResponse,
 } from '../lib/valuation/valuationTypes'
-import {
-  convertETHPrediction,
-  convertMANAPrediction,
-  getAxieLandData,
-  getCurrentPrice,
-  getLandData,
-} from '../lib/valuation/valuationUtils'
-import { Metaverse } from '../lib/enums'
+import { fetchLandList, getLandData } from '../lib/valuation/valuationUtils'
 import {
   addLandToWatchList,
   addMissingWatchlist,
@@ -25,74 +17,60 @@ import {
 import { useAppSelector } from '../state/hooks'
 import { Contracts } from '../lib/contracts'
 import { Fade } from 'react-awesome-reveal'
-import { formatMetaverseName } from '../lib/utilities'
+import { formatName, typedKeys } from '../lib/utilities'
+import { Metaverse } from '../lib/metaverse'
 
-export type WatchListState =
-  | 'loadingFirst'
-  | 'loading'
-  | 'loaded'
-  | 'badQueryId'
-  | 'badQueryCoordinates'
-  | 'limitIdSandbox'
-  | 'limitCoordinatesSandbox'
-  | 'limitIdDecentraland'
-  | 'limitCoordinatesDecentraland'
-  | 'limitIdAxie'
-  | 'limitCoordinatesAxie'
-  | 'loadingQueryId'
-  | 'loadingQueryCoordinates'
-  | 'noWallet'
-  | 'successId'
-  | 'successCoordinates'
+const watchlistState = [
+  'loadingFirst',
+  'loading',
+  'loaded',
+  'badQueryId',
+  'badQueryCoordinates',
+  'limitIdSandbox',
+  'limitCoordinatesSandbox',
+  'limitIdDecentraland',
+  'limitCoordinatesDecentraland',
+  'limitIdAxie',
+  'limitCoordinatesAxie',
+  'loadingQueryId',
+  'loadingQueryCoordinates',
+  'noWallet',
+  'successId',
+  'successCoordinates',
+] as const
+
+export type WatchListState = typeof watchlistState[number]
 
 const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   const [reFetch, setRefetch] = useState(false)
   const [state, setState] = useState<WatchListState>('loadingFirst')
-  const [sandboxLands, setSandboxLands] = useState<IWatchListCard[]>([])
-  const [decentralandLands, setDecentralandLands] = useState<IWatchListCard[]>(
-    []
-  )
-  const [axieLands, setAxieLands] = useState<IWatchListCard[]>([])
+  const [lands, setLands] = useState<Record<Metaverse, LandListAPIResponse>>()
   const [ids, setIds] = useState<string[]>([])
   const { address } = useAppSelector((state) => state.account)
 
   const landOptions = {
-    // LAND contract address might have to be changed once Sandbox && OpenSea finish migration
     sandbox: {
       contract: Contracts.LAND.ETHEREUM_MAINNET.newAddress,
       firebase: 'sandbox-watchlist',
-      landList: sandboxLands,
-      setList: setSandboxLands,
       limitIdState: 'limitIdSandbox',
       limitCoordinatesState: 'limitCoordinatesSandbox',
-      metaverse: Metaverse.SANDBOX,
-      convert: convertETHPrediction,
     },
     decentraland: {
       contract: Contracts.PARCEL.ETHEREUM_MAINNET.address,
       firebase: 'decentraland-watchlist',
-      landList: decentralandLands,
-      setList: setDecentralandLands,
       limitIdState: 'limitIdDecentraland',
       limitCoordinatesState: 'limitCoordinatesDecentraland',
-      metaverse: Metaverse.DECENTRALAND,
-      convert: convertMANAPrediction,
     },
     'axie-infinity': {
       contract: Contracts.AXIE_LANDS.RONIN_MAINNET.address,
       firebase: 'axie-infinity-watchlist',
-      landList: axieLands,
-      setList: setAxieLands,
       limitIdState: 'limitIdAxie',
       limitCoordinatesState: 'limitCoordinatesAxie',
-      metaverse: Metaverse.AXIE_INFINITY,
-      convert: convertETHPrediction,
     },
-  }
+  } as const
 
-  const axieContract = Contracts.AXIE_LANDS.RONIN_MAINNET.address
   // Creating Array for looping through Metaverses Options
-  const landKeys = Object.keys(landOptions) as LandsKey[]
+  const landKeys = typedKeys(landOptions)
 
   const addToWatchList = async (
     metaverse: Metaverse,
@@ -100,10 +78,10 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
     coordinates?: { X: string; Y: string }
   ) => {
     // If Sandbox or Decentraland limit give Feedback to user
-    if (landOptions[metaverse].landList.length === 10) {
-      landId && setState(landOptions[metaverse].limitIdState as WatchListState)
-      coordinates &&
-        setState(landOptions[metaverse].limitCoordinatesState as WatchListState)
+    if (!lands) return
+    if (typedKeys(lands[metaverse]).length === 10) {
+      landId && setState(landOptions[metaverse].limitIdState)
+      coordinates && setState(landOptions[metaverse].limitCoordinatesState)
       return setTimeout(() => {
         // Retrigger useEffect
         setState('loaded')
@@ -130,7 +108,6 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
       landId && setState('badQueryId')
       coordinates && setState('badQueryCoordinates')
       return setTimeout(() => {
-        // Retrigger useEffect
         setState('loaded')
       }, 2000)
     }
@@ -140,24 +117,20 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
     async (landId: string, metaverse: Metaverse) => {
       // Removing Land from Database
       await removeLandFromWatchList(landId, address!, metaverse)
-
-      // Updating Lands for selected Metaverse
-      landOptions[metaverse].setList((previous) =>
-        previous.filter((land) => {
-          return land.apiData.tokenId !== landId
-        })
-      )
-
-      // Updating Ids
-      setIds((previous) => previous.filter((id) => id !== landId))
+      const metaverseLandsObject = lands?.[metaverse]
+      delete metaverseLandsObject?.[landId]
+      setLands({
+        ...lands!,
+        [metaverse]: metaverseLandsObject,
+      })
     },
-    [sandboxLands, decentralandLands]
+    [lands]
   )
 
   useEffect(() => {
     const getLands = async () => {
       try {
-        // getting user watchlist data
+        // getting user watchlist data (We add ! for address because if there's no address we don't call this function)
         const userData = await getUserInfo(address!)
         // If no User Data but user is logged in create them a watchlist
         if (!userData) {
@@ -167,73 +140,25 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 
         userData &&
           (await Promise.all(
-            landKeys.map(async (landKey) => {
-              if (!userData[landOptions[landKey].firebase]) {
+            landKeys.map(async (metaverse) => {
+              if (!userData[landOptions[metaverse].firebase]) {
                 return await addMissingWatchlist(
                   address!,
-                  landOptions[landKey].firebase
+                  landOptions[metaverse].firebase
                 )
               }
-              await Promise.all(
-                // Mapping through all Assets in Watchlist from User
-
-                userData[landOptions[landKey].firebase].map(
-                  async (land: string) => {
-                    // If we already fetched Item, do not refetch it
-                    if (ids.includes(land)) return
-                    // Retrieving Data from our API for each Asset
-                    const landData = await getLandData(
-                      landKey as Metaverse,
-                      land
-                    )
-                    let currentPriceUSD = NaN
-                    if (landKey === 'axie-infinity') {
-                      // Retrieving data from Axie Marketplace
-                      const axieLandData = await getAxieLandData(
-                        landData.coords.x,
-                        landData.coords.y
-                      )
-                      currentPriceUSD = Number(
-                        axieLandData.auction?.currentPriceUSD
-                      )
-                    }
-                    if (landKey !== 'axie-infinity') {
-                      // Retrieving data from OpenSea (Comes in ETH)
-                      const res = await fetch(
-                        `/api/fetchSingleAsset/${landOptions[landKey].contract}/${landData.tokenId}`
-                      )
-
-                      // Retrieving Latest Orders for each Asset
-                      const listings = (await res.json()).listings
-                      // Getting Current Price for each Asset
-
-                      currentPriceUSD =
-                        getCurrentPrice(listings) * prices.ethereum.usd
-                    }
-
-                    const predictions = convertETHPrediction(
-                      prices,
-                      landData.prices.eth_predicted_price,
-                      landOptions[landKey].metaverse
-                    )
-                    // Creating FormattedLand Instance
-                    const formattedLand = {
-                      apiData: landData,
-                      predictions: predictions,
-                      currentPrice: currentPriceUSD,
-                    }
-                    // Pushing it to State Array
-                    landOptions[landKey].setList((previous) => [
-                      formattedLand,
-                      ...previous,
-                    ])
-                    setIds((previous) => [
-                      ...previous,
-                      formattedLand.apiData.tokenId,
-                    ])
-                  }
-                )
+              // UserLands for selected metaverse
+              const watchlistIds = userData[
+                landOptions[metaverse].firebase
+              ] as string[] // array of land Ids
+              // Object of Lands of corresponding Metaverse
+              const metaverseLandsObject = await fetchLandList(
+                metaverse,
+                watchlistIds
               )
+              setLands((previous) => {
+                return { ...previous!, [metaverse]: metaverseLandsObject }
+              })
             })
           ))
         setState('loaded')
@@ -250,9 +175,7 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
       }
       getLands()
     } else {
-      landKeys.map((landKey) => {
-        landOptions[landKey].setList([])
-      })
+      setLands(undefined)
       setIds([])
       setState('noWallet')
     }
@@ -282,19 +205,21 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
           addToWatchList={addToWatchList}
         />
         {/* Lands List */}
-        {ids.length > 0 &&
-          state !== 'loadingFirst' &&
+        {state !== 'loadingFirst' &&
           landKeys.map(
-            (key) =>
-              landOptions[key].landList.length > 0 && (
-                <article key={key} className='mb-8 w-full'>
+            (metaverse) =>
+              lands &&
+              typedKeys(lands[metaverse]).length > 0 && (
+                <article key={metaverse} className='mb-8 w-full'>
                   <Fade>
                     <h3 className='gray-box xs:w-[22rem] sm:w-fit mx-auto  sm:ml-0 green-text-gradient mb-4'>
-                      {formatMetaverseName(key, true)}
+                      {formatName(metaverse, true)}
                     </h3>
                   </Fade>
                   <LandList
-                    lands={landOptions[key].landList}
+                    coinPrices={prices}
+                    lands={lands[metaverse]}
+                    metaverse={metaverse}
                     removeFromWatchList={removeFromWatchList}
                   />
                 </article>
