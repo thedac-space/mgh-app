@@ -44,7 +44,7 @@ const FloorPriceTracker = ({ coinPrices, metaverse }: Props) => {
     setData()
   }, [metaverse])
 
-  return !predictions ? (
+  return !predictions && !loading ? (
     <>
       <div className='flex flex-col items-start gray-box'>
         <p className={`text-lg xl:text-xl font-medium text-gray-300`}>
@@ -73,7 +73,9 @@ const FloorPriceTracker = ({ coinPrices, metaverse }: Props) => {
             ' transition-all duration-300'
           }
         >
-          <PriceList predictions={predictions} metaverse={metaverse} />
+          {predictions && (
+            <PriceList predictions={predictions} metaverse={metaverse} />
+          )}
         </div>
       </div>
     </>
