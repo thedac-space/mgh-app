@@ -1,4 +1,4 @@
-import { Metaverse } from '../../lib/enums'
+import { Metaverse } from '../../lib/metaverse'
 import { IPredictions } from '../../lib/types'
 
 const COINS = {
