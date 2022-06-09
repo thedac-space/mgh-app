@@ -139,7 +139,7 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
         }
 
         userData &&
-          (await Promise.all(
+          (await Promise.allSettled(
             landKeys.map(async (metaverse) => {
               if (!userData[landOptions[metaverse].firebase]) {
                 return await addMissingWatchlist(
@@ -151,11 +151,14 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
               const watchlistIds = userData[
                 landOptions[metaverse].firebase
               ] as string[] // array of land Ids
+              if (watchlistIds.length === 0) return
               // Object of Lands of corresponding Metaverse
               const metaverseLandsObject = await fetchLandList(
                 metaverse,
                 watchlistIds
               )
+              console.log(metaverseLandsObject)
+              if (metaverseLandsObject.err) return
               setLands((previous) => {
                 return { ...previous!, [metaverse]: metaverseLandsObject }
               })
@@ -209,6 +212,7 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
           landKeys.map(
             (metaverse) =>
               lands &&
+              lands[metaverse] &&
               typedKeys(lands[metaverse]).length > 0 && (
                 <article key={metaverse} className='mb-8 w-full'>
                   <Fade>
