@@ -40,21 +40,6 @@ const ValuationPage: NextPage = ({ prices }: any) => {
     )
     console.log(predictions)
     setPredictions(predictions)
-
-    // if (data.metaverse === 'sandbox') {
-    //     const ethPrediction = data.prices.predicted_price;
-    //     const predictions = convertETHPrediction(prices, ethPrediction, 'sandbox')
-    //     setPredictions(predictions)
-    // } else if (data.metaverse === 'decentraland') {
-    //     const manaPrediction = data.prices.predicted_price;
-    //     const predictions = convertMANAPrediction(prices, manaPrediction)
-    //     setPredictions(predictions)
-    // } else if (data.metaverse === 'axie-infinity') {
-    //     const manaPrediction = data.prices.predicted_price;
-    //     const predictions = convertETHPrediction(prices, manaPrediction, 'axie-infinity')
-    //     setPredictions(predictions)
-    // }
-
     setShowCard(true)
   }
 
