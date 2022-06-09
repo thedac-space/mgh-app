@@ -157,7 +157,6 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                 metaverse,
                 watchlistIds
               )
-              console.log(metaverseLandsObject)
               if (metaverseLandsObject.err) return
               setLands((previous) => {
                 return { ...previous!, [metaverse]: metaverseLandsObject }
