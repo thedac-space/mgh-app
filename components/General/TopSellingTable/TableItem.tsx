@@ -15,7 +15,7 @@ const TableItem = ({ item } : { item: TopSellingRequestItem }) => {
         </span>
       </th>
       <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-        <span className="mr-2">{dataTable.from}</span>
+        <span className="mr-2">{dataTable.from || 'anonymous'}</span>
       </td>
       <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
         <span className="mr-2">{dataTable.owner}</span>
