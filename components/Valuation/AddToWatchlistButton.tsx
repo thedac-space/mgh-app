@@ -1,17 +1,16 @@
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import { Metaverse } from '../../lib/enums'
-import { addLandToWatchList, getUserInfo } from '../../lib/FirebaseUtilities'
+import {
+  addLandToWatchList,
+  createUser,
+  getUserInfo,
+} from '../../lib/FirebaseUtilities'
+import { Metaverse } from '../../lib/metaverse'
 import { useAppSelector } from '../../state/hooks'
 
 interface Props {
   landId: string
   metaverse: Metaverse
-}
-
-interface UserWatchlist {
-  'decentraland-watchlist': string[]
-  'sandbox-watchlist': string[]
 }
 
 type WatchlistButtonState =
@@ -26,7 +25,10 @@ const AddToWatchlistButton = ({ landId, metaverse }: Props) => {
   const { address } = useAppSelector((state) => state.account)
   const [state, setState] = useState<WatchlistButtonState>()
   const [refetch, setRefetch] = useState(false)
-  type Key = 'decentraland-watchlist' | 'sandbox-watchlist'
+  type Key =
+    | 'decentraland-watchlist'
+    | 'sandbox-watchlist'
+    | 'axie-infinity-watchlist'
 
   const addToWatchList = async () => {
     if (state === 'alreadyInWatchlist') return push('/watchlist')
@@ -44,19 +46,14 @@ const AddToWatchlistButton = ({ landId, metaverse }: Props) => {
     }
   }
 
-  const loadingDots = () => {
-    const dots = 0
-  }
-
   useEffect(() => {
     const fetchData = async () => {
       if (address) {
         const user = (await getUserInfo(address)) as Record<Key, string[]>
-        console.log({ user })
+        if (!user) return createUser(address)
         const metaverseKey = Object.keys(user).find((key) =>
           key.includes(metaverse)
         ) as Key
-        console.log()
         if (user[metaverseKey].includes(landId))
           return setState('alreadyInWatchlist')
         if (user[metaverseKey].length === 10) return setState('metaverseLimit')
