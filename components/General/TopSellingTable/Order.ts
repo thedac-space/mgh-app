@@ -4,17 +4,17 @@ export const handleOrderAsset = (sortDir: boolean, setSortDir: Function, data: [
   let sortArray = data
   sortArray.sort((a: TopSellingRequestItem, b: TopSellingRequestItem) => {
     let returns = 0
-    if (Number(a.data.dataLand.coords.y) > Number(b.data.dataLand.coords.y))
+    if (a.dataTable.coords.y > b.dataTable.coords.y)
       returns = 1
-    if (Number(a.data.dataLand.coords.y) < Number(b.data.dataLand.coords.y))
+    if (a.dataTable.coords.y < b.dataTable.coords.y)
       returns = -1
     return sortDir ? returns : - returns
   })
   sortArray.sort((a: TopSellingRequestItem, b: TopSellingRequestItem) => {
     let returns = 0
-    if (Number(a.data.dataLand.coords.x) > Number(b.data.dataLand.coords.x))
+    if (a.dataTable.coords.x > b.dataTable.coords.x)
       returns = 1
-    if (Number(a.data.dataLand.coords.x) < Number(b.data.dataLand.coords.x))
+    if (a.dataTable.coords.x < b.dataTable.coords.x)
       returns = -1
     return sortDir ? returns : - returns
   })
@@ -39,9 +39,9 @@ export const handleOrderPrice = (sortDir: boolean, setSortDir: Function, data: [
   let sortArray = data
   sortArray.sort((a: TopSellingRequestItem, b: TopSellingRequestItem) => {
     let returns = 0
-    if (parseInt(a.data.dataTable.price) > parseInt(b.data.dataTable.price))
+    if (parseInt(a.dataTable.price) > parseInt(b.dataTable.price))
       returns = 1
-    if (parseInt(a.data.dataTable.price) < parseInt(b.data.dataTable.price))
+    if (parseInt(a.dataTable.price) < parseInt(b.dataTable.price))
       returns = -1
     return sortDir ? returns : - returns
   })
@@ -63,9 +63,9 @@ export const handleOrder = ( atribute: MapAtribute, sortDir: boolean, setSortDir
   let sortArray = data
   sortArray.sort((a: TopSellingRequestItem, b: TopSellingRequestItem) => {
     let returns = 0
-    if (a.data.dataTable[atribute] > b.data.dataTable[atribute])
+    if (a.dataTable[atribute] > b.dataTable[atribute])
       returns = 1
-    if (a.data.dataTable[atribute] < b.data.dataTable[atribute])
+    if (a.dataTable[atribute] < b.dataTable[atribute])
       returns = -1
     return sortDir ? returns : - returns
   })

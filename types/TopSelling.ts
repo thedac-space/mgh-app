@@ -1,5 +1,3 @@
-import { Key } from "react"
-
 export interface TopSellingDataTable {
   asset: string,
   date: string,
@@ -9,22 +7,16 @@ export interface TopSellingDataTable {
   owner: string,
   price: string,
   symbol: string
-}
-
-export interface TopSellingData {
-  dataLand: any,
-  dataTable: TopSellingDataTable,
-  requestDate: Date,
-  tokenId: string,
-  totalCounter: Number,
-  yesterdayCounter: Number,
-  prevMonthCounter: Number,
-  prevYearCounter: Number
+  landId: number,
+  coords: {
+    x: number,
+    y: number
+  }
 }
 
 export interface TopSellingRequestItem {
   position: any,
-  data: TopSellingData
+  dataTable: TopSellingDataTable,
 }
 
 export interface TopSellings{

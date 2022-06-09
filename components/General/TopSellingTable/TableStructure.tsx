@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import TableItem from "./TableItem"
 import { handleOrder, handleOrderAsset, handleOrderRank, handleOrderPrice } from "./Order"
 import { TopSellingRequestItem } from "../../../types/TopSelling"
@@ -9,33 +9,43 @@ interface filterBy {
 }
 
 const TableStructure = ({filterby} : {filterby: filterBy}) => {
-  const [data, setData] = useState<[key: TopSellingRequestItem]>(filterby.data)
+  const filterData = (data: any) => {
+    let result: any = []
+    data.map((value: any) => value.position ? result.push(value) : false)
+    return result
+  }
+
+  const [response, setResponse] = useState<[key: TopSellingRequestItem]>(filterData(filterby.data))
   const [sortDir, setSortDir] = useState<boolean>(false)
 
   const thStyle = "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-slate-800 text-slate-300 border-slate-700 cursor-pointer"
 
+  useEffect(() => {
+    setResponse(filterData(filterby.data))
+  }, [filterby])
+  
   return(
     <>
       {
-        data[0].data ?
+        response[0] ?
         <table className="items-center w-full bg-transparent border-collapse">
           <thead>
             <tr>
-              <th className={thStyle} onClick={() => handleOrderRank(sortDir, setSortDir, data, setData)} >RANK</th>
-              <th className={thStyle} onClick={() => handleOrderAsset(sortDir, setSortDir, data, setData)}>ASSET</th>
-              <th className={thStyle} onClick={() => handleOrder('from', sortDir, setSortDir, data, setData)}>FROM</th>
-              <th className={thStyle} onClick={() => handleOrder('owner', sortDir, setSortDir, data, setData)}>TO</th>
-              <th className={thStyle} onClick={() => handleOrder('date', sortDir, setSortDir, data, setData)}>PURCHASED </th>
-              <th className={thStyle} onClick={() => handleOrderPrice(sortDir, setSortDir, data, setData)}>PRICE</th>
+              <th className={thStyle} onClick={() => handleOrderRank(sortDir, setSortDir, response, setResponse)} >RANK</th>
+              <th className={thStyle} onClick={() => handleOrderAsset(sortDir, setSortDir, response, setResponse)}>ASSET</th>
+              <th className={thStyle} onClick={() => handleOrder('from', sortDir, setSortDir, response, setResponse)}>FROM</th>
+              <th className={thStyle} onClick={() => handleOrder('owner', sortDir, setSortDir, response, setResponse)}>TO</th>
+              <th className={thStyle} onClick={() => handleOrder('date', sortDir, setSortDir, response, setResponse)}>PURCHASED </th>
+              <th className={thStyle} onClick={() => handleOrderPrice(sortDir, setSortDir, response, setResponse)}>PRICE</th>
             </tr>
           </thead>
           <tbody>
             {
-              data.map((value: TopSellingRequestItem) => <TableItem key={value.position} item={value}/>)
+              response.map((value) =><TableItem key={value.position} item={value}/>)
             }
           </tbody>
         </ table> :
-        <h3 className="px-6 text-lg text-white">REQUEST ERROR</h3>
+        <h3 className="px-6 text-lg text-white">NO LANDS</h3>
       }
     </>
   )

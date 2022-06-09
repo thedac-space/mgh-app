@@ -1,7 +1,7 @@
 import { TopSellingDataTable, TopSellingRequestItem } from "../../../types/TopSelling"
 
 const TableItem = ({ item } : { item: TopSellingRequestItem }) => {
-  let dataTable: TopSellingDataTable = item.data.dataTable
+  let dataTable: TopSellingDataTable | any = item.dataTable || null
     
   return (
     <tr>
