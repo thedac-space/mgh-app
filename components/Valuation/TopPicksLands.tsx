@@ -40,49 +40,50 @@ const TopPicksLands = ({ metaverse }: Props) => {
             <RiLoader3Fill className='animate-spin-slow h-5 w-5 xs:h-6 xs:w-6' />
           </p>
         ) : (
-          <table className='text-center w-full'>
+          <table className='text-center w-full table-fixed border-collapse'>
             <thead className='bg-transparent flex text-white w-full'>
               <tr className='flex w-full mb-4'>
-                <th className='p-4 w-1/4 bg-slate-800'></th>
-                <th className='p-4 w-1/4 uppercase bg-slate-800 '>Coord</th>
-                <th className='p-4 w-1/4 uppercase bg-slate-800 '>
+                <th className='p-4 w-1/5 bg-slate-800'></th>
+                <th className='p-4 w-1/5 lg:uppercase bg-slate-800 text-xs lg:text-lg md:text-base '>Coord</th>
+                <th className='p-4 w-1/5 lg:uppercase bg-slate-800 text-xs lg:text-lg md:text-base '>
                   Current price
                 </th>
-                <th className='p-4 w-1/4 uppercase bg-slate-800 '>
+                <th className='p-4 w-1/5 lg:uppercase bg-slate-800 text-xs lg:text-lg md:text-base '>
                   Predicted price
                 </th>
-                <th className='p-4 w-1/4 uppercase bg-slate-800 '>Gap</th>
+                <th className='p-4 w-1/5 lg:uppercase bg-slate-800 text-xs lg:text-lg md:text-base'>Gap</th>
               </tr>
             </thead>
-            <tbody className='bg-transparent flex flex-col items-center justify-between overflow-y-scroll w-full h-52 scrollbar ml-5'>
+            <tbody className='bg-transparent flex flex-col items-center justify-between overflow-y-scroll w-full h-52 scrollbar'>
               {typedKeys(picks).map((key) => {
                 return (
                   <tr key={key} className='flex w-full mb-4'>
-                    <td className='flex justify-center content-center p-4 w-1/4'>
+                    <td className='flex justify-center content-center w-1/5'>
                       <img
                         src={picks[key]['images']['image_url']}
-                        className='h-12 w-12 bg-white rounded-full border mb-4 mt-4'
+                        className='lg:h-12 lg:w-12 md:h-8 md:w-8 bg-white rounded-full border mb-4 mt-4 w-6 h-6'
                       />
                     </td>
-                    <td className='flex justify-center content-center items-center text-xl 2xl:text-2xl font-medium text-sky-400 pt-0.5 w-1/4 hover:underline'>
-                      <a href={picks[key]['external_link']}>
+                    <td className='flex justify-center content-center items-center text-sky-400 pt-0.5 w-1/5 hover:underline'>
+                      <a className='text-sm lg:text-2xl font-medium md:text-base' 
+                        href={picks[key]['external_link']}>
                         X:{picks[key]['coords']['x']}, Y:
                         {picks[key]['coords']['y']}
                       </a>
                     </td>
-                    <td className='flex justify-center content-center items-center text-xl 2xl:text-2xl font-medium text-gray-300 pt-0.5 w-1/4'>
+                    <td className='flex justify-center content-center items-center text-sm lg:text-2xl font-medium md:text-base text-gray-300 pt-0.5 w-1/5'>
                       <span>
                         {parseFloat(picks[key]['current_price_eth']).toFixed(2)}
                       </span>
                     </td>
-                    <td className='flex justify-center content-center items-center text-xl 2xl:text-2xl font-medium text-gray-300 pt-0.5 w-1/4'>
+                    <td className='flex justify-center content-center items-center text-sm lg:text-2xl font-medium md:text-base text-gray-300 pt-0.5 w-1/5'>
                       <span>
                         {parseFloat(picks[key]['eth_predicted_price']).toFixed(
                           2
                         )}
                       </span>
                     </td>
-                    <td className='flex justify-center content-center items-center text-xl 2xl:text-2xl font-medium text-gray-300 pt-0.5 w-1/4'>
+                    <td className='flex justify-center content-center items-center text-sm lg:text-2xl font-medium md:text-base text-gray-300 pt-0.5 w-1/5'>
                       <span>{parseFloat(picks[key]['gap']).toFixed(2)}</span>
                     </td>
                   </tr>

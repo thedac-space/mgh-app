@@ -30,23 +30,23 @@
   } */
 
   .scrollbar::-webkit-scrollbar {
-    width: 20px;
+    width: 8px;
     height: 20px;
   }
 
   .scrollbar::-webkit-scrollbar-track {
     border-radius: 100vh;
-    background: #f7f4ed;
+    background: #1E293B;
   }
 
   .scrollbar::-webkit-scrollbar-thumb {
-    background: #e0cbcb;
+    background: #FFFFFF;
     border-radius: 100vh;
-    border: 3px solid #f6f7ed;
+    border: 3px solid #1E293B;
   }
 
   .scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #c0a0b9;
+    background: #8080f0;
   }
 
   @font-face {
