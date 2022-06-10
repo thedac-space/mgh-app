@@ -58,6 +58,7 @@ type MapAtribute =
 |  'owner'
 |  'price'
 |  'symbol'
+|  'to'
 
 export const handleOrder = ( atribute: MapAtribute, sortDir: boolean, setSortDir: Function, data: [key: TopSellingRequestItem], setData: Function ) => {
   let sortArray = data

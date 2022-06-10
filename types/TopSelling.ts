@@ -3,6 +3,7 @@ export interface TopSellingDataTable {
   date: string,
   external_link: string,
   from: string,
+  to: string,
   image: string,
   owner: string,
   price: string,
