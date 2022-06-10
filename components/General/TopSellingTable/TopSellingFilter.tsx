@@ -34,8 +34,8 @@ const TopSellingFilter = ({ filterBy, setFilterBy }: Props) => {
                   {filterOptions[filter].label}
                 </button>)
             }
-            <h3 className="text-lg text-white absolute top-0 right-0">{filterOptions[filterBy].title}</h3>
           </div>
+          <h3 className="text-lg text-white lg:absolute top-0 right-0">{filterOptions[filterBy].title}</h3>
         </div>
       </div>
     </div>
