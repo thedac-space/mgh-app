@@ -3,6 +3,12 @@ import { TopSellingDataTable, TopSellingRequestItem } from "../../../types/TopSe
 const TableItem = ({ item } : { item: TopSellingRequestItem }) => {
   let dataTable: TopSellingDataTable | any = item.dataTable || null
     
+  const priceLoader = () => {
+    if(dataTable.price == 0)
+      return <span className="mr-2">Loading...</span>
+    return <span className="mr-2">{`${dataTable.price} ${dataTable.symbol}`}</span>
+  }
+
   return (
     <tr>
       <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">{item.position}</td>
@@ -24,7 +30,9 @@ const TableItem = ({ item } : { item: TopSellingRequestItem }) => {
         <span className="mr-2">{dataTable.date}</span>
       </td>
       <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-        <span className="mr-2">{`${dataTable.price} ${dataTable.symbol}`}</span>
+        {
+          priceLoader()
+        }
       </td>
     </tr>
   )
