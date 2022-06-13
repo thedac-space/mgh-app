@@ -1,6 +1,7 @@
-import { supportedChains } from './chains'
+import { ethers } from 'ethers'
+import { Chains, supportedChains } from './chains'
 import { stakingPools } from './pools'
-import { IChainData, IPoolData } from './types'
+import { IChainData, IPoolData, ValueOf } from './types'
 
 export function getChainData(
   chainId: number | undefined
@@ -65,4 +66,11 @@ export function typedKeys<O extends object, K extends keyof O = keyof O>(
   obj: O
 ): K[] {
   return Object.keys(obj) as K[]
+}
+
+export const makeOwnProvider = (chain: ValueOf<typeof Chains>['chainId']) => {
+  return new ethers.providers.InfuraProvider(
+    chain,
+    '03bfd7b76f3749c8bb9f2c91bdba37f3'
+  )
 }
