@@ -3,7 +3,6 @@ import { useAppSelector } from '../../state/hooks'
 
 const PurchaseRoleSign = () => {
   const { role } = useAppSelector((state) => state.account)
-  console.log({ role })
   return (
     /* Role Sign */
     <div className='m-auto w-fit gray-box bg-opacity-10 mb-8'>

@@ -22,9 +22,9 @@ interface PurchaseContent {
 export const purchaseContext = createContext<PurchaseContent>({
   coinsBalance: undefined,
   setCoinsBalance: () => {},
-  monthlyChoice: undefined,
+  monthlyChoice: 450,
   setMonthlyChoice: () => {},
-  coin: undefined,
+  coin: 'mgh',
   setCoin: () => {},
 })
 

@@ -1,34 +1,29 @@
 import { BigNumber, ethers } from 'ethers'
-import { parseEther } from 'ethers/lib/utils'
 import React, { useContext, useEffect, useState } from 'react'
+import { apiTokenNames, PurchaseActionButton } from '.'
 import changeChain from '../../backend/changeChain'
 import useProvider from '../../backend/provider'
 import { Chains } from '../../lib/chains'
-import { createERC20Contract } from '../../lib/erc20utils'
-import { ValueOf } from '../../lib/types'
+import { createERC20Contract } from '../../lib/ERC20utils'
 import { makeOwnProvider } from '../../lib/utilities'
 import { useAppSelector } from '../../state/hooks'
 import { purchaseCoinOptions } from './purchaseCoinOptions'
 import { purchaseContext } from './purchaseContext'
+import { PurchaseCoinValues } from './purchaseTypes'
 
-const PurchaseBuyForm = () => {
+const PurchaseBuyForm = ({
+  coinValues,
+}: {
+  coinValues: PurchaseCoinValues
+}) => {
   const { address, chainId } = useAppSelector((state) => state.account)
   const { monthlyChoice, coin } = useContext(purchaseContext)
   const [allowance, setAllowance] = useState(NaN)
   const provider = useProvider()
   const mghWallet = '0x2CE9f1CA1650B495fF8F7A81BB55828A53bfdd5A' // change to proper address
   const isERC20 = coin && !['eth', 'matic'].includes(coin)
-
-  const apiTokenNames = {
-    eth: 'ethereum',
-    matic: 'wmatic',
-    mgh: 'metagamehub-dao',
-    usdc: 'usd-coin',
-    usdt: 'tether',
-    ocean: 'ocean-protocol',
-    sand: 'the-sandbox',
-    mana: 'decentraland',
-  } as const
+  const convertedMonthlyChoice =
+    coin && monthlyChoice && monthlyChoice / coinValues[apiTokenNames[coin]].usd
 
   useEffect(() => {
     const getAllowance = async () => {
@@ -64,73 +59,55 @@ const PurchaseBuyForm = () => {
 
   const transferToken = async () => {
     if (!coin || !provider || !address || !monthlyChoice) return
-    // Using wmatic instead of matic cause coingecko isn't working for matic..
-    const coinRes = await fetch(
-      `https://api.coingecko.com/api/v3/simple/price?ids=ethereum%2Cthe-sandbox%2Cdecentraland%2Cocean-protocol%2Cmetagamehub-dao%2Cwmatic%2Cusd-coin%2Ctether&vs_currencies=usd`
-    )
-    const coinValues = (await coinRes.json()) as Record<
-      ValueOf<typeof apiTokenNames>,
-      { usd: number }
-    >
 
     const ethersWeb3Provider = new ethers.providers.Web3Provider(provider)
-    const convertedMonthlyChoice =
-      monthlyChoice / coinValues[apiTokenNames[coin]].usd
+    const signer = ethersWeb3Provider.getSigner()
+
     const amountToPay =
+      convertedMonthlyChoice &&
       convertedMonthlyChoice * 10 ** purchaseCoinOptions[coin].decimals
+    if (!amountToPay) return
     if (isERC20) {
       const coinContract = createERC20Contract(
-        ethersWeb3Provider.getSigner(),
+        signer,
         purchaseCoinOptions[coin].contractAddress
       )
       if (allowance < amountToPay) return
       const tx = await coinContract.transferFrom(
         address,
         mghWallet,
-        amountToPay.toString().toString()
+        amountToPay.toString()
       )
 
+      await tx.wait()
+      // ETH & MATIC. THIS CAN BE TRIGGERED ON TESTNETS AS WELL. SO CHECK
+      // ON MAINNET CONTRACT.
+    } else {
+      const tx = await signer.sendTransaction({
+        to: mghWallet,
+        value: BigNumber.from(amountToPay.toString()),
+      })
       await tx.wait()
     }
   }
 
   return (
-    <div>
+    <div className='w-fit m-auto'>
       {/* Show Amount */}
       <h3>
-        Total Amount {monthlyChoice} {coin?.toUpperCase()}
+        Total Amount {convertedMonthlyChoice?.toFixed(2)} {coin?.toUpperCase()}
       </h3>
+      {/* Action Buttons */}
 
-      <button
-        onClick={approveToken}
-        className='z-30 disabled:opacity-50 disabled:hover:shadow-dark disabled:cursor-default mt-4 relative flex justify-center items-center  transition ease-in-out duration-500 shadow-dark rounded-xl w-full max-w-md py-3 sm:py-4 group'
-      >
-        <div className='h-full w-full absolute bg-gradient-to-br transition-all ease-in-out duration-300 from-pink-600 to-blue-500 rounded-xl opacity-60 group-hover:opacity-80' />
-        <span className='pt-1 z-10 text-gray-200 font-medium text-lg sm:text-xl'>
-          Approve Token
-        </span>
-      </button>
-      <button
-        onClick={transferToken}
-        className='z-30 disabled:opacity-50 disabled:hover:shadow-dark disabled:cursor-default mt-4 relative flex justify-center items-center  transition ease-in-out duration-500 shadow-dark rounded-xl w-full max-w-md py-3 sm:py-4 group'
-      >
-        <div className='h-full w-full absolute bg-gradient-to-br transition-all ease-in-out duration-300 from-pink-600 to-blue-500 rounded-xl opacity-60 group-hover:opacity-80' />
-        <span className='pt-1 z-10 text-gray-200 font-medium text-lg sm:text-xl'>
-          Buy
-        </span>
-      </button>
+      <PurchaseActionButton onClick={approveToken} text='Approve Token' />
+      <PurchaseActionButton onClick={transferToken} text='Buy' />
       {chainId !== Chains.MATIC_MAINNET.chainId && (
-        <button
+        <PurchaseActionButton
           onClick={() => {
             changeChain(provider, Chains.MATIC_MAINNET.chainId)
           }}
-          className='z-30 disabled:opacity-50 disabled:hover:shadow-dark disabled:cursor-default mt-4 relative flex justify-center items-center  transition ease-in-out duration-500 shadow-dark rounded-xl w-full max-w-md py-3 sm:py-4 group'
-        >
-          <div className='h-full w-full absolute bg-gradient-to-br transition-all ease-in-out duration-300 from-pink-600 to-blue-500 rounded-xl opacity-60 group-hover:opacity-80' />
-          <span className='pt-1 z-10 text-gray-200 font-medium text-lg sm:text-xl'>
-            Switch to Polygon
-          </span>
-        </button>
+          text='Switch to Polygon'
+        />
       )}
     </div>
   )

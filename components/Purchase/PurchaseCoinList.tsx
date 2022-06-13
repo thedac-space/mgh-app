@@ -16,7 +16,7 @@ const PurchaseCoinList = () => {
     setCoin(selectedCoin === coin ? undefined : coin)
   }
   return (
-    <ul className='flex gap-4 justify-around'>
+    <ul className='flex gap-4 justify-around mb-16'>
       {typedKeys(purchaseCoinOptions).map((coin) => (
         <li>
           <button onClick={() => handleClick(coin)}>
@@ -24,11 +24,13 @@ const PurchaseCoinList = () => {
               width={100}
               height={100}
               src={purchaseCoinOptions[coin].img}
+              rounded='full'
               className={
-                (!selectedCoin && coinsBalance && coinsBalance[coin] > 0) ||
+                'hover:grayscale-0 transition-all' +
+                ((!selectedCoin && coinsBalance && coinsBalance[coin] > 0) ||
                 selectedCoin === coin
                   ? ''
-                  : 'grayscale'
+                  : ' grayscale')
               }
             />
           </button>

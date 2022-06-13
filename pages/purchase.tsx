@@ -3,6 +3,7 @@ import { NextPage } from 'next'
 import Head from 'next/head'
 import React, { useContext, useEffect } from 'react'
 import {
+  apiTokenNames,
   PurchaseBuyForm,
   PurchaseCoinList,
   purchaseCoinOptions,
@@ -14,11 +15,15 @@ import {
   purchaseContext,
   PurchaseProvider,
 } from '../components/Purchase/purchaseContext'
-import { createERC20Contract } from '../lib/erc20utils'
+import { PurchaseCoinValues } from '../components/Purchase/purchaseTypes'
+import { createERC20Contract } from '../lib/ERC20utils'
+import { ValueOf } from '../lib/types'
 import { makeOwnProvider, typedKeys } from '../lib/utilities'
 import { useAppSelector } from '../state/hooks'
 
-const Purchase: NextPage = () => {
+const Purchase: NextPage<{ coinValues: PurchaseCoinValues }> = ({
+  coinValues,
+}) => {
   const { address } = useAppSelector((state) => state.account)
   const { setCoinsBalance } = useContext(purchaseContext)
 
@@ -72,10 +77,22 @@ const Purchase: NextPage = () => {
         {/* Coin List */}
         <PurchaseCoinList />
         {/* Buy Form */}
-        <PurchaseBuyForm />
+        <PurchaseBuyForm coinValues={coinValues} />
       </section>
     </PurchaseProvider>
   )
+}
+export async function getServerSideProps() {
+  // Using wmatic instead of matic cause coingecko isn't working for matic..
+  const coinRes = await fetch(
+    `https://api.coingecko.com/api/v3/simple/price?ids=ethereum%2Cthe-sandbox%2Cdecentraland%2Cocean-protocol%2Cmetagamehub-dao%2Cwmatic%2Cusd-coin%2Ctether&vs_currencies=usd`
+  )
+  const coinValues = (await coinRes.json()) as PurchaseCoinValues
+  return {
+    props: {
+      coinValues,
+    },
+  }
 }
 
 export default Purchase
