@@ -1,16 +1,55 @@
+import { ethers } from 'ethers'
 import { NextPage } from 'next'
 import Head from 'next/head'
-import React from 'react'
+import React, { useContext, useEffect } from 'react'
 import {
+  PurchaseBuyForm,
   PurchaseCoinList,
+  purchaseCoinOptions,
   PurchaseKeyFeatures,
   PurchaseOptionButton,
   PurchaseRoleSign,
 } from '../components/Purchase'
+import {
+  purchaseContext,
+  PurchaseProvider,
+} from '../components/Purchase/purchaseContext'
+import { createERC20Contract } from '../lib/erc20utils'
+import { makeOwnProvider, typedKeys } from '../lib/utilities'
+import { useAppSelector } from '../state/hooks'
 
 const Purchase: NextPage = () => {
+  const { address } = useAppSelector((state) => state.account)
+  const { setCoinsBalance } = useContext(purchaseContext)
+
+  useEffect(() => {
+    const getCoinBalances = async () => {
+      if (!address) return
+
+      // Retrieving coin Balances from user
+      await Promise.allSettled(
+        typedKeys(purchaseCoinOptions).map(async (coin) => {
+          let balance = NaN
+          const provider = makeOwnProvider(purchaseCoinOptions[coin].chain)
+          if (!['eth', 'matic'].includes(coin)) {
+            const coinContract = createERC20Contract(
+              provider,
+              purchaseCoinOptions[coin].contractAddress
+            )
+            balance = (await coinContract.balanceOf(address)).toNumber()
+          } else {
+            balance = (await provider.getBalance(address)).toNumber()
+          }
+          setCoinsBalance((previousState) => {
+            return { ...previousState!, [coin]: balance }
+          })
+        })
+      )
+    }
+    getCoinBalances()
+  }, [address])
   return (
-    <>
+    <PurchaseProvider>
       <Head>
         <title>MGH | Purchase</title>
         <meta name='description' content='Purchase VIP Status' />
@@ -32,8 +71,10 @@ const Purchase: NextPage = () => {
         <PurchaseKeyFeatures />
         {/* Coin List */}
         <PurchaseCoinList />
+        {/* Buy Form */}
+        <PurchaseBuyForm />
       </section>
-    </>
+    </PurchaseProvider>
   )
 }
 

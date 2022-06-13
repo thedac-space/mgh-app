@@ -1,3 +1,4 @@
+import { purchaseCoinOptions } from '../components/Purchase'
 import { Network } from './enums'
 import { Metaverse } from './metaverse'
 
