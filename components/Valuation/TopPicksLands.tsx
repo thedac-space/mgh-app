@@ -43,7 +43,7 @@ const TopPicksLands = ({ metaverse }: Props) => {
           <table className='text-center w-full table-fixed border-collapse'>
             <thead className='bg-transparent flex text-white w-full'>
               <tr className='flex w-full mb-4'>
-                <th className='p-4 w-1/5 bg-slate-800'></th>
+                <th className='p-4 w-1/5 lg:uppercase bg-slate-800 text-xs lg:text-lg md:text-base '>Land</th>
                 <th className='p-4 w-1/5 lg:uppercase bg-slate-800 text-xs lg:text-lg md:text-base '>Coord</th>
                 <th className='p-4 w-1/5 lg:uppercase bg-slate-800 text-xs lg:text-lg md:text-base '>
                   Current price
@@ -84,7 +84,7 @@ const TopPicksLands = ({ metaverse }: Props) => {
                       </span>
                     </td>
                     <td className='flex justify-center content-center items-center text-sm lg:text-2xl font-medium md:text-base text-gray-300 pt-0.5 w-1/5'>
-                      <span>{parseFloat(picks[key]['gap']).toFixed(2)}</span>
+                      <span>{parseFloat(picks[key]['gap']).toFixed(2)}%</span>
                     </td>
                   </tr>
                 )
