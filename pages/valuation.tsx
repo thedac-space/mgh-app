@@ -413,6 +413,9 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                 <FloorPriceTracker metaverse={metaverse} coinPrices={prices} />
               </div>
             </div>
+            <h3 className='text-transparent bg-clip-text lg:text-3xl text-2xl bg-gradient-to-br from-blue-500 via-green-400 to-green-500 mb-0 sm:mb-2'>
+              Our Top Picks
+            </h3>
             <TopPicksLands metaverse={metaverse} />
             <div className='flex flex-col items-start shadow-blck rounded-xl py-3 px-4 w-full bg-grey-dark bg-opacity-20 text-left mb-8'>
               <p className='text-xs sm:text-sm text-gray-400'>
