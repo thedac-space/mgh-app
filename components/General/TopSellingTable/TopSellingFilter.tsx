@@ -19,10 +19,9 @@ const filterOptions = {
 const TopSellingFilter = ({ filterBy, setFilterBy }: Props) => {
 
   return (
-    <div className="w-full rounded-t mb-0 px-4 py-3 border-0">
-      <div className="w-fullflex flex-wrap items-center">
-        <div className="w-full relative px-4 max-w-full flex-grow flex-1 ">
-          <div className="w-full inline-flex">
+    <div className="w-full rounded-t mb-0 px-8 py-3 border-0">
+      <div className="w-full flex flex-wrap items-center justify-between">
+          <div className="w-fit inline-flex">
             {
               typedKeys(filterOptions).map((filter) =>
                 <button
@@ -35,8 +34,7 @@ const TopSellingFilter = ({ filterBy, setFilterBy }: Props) => {
                 </button>)
             }
           </div>
-          <h3 className="text-lg text-white lg:absolute top-0 right-0">{filterOptions[filterBy].title}</h3>
-        </div>
+          <h3 className="text-lg text-white">{filterOptions[filterBy].title}</h3>
       </div>
     </div>
   )
