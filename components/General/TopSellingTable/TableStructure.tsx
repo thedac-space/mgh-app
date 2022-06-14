@@ -33,10 +33,10 @@ const TableStructure = ({filterby} : {filterby: filterBy}) => {
             <tr>
               <th className={thStyle} onClick={() => handleOrderRank(sortDir, setSortDir, response, setResponse)} >RANK</th>
               <th className={thStyle} onClick={() => handleOrderAsset(sortDir, setSortDir, response, setResponse)}>ASSET</th>
+              <th className={thStyle} onClick={() => handleOrderPrice(sortDir, setSortDir, response, setResponse)}>PRICE</th>
               <th className={thStyle} onClick={() => handleOrder('from', sortDir, setSortDir, response, setResponse)}>FROM</th>
               <th className={thStyle} onClick={() => handleOrder('to', sortDir, setSortDir, response, setResponse)}>TO</th>
               <th className={thStyle} onClick={() => handleOrder('date', sortDir, setSortDir, response, setResponse)}>PURCHASED </th>
-              <th className={thStyle} onClick={() => handleOrderPrice(sortDir, setSortDir, response, setResponse)}>PRICE</th>
             </tr>
           </thead>
           <tbody>
