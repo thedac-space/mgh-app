@@ -8,22 +8,14 @@ import { fetchChartData } from "../Analytics/fetchChartData"
 
 const TopSellingLands = (props : {metaverse : Metaverse}) => {
   const [topSellings, setTopSellings] = useState<TopSellings | any>({})
-  const [metaverse, setMetaverse] = useState<Metaverse>(props.metaverse)
   const [filterBy, setFilterBy] = useState<TopSellingFilterBy>('totalTop')
-  
-  if (!(props.metaverse == metaverse)){
-    setTopSellings({})
-    setMetaverse(props.metaverse)
-  }
   
   async function waitingData(metaverse: Metaverse) {
     const data = await fetchChartData(metaverse, 'topSellingLands')
     setTopSellings(data)
   }
 
-  useEffect(() => {
-    waitingData(metaverse)
-  }, [metaverse])
+  useEffect(() => { waitingData(props.metaverse) }, [props.metaverse])
 
   return (
     <div className='flex flex-col items-start shadow-blck rounded-xl py-3 px-4 w-full bg-grey-dark bg-opacity-20 text-left'>
