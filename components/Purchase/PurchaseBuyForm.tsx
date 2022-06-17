@@ -95,7 +95,7 @@ const PurchaseBuyForm = ({
     <div className='w-fit m-auto'>
       {/* Show Amount */}
       <h3>
-        Total Amount {convertedMonthlyChoice?.toFixed(2)} {coin?.toUpperCase()}
+        Total Amount: {convertedMonthlyChoice?.toFixed(2)} {coin?.toUpperCase()}
       </h3>
       {/* Action Buttons */}
 
