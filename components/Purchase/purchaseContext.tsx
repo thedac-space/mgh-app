@@ -11,7 +11,7 @@ interface PurchaseContent {
   setCoinsBalance: React.Dispatch<
     React.SetStateAction<PurchaseCoinsBalance | undefined>
   >
-  monthlyChoice: PurchaseMonthlyChoice | undefined
+  monthlyChoice: PurchaseMonthlyChoice
   setMonthlyChoice: React.Dispatch<
     React.SetStateAction<PurchaseMonthlyChoice | undefined>
   >
@@ -22,7 +22,7 @@ interface PurchaseContent {
 export const purchaseContext = createContext<PurchaseContent>({
   coinsBalance: undefined,
   setCoinsBalance: () => {},
-  monthlyChoice: 450,
+  monthlyChoice: undefined,
   setMonthlyChoice: () => {},
   coin: 'mgh',
   setCoin: () => {},
@@ -30,8 +30,8 @@ export const purchaseContext = createContext<PurchaseContent>({
 
 export const PurchaseProvider: React.FC = ({ children }) => {
   const [coinsBalance, setCoinsBalance] = useState<PurchaseCoinsBalance>()
-  const [monthlyChoice, setMonthlyChoice] = useState<PurchaseMonthlyChoice>()
-  const [coin, setCoin] = useState<PurchaseCoin>()
+  const [monthlyChoice, setMonthlyChoice] = useState<PurchaseMonthlyChoice>(450)
+  const [coin, setCoin] = useState<PurchaseCoin | undefined>('mgh')
 
   return (
     <purchaseContext.Provider

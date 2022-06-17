@@ -10,7 +10,7 @@ const PurchaseKeyFeatures = () => {
   ]
   return (
     <>
-      <div className='flex justify-between mb-16'>
+      <div className='flex flex-col lg:flex-row justify-between items-center mb-16 gap-4'>
         {/* Features wrapper */}
         <div className='w-fit m-auto'>
           <h3 className='text-3xl mb-8'>Key Features</h3>

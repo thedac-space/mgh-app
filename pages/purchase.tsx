@@ -59,7 +59,7 @@ const Purchase: NextPage<{ coinValues: PurchaseCoinValues }> = ({
         <title>MGH | Purchase</title>
         <meta name='description' content='Purchase VIP Status' />
       </Head>
-      <section className='text-gray-200 max-w-7xl'>
+      <section className='text-gray-200 max-w-7xl w-screen'>
         {/* Header */}
         <h1 className='text-center md:text-4xl lg:text-5xl text-3xl green-text-gradient mb-8'>
           Unlock premium Metaverse Tools!
@@ -67,7 +67,7 @@ const Purchase: NextPage<{ coinValues: PurchaseCoinValues }> = ({
         {/* Role Sign */}
         <PurchaseRoleSign />
         {/* Purchase Options */}
-        <div className='flex gap-4 mb-8 justify-around'>
+        <div className='flex gap-1 sm:gap-4 mb-8 justify-between md:justify-around'>
           {([1, 3, 12] as const).map((option) => (
             <PurchaseOptionButton key={option} option={option} />
           ))}
