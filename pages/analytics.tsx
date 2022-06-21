@@ -18,7 +18,7 @@ import { ICoinPrices } from '../lib/valuation/valuationTypes'
 import { RiLoader3Fill } from 'react-icons/ri'
 import { Loader } from '../components'
 import PopOver from '../components/Analytics/PopOver'
-
+import { BsQuestionCircle } from 'react-icons/bs'
 const analyticsState = ['loading', 'loaded', 'firstLoad'] as const
 type AnalyticsState = typeof analyticsState[number]
 
@@ -128,11 +128,12 @@ const Analytics: NextPage<Props> = ({ prices }) => {
                             if (values[element.route])
                                 return (
                                     <li>
-                                        <h3 className="text-gray-300 text-lg md:text-xl lg:text-2xl">
+                                        <h3 className="text-gray-300 relative text-lg md:text-xl lg:text-2xl flex h-[70px]">
                                             {element.label}{' '}
-                                            <span className="font-thin text-sm text-[#ef8a17] cursor-pointer">
-                                                <PopOver text={element.description}/>
-                                            </span>
+                                                <BsQuestionCircle className="text-gray-300 cursor-pointer peer bottom-[2px] ml-[5px] " />
+                                                <p className="relative -top-1 left-[1%] border border-gray-500 p-2 rounded-lg bg-black bg-opacity-10 backdrop-filter backdrop-blur font-medium text-xs text-gray-200 hidden peer-hover:block w-70 ">
+                                                    {element.description}
+                                                </p>
                                         </h3>
                                         <AnalyticsChart
                                             fetching={loading}
