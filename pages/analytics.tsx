@@ -17,6 +17,7 @@ import {
 import { ICoinPrices } from '../lib/valuation/valuationTypes'
 import { RiLoader3Fill } from 'react-icons/ri'
 import { Loader } from '../components'
+import { TopSellingLands } from '../components/General'
 
 const analyticsState = ['loading', 'loaded', 'firstLoad'] as const
 type AnalyticsState = typeof analyticsState[number]
@@ -116,27 +117,33 @@ const Analytics: NextPage<Props> = ({ prices }) => {
         {firstLoad ? (
           <Loader />
         ) : (
-          /* Charts Wrapper */
-          <ul className='flex flex-col gap-12'>
-            {/* Charts */}
-            {chartRoutes.map((element) => {
-              if (values[element.route])
-                return (
-                  <li>
-                    <h3 className='text-gray-300 text-lg md:text-xl lg:text-2xl'>
-                      {element.label}
-                    </h3>
-                    <AnalyticsChart
-                      fetching={loading}
-                      prices={prices}
-                      metaverse={metaverse}
-                      data={values[element.route]!}
-                      label={element.label}
-                    />
-                  </li>
-                )
-            })}
-          </ul>
+          <>
+            {/* /* Charts Wrapper */}
+            <ul className='flex flex-col gap-12 mb-12'>
+              {/* Charts */}
+              {chartRoutes.map((element) => {
+                if (values[element.route])
+                  return (
+                    <li>
+                      <h3 className='text-gray-300 text-lg md:text-xl lg:text-2xl'>
+                        {element.label}
+                      </h3>
+                      <AnalyticsChart
+                        fetching={loading}
+                        prices={prices}
+                        metaverse={metaverse}
+                        data={values[element.route]!}
+                        label={element.label}
+                      />
+                    </li>
+                  )
+              })}
+            </ul>
+            <h3 className='text-gray-300 text-lg md:text-xl lg:text-2xl'>
+              Top Selling Lands
+            </h3>
+            <TopSellingLands metaverse={metaverse} />
+          </>
         )}
       </section>
     </>

@@ -50,7 +50,7 @@ import { useAppSelector } from '../state/hooks'
 import { getUserNFTs } from '../lib/nftUtils'
 import useConnectWeb3 from '../backend/connectWeb3'
 import { Chains } from '../lib/chains'
-import { FullScreenButton, TopSellingLands } from '../components/General'
+import { FullScreenButton } from '../components/General'
 import { Metaverse } from '../lib/metaverse'
 import { getLandSummary } from '../lib/heatmap/getLandSummary'
 import { findHeatmapLand } from '../lib/heatmap/findHeatmapLand'
@@ -434,7 +434,6 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                 by you on any information obtained from using the Service.
               </p>
             </div>
-            <TopSellingLands metaverse={metaverse}/>
           </Fade>
         )}
       </section>
