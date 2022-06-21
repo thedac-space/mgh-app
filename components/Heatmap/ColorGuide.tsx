@@ -26,6 +26,7 @@ const ColorGuide = ({ percentFilter, setPercentFilter, filterBy }: Props) => {
     transfers: 'transfers',
     price_difference: 'price difference',
     basic: 'basic',
+    skyView: 'sky view',
 
     // Not using this filters for now.. will delete if permanent
     // variation_last_week: 'variation las week',
