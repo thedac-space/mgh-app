@@ -172,13 +172,13 @@ export const DECENTRALAND_API_COLORS: Record<number, string> = Object.freeze({
  * If we used normal percentages, most lands would be blue the higher ones red, defeating the purpose of the map since there would barely be
  * any yellow/orange or green.
  * To balance this out and make the map have more contrast between the lower lands we write that
- * lands using RED color are the ones that spawn from 100% til 30%. ORANGE from 10% til 5%. YELLOW from 5% til 2%
+ * lands using RED color are the ones that spawn from 100% til 30% ORANGE from 20% to 10%. YELLOW from 10% til 5%. GREEN from 5% til 2%
  * and Light-Blue from 2% till 0%. For the other filters we just use normal percentage, but with any case were the high numbers
  * are way too high compared to the other ones it might make the map more worthy of using to switch the % like we are doing with
  * eth_predicted_price.
  */
 const filterPercentages = {
-  predictedPricePercentage: [0, 2, 5, 10, 30, 100],
+  predictedPricePercentage: [0, 4, 7, 10, 20, 100],
   normal: [0, 20, 40, 60, 80, 100],
 }
 

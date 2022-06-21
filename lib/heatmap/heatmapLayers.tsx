@@ -124,3 +124,16 @@ export const decentralandAPILayer: Layer = (x, y, atlas) => {
     }
   }
 }
+
+export const skyViewLayer: Layer = (x, y, atlas, filter) => {
+  const id = x + ',' + y
+  if (filter === 'skyView' && atlas?.skyView && id in atlas?.skyView) {
+    const img = atlas?.skyView?.[id].img
+    return {
+      color: '',
+      img,
+    }
+  } else {
+    return { color: undefined }
+  }
+}

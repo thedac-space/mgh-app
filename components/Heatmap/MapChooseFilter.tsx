@@ -41,6 +41,11 @@ const MapChooseFilter = ({ filterBy, setFilterBy }: Props) => {
       shortName: undefined,
       icon: <BiTransferAlt />,
     },
+    skyView: {
+      name: 'Sky View',
+      shortName: undefined,
+      icon: <BiTargetLock />,
+    },
 
     // Not using this filters for now..Will delete if decision is permanent
     // variation_last_week: {

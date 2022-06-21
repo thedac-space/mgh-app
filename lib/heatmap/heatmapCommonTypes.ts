@@ -5,6 +5,7 @@ export type Coord = {
 export type Atlas = {
   ITRM: Record<string, ValuationTile>
   decentraland?: Record<string, AtlasTile>
+  skyView?: Record<string, SkyTile>
 }
 
 export type Layer = (
@@ -17,7 +18,8 @@ export type Layer = (
 ) => Tile | null
 
 export type Tile = {
-  color: string
+  color?: string
+  img?: CanvasImageSource
   top?: boolean
   left?: boolean
   topLeft?: boolean
@@ -36,6 +38,12 @@ export type AtlasTile = {
   topLeft?: number
   price?: number
   owner?: string
+}
+
+export type SkyTile = {
+  x: number
+  y: number
+  img: CanvasImageSource //TODO find how to do this
 }
 
 type valuationTransfer = {
@@ -73,6 +81,7 @@ export type MapFilter =
   | 'transfers'
   | 'basic'
   | 'listed_lands'
+  | 'skyView'
 // Not using this filters for now..will delete if permanent
 // | 'variation_last_week'
 // | 'variation_last_four_weeks'

@@ -10,6 +10,7 @@ import {
   LegendFilter,
   MapFilter,
   PercentFilter,
+  SkyTile,
 } from '../lib/heatmap/heatmapCommonTypes'
 import { useVisible } from '../lib/hooks'
 import { formatName, getState, typedKeys } from '../lib/utilities'
@@ -17,10 +18,12 @@ import { ICoinPrices } from '../lib/valuation/valuationTypes'
 import {
   decentralandAPILayer,
   filteredLayer,
+  skyViewLayer,
 } from '../lib/heatmap/heatmapLayers'
 import {
   fetchDecentralandAtlas,
   fetchITRMAtlas,
+  fetchSkyViewAtlas,
 } from '../lib/heatmap/fetchAtlas'
 import { setColours } from '../lib/heatmap/valuationColoring'
 import { getHeatmapSize } from '../lib/heatmap/getHeatmapSize'
@@ -206,13 +209,20 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
         }
       }
       let decentralandAtlas: Record<string, AtlasTile> | undefined
+      let skyViewAtlas: Record<string, SkyTile> | undefined
       if (metaverse === 'decentraland') {
         decentralandAtlas = await fetchDecentralandAtlas()
+        // WE NEED TO UPDATE fetchSkyViewAtlas()!
+        skyViewAtlas = await fetchSkyViewAtlas()
       }
       const atlasWithColours = await setColours(ITRMAtlas, filterBy)
       const heatmapSize = getHeatmapSize({ ITRM: ITRMAtlas })
       setHeatmapSize(heatmapSize)
-      setAtlas({ ITRM: atlasWithColours, decentraland: decentralandAtlas })
+      setAtlas({
+        ITRM: atlasWithColours,
+        decentraland: decentralandAtlas,
+        skyView: skyViewAtlas,
+      })
       setMapState('loaded')
     }
     setData()
@@ -259,7 +269,6 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
             ))}
           </div>
         </div>
-
         {/* Heatmap */}
         <div className='relative mb-8 h-[55vh]' ref={mapDivRef}>
           {!metaverse && (
@@ -353,6 +362,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                 width={dims.width}
                 height={dims.height}
                 layers={[
+                  skyViewLayer,
                   decentralandAPILayer,
                   filteredLayer,
                   selectedStrokeLayer,
@@ -434,7 +444,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                 by you on any information obtained from using the Service.
               </p>
             </div>
-            <TopSellingLands metaverse={metaverse}/>
+            <TopSellingLands metaverse={metaverse} />
           </Fade>
         )}
       </section>

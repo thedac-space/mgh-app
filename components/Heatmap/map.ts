@@ -54,7 +54,7 @@ export function renderMap(args: {
         if (!tile) {
           continue
         }
-        const { color, top, left, topLeft, scale } = tile
+        const { color, top, left, topLeft, scale, img } = tile
 
         const halfSize = scale ? (size * scale) / 2 : size / 2
 
@@ -70,6 +70,8 @@ export function renderMap(args: {
           top,
           topLeft,
           scale,
+          filter,
+          img,
         })
       }
     }

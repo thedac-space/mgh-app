@@ -1,6 +1,6 @@
 import { Metaverse } from '../metaverse'
 import { typedKeys } from '../utilities'
-import { AtlasTile, ValuationTile } from './heatmapCommonTypes'
+import { AtlasTile, SkyTile, ValuationTile } from './heatmapCommonTypes'
 import { heatmapMvOptions } from './heatmapMvOptions'
 
 export const fetchITRMAtlas = async (
@@ -54,4 +54,9 @@ export const fetchDecentralandAtlas = async () => {
   const resp = await fetch('https://api.decentraland.org/v1/tiles')
   const json = await resp.json()
   return json.data as Record<string, AtlasTile> | undefined
+}
+
+export const fetchSkyViewAtlas = async () => {
+  // Fetch Logic
+  return undefined
 }
