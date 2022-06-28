@@ -17,7 +17,6 @@ import {
 import { ICoinPrices } from '../lib/valuation/valuationTypes'
 import { RiLoader3Fill } from 'react-icons/ri'
 import { Loader } from '../components'
-import PopOver from '../components/Analytics/PopOver'
 import { BsQuestionCircle } from 'react-icons/bs'
 const analyticsState = ['loading', 'loaded', 'firstLoad'] as const
 type AnalyticsState = typeof analyticsState[number]

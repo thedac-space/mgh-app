@@ -3,21 +3,21 @@ export const chartRoutes = [
         route: 'avgPriceParcel',
         label: 'Average Sale Price per Parcel',
         description:
-            'This chart shows up the average price per parcel for each day',
+            'Average sale price for a 1x1 plot of LAND for a given timeframe',
     },
     {
         route: 'floorPrice',
         label: 'Floor Price',
-        description: 'This chart shows the floor price for each day',
+        description: 'Lowest listing price of a 1x1 plot of LAND on Opensea',
     },
     {
         route: 'avgPriceParcelPerArea',
-        label: 'Average Sale Price per SQM',
-        description: '',
+        label: 'Average Price Per m^2',
+        description: 'Average sale price for 1 m^2 of LAND for a given timeframe',
     },
-    { route: 'totalNumberOfSales', label: 'Total Sales', description: '' },
+    { route: 'totalNumberOfSales', label: 'Total Sales', description: 'Total plots of LAND sold in a given period of time' },
     { route: 'stdSalesPrices', label: 'Sales Prices', description: '' },
-    { route: 'salesVolume', label: 'Daily Sales Volume', description: '' },
+    { route: 'salesVolume', label: 'Daily Sales Volume', description: 'LAND sales volume for a given timeframe' },
 ]
 
 export const chartSymbolOptions = {
