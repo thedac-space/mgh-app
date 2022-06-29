@@ -37,6 +37,9 @@ export const setColours = async (
    that have a price difference of less than the number below
    */
   const MAX_DIFF = 400
+
+
+  // GENERATE MAX
   const elementOptions = {
     transfers: {
       predictions: typedKeys(valuationAtlas).map(
@@ -82,6 +85,8 @@ export const setColours = async (
 
   max = getMax(predictions)
   // Adding Percent to each land depending on the max number from previous iteration.
+
+  // GENERATE PERCENTAGE FOR EACH TILE.
   typedKeys(valuationAtlas).map((valuation) => {
     const priceDiffPercentage = getPercentage(
       valuationAtlas[valuation].current_price_eth,
