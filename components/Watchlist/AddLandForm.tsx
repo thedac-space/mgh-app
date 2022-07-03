@@ -81,7 +81,9 @@ const AddLandForm = ({ state, addToWatchList, ids, landKeys }: Props) => {
             <button
               disabled={limitReached}
               key={landKey}
-              onClick={() => setMetaverse(landKey)}
+              onClick={() => {
+                console.log(metaverse)
+                setMetaverse(landKey)}}
               className={`flex flex-col items-center justify-center space-y-2 rounded-xl cursor-pointer p-2 px-3 pt-4 md:w-30 md:h-[9.7rem] w-24 h-24 group focus:outline-none ${
                 metaverse === landKey
                   ? 'border-opacity-100 text-gray-200'

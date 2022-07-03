@@ -77,17 +77,6 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
     landId?: string,
     coordinates?: { X: string; Y: string }
   ) => {
-    // If Sandbox or Decentraland limit give Feedback to user
-    if (!lands) return
-    if (typedKeys(lands[metaverse]).length === 10) {
-      landId && setState(landOptions[metaverse].limitIdState)
-      coordinates && setState(landOptions[metaverse].limitCoordinatesState)
-      return setTimeout(() => {
-        // Retrigger useEffect
-        setState('loaded')
-      }, 2000)
-    }
-
     if (!address) return
     landId && setState('loadingQueryId')
     coordinates && setState('loadingQueryCoordinates')
@@ -111,6 +100,18 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
         setState('loaded')
       }, 2000)
     }
+    // If Sandbox or Decentraland limit give Feedback to user
+    if (!lands) return
+    if (typedKeys(lands[metaverse]).length === 10) {
+      landId && setState(landOptions[metaverse].limitIdState)
+      coordinates && setState(landOptions[metaverse].limitCoordinatesState)
+      return setTimeout(() => {
+        // Retrigger useEffect
+        setState('loaded')
+      }, 2000)
+    }
+
+
   }
 
   const removeFromWatchList = useCallback(
@@ -132,6 +133,7 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
       try {
         // getting user watchlist data (We add ! for address because if there's no address we don't call this function)
         const userData = await getUserInfo(address!)
+        console.log(userData)
         // If no User Data but user is logged in create them a watchlist
         if (!userData) {
           setState('loaded')
@@ -159,6 +161,7 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
               )
               if (metaverseLandsObject.err) return
               setLands((previous) => {
+                console.log(previous)
                 return { ...previous!, [metaverse]: metaverseLandsObject }
               })
             })

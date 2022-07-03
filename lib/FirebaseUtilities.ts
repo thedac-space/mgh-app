@@ -50,7 +50,7 @@ export async function addMissingWatchlist(
   watchlist: string
 ) {
   const users = collection(db, "users");
-
+console.log(watchlist)
   await updateDoc(doc(users, walletAddress), {
     [watchlist]: [],
   });
@@ -62,20 +62,20 @@ export async function addLandToWatchList(
   walletAddress: string,
   metaverse: Metaverse
 ) {
-  // const user = doc(db, 'users', walletAddress)
-  // await updateDoc(user, {
-  //   [metaverse + '-watchlist']: arrayUnion(landId),
-  // })
+  const user = doc(db, 'users', walletAddress)
+  await updateDoc(user, {
+    [metaverse + '-watchlist']: arrayUnion(landId),
+  })
 
-  // const updatedData = await getUserInfo(walletAddress)
-  // return updatedData
-  console.log("firing")
-  const updatedData = await calls(`${URL}addToWatchlist`, {
-    address: walletAddress,
-    metaverse: metaverse,
-    land: landId,
-    method: "update",
-  });
+  const updatedData = await getUserInfo(walletAddress)
+  return updatedData
+  // console.log("firing")
+  // const updatedData = await calls(`${URL}addToWatchlist`, {
+  //   address: walletAddress,
+  //   metaverse: metaverse,
+  //   land: landId,
+  //   method: "update",
+  // });
 
   return updatedData;
 }
