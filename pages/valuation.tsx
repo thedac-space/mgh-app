@@ -372,7 +372,7 @@ const ValuationPage: NextPage = ({ prices }: any) => {
   )
 }
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   const res = await fetch(
     'https://api.coingecko.com/api/v3/simple/price?ids=ethereum%2Cthe-sandbox%2Cdecentraland%2Caxie-infinity&vs_currencies=usd'
   )
