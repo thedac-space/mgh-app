@@ -23,7 +23,7 @@ const Layout = ({ children }: any) => {
             <div className="flex flex-col w-full h-full min-h-screen xl:h-screen pt-0 bg-grey-darkest overflow-hidden">
                 {openModal && <WalletModal onDismiss={() => setOpenModal(false)} />}
 
-                <div className="h-72 w-72 rounded-full border bg-gradient-to-br from-blue-500 to-pink-600 blur-3xl fixed top-0 left-0 xl:top-20 xl:left-0.15 2xl:left-0.125 opacity-80" />
+                <div className="h-72 w-72 rounded-full border bg-gradient-to-br from-blue-500 to-pink-600 blur-3xl fixed top-0 left-0 xl:top-20 xl:left-0.15 2xl:left-0.125 opacity-80"/>
 
                 <div className="h-72 w-72 rounded-tl-full border bg-gradient-to-br from-blue-500 to-pink-600 blur-3xl fixed bottom-0 right-0 opacity-50" />
 
