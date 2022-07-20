@@ -51,7 +51,8 @@ module.exports = {
         '19': '4.75rem',
         '26': '6.5rem',
         '30': '7.5rem',
-        '42': '10.5rem'
+        '42': '10.5rem',
+        'mainh': 'calc(100% - 112px)'
       },
       width: {
         '18': '4.5rem',
@@ -127,7 +128,8 @@ module.exports = {
       'lg': '1024px',
       'xl': '1280px',
       '2xl': '1536px',
-      '3xl': '1800px'
+      '3xl': '1800px',
+      'tall': {'raw': '(min-height: 800px)'}
     }
   },
   variants: {

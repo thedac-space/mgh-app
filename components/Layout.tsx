@@ -41,9 +41,9 @@ const Layout = ({ children }: any) => {
                     </div>
                 </div>
 
-                <div className="flex w-full justify-end h-full">
+                <div className="flex w-full justify-start h-full">
 
-                    <div className="hidden xl:flex h-full w-1/6 max-w-sm min-w-max flex-col items-start p-5 pt-16">
+                    <div className="hidden xl:flex h-fit w-1/6 max-w-sm min-w-max flex-col items-start p-5 pt-16 mb-10">
                         <div className="space-y-6 flex flex-col w-full">
                             <NavItem text="Home" link="/" />
                             <NavItem text="Swap" link="/swap" />
@@ -54,7 +54,7 @@ const Layout = ({ children }: any) => {
                         </div>
                     </div>
 
-                    <main className="z-10 w-full h-full min-h-screen xl:min-h-full pt-16 xs:pt-16 sm:pt-20 md:pt-24 xl:pt-10 p-4 xs:p-6 sm:p-10 flex items-start justify-center flex-grow overflow-auto overscroll-auto animate-none xl:animate__animated animate__slideInRight border-t border-l border-white/0 xl:border-white/10 rounded-none xl:rounded-tl-3xl self-end bg-grey-dark bg-opacity-30 shadow-dark ">
+                    <main className="z-10 w-full h-full xl:h-mainh pt-16 xs:pt-16 sm:pt-20 md:pt-24 xl:pt-10 p-4 xs:p-6 sm:p-10 flex items-start justify-center flex-grow overflow-auto overscroll-auto animate-none xl:animate__animated animate__slideInRight border-t border-l border-white/0 xl:border-white/10 rounded-none xl:rounded-tl-3xl xl:rounded-bl-3xl bg-grey-dark bg-opacity-30 shadow-dark ">
                         {children}
                     </main>
 
