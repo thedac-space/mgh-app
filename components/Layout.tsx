@@ -17,10 +17,9 @@ const Layout = ({ children }: any) => {
     const { chainId } = useAppSelector(state => state.account)
     const { web3Provider, disconnectWallet } = useConnectWeb3();
 
-
     return (
         <>
-            <div className="flex flex-col w-full h-full min-h-screen xl:h-screen pt-0 bg-grey-darkest overflow-hidden">
+            <div className="flex flex-col w-full pt-0 bg-grey-darkest overflow-auto">
                 {openModal && <WalletModal onDismiss={() => setOpenModal(false)} />}
 
                 <div className="h-72 w-72 rounded-full border bg-gradient-to-br from-blue-500 to-pink-600 blur-3xl fixed top-0 left-0 xl:top-20 xl:left-0.15 2xl:left-0.125 opacity-80"/>
@@ -54,7 +53,7 @@ const Layout = ({ children }: any) => {
                         </div>
                     </div>
 
-                    <main className="z-10 w-full h-full xl:h-mainh pt-16 xs:pt-16 sm:pt-20 md:pt-24 xl:pt-10 p-4 xs:p-6 sm:p-10 flex items-start justify-center flex-grow overflow-auto overscroll-auto animate-none xl:animate__animated animate__slideInRight border-t border-l border-white/0 xl:border-white/10 rounded-none xl:rounded-tl-3xl xl:rounded-bl-3xl bg-grey-dark bg-opacity-30 shadow-dark ">
+                    <main className="z-10 w-full h-full pt-16 xs:pt-16 sm:pt-20 md:pt-24 xl:pt-10 p-4 xs:p-6 sm:p-10 flex items-start justify-center flex-col overflow-auto overscroll-auto animate-none xl:animate__animated animate__slideInRight border-t border-l border-white/0 xl:border-white/10 rounded-none xl:rounded-tl-3xl bg-grey-dark bg-opacity-30 shadow-dark ">
                         {children}
                     </main>
 
