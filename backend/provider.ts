@@ -5,6 +5,7 @@ import detectEthereumProvider from '@metamask/detect-provider';
 import { getLocal, removeLocal } from "../lib/local"
 import { Provider } from "../lib/enums"
 import { Chains } from "../lib/chains";
+import { ethers } from "ethers";
 
 
 const useProvider = () => {
@@ -38,6 +39,14 @@ const useProvider = () => {
                 .catch(() => {
                     removeLocal("provider")
                 })
+
+        } else if (providerId === Provider.BITKEEP) {
+            if (window.bitkeep.ethereum) {
+                setProvider(window.bitkeep.ethereum)
+            } else {
+                removeLocal("provider")
+            }
+
         } else {
             setProvider(undefined)
         }

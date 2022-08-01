@@ -13,4 +13,5 @@ export enum Tokens {
 export enum Provider {
   METAMASK = 'metamask',
   WALLETCONNECT = 'walletconnect',
+  BITKEEP = 'bitkeep'
 }
