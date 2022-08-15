@@ -54,7 +54,7 @@ const Analytics: NextPage<Props> = ({ prices }) => {
 
 
             setValues(routesValues)
-            setMarkCap((await fetchChartData(metaverse, 'mCap')) as number)
+            
             setRichList(
                 (await fetchChartData(metaverse, 'richList')) as RichList
             )
@@ -104,14 +104,6 @@ const Analytics: NextPage<Props> = ({ prices }) => {
                             {loaded ? (
                                 richList?.pctParcels &&
                                 (richList.pctParcels * 100).toFixed() + '%'
-                            ) : (
-                                <RiLoader3Fill className="animate-spin-slow h-5 w-5 xs:h-6 xs:w-6" />
-                            )}
-                        </p>
-                        <p className="flex gap-1">
-                            Market Cap:{' '}
-                            {loaded ? (
-                                `${markCap.toFixed(2)} ETH`
                             ) : (
                                 <RiLoader3Fill className="animate-spin-slow h-5 w-5 xs:h-6 xs:w-6" />
                             )}
