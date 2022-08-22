@@ -194,7 +194,7 @@ const filterPercentages = {
 
 const filterKey = (mapFilter: MapFilter | undefined) => {
   return mapFilter &&
-    ['eth_predicted_price', 'listed_lands'].includes(mapFilter)
+    ['eth_predicted_price', 'listed_lands', 'floor_adjusted_predicted_price'].includes(mapFilter)
     ? 'predictedPricePercentage'
     : 'normal'
 }
