@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Fade } from 'react-awesome-reveal'
-import { BiTargetLock, BiTransferAlt } from 'react-icons/bi'
+import { BiTargetLock, BiTransferAlt, BiBullseye } from 'react-icons/bi'
 import { FiMap } from 'react-icons/fi'
 import { IoIosArrowDown } from 'react-icons/io'
 import { MdAttachMoney } from 'react-icons/md'
@@ -26,6 +26,11 @@ const MapChooseFilter = ({ filterBy, setFilterBy }: Props) => {
       shortName: undefined,
       icon: <BiTargetLock />,
     },
+    floor_adjusted_predicted_price: {
+      name: 'Floor Adjusted Predicted Price',
+      shortName: undefined,
+      icon: <BiBullseye />,
+    },
     listed_lands: {
       name: 'Listed Lands',
       shortName: undefined,
@@ -38,11 +43,6 @@ const MapChooseFilter = ({ filterBy, setFilterBy }: Props) => {
     },
     transfers: {
       name: 'Transfers',
-      shortName: undefined,
-      icon: <BiTransferAlt />,
-    },
-    floor_adjusted_predicted_price: {
-      name: 'Floor Adjusted Predicted Price',
       shortName: undefined,
       icon: <BiTransferAlt />,
     },
