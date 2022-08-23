@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Fade } from 'react-awesome-reveal'
-import { BiTargetLock, BiTransferAlt } from 'react-icons/bi'
+import { BiTargetLock, BiTransferAlt, BiBullseye } from 'react-icons/bi'
 import { FiMap } from 'react-icons/fi'
 import { IoIosArrowDown } from 'react-icons/io'
 import { MdAttachMoney } from 'react-icons/md'
@@ -25,6 +25,11 @@ const MapChooseFilter = ({ filterBy, setFilterBy }: Props) => {
       name: 'Predicted Price',
       shortName: undefined,
       icon: <BiTargetLock />,
+    },
+    floor_adjusted_predicted_price: {
+      name: 'Floor Adjusted Predicted Price',
+      shortName: undefined,
+      icon: <BiBullseye />,
     },
     listed_lands: {
       name: 'Listed Lands',
@@ -64,7 +69,7 @@ const MapChooseFilter = ({ filterBy, setFilterBy }: Props) => {
       {/* Filter Button + Name */}
       <button
         onClick={() => setOpened(!opened)}
-        className='h-16 gray-box bg-opacity-100 mb-2 items-center w-70 tracking-wider font-semibold text-gray-200 hover:text-white flex justify-between cursor-pointer transition-all'
+        className='h-16 gray-box bg-opacity-100 mb-2 items-center w-96 tracking-wider font-semibold text-gray-200 hover:text-white flex justify-between cursor-pointer transition-all'
       >
         {/* Icon */}
         <span className='hidden sm:block text-lg'>
@@ -100,7 +105,7 @@ const MapChooseFilter = ({ filterBy, setFilterBy }: Props) => {
               filter !== filterBy && (
                 <Fade duration={500} key={filter} direction='down'>
                   <button
-                    className='flex gray-box gap-4 bg-opacity-100 items-center text-gray-200 hover:text-white font-semibold w-70 text-sm md:text-base'
+                    className='flex gray-box gap-4 bg-opacity-100 items-center text-gray-200 hover:text-white font-semibold w-96 text-sm md:text-base'
                     onClick={() => {
                       setFilterBy(filter)
                       setOpened(false)

@@ -65,14 +65,17 @@ export type ValuationTile = {
   portfolio?: boolean
   images: { image_url: string }
   owner?: string
-  external_link: string
+  external_link: string,
+  floor_adjusted_predicted_price?: number
 }
+
 export type MapFilter =
   | 'eth_predicted_price'
   | 'price_difference'
   | 'transfers'
   | 'basic'
   | 'listed_lands'
+  | 'floor_adjusted_predicted_price'
 // Not using this filters for now..will delete if permanent
 // | 'variation_last_week'
 // | 'variation_last_four_weeks'

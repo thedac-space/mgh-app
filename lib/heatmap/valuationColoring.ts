@@ -65,19 +65,23 @@ export const setColours = async (
       ),
     },
     basic: { predictions: [] },
+    floor_adjusted_predicted_price: {
+      predictions: typedKeys(valuationAtlas).map(
+        (valuation) => valuationAtlas[valuation]?.floor_adjusted_predicted_price
+      )
+    }
   }
   // Making an Array of Numbers to get the Max and use that for Percentages on lower Iteration
   let predictions: (number | undefined)[]
 
   // I would prefer to use typedKeys(elementOptions) here but typescript complains so using Object.keys instead
   if (Object.keys(elementOptions).includes(element)) {
-    predictions =
-      elementOptions[element as keyof typeof elementOptions].predictions
+    predictions = elementOptions[element as keyof typeof elementOptions].predictions
   } else {
     predictions = typedKeys(valuationAtlas).map(
       (valuation) =>
         valuationAtlas[valuation][
-          element as keyof ValueOf<typeof valuationAtlas> & MapFilter
+        element as keyof ValueOf<typeof valuationAtlas> & MapFilter
         ]
     )
   }
@@ -98,12 +102,13 @@ export const setColours = async (
         typeof valuationAtlas[valuation].current_price_eth !== 'number'
           ? 0
           : priceDiffPercentage < MAX_DIFF
-          ? getPercentage(priceDiffPercentage, max)
-          : 101, // If land's price difference is higher than MAX_DIFF make their percentage 101, this will show them as dark red.
+            ? getPercentage(priceDiffPercentage, max)
+            : 101, // If land's price difference is higher than MAX_DIFF make their percentage 101, this will show them as dark red.
       basic: 20,
       listed_lands: valuationAtlas[valuation].current_price_eth
         ? getPercentage(valuationAtlas[valuation].eth_predicted_price, max)
         : NaN,
+      floor_adjusted_predicted_price: getPercentage(valuationAtlas[valuation]?.floor_adjusted_predicted_price , max),
     }
 
     let percent = NaN
@@ -112,7 +117,7 @@ export const setColours = async (
     } else {
       percent = getPercentage(
         valuationAtlas[valuation][
-          element as keyof ValueOf<typeof valuationAtlas> & MapFilter
+        element as keyof ValueOf<typeof valuationAtlas> & MapFilter
         ],
         max
       )
@@ -189,7 +194,7 @@ const filterPercentages = {
 
 const filterKey = (mapFilter: MapFilter | undefined) => {
   return mapFilter &&
-    ['eth_predicted_price', 'listed_lands'].includes(mapFilter)
+    ['eth_predicted_price', 'listed_lands', 'floor_adjusted_predicted_price'].includes(mapFilter)
     ? 'predictedPricePercentage'
     : 'normal'
 }
@@ -212,11 +217,10 @@ export const generateColor = (percent: number, mapFilter?: MapFilter) => {
     // CAREFUL WITH FORGETTING THE COMAS BETWEEN NUMBERS ON THE RGB!!!
 
     // LIGHT-BLUE: rgb(0, 255, 160..255)
-    `rgb(0,255,${
-      255 -
-      Math.ceil(
-        (percent / filterPercentages[filterKey(mapFilter)][1]) * (255 - 160)
-      )
+    `rgb(0,255,${255 -
+    Math.ceil(
+      (percent / filterPercentages[filterKey(mapFilter)][1]) * (255 - 160)
+    )
     })`,
 
     // GREEN: rgb(0..170, 255, 0)
@@ -224,39 +228,36 @@ export const generateColor = (percent: number, mapFilter?: MapFilter) => {
       ((percent - filterPercentages[filterKey(mapFilter)][1]) /
         (filterPercentages[filterKey(mapFilter)][2] -
           filterPercentages[filterKey(mapFilter)][1])) *
-        170
+      170
     )},255,0)`,
 
     // YELLOW: rgb(255, 190..255, 0)
-    `rgb(255,${
-      255 -
-      Math.ceil(
-        ((percent - filterPercentages[filterKey(mapFilter)][2]) /
-          (filterPercentages[filterKey(mapFilter)][3] -
-            filterPercentages[filterKey(mapFilter)][2])) *
-          (255 - 190)
-      )
+    `rgb(255,${255 -
+    Math.ceil(
+      ((percent - filterPercentages[filterKey(mapFilter)][2]) /
+        (filterPercentages[filterKey(mapFilter)][3] -
+          filterPercentages[filterKey(mapFilter)][2])) *
+      (255 - 190)
+    )
     },0)`,
 
     // ORANGE: rgb(255, 100..170, 0)
-    `rgb(255,${
-      170 -
-      Math.ceil(
-        ((percent - filterPercentages[filterKey(mapFilter)][3]) /
-          (filterPercentages[filterKey(mapFilter)][4] -
-            filterPercentages[filterKey(mapFilter)][3])) *
-          (170 - 100)
-      )
+    `rgb(255,${170 -
+    Math.ceil(
+      ((percent - filterPercentages[filterKey(mapFilter)][3]) /
+        (filterPercentages[filterKey(mapFilter)][4] -
+          filterPercentages[filterKey(mapFilter)][3])) *
+      (170 - 100)
+    )
     },0)`,
 
     // RED: rgb(255, 0..70, 0)
-    `rgb(255, ${
-      70 -
-      Math.ceil(
-        ((percent - filterPercentages[filterKey(mapFilter)][4]) /
-          (100 - filterPercentages[filterKey(mapFilter)][4])) *
-          70
-      )
+    `rgb(255, ${70 -
+    Math.ceil(
+      ((percent - filterPercentages[filterKey(mapFilter)][4]) /
+        (100 - filterPercentages[filterKey(mapFilter)][4])) *
+      70
+    )
     },0)`,
   ]
   let color!: string
