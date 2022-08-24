@@ -40,7 +40,7 @@ export const setColours = async (
   const getSevenDaysCounter = (valuation: any) => {
     let counter = 0
     let today = new Date()
-    let yesterday = today.setDate(today.getDate() - 7)
+    let yesterday = today.setDate(today.getDate() - 1000)
     valuationAtlas[valuation].history?.map((dataHistory) => {
       let historyTime = new Date(dataHistory.timestamp).getTime()
       if (historyTime > yesterday)
