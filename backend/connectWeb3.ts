@@ -7,7 +7,6 @@ import { useAppDispatch } from "../state/hooks";
 import { disconnect, setAddress, setChain } from "../state/account";
 
 import useProvider from "./provider";
-import Web3 from "web3";
 
 export default function useConnectWeb3() {
   const [web3Provider, setweb3Provider] = useState<ethers.providers.Web3Provider>()
