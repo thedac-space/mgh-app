@@ -198,7 +198,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
           // Iterating through Map
           typedKeys(ITRMAtlas).forEach((land) => {
             // For each Land in user's Portfolio/Watchlist
-            userLands[key]?.forEach((stateLandId) => {
+            userLands[key]?.forEach((stateLandId: any) => {
               ITRMAtlas[land].land_id === stateLandId &&
                 (ITRMAtlas[land][key] = true);
             });
@@ -230,6 +230,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
       setAtlas({ ...atlas, ITRM: atlasWithColours });
     };
     changeColours();
+    handleMapSelection();
   }, [filterBy, percentFilter]);
 
   return (
