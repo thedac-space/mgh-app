@@ -1,3 +1,4 @@
+import Valuation from '../../pages/valuation'
 import { ValueOf } from '../types'
 import { typedKeys } from '../utilities'
 import {
@@ -36,8 +37,19 @@ export const setColours = async (
    * To keep the price_difference filter consistent, we will consider
    that have a price difference of less than the number below
    */
-  const MAX_DIFF = 400
+  const getSevenDaysCounter = (valuation: any) => {
+    let counter = 0
+    let today = new Date()
+    let yesterday = today.setDate(today.getDate() - 7)
+    valuationAtlas[valuation].history?.map((dataHistory) => {
+      let historyTime = new Date(dataHistory.timestamp).getTime()
+      if (historyTime > yesterday)
+        counter = counter + 1
+    })
+    return counter
+  }
 
+  const MAX_DIFF = 400
 
   // GENERATE MAX
   const elementOptions = {
@@ -69,6 +81,11 @@ export const setColours = async (
       predictions: typedKeys(valuationAtlas).map(
         (valuation) => valuationAtlas[valuation]?.floor_adjusted_predicted_price
       )
+    },
+    seven_day_sells: {
+      predictions: typedKeys(valuationAtlas).map((valuation) => {
+         return getSevenDaysCounter(valuation)
+      })
     }
   }
   // Making an Array of Numbers to get the Max and use that for Percentages on lower Iteration
@@ -90,6 +107,7 @@ export const setColours = async (
   max = getMax(predictions)
   // Adding Percent to each land depending on the max number from previous iteration.
 
+
   // GENERATE PERCENTAGE FOR EACH TILE.
   typedKeys(valuationAtlas).map((valuation) => {
     const priceDiffPercentage = getPercentage(
@@ -108,7 +126,8 @@ export const setColours = async (
       listed_lands: valuationAtlas[valuation].current_price_eth
         ? getPercentage(valuationAtlas[valuation].eth_predicted_price, max)
         : NaN,
-      floor_adjusted_predicted_price: getPercentage(valuationAtlas[valuation]?.floor_adjusted_predicted_price , max),
+      floor_adjusted_predicted_price: getPercentage(valuationAtlas[valuation]?.floor_adjusted_predicted_price, max),
+      seven_day_sells: getPercentage(getSevenDaysCounter(valuation), max)
     }
 
     let percent = NaN

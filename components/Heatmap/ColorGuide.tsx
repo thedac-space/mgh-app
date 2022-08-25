@@ -26,7 +26,8 @@ const ColorGuide = ({ percentFilter, setPercentFilter, filterBy }: Props) => {
     transfers: 'transfers',
     price_difference: 'price difference',
     basic: 'basic',
-    floor_adjusted_predicted_price: "floor adjusted predicted price"
+    floor_adjusted_predicted_price: "floor adjusted predicted price",
+    seven_day_sells: "Sales of the last seven days"
 
     // Not using this filters for now.. will delete if permanent
     // variation_last_week: 'variation las week',

@@ -5,6 +5,7 @@ import { FiMap } from 'react-icons/fi'
 import { IoIosArrowDown } from 'react-icons/io'
 import { MdAttachMoney } from 'react-icons/md'
 import { VscGraphLine } from 'react-icons/vsc'
+import { GiStopwatch } from 'react-icons/gi'
 import { MapFilter } from '../../lib/heatmap/heatmapCommonTypes'
 import { typedKeys } from '../../lib/utilities'
 import { useAppSelector } from '../../state/hooks'
@@ -45,6 +46,11 @@ const MapChooseFilter = ({ filterBy, setFilterBy }: Props) => {
       name: 'Transfers',
       shortName: undefined,
       icon: <BiTransferAlt />,
+    },
+    seven_day_sells: {
+      name: 'Sales of the last seven days',
+      shortName: undefined,
+      icon: <GiStopwatch />
     },
 
     // Not using this filters for now..Will delete if decision is permanent
@@ -94,9 +100,7 @@ const MapChooseFilter = ({ filterBy, setFilterBy }: Props) => {
       </button>
       {/* FilterOptions */}
       <div
-        className={
-          (opened && 'mb-1 md:mb-0') + 'md:absolute flex flex-col gap-2'
-        }
+        className={(opened && 'mb-1 md:mb-0') + 'md:absolute flex flex-col gap-2'}
       >
         {opened &&
           isPremium &&
