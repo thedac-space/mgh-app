@@ -7,7 +7,7 @@ const store =  configureStore({
   reducer: {
     network: networkReducer,
     account: accountReducer
-  }
+  }  
 })
 
 // Infer the `RootState` and `AppDispatch` types from the store itself

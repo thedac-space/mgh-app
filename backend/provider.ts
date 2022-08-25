@@ -5,7 +5,6 @@ import detectEthereumProvider from '@metamask/detect-provider';
 import { getLocal, removeLocal } from "../lib/local"
 import { Provider } from "../lib/enums"
 import { Chains } from "../lib/chains";
-import { ethers } from "ethers";
 
 
 const useProvider = () => {
@@ -13,7 +12,6 @@ const useProvider = () => {
     const providerId = getLocal("provider")
 
     useEffect(() => {
-
         if (providerId === Provider.METAMASK) {
             detectEthereumProvider().then((windowEthereum: any) => {
                 windowEthereum.enable()
@@ -41,8 +39,8 @@ const useProvider = () => {
                 })
 
         } else if (providerId === Provider.BITKEEP) {
-            if (window.bitkeep.ethereum) {
-                setProvider(window.bitkeep.ethereum)
+            if (window.bitkeep && window.bitkeep.ethereum) {
+                setProvider(window.bitkeep && window.bitkeep.ethereum)
             } else {
                 removeLocal("provider")
             }

@@ -7,7 +7,7 @@ import { useAppDispatch } from "../state/hooks";
 import { disconnect, setAddress, setChain } from "../state/account";
 
 import useProvider from "./provider";
-
+import Web3 from "web3";
 
 export default function useConnectWeb3() {
   const [web3Provider, setweb3Provider] = useState<ethers.providers.Web3Provider>()
@@ -22,7 +22,7 @@ export default function useConnectWeb3() {
 
     const ethersWeb3Provider = new ethers.providers.Web3Provider(provider, "any");
     setweb3Provider(ethersWeb3Provider)
-
+    const accounts = provider.request({ method: 'eth_requestAccounts' });
     ethersWeb3Provider.listAccounts().then(res => {
       dispatch(setAddress(res[0]))
     })
@@ -35,7 +35,6 @@ export default function useConnectWeb3() {
       if (accounts.length === 0) {
         disconnectWallet()
       }
-      console.log("accountsChanged", accounts);
     }
 
     const handleChainChanged = (newChainId: string) => {
