@@ -32,23 +32,23 @@ export const setColours = async (
   valuationAtlas: Record<string, ValuationTile>,
   element: MapFilter
 ) => {
-  /**
-   * Some Lands are listed for way too high prices.
-   * To keep the price_difference filter consistent, we will consider
-   that have a price difference of less than the number below
-   */
-  const getSevenDaysCounter = (valuation: any) => {
+  const getLandDependingOnGivenNumberOfDays = (valuation: any, givenDays: number) => {
     let counter = 0
-    let today = new Date()
-    let yesterday = today.setDate(today.getDate() - 7)
+    let now = new Date()
+    let deathLine = now.setDate(now.getDate() - givenDays)
     valuationAtlas[valuation].history?.map((dataHistory) => {
       let historyTime = new Date(dataHistory.timestamp).getTime()
-      if (historyTime > yesterday)
+      if (historyTime > deathLine)
         counter = counter + 1
     })
     return counter
   }
 
+  /**
+   * Some Lands are listed for way too high prices.
+   * To keep the price_difference filter consistent, we will consider
+   that have a price difference of less than the number below
+   */
   const MAX_DIFF = 400
 
   // GENERATE MAX
@@ -82,9 +82,11 @@ export const setColours = async (
         (valuation) => valuationAtlas[valuation]?.floor_adjusted_predicted_price
       )
     },
-    seven_day_sells: {
+    six_months_sells: {
       predictions: typedKeys(valuationAtlas).map((valuation) => {
-         return getSevenDaysCounter(valuation)
+        if (getLandDependingOnGivenNumberOfDays(valuation, 183) > 0)
+          return valuationAtlas[valuation].eth_predicted_price
+        return 0
       })
     }
   }
@@ -127,7 +129,9 @@ export const setColours = async (
         ? getPercentage(valuationAtlas[valuation].eth_predicted_price, max)
         : NaN,
       floor_adjusted_predicted_price: getPercentage(valuationAtlas[valuation]?.floor_adjusted_predicted_price, max),
-      seven_day_sells: getPercentage(getSevenDaysCounter(valuation), max)
+      six_months_sells: getLandDependingOnGivenNumberOfDays(valuation, 183)
+        ? getPercentage(valuationAtlas[valuation].eth_predicted_price, max)
+        : NaN
     }
 
     let percent = NaN
@@ -213,7 +217,11 @@ const filterPercentages = {
 
 const filterKey = (mapFilter: MapFilter | undefined) => {
   return mapFilter &&
-    ['eth_predicted_price', 'listed_lands', 'floor_adjusted_predicted_price'].includes(mapFilter)
+    [
+      'eth_predicted_price',
+      'listed_lands', 'floor_adjusted_predicted_price',
+      'six_months_sells'
+    ].includes(mapFilter)
     ? 'predictedPricePercentage'
     : 'normal'
 }

@@ -76,7 +76,7 @@ export type MapFilter =
   | 'basic'
   | 'listed_lands'
   | 'floor_adjusted_predicted_price'
-  | 'seven_day_sells'
+  | 'six_months_sells'
 // Not using this filters for now..will delete if permanent
 // | 'variation_last_week'
 // | 'variation_last_four_weeks'

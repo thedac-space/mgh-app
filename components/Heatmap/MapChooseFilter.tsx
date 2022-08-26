@@ -47,8 +47,8 @@ const MapChooseFilter = ({ filterBy, setFilterBy }: Props) => {
       shortName: undefined,
       icon: <BiTransferAlt />,
     },
-    seven_day_sells: {
-      name: 'Sales of the last seven days',
+    six_months_sells: {
+      name: 'Sales of the last six Months',
       shortName: undefined,
       icon: <GiStopwatch />
     },
