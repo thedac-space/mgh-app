@@ -4,14 +4,15 @@ import { IAPIData } from '../types'
 import { typedKeys } from '../utilities'
 import { ICoinPrices } from '../valuation/valuationTypes'
 import { convertETHPrediction } from '../valuation/valuationUtils'
-import { LandCoords, ValuationTile } from './heatmapCommonTypes'
+import { LandCoords, MapFilter, ValuationTile } from './heatmapCommonTypes'
 
 export const findHeatmapLand = (
   map: Record<string, ValuationTile>,
   prices: ICoinPrices,
   metaverse: Metaverse,
   tokenId?: string,
-  coords?: LandCoords
+  coords?: LandCoords,
+  filterBy?: MapFilter
 ) => {
   const landOptions = {
     sandbox: { contract: Contracts.LAND.ETHEREUM_MAINNET.newAddress },
@@ -37,15 +38,29 @@ export const findHeatmapLand = (
   }
 
   if (!land) return
-  const apiData: IAPIData = {
-    ...map[land],
-    metaverse: metaverse,
-    tokenId: map[land].land_id!,
-    prices: {
-      eth_predicted_price: map[land].eth_predicted_price,
-      predicted_price: map[land].eth_predicted_price * prices.ethereum.usd,
-    },
+  let apiData: IAPIData
+  if (filterBy === 'floor_adjusted_predicted_price') {
+    apiData = {
+      ...map[land],
+      metaverse: metaverse,
+      tokenId: map[land].land_id!,
+      prices: {
+        eth_predicted_price: map[land].floor_adjusted_predicted_price || 0,
+        predicted_price: (map[land].floor_adjusted_predicted_price || 0) * prices.ethereum.usd,
+      },
+    }
+  } else {
+    apiData = {
+      ...map[land],
+      metaverse: metaverse,
+      tokenId: map[land].land_id!,
+      prices: {
+        eth_predicted_price: map[land].eth_predicted_price,
+        predicted_price: map[land].eth_predicted_price * prices.ethereum.usd,
+      },
+    }
   }
+
   const landCoords = { x: map[land].coords.x, y: map[land].coords.y }
   setOpenSeaLink(land)
 

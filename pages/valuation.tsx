@@ -153,7 +153,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
     const landData = findHeatmapLand(atlas.ITRM, prices, metaverse, tokenId, {
       x: x,
       y: y,
-    });
+    }, filterBy);
     if (!landData) {
       setMapState("errorQuery");
       return setTimeout(() => setIsVisible(false), 1100);
@@ -198,7 +198,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
           // Iterating through Map
           typedKeys(ITRMAtlas).forEach((land) => {
             // For each Land in user's Portfolio/Watchlist
-            userLands[key]?.forEach((stateLandId) => {
+            userLands[key]?.forEach((stateLandId: any) => {
               ITRMAtlas[land].land_id === stateLandId &&
                 (ITRMAtlas[land][key] = true);
             });
