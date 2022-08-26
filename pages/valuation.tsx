@@ -230,7 +230,6 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
       setAtlas({ ...atlas, ITRM: atlasWithColours });
     };
     changeColours();
-    handleMapSelection();
   }, [filterBy, percentFilter]);
 
   return (

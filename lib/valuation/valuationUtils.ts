@@ -6,10 +6,8 @@ import { ICoinPrices, IPriceCard, LandListAPIResponse } from './valuationTypes'
 
 export const convertETHPrediction = (
   coinPrices: ICoinPrices,
-
   ethPrediction: number = 0,
   metaverse: Metaverse
-
 ) => {
   const ethUSD = coinPrices.ethereum.usd
   const usdPrediction = ethPrediction * ethUSD
