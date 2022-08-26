@@ -39,7 +39,7 @@ export const findHeatmapLand = (
 
   if (!land) return
   let apiData: IAPIData
-  if (filterBy == 'floor_adjusted_predicted_price') {
+  if (filterBy === 'floor_adjusted_predicted_price') {
     apiData = {
       ...map[land],
       metaverse: metaverse,

@@ -153,7 +153,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
     const landData = findHeatmapLand(atlas.ITRM, prices, metaverse, tokenId, {
       x: x,
       y: y,
-    });
+    }, filterBy);
     if (!landData) {
       setMapState("errorQuery");
       return setTimeout(() => setIsVisible(false), 1100);
