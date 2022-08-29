@@ -395,14 +395,17 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
               )}
 
               {/* Map Legend - Hides when MapCard is showing (all screens) */}
-              {!isVisible && (
-                <MapLegend
-                  className="absolute bottom-2 right-2"
-                  legendFilter={legendFilter}
-                  setLegendFilter={setLegendFilter}
-                  metaverse={metaverse}
-                />
-              )}
+              {
+                filterBy === 'basic'
+                  ? !isVisible && (
+                    <MapLegend
+                      className="absolute bottom-2 right-2"
+                      legendFilter={legendFilter}
+                      setLegendFilter={setLegendFilter}
+                      metaverse={metaverse}
+                    />
+                  ) : ( <></>)
+              }
             </>
           )}
         </div>
