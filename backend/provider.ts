@@ -39,8 +39,8 @@ const useProvider = () => {
                 })
 
         } else if (providerId === Provider.BITKEEP) {
-            if (window.bitkeep && window.bitkeep.ethereum) {
-                setProvider(window.bitkeep && window.bitkeep.ethereum)
+            if (window.bitkeep) {
+                setProvider(window.bitkeep.ethereum)
             } else {
                 removeLocal("provider")
             }

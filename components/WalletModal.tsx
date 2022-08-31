@@ -6,15 +6,15 @@ import { Provider } from "../lib/enums"
 
 
 const WalletModal = ({ onDismiss }: any) => {
-    const [metamask, setMetamask] = useState(Provider)
-    const [bitkeep, setBitkeep] = useState(Provider)
+    const [metamask, setMetamask] = useState()
+    const [bitkeep, setBitkeep] = useState()
     const mounted = useRef(true)
 
     useEffect(() => {
         detectEthereumProvider().then((res: any) => {
             mounted.current && setMetamask(res)
         })
-        if (window.bitkeep.ethereum) {
+        if (window.bitkeep) {
             mounted.current && setBitkeep(window.bitkeep.ethereum)
         }
 
