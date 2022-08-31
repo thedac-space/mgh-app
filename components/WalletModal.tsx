@@ -33,7 +33,7 @@ const WalletModal = ({ onDismiss }: any) => {
                     </div>
                     <div onClick={() => { bitkeep ? setLocal("provider", Provider.BITKEEP) : window.open("https://bitkeep.com/", "_blank"); onDismiss() }} className="flex justify-between items-center cursor-pointer hover:bg-gray-700 rounded-lg transition ease-in-out duration-300 px-2">
                         <img src="/images/bitkeep.svg" className="w-16 h-16" />
-                        <p className="text-xl font-medium pt-1">{bitkeep ? "Bitkeep" : "Bitkeep"}</p>
+                        <p className="text-xl font-medium pt-1">{bitkeep ? "BitKeep" : "BitKeep"}</p>
                     </div>
                     <div onClick={() => { setLocal("provider", Provider.WALLETCONNECT); onDismiss() }} className="flex justify-between items-center cursor-pointer hover:bg-gray-700 rounded-lg transition ease-in-out duration-300 px-2">
                         <img src="/images/walletconnect.svg" className="w-16 h-16" />
