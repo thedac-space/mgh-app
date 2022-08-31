@@ -8,7 +8,7 @@ export const fetchITRMAtlas = async (
   setLandsLoaded: React.Dispatch<React.SetStateAction<number>>
 ) => {
   const valuationAtlas: Record<string, ValuationTile> = {}
-  const LANDS_PER_REQUEST = 2000;
+  const LANDS_PER_REQUEST = 1200;
   const metaverseAddress = getMetaverseAddress(metaverse);
   await Promise.all(
     [
@@ -23,47 +23,49 @@ export const fetchITRMAtlas = async (
           }&size=${LANDS_PER_REQUEST}`
         )
         valuationRes = await valuationRes.json();
-        const arr: any = Object.keys(valuationRes);
-        if (arr.length == 0) {
+        const tokenIds: any = Object.keys(valuationRes);
+        if (tokenIds.length == 0) {
           return Array(1).fill(1);
         }
         //console.log(arr);
+        let ores: any;
+        let cnt : any = 0;
         if (metaverseAddress !== 'None') {
-          let urlOpensea = "https://services.itrmachines.com/test-opensea/service/getData/"
-            + "?collection="
-            + metaverseAddress;
-          const chunks = sliceIntoChunks(arr, 40);
-          let ores: any;
-          for (let current_chunk of chunks) {
-            //console.log(current_chunk.length);
-            let tokens = "";
-            for (let j = 0; j < current_chunk.length; j++) {
-              let token_id = current_chunk[j];
-              tokens += "&token_id=" + token_id;
-            }
-            //Request
-            //console.log("TOKENS STRING >> ", tokens);
-            let url = urlOpensea + tokens;
-            //console.log(url);
-            ores = await fetch(url);
-            ores = await ores.json();
-            for (let value of ores.results) {
-              let pred_price = valuationRes[value.token_id].predicted_price;
-              if (value.current_price) {
-                valuationRes[value.token_id].current_price_eth = value.current_price ? value.current_price.eth_price : undefined;
-                valuationRes[value.token_id].percent = value.current_price ? (100 * ((value.current_price.eth_price / pred_price) - 1)) : undefined;
+          do {
+            try {
+              let urlOpensea = "https://services.itrmachines.com/test-opensea/service/getTokens";
+              let data = {
+                collection: metaverseAddress,
+                tokenIds: tokenIds
               }
-              valuationRes[value.token_id].best_offered_price_eth = value.best_offered_price ? value.best_offered_price.eth_price : undefined;
+              ores = await fetch(urlOpensea, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+              });
+              ores = await ores.json();
+              for (let value of ores.results) {
+                let pred_price = valuationRes[value.token_id].predicted_price;
+                if (value.current_price) {
+                  valuationRes[value.token_id].current_price_eth = value.current_price ? value.current_price.eth_price : undefined;
+                  valuationRes[value.token_id].percent = value.current_price ? (100 * ((value.current_price.eth_price / pred_price) - 1)) : undefined;
+                }
+                valuationRes[value.token_id].best_offered_price_eth = value.best_offered_price ? value.best_offered_price.eth_price : undefined;
+              }
+            } catch (error) {
+              ores = undefined;
+              cnt = cnt + 1;
+              console.log("Error trying again...", error);
             }
-          }
+          } while (ores == undefined && cnt < 10);
         }
-        //console.log(ores);
-        //valuationRes['45'].curent_price = 4.5;
         const valuations = valuationRes as Record<
           string,
           ValuationTile | undefined
         >
-        console.log(valuations);
+        //console.log(valuations);
         // Mapping through those valuations
         typedKeys(valuations).map((key) => {
           {
