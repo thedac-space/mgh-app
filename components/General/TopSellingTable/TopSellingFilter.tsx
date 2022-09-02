@@ -9,10 +9,10 @@ interface Props {
 
 // Had to put this object outside to use it on the Props. If not, would usually keep it inside function
 const filterOptions = { 
-  yesterdayTop :{ title: 'TOP LANDS FILTERED BY LAST 24 HOURS', label: '1D' },
-  monthTop: { title: 'TOP LANDS FILTERED BY LAST MOUNTH', label: '1M' },
-  yearTop:{ title: 'TOP LANDS FILTERED BY LAST YEAR', label: '1Y' },
-  totalTop:{ title: 'TOP LANDS', label: 'Max' }
+  yesterdayTop :{ title: 'TOP SALES FILTERED BY LAST 24 HOURS', label: '1D' },
+  monthTop: { title: 'TOP SALES FILTERED BY LAST MOUNTH', label: '1M' },
+  yearTop:{ title: 'TOP SALES FILTERED BY LAST YEAR', label: '1Y' },
+  totalTop:{ title: 'TOP SALES', label: 'Max' }
  }
 
 
