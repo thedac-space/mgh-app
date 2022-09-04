@@ -82,9 +82,9 @@ export const setColours = async (
         (valuation) => valuationAtlas[valuation]?.floor_adjusted_predicted_price
       )
     },
-    six_months_sells: {
+    last_month_sells: {
       predictions: typedKeys(valuationAtlas).map((valuation) => {
-        if (getLandDependingOnGivenNumberOfDays(valuation, 183) > 0)
+        if (getLandDependingOnGivenNumberOfDays(valuation, 30) > 0)
           return valuationAtlas[valuation].eth_predicted_price
         return 0
       })
@@ -129,7 +129,7 @@ export const setColours = async (
         ? getPercentage(valuationAtlas[valuation].eth_predicted_price, max)
         : NaN,
       floor_adjusted_predicted_price: getPercentage(valuationAtlas[valuation]?.floor_adjusted_predicted_price, max),
-      six_months_sells: getLandDependingOnGivenNumberOfDays(valuation, 183)
+      last_month_sells: getLandDependingOnGivenNumberOfDays(valuation, 30)
         ? getPercentage(valuationAtlas[valuation].eth_predicted_price, max)
         : NaN
     }
@@ -220,7 +220,7 @@ const filterKey = (mapFilter: MapFilter | undefined) => {
     [
       'eth_predicted_price',
       'listed_lands', 'floor_adjusted_predicted_price',
-      'six_months_sells'
+      'last_month_sells'
     ].includes(mapFilter)
     ? 'predictedPricePercentage'
     : 'normal'
