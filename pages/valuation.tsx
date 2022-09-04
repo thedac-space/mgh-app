@@ -50,7 +50,7 @@ import { useAppSelector } from "../state/hooks";
 import { getUserNFTs } from "../lib/nftUtils";
 import useConnectWeb3 from "../backend/connectWeb3";
 import { Chains } from "../lib/chains";
-import { FullScreenButton } from "../components/General";
+import { FullScreenButton, TopSellingLands } from "../components/General";
 import { Metaverse } from "../lib/metaverse";
 import { getLandSummary } from "../lib/heatmap/getLandSummary";
 import { findHeatmapLand } from "../lib/heatmap/findHeatmapLand";
@@ -425,6 +425,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
               Our Top Picks
             </h3>
             <TopPicksLands metaverse={metaverse} />
+            <TopSellingLands metaverse={metaverse} />
             <div className="flex flex-col items-start shadow-blck rounded-xl py-3 px-4 w-full bg-grey-dark bg-opacity-20 text-left mb-8">
               <p className="text-xs sm:text-sm text-gray-400">
                 The MGH DAO does not provide, personalized investment
