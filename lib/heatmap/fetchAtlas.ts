@@ -8,7 +8,7 @@ export const fetchITRMAtlas = async (
   setLandsLoaded: React.Dispatch<React.SetStateAction<number>>
 ) => {
   const valuationAtlas: Record<string, ValuationTile> = {}
-  const LANDS_PER_REQUEST = 1200;
+  const LANDS_PER_REQUEST = 2000;
   const metaverseAddress = getMetaverseAddress(metaverse);
   await Promise.all(
     [
