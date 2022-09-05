@@ -1,14 +1,14 @@
 import { Metaverse } from '../metaverse'
 import { typedKeys } from '../utilities'
 import { AtlasTile, ValuationTile } from './heatmapCommonTypes'
-import { heatmapMvOptions, hetmapMvLandsPerRequest } from './heatmapMvOptions'
+import { heatmapMvOptions, heatmapMvLandsPerRequest } from './heatmapMvOptions'
 
 export const fetchITRMAtlas = async (
     metaverse: Metaverse,
     setLandsLoaded: React.Dispatch<React.SetStateAction<number>>
 ) => {
     const valuationAtlas: Record<string, ValuationTile> = {}
-    const LANDS_PER_REQUEST = hetmapMvLandsPerRequest[metaverse].lands
+    const LANDS_PER_REQUEST = heatmapMvLandsPerRequest[metaverse].lands
     const metaverseAddress = getMetaverseAddress(metaverse)
     await Promise.all(
         [

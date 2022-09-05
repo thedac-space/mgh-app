@@ -8,7 +8,7 @@ export const heatmapMvOptions = {
   'axie-infinity': { lands: 90601 },
 }
 
-export const hetmapMvLandsPerRequest = {
+export const heatmapMvLandsPerRequest = {
   sandbox: {
     lands: 2000,
   },
