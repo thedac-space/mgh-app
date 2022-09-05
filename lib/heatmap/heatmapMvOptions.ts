@@ -7,3 +7,13 @@ export const heatmapMvOptions = {
   },
   'axie-infinity': { lands: 90601 },
 }
+
+export const hetmapMvLandsPerRequest = {
+  sandbox: {
+    lands: 2000,
+  },
+  decentraland: {
+    lands: 1200,
+  },
+  'axie-infinity': { lands: 2000 },
+}
