@@ -10,7 +10,6 @@ interface Props {
 
 const TopPicksLands = ({ metaverse }: Props) => {
   const [loading, setLoading] = useState(true)
-
   const [picks, setPicks] = useState({})
 
   useEffect(() => {
@@ -38,21 +37,21 @@ const TopPicksLands = ({ metaverse }: Props) => {
         </p>
       ) : (
         <table className='w-full table-fixed border-collapse'>
-          <thead className='bg-transparent text-white w-full'>
-            <tr className='flex w-full mb-4 text-left'>
-              <th className='p-4 w-1/5  bg-slate-800 text-xs lg:text-lg md:text-base '>
+          <thead className='bg-transparent text-slate-200 w-full'>
+            <tr className='flex w-full mb-4 text-left bg-slate-800'>
+              <th className='p-4 w-1/5 text-xs lg:text-lg md:text-base '>
                 Land
               </th>
-              <th className='p-4 w-1/5  bg-slate-800 text-xs lg:text-lg md:text-base '>
+              <th className='p-4 w-1/5 text-xs lg:text-lg md:text-base '>
                 Coord
               </th>
-              <th className='p-4 w-1/5  bg-slate-800 text-xs lg:text-lg md:text-base '>
+              <th className='p-4 w-1/5 text-xs lg:text-lg md:text-base '>
                 Current price
               </th>
-              <th className='p-4 w-1/5  bg-slate-800 text-xs lg:text-lg md:text-base '>
+              <th className='p-4 w-1/5 text-xs lg:text-lg md:text-base '>
                 Predicted price
               </th>
-              <th className='p-4 w-1/5  bg-slate-800 text-xs lg:text-lg md:text-base'>
+              <th className='p-4 w-1/5 text-xs lg:text-lg md:text-base'>
                 Gap
               </th>
             </tr>
