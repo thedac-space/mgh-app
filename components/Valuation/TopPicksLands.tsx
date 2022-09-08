@@ -56,7 +56,7 @@ const TopPicksLands = ({ metaverse }: Props) => {
               </th>
             </tr>
           </thead>
-          <tbody className='bg-transparent flex flex-col items-center justify-between overflow-y-scroll w-full h-52 scrollbar'>
+          <tbody className='bg-transparent flex flex-col items-center justify-between overflow-y-scroll w-full h-52 scrollbar--y scrollbar'>
             {typedKeys(picks).map((key) => {
               return (
                 <tr key={key} className='flex w-full mb-4'>

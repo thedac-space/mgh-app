@@ -29,9 +29,14 @@
     src: url("./fonts/Montserrat/Montserrat-Bold.ttf");
   } */
 
-  .scrollbar::-webkit-scrollbar {
+  .scrollbar--y ::-webkit-scrollbar {
     width: 8px;
     height: 20px;
+  }
+
+  .scrollbar--x::-webkit-scrollbar {
+    width: 20px;
+    height: 8px;
   }
 
   .scrollbar::-webkit-scrollbar-track {
@@ -46,26 +51,6 @@
   }
 
   .scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #8080f0;
-  }
-
-  .scrollbar--x::-webkit-scrollbar {
-    width: 20px;
-    height: 8px;
-  }
-
-  .scrollbar--x::-webkit-scrollbar-track {
-    border-radius: 100vh;
-    background: #1E293B;
-  }
-
-  .scrollbar--x::-webkit-scrollbar-thumb {
-    background: #FFFFFF;
-    border-radius: 100vh;
-    border: 3px solid #1E293B;
-  }
-
-  .scrollbar--x::-webkit-scrollbar-thumb:hover {
     background: #8080f0;
   }
 
