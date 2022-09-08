@@ -18,15 +18,15 @@ const TopSellingLands = (props : {metaverse : Metaverse}) => {
   useEffect(() => { waitingData(props.metaverse) }, [props.metaverse])
 
   return (
-    <div className='flex flex-col items-start shadow-blck rounded-xl py-3 px-4 w-full bg-grey-dark bg-opacity-20 text-left'>
+    <div className='flex flex-col items-start rounded-xl py-3 px-4 w-full gray-box text-left mb-10'>
       {
         Object.entries(topSellings).length === 0 ?
         <p className={`text-xs sm:text-sm text-gray-400`}>LOADING TOP SELLINGS...</p> :
-        <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded bg-slate-900 text-white">
+        <div className="relative flex flex-col min-w-0 break-words w-full mb-6 rounded text-white">
           <div className="block w-full overflow-x-auto">
             <TopSellingFilter filterBy={filterBy} setFilterBy={setFilterBy}/>
           </div>
-          <div className="block w-full overflow-x-auto">
+          <div className="block w-full overflow-x-scroll scrollbar--x scrollbar">
             <TableStructure filterby={{element: filterBy, data: topSellings[filterBy]}}/>
           </div>
         </div>

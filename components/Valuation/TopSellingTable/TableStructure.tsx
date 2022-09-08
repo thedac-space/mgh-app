@@ -18,7 +18,7 @@ const TableStructure = ({filterby} : {filterby: filterBy}) => {
   const [response, setResponse] = useState<[key: TopSellingRequestItem]>(filterData(filterby.data))
   const [sortDir, setSortDir] = useState<boolean>(false)
 
-  const thStyle = "px-6 align-middle border border-solid py-3 text-xs uppercase border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-slate-800 text-slate-300 border-slate-700 cursor-pointer"
+  const thStyle = "px-6 align-middle py-3 text-xs lg:text-lg border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-slate-800 text-slate-200 border-slate-700 cursor-pointer"
 
   useEffect(() => {
     setResponse(filterData(filterby.data))
@@ -31,15 +31,15 @@ const TableStructure = ({filterby} : {filterby: filterBy}) => {
         <table className="items-center w-full bg-transparent border-collapse">
           <thead>
             <tr>
-              <th className={thStyle} onClick={() => handleOrderRank(sortDir, setSortDir, response, setResponse)} >RANK</th>
-              <th className={thStyle} onClick={() => handleOrderAsset(sortDir, setSortDir, response, setResponse)}>ASSET</th>
-              <th className={thStyle} onClick={() => handleOrderPrice(sortDir, setSortDir, response, setResponse)}>PRICE</th>
-              <th className={thStyle} onClick={() => handleOrder('from', sortDir, setSortDir, response, setResponse)}>FROM</th>
-              <th className={thStyle} onClick={() => handleOrder('to', sortDir, setSortDir, response, setResponse)}>TO</th>
-              <th className={thStyle} onClick={() => handleOrder('date', sortDir, setSortDir, response, setResponse)}>PURCHASED </th>
+              <th className={thStyle} onClick={() => handleOrderRank(sortDir, setSortDir, response, setResponse)} >Rank</th>
+              <th className={thStyle} onClick={() => handleOrderAsset(sortDir, setSortDir, response, setResponse)}>Asset</th>
+              <th className={thStyle} onClick={() => handleOrderPrice(sortDir, setSortDir, response, setResponse)}>Price</th>
+              <th className={thStyle} onClick={() => handleOrder('from', sortDir, setSortDir, response, setResponse)}>From</th>
+              <th className={thStyle} onClick={() => handleOrder('to', sortDir, setSortDir, response, setResponse)}>To</th>
+              <th className={thStyle} onClick={() => handleOrder('date', sortDir, setSortDir, response, setResponse)}>Purchased </th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="bg-transparent items-center justify-between w-full h-52">
             {
               response.map((value) =><TableItem key={value.position} item={value}/>)
             }
