@@ -39,7 +39,7 @@ const TableStructure = ({filterby} : {filterby: filterBy}) => {
               <th className={thStyle} onClick={() => handleOrder('date', sortDir, setSortDir, response, setResponse)}>Purchased </th>
             </tr>
           </thead>
-          <tbody className="bg-transparent items-center justify-between overflow-x-scroll w-full h-52 scrollbar">
+          <tbody className="bg-transparent items-center justify-between w-full h-52">
             {
               response.map((value) =><TableItem key={value.position} item={value}/>)
             }

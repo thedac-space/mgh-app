@@ -26,7 +26,7 @@ const TopSellingLands = (props : {metaverse : Metaverse}) => {
           <div className="block w-full overflow-x-auto">
             <TopSellingFilter filterBy={filterBy} setFilterBy={setFilterBy}/>
           </div>
-          <div className="block w-full overflow-x-auto">
+          <div className="block w-full overflow-x-scroll scrollbar--x">
             <TableStructure filterby={{element: filterBy, data: topSellings[filterBy]}}/>
           </div>
         </div>
