@@ -19,7 +19,6 @@ import { RiLoader3Fill } from 'react-icons/ri'
 import { Loader } from '../components'
 
 import { BsQuestionCircle } from 'react-icons/bs'
-import { TopSellingLands } from '../components/General'
 const analyticsState = ['loading', 'loaded', 'firstLoad'] as const
 type AnalyticsState = typeof analyticsState[number]
 
