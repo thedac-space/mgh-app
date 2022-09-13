@@ -48,7 +48,6 @@ const MapInitMvChoice = ({ metaverse, setMetaverse }: Props) => {
           </button>
         ))}
       </div>
-      <img src='/images/somnium-space-cube-logo' />
     </div>
   )
 }

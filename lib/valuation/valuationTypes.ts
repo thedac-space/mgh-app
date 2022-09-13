@@ -5,6 +5,7 @@ export interface ICoinPrices {
   ethereum: { usd: number }
   'the-sandbox': { usd: number }
   'axie-infinity': { usd: number }
+  'somnium-space': { usd: number }
 }
 
 export interface IPriceCard {
