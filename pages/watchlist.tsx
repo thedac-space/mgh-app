@@ -67,6 +67,12 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
       limitIdState: 'limitIdAxie',
       limitCoordinatesState: 'limitCoordinatesAxie',
     },
+    "somnium-space": {
+      contract: Contracts.AXIE_LANDS.RONIN_MAINNET.address,
+      firebase: 'axie-infinity-watchlist',
+      limitIdState: 'limitIdAxie',
+      limitCoordinatesState: 'limitCoordinatesAxie',
+    }
   } as const
 
   // Creating Array for looping through Metaverses Options
