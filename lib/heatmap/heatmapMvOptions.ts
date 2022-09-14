@@ -10,7 +10,7 @@ export const heatmapMvOptions = {
 
 export const heatmapMvLandsPerRequest = {
   sandbox: {
-    lands: 2000,
+    lands: 5000,
   },
   decentraland: {
     lands: 1200,
