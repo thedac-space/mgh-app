@@ -28,7 +28,11 @@ const SalesVolumeDaily = ({ coinPrices, metaverse }: Props) => {
       }
 
       const formattedMetaverse =
-        metaverse === 'sandbox' ? 'the-sandbox' : metaverse
+        metaverse === 'sandbox'
+          ? 'the-sandbox'
+          : metaverse === 'somnium-space'
+            ? 'somnium-space-cubes'
+            : metaverse
       const metaversePrediction =
         (stats.one_day_volume * coinPrices.ethereum?.usd) /
         coinPrices[formattedMetaverse]?.usd
