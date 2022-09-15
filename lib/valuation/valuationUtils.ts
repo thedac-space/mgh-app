@@ -89,6 +89,7 @@ export const handleLandName = (
     sandbox: 'Land',
     decentraland: 'Parcel',
     'axie-infinity': 'Plot',
+    'somnium-space':''
   }
   if (!landName) return `${options[metaverse]} ${coords.x}, ${coords.y}`
   if (metaverse === 'decentraland') {

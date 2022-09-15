@@ -17,6 +17,7 @@ export const findHeatmapLand = (
   const landOptions = {
     sandbox: { contract: Contracts.LAND.ETHEREUM_MAINNET.newAddress },
     decentraland: { contract: Contracts.PARCEL.ETHEREUM_MAINNET.address },
+    'somnium-space':{contract:''}
   }
 
   const setOpenSeaLink = (key: string) => {

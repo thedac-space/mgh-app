@@ -22,6 +22,7 @@ const FloorAndVolumeChart = ({ metaverse }: { metaverse: Metaverse }) => {
       sandbox: 'SAND',
       decentraland: 'MANA',
       'axie-infinity': 'AXS',
+      'somnium-space':''
     },
   }
   const [symbol, setSymbol] = useState<keyof typeof symbolOptions>('ETH')
