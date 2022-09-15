@@ -67,4 +67,10 @@ export const Contracts = {
       abi: new Interface(AxieLandAbi),
     },
   },
+  // Somnium Space:
+  CUBES: {
+    ETHEREUM_MAINNET: {
+      address: '0x913ae503153d9a335398d0785ba60a2d63ddb4e2'
+    }
+  }
 }

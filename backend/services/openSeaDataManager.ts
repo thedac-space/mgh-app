@@ -48,6 +48,7 @@ export const createOpenSeaLink = (metaverse: Metaverse, landId: string) => {
   const contracts = {
     decentraland: Contracts.PARCEL.ETHEREUM_MAINNET.address,
     sandbox: Contracts.LAND.ETHEREUM_MAINNET.newAddress,
+    'somnium-space': Contracts.CUBES.ETHEREUM_MAINNET.address
   }
 
   return `https://opensea.io/assets/${contracts[metaverse]}/${landId}`
