@@ -45,6 +45,7 @@ import {
   MapMobileFilters,
   MapSearch,
   TileMap,
+  MaptalksCanva
 } from "../components/Heatmap";
 import { getUserInfo } from "../lib/FirebaseUtilities";
 import { useAppSelector } from "../state/hooks";
@@ -56,7 +57,6 @@ import { Metaverse } from "../lib/metaverse";
 import { getLandSummary } from "../lib/heatmap/getLandSummary";
 import { findHeatmapLand } from "../lib/heatmap/findHeatmapLand";
 import Head from "next/head";
-import MaptalksCanva from "../components/Heatmap/MaptalksCanva";
 
 // Making this state as an object in order to iterate easily through it
 export const VALUATION_STATE_OPTIONS = [

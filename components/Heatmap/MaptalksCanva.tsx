@@ -56,7 +56,7 @@ const MaptalksCanva = ({ width, height }: IMaptalksCanva) => {
     } */
 
     let map
-    /* var imageLayer = new maptalks.ImageLayer('images', [
+    var imageLayer = new maptalks.ImageLayer('images', [
       {
         //url : 'images/map-hires-background.jpg',
         //url : '/images/Somnium_Space_World_Map_HQ2.jpg',
@@ -64,7 +64,7 @@ const MaptalksCanva = ({ width, height }: IMaptalksCanva) => {
         extent: [-1, -1, 1, 1],
         opacity: 1
       }
-    ]); */
+    ]);
 
     map = new maptalks.Map('map', {
       center: [0, 0],
@@ -77,12 +77,7 @@ const MaptalksCanva = ({ width, height }: IMaptalksCanva) => {
       //zoomControl : true,
       //overviewControl : true,
       dragRotate: true, // set to true if you want a rotatable map
-      baseLayer: new maptalks.TileLayer('base', {
-        'urlTemplate' : 'http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
-        'subdomains'  : ['a','b','c','d'],
-        'attribution'  : '&copy; <a href="http://www.osm.org/copyright">OSM</a> contributors, '+
-        '&copy; <a href="https://carto.com/attributions">CARTO</a>'
-      })
+      baseLayer: imageLayer
     });
 
     //let layer = new maptalks.VectorLayer('vector').addTo(map);
@@ -98,7 +93,7 @@ const MaptalksCanva = ({ width, height }: IMaptalksCanva) => {
   }, [])
 
   return (
-    <div id="map" className={`w-[${width}px] h-[${height}px]`} />
+    <canvas width={width} height={height} id="map"></canvas>
   )
 }
 
