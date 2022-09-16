@@ -42,7 +42,7 @@ const MaptalksCanva = ({
     const downloadMap = async (ITRMObject: any, layer: any) => {
       const landColection: any = []
 
-      Object.entries(ITRMObject).forEach(([key, value] : any) => {
+      Object.entries(ITRMObject).forEach(([key, value]: any) => {
         let polygon = new maptalks.Polygon([
           [
             [value.geometry[0].x, value.geometry[0].y],
@@ -97,11 +97,11 @@ const MaptalksCanva = ({
     let layer = new maptalks.VectorLayer('vector').addTo(map);
     downloadMap(atlas.ITRM, layer)
 
-    /* map.on('click', function (e: any) {
+    map.on('click', function (e: any) {
       layer.forEach(function (g: any) {
-        alert('Que hace este click?')
+        //alert('clicked')
       });
-    }); */
+    });
   }, [])
 
   return (
