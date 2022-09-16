@@ -31,7 +31,7 @@ const FloorPriceTracker = ({ coinPrices, metaverse }: Props) => {
         metaverse === 'sandbox'
           ? 'the-sandbox'
           : metaverse === 'somnium-space'
-            ? 'somnium-space-cubes'
+            ? 'somnium-space'
             : metaverse
       const metaversePrediction =
         (stats.floor_price * coinPrices.ethereum?.usd) /

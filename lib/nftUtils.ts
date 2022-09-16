@@ -75,7 +75,7 @@ export const getUserNFTs = async (
     decentraland: Contracts.PARCEL.ETHEREUM_MAINNET.address,
     'axie-infinity': Contracts.AXIE_LANDS.RONIN_MAINNET.address,
   }
-  const contract = createNFTContract(provider, contracts[metaverse])
+  const contract = createNFTContract(provider, (contracts as any)[metaverse])
   // Getting al transfer events that involve the user
   const event = contract.filters.Transfer(undefined, address)
 
