@@ -45,6 +45,7 @@ import {
   MapMobileFilters,
   MapSearch,
   TileMap,
+  MaptalksCanva
 } from "../components/Heatmap";
 import { getUserInfo } from "../lib/FirebaseUtilities";
 import { useAppSelector } from "../state/hooks";
@@ -339,43 +340,71 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                 </div>
               )}
               {/*  Map */}
-              <TileMap
-                // min and max values for x and y
-                minX={heatmapSize.minX}
-                maxX={heatmapSize.maxX}
-                minY={heatmapSize.minY}
-                maxY={heatmapSize.maxY}
-                // starting position of the map
-                x={Number(selected?.x || heatmapSize.initialY)}
-                y={Number(selected?.y || heatmapSize.initialX)}
-                // map filter (predicted_price, transfers, etc..)
-                filter={filterBy}
-                // Filter lands by percentage. On bottom left
-                percentFilter={percentFilter}
-                // Filter lands by utility (watchlist, portfolio, etc..). On bottom right
-                legendFilter={legendFilter}
-                atlas={atlas}
-                className="atlas"
-                width={dims.width}
-                height={dims.height}
-                layers={[
-                  decentralandAPILayer,
-                  filteredLayer,
-                  selectedStrokeLayer,
-                  selectedFillLayer,
-                  hoverLayer,
-                ]}
-                onHover={(x, y) => {
-                  handleHover(x, y);
-                }}
-                onClick={(x, y) => {
-                  if (isSelected(x, y)) {
-                    setSelected(undefined);
-                  } else {
-                    handleMapSelection(x, y);
-                  }
-                }}
-              />
+              {
+                metaverse !== 'somnium-space'
+                  ? (
+                    <TileMap
+                      // min and max values for x and y
+                      minX={heatmapSize.minX}
+                      maxX={heatmapSize.maxX}
+                      minY={heatmapSize.minY}
+                      maxY={heatmapSize.maxY}
+                      // starting position of the map
+                      x={Number(selected?.x || heatmapSize.initialY)}
+                      y={Number(selected?.y || heatmapSize.initialX)}
+                      // map filter (predicted_price, transfers, etc..)
+                      filter={filterBy}
+                      // Filter lands by percentage. On bottom left
+                      percentFilter={percentFilter}
+                      // Filter lands by utility (watchlist, portfolio, etc..). On bottom right
+                      legendFilter={legendFilter}
+                      atlas={atlas}
+                      className="atlas"
+                      width={dims.width}
+                      height={dims.height}
+                      layers={[
+                        decentralandAPILayer,
+                        filteredLayer,
+                        selectedStrokeLayer,
+                        selectedFillLayer,
+                        hoverLayer,
+                      ]}
+                      onHover={(x, y) => {
+                        handleHover(x, y);
+                      }}
+                      onClick={(x, y) => {
+                        if (isSelected(x, y)) {
+                          setSelected(undefined);
+                        } else {
+                          handleMapSelection(x, y);
+                        }
+                      }}
+                    />
+                  )
+                  : (
+                    <MaptalksCanva
+                      filter={filterBy}
+                      // Filter lands by percentage. On bottom left
+                      percentFilter={percentFilter}
+                      // Filter lands by utility (watchlist, portfolio, etc..). On bottom right
+                      legendFilter={legendFilter}
+                      atlas={atlas}
+                      className="atlas"
+                      width={dims.width}
+                      height={dims.height}
+                      onHover={(x: any, y: any) => {
+                        handleHover(x, y);
+                      }}
+                      onClick={(x: any, y: any) => {
+                        if (isSelected(x, y)) {
+                          setSelected(undefined);
+                        } else {
+                          handleMapSelection(x, y);
+                        }
+                      }}
+                    />
+                  )
+              }
               {/* Selected Land Card */}
               {isVisible && (
                 <div
@@ -405,7 +434,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                       setLegendFilter={setLegendFilter}
                       metaverse={metaverse}
                     />
-                  ) : ( <></>)
+                  ) : (<></>)
               }
             </>
           )}
@@ -457,7 +486,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 
 export async function getServerSideProps() {
   const coin = await fetch(
-    "https://api.coingecko.com/api/v3/simple/price?ids=ethereum%2Cthe-sandbox%2Cdecentraland%2Caxie-infinity&vs_currencies=usd"
+    "https://api.coingecko.com/api/v3/simple/price?ids=ethereum%2Cthe-sandbox%2Cdecentraland%2Caxie-infinity%2Csomnium-space-cubes&vs_currencies=usd"
   );
   const prices = await coin.json();
   return {

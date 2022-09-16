@@ -29,5 +29,6 @@ export const chartSymbolOptions = {
         sandbox: 'SAND',
         decentraland: 'MANA',
         'axie-infinity': 'AXS',
+        'somnium-space':''
     },
 } as const

@@ -6,6 +6,7 @@ export const heatmapMvOptions = {
     lands: 92573,
   },
   'axie-infinity': { lands: 90601 },
+  'somnium-space': { lands: 5000 }
 }
 
 export const heatmapMvLandsPerRequest = {
@@ -16,4 +17,5 @@ export const heatmapMvLandsPerRequest = {
     lands: 1200,
   },
   'axie-infinity': { lands: 2000 },
+  'somnium-space': { lands: 100 }
 }
