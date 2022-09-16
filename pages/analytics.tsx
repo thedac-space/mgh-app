@@ -107,14 +107,6 @@ const Analytics: NextPage<Props> = ({ prices }) => {
                                 <RiLoader3Fill className="animate-spin-slow h-5 w-5 xs:h-6 xs:w-6" />
                             )}
                         </p>
-                        <p className="flex gap-1">
-                            Market Cap:{' '}
-                            {loaded ? (
-                                `${markCap.toFixed(2)} ETH`
-                            ) : (
-                                <RiLoader3Fill className="animate-spin-slow h-5 w-5 xs:h-6 xs:w-6" />
-                            )}
-                        </p>
                     </div>
                 </div>
 
