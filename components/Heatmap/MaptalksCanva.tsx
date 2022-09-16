@@ -1,29 +1,48 @@
 import { useEffect } from 'react'
 import * as maptalks from 'maptalks';
+import {
+  Atlas,
+  LegendFilter,
+  MapFilter,
+  PercentFilter
+} from '../../lib/heatmap/heatmapCommonTypes';
 
 interface IMaptalksCanva {
   width: number | string | undefined
   height: number | string | undefined
+  filter: MapFilter
+  percentFilter: PercentFilter
+  legendFilter: LegendFilter
+  atlas: Atlas
+  onHover: (x: any, y: any) => void
+  onClick: (x: any, y: any) => void
+  className?: string
 }
 
-const MaptalksCanva = ({ width, height }: IMaptalksCanva) => {
+const MaptalksCanva = ({
+  width,
+  height,
+  filter,
+  percentFilter,
+  legendFilter,
+  atlas,
+  className,
+  onHover,
+  onClick
+}: IMaptalksCanva) => {
+
   useEffect(() => {
-    /* const downloadMap = async (metaverse, size, layer) => {
-      let response = {}, from = 0, result = {};
+    console.log('filter: ', filter)
+    console.log('percentFilter: ', percentFilter)
+    console.log('legendFilter: ', legendFilter)
+    console.log('atlas', atlas)
+  }, [filter])
 
-      do {
-        let url = "https://services.itrmachines.com/" + metaverse + "/requestMap?from=" + from + "&size=" + size;
-        from += size;
-        console.log("> requesting:", from);
-        response = await fetch(url, { method: 'GET' });
-        response = await response.json();
-        for (let key of Object.keys(response))
-          result[key] = response[key];
-      } while (Object.keys(response).length > 0);
-
+  useEffect(() => {
+    const downloadMap = async (ITRMObject: any, layer: any) => {
       const landColection: any = []
 
-      Object.entries(result).forEach(([key, value]) => {
+      Object.entries(ITRMObject).forEach(([key, value] : any) => {
         let polygon = new maptalks.Polygon([
           [
             [value.geometry[0].x, value.geometry[0].y],
@@ -40,9 +59,9 @@ const MaptalksCanva = ({ width, height }: IMaptalksCanva) => {
           dragShadow: false, // display a shadow during dragging
           drawOnAxis: null,  // force dragging stick on a axis, can be: x, y
           symbol: {
-            'lineColor': '#34495e',
+            'lineColor': 'rgb(67,186,88)',
             'lineWidth': 2,
-            'polygonFill': 'rgb(0,0,0)',
+            'polygonFill': 'rgb(67,186,88)',
             'polygonOpacity': 1
           },
           cursor: 'pointer',
@@ -53,13 +72,11 @@ const MaptalksCanva = ({ width, height }: IMaptalksCanva) => {
 
       let collection = new maptalks.GeometryCollection(landColection);
       layer.addGeometry(collection)
-    } */
+    }
 
     let map
     var imageLayer = new maptalks.ImageLayer('images', [
       {
-        //url : 'images/map-hires-background.jpg',
-        //url : '/images/Somnium_Space_World_Map_HQ2.jpg',
         url: '/images/Waterfront_Extended_Parcels_Map_allgreen.jpg',
         extent: [-1, -1, 1, 1],
         opacity: 1
@@ -72,18 +89,13 @@ const MaptalksCanva = ({ width, height }: IMaptalksCanva) => {
       minZoom: 9,
       maxZoom: 12,
       pitch: 45,
-      //bearing : 180,
       attribution: false,
-      //zoomControl : true,
-      //overviewControl : true,
       dragRotate: true, // set to true if you want a rotatable map
       baseLayer: imageLayer
     });
 
-    //let layer = new maptalks.VectorLayer('vector').addTo(map);
-
-    //downloadMap("somnium-space", X)
-    // downloadMap("somnium-space", 100, layer)
+    let layer = new maptalks.VectorLayer('vector').addTo(map);
+    downloadMap(atlas.ITRM, layer)
 
     /* map.on('click', function (e: any) {
       layer.forEach(function (g: any) {
