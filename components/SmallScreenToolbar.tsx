@@ -38,7 +38,7 @@ const SmallScreenToolbar = ({ onWalletClick, disconnectWallet, web3Provider, cha
                     <NavItem text="Swap" link="/swap" />
                     <NavItem text="Liquidity" link="/liquidity" />
                     <NavItem text="Stake" link="/stake" />
-                    <NavItem text="NFT Pools" link="/pools" />
+                    <NavItem text="Governance" link="https://snapshot.org/#/metagamehub.eth" />
                     <NavItem text="LAND Valuation" link="/valuation" />
                 </div>
 
