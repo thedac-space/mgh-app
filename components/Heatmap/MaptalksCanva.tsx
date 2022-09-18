@@ -2,10 +2,13 @@ import { useEffect } from 'react'
 import * as maptalks from 'maptalks';
 import {
   Atlas,
+  Layer,
   LegendFilter,
   MapFilter,
-  PercentFilter
+  PercentFilter,
+  ValuationTile
 } from '../../lib/heatmap/heatmapCommonTypes';
+import { filteredLayer } from '../../lib/heatmap/heatmapLayers';
 
 interface IMaptalksCanva {
   width: number | string | undefined
@@ -17,6 +20,7 @@ interface IMaptalksCanva {
   onHover: (x: any, y: any) => void
   onClick: (x: any, y: any) => void
   className?: string
+  layers: Layer[]
 }
 
 const MaptalksCanva = ({
@@ -28,21 +32,19 @@ const MaptalksCanva = ({
   atlas,
   className,
   onHover,
-  onClick
+  onClick,
+  layers
 }: IMaptalksCanva) => {
-
   useEffect(() => {
-    console.log('filter: ', filter)
-    console.log('percentFilter: ', percentFilter)
-    console.log('legendFilter: ', legendFilter)
-    console.log('atlas', atlas)
-  }, [filter])
-
-  useEffect(() => {
-    const downloadMap = async (ITRMObject: any, layer: any) => {
+    const downloadMap = async (ITRMObject: Record<string, ValuationTile>, layer: maptalks.VectorLayer) => {
       const landColection: any = []
 
       Object.entries(ITRMObject).forEach(([key, value]: any) => {
+        let tile: any
+        tile = filteredLayer(value.center.x, value.center.y, atlas, filter, percentFilter, legendFilter)
+
+        const { color, top, left, topLeft, scale } = tile
+
         let polygon = new maptalks.Polygon([
           [
             [value.geometry[0].x, value.geometry[0].y],
@@ -59,14 +61,12 @@ const MaptalksCanva = ({
           dragShadow: false, // display a shadow during dragging
           drawOnAxis: null,  // force dragging stick on a axis, can be: x, y
           symbol: {
-            'lineColor': 'rgb(67,186,88)',
-            'lineWidth': 2,
-            'polygonFill': 'rgb(67,186,88)',
+            'lineWidth': 0,
+            'polygonFill': color,
             'polygonOpacity': 1
           },
           cursor: 'pointer',
         });
-
         landColection.push(polygon)
       })
 
@@ -102,7 +102,7 @@ const MaptalksCanva = ({
         //alert('clicked')
       });
     });
-  }, [])
+  }, [filter])
 
   return (
     <canvas width={width} height={height} id="map"></canvas>

@@ -402,6 +402,13 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                           handleMapSelection(x, y);
                         }
                       }}
+                      layers={[
+                        decentralandAPILayer,
+                        filteredLayer,
+                        selectedStrokeLayer,
+                        selectedFillLayer,
+                        hoverLayer,
+                      ]}
                     />
                   )
               }

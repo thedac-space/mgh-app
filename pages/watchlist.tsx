@@ -68,9 +68,9 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
       limitCoordinatesState: 'limitCoordinatesAxie',
     },
     "somnium-space": {
-      contract: Contracts.PARCEL.ETHEREUM_MAINNET.address,
-      firebase: 'decentraland-watchlist',
-      limitIdState: 'limitIdDecentraland',
+      contract: Contracts.CUBES.ETHEREUM_MAINNET.address,
+      firebase: 'somnium-space-watchlist',
+      limitIdState: 'limitIdAxie',
       limitCoordinatesState: 'limitCoordinatesDecentraland',
     }
   } as const
