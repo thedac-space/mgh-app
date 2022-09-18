@@ -158,6 +158,7 @@ export class TileMap extends React.PureComponent<Props, State> {
       this.canvas.removeEventListener('mouseout', this.handleMouseOut)
     }
     this.mounted = false
+
   }
 
   generateState(
