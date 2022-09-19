@@ -233,7 +233,6 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
     };
     changeColours();
   }, [filterBy, percentFilter]);
-  useEffect(() => {console.log(atlas,"Parent")},[atlas])
   return (
     <>
       <Head>

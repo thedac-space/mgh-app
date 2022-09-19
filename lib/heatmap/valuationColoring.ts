@@ -32,7 +32,6 @@ export const setColours = async (
   valuationAtlas: Record<string, ValuationTile>,
   element: MapFilter
 ) => {
-  console.log(element)
   const getLandDependingOnGivenNumberOfDays = (valuation: any, givenDays: number) => {
     let counter = 0
     let now = new Date()
