@@ -56,7 +56,6 @@ const MaptalksCanva = ({
         let layer = new maptalks.VectorLayer('vector').addTo(map)
 
         const landColection: any = []
-        console.log(filter)
         Object.entries(atlas.ITRM).forEach(([key, value]: any) => {
             let tile: any
 
@@ -106,7 +105,6 @@ const MaptalksCanva = ({
     }); */
 
     }, [atlas])
-    useEffect(() => {console.log("ATLAS")},[atlas])
 
     return <canvas width={width} height={height} id="map"></canvas>
 }
