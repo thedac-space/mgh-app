@@ -389,7 +389,6 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                       // Filter lands by utility (watchlist, portfolio, etc..). On bottom right
                       legendFilter={legendFilter}
                       atlas={atlas}
-                      className="atlas"
                       width={dims.width}
                       height={dims.height}
                       onHover={(x: any, y: any) => {
@@ -402,13 +401,6 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                           handleMapSelection(x, y);
                         }
                       }}
-                      layers={[
-                        decentralandAPILayer,
-                        filteredLayer,
-                        selectedStrokeLayer,
-                        selectedFillLayer,
-                        hoverLayer,
-                      ]}
                     />
                   )
               }
