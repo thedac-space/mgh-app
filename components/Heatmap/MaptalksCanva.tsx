@@ -10,6 +10,7 @@ import {
 import { filteredLayer } from '../../lib/heatmap/heatmapLayers'
 import React from 'react'
 
+
 interface IMaptalksCanva {
     width: number | string | undefined
     height: number | string | undefined
