@@ -19,7 +19,7 @@ export const fetchITRMAtlas = async (
             try {
                 // Getting valuations from ITRM
                 let valuationRes: any = await fetch(
-                    `https://services.itrmachines.com/${metaverse}/map?from=${i * LANDS_PER_REQUEST
+                    `https://services.itrmachines.com/${metaverse}/${metaverse=="axie-infinity"?"requestMap":"map"}?from=${i * LANDS_PER_REQUEST
                     }&size=${LANDS_PER_REQUEST}&reduced=true`
                 )
                 valuationRes = await valuationRes.json()

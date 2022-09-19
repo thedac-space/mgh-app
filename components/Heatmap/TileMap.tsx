@@ -124,6 +124,7 @@ export class TileMap extends React.PureComponent<Props, State> {
   }
 
   componentDidUpdate() {
+    
     this.debouncedRenderMap()
     this.oldState = this.state
   }
