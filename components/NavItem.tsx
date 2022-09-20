@@ -28,7 +28,7 @@ const NavItem = ({ text, link }: any) => {
                 return <FaHandHoldingUsd className={`text-2xl mr-4 z-10 ${focus && "text-pink-600"} group-hover:text-pink-600`} />
             case "/stake": case "/stake-ethereum": case "stake-polygon":
                 return <VscLock className={`text-2xl mr-4 z-10 ${focus && "text-pink-600"} group-hover:text-pink-600`} />
-            case "/pools":
+            case "https://snapshot.org/#/metagamehub.eth" || "/pools":
                 return <MdOutlineCollections className={`text-2xl mr-4 z-10 ${focus && "text-pink-600"} group-hover:text-pink-600`} />
             case "/valuation":
                 return <MdOutlineAttachMoney className={`text-2xl mr-4 z-10 ${focus && "text-pink-600"} group-hover:text-pink-600`} />

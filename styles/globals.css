@@ -29,9 +29,14 @@
     src: url("./fonts/Montserrat/Montserrat-Bold.ttf");
   } */
 
-  .scrollbar::-webkit-scrollbar {
+  .scrollbar--y::-webkit-scrollbar {
     width: 8px;
     height: 20px;
+  }
+
+  .scrollbar--x::-webkit-scrollbar {
+    width: 20px;
+    height: 8px;
   }
 
   .scrollbar::-webkit-scrollbar-track {

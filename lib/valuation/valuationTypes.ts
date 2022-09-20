@@ -5,6 +5,7 @@ export interface ICoinPrices {
   ethereum: { usd: number }
   'the-sandbox': { usd: number }
   'axie-infinity': { usd: number }
+  'somnium-space-cubes': { usd: number }
 }
 
 export interface IPriceCard {
@@ -14,8 +15,7 @@ export interface IPriceCard {
   predictions: IPredictions
 }
 
-export type LandsKey = 'sandbox' | 'decentraland' | 'axie-infinity'
-
+export type LandsKey = 'sandbox' | 'decentraland' | 'axie-infinity' | 'somnium-space'
 export interface IWatchListCard extends IPriceCard {
   currentPrice?: number
 }

@@ -24,6 +24,10 @@ const COINS = {
       src: '/images/axie-infinity-axs-logo.png',
       name: 'AXS',
     },
+    'somnium-spacePrediction': {
+      src: '/images/somnium-space-cube-logo.webp',
+      name: 'CUBE'
+    }
   },
 }
 
@@ -31,6 +35,7 @@ type metaverseKey =
   | 'sandboxPrediction'
   | 'decentralandPrediction'
   | 'axie-infinityPrediction'
+  | 'somnium-spacePrediction'
 
 interface Props {
   predictions: Partial<IPredictions>

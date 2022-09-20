@@ -67,6 +67,12 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
       limitIdState: 'limitIdAxie',
       limitCoordinatesState: 'limitCoordinatesAxie',
     },
+    "somnium-space": {
+      contract: Contracts.PARCEL.ETHEREUM_MAINNET.address,
+      firebase: 'decentraland-watchlist',
+      limitIdState: 'limitIdDecentraland',
+      limitCoordinatesState: 'limitCoordinatesDecentraland',
+    }
   } as const
 
   // Creating Array for looping through Metaverses Options
