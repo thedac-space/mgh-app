@@ -7,15 +7,21 @@ import { Chains } from '../../lib/chains'
 import { createERC20Contract } from '../../lib/ERC20utils'
 import { makeOwnProvider } from '../../lib/utilities'
 import { useAppSelector } from '../../state/hooks'
+import WalletButton from '../WalletButton'
 import { purchaseCoinOptions } from './purchaseCoinOptions'
 import { purchaseContext } from './purchaseContext'
 import { PurchaseCoinValues } from './purchaseTypes'
+import useConnectWeb3 from "../../backend/connectWeb3";
+import WalletModal from '../WalletModal'
 
 const PurchaseBuyForm = ({
   coinValues,
 }: {
   coinValues: PurchaseCoinValues
 }) => {
+
+  const [openModal, setOpenModal] = useState(false)
+  const { web3Provider, disconnectWallet } = useConnectWeb3();
   const { address, chainId } = useAppSelector((state) => state.account)
   const { monthlyChoice, coin } = useContext(purchaseContext)
   const [allowance, setAllowance] = useState(NaN)
@@ -62,7 +68,6 @@ const PurchaseBuyForm = ({
 
     const ethersWeb3Provider = new ethers.providers.Web3Provider(provider)
     const signer = ethersWeb3Provider.getSigner()
-
     const amountToPay =
       convertedMonthlyChoice &&
       convertedMonthlyChoice * 10 ** purchaseCoinOptions[coin].decimals
@@ -92,24 +97,44 @@ const PurchaseBuyForm = ({
   }
 
   return (
-    <div className='w-fit m-auto'>
-      {/* Show Amount */}
-      <h3>
-        Total Amount: {convertedMonthlyChoice?.toFixed(2)} {coin?.toUpperCase()}
-      </h3>
-      {/* Action Buttons */}
+    <>
+      {openModal && <WalletModal onDismiss={() => setOpenModal(false)} />}
+      <div className='w-fit m-auto'>
+        {/* Show Amount */}
+        <h3>Total Amount: {convertedMonthlyChoice?.toFixed(2)} {coin?.toUpperCase()}</h3>
 
-      <PurchaseActionButton onClick={approveToken} text='Approve Token' />
-      <PurchaseActionButton onClick={transferToken} text='Buy' />
-      {chainId !== Chains.MATIC_MAINNET.chainId && (
-        <PurchaseActionButton
-          onClick={() => {
-            changeChain(provider, Chains.MATIC_MAINNET.chainId)
-          }}
-          text='Switch to Polygon'
-        />
-      )}
-    </div>
+        {/* Connect Wallet */}
+        {!web3Provider && (
+          <div className='w-full flex justify-center'>
+            <WalletButton onClick={() => setOpenModal(true)} disconnectWallet={disconnectWallet} />
+          </div>
+        )}
+
+        {/* Action Buttons */}
+        {web3Provider && (coin == "usdc" || coin == "usdt") && (
+          <PurchaseActionButton onClick={approveToken} text='Approve Token' />
+        )}
+        {web3Provider && (!(coin == "usdc" || coin == "usdt") && +allowance) && (
+          <PurchaseActionButton onClick={transferToken} text='Buy' />
+        )}
+        {web3Provider && chainId !== Chains.MATIC_MAINNET.chainId && (
+          <PurchaseActionButton
+            onClick={() => {
+              changeChain(provider, Chains.MATIC_MAINNET.chainId)
+            }}
+            text='Switch to Polygon'
+          />
+        )}
+        {web3Provider && chainId !== Chains.ETHEREUM_MAINNET.chainId && (
+          <PurchaseActionButton
+            onClick={() => {
+              changeChain(provider, Chains.ETHEREUM_MAINNET.chainId)
+            }}
+            text='Switch to Ethereum'
+          />
+        )}
+      </div>
+    </>
   )
 }
 

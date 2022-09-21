@@ -8,7 +8,6 @@ const WalletButton = ({ onClick, disconnectWallet }: any) => {
 
     const { address } = useAppSelector(state => state.account)
 
-
     return (
         <>
             <div className={`relative ${address && "group"}`}>
