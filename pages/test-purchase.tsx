@@ -34,6 +34,10 @@ const Liquidity: NextPage = () => {
             <div className="w-full -mb-4 xs:-mb-6 sm:-mb-10 xl:-mb-0 h-full flex flex-col items-center justify-center animate__animated animate__fadeIn animate__slow">
                 <PurchaseProvider>
                     <div className='w-full overflow-auto'>
+                        <PurchaseOptionButton option={buttonOption}/>
+                            <PurchaseActionButton onClick={() => {setButtonOption(1)}} text={"1 Month"}/>
+                            <PurchaseActionButton onClick={() => {setButtonOption(3)}} text={"3 Month"}/>
+                            <PurchaseActionButton onClick={() => {setButtonOption(12)}} text={"12 Month"}/>
                         <h3 className='text-slate-50'>Este es el Action Button, en si solo recibe una accion a ejecutar y un texto</h3>
                         <PurchaseActionButton onClick={() => { alert("En la accion puse un alert con este mensaje") }} text={"click me"}/>
                         <h3 className='text-slate-50'>Este es el But Form, creo que aun no esta terminado, o no se bien como usarlo, ya que cuando le doy click al button switch to poligon se romple el programa</h3>
@@ -43,10 +47,6 @@ const Liquidity: NextPage = () => {
                         <h3 className='text-slate-50'>Informacion plasmada, nada funcional</h3>
                         <PurchaseKeyFeatures/>
                         <h3 className='text-slate-50'>este si es funcional, tiene 3 diferentes opciones que las dejo plasmadas en el button de abajo</h3>
-                        <PurchaseOptionButton option={buttonOption}/>
-                        <PurchaseActionButton onClick={() => {setButtonOption(1)}} text={"1 Month"}/>
-                        <PurchaseActionButton onClick={() => {setButtonOption(3)}} text={"3 Month"}/>
-                        <PurchaseActionButton onClick={() => {setButtonOption(12)}} text={"12 Month"}/>
                     </div>
                 </PurchaseProvider>
 
