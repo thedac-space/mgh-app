@@ -97,43 +97,44 @@ const PurchaseBuyForm = ({
   }
 
   return (
-    <div className='w-fit m-auto'>
-      {/* Show Amount */}
-      <h3>
-        Total Amount: {convertedMonthlyChoice?.toFixed(2)} {coin?.toUpperCase()}
-      </h3>
-      
-      {/* Connect Wallet */}
+    <>
       {openModal && <WalletModal onDismiss={() => setOpenModal(false)} />}
-      
-      {!web3Provider && (
-      <WalletButton onClick={() => setOpenModal(true)} disconnectWallet={disconnectWallet}/>
-      )}
+      <div className='w-fit m-auto'>
+        {/* Show Amount */}
+        <h3>Total Amount: {convertedMonthlyChoice?.toFixed(2)} {coin?.toUpperCase()}</h3>
 
-      {/* Action Buttons */}
-      {web3Provider && (coin=="usdc" || coin=="usdt") && (
-        <PurchaseActionButton onClick={approveToken} text='Approve Token' /> 
-      )}
-      {web3Provider && (!(coin=="usdc" || coin=="usdt") && +allowance)  && (
-        <PurchaseActionButton onClick={transferToken} text='Buy' />
-      )}
-      {web3Provider && chainId !== Chains.MATIC_MAINNET.chainId && (
-        <PurchaseActionButton
-          onClick={() => {
-            changeChain(provider, Chains.MATIC_MAINNET.chainId)
-          }}
-          text='Switch to Polygon'
-        />
-      )}
-      {web3Provider && chainId !== Chains.ETHEREUM_MAINNET.chainId && (
-        <PurchaseActionButton
-          onClick={() => {
-            changeChain(provider, Chains.ETHEREUM_MAINNET.chainId)
-          }}
-          text='Switch to Ethereum'
-        />
-      )}
-    </div>
+        {/* Connect Wallet */}
+        {!web3Provider && (
+          <div className='w-full flex justify-center'>
+            <WalletButton onClick={() => setOpenModal(true)} disconnectWallet={disconnectWallet} />
+          </div>
+        )}
+
+        {/* Action Buttons */}
+        {web3Provider && (coin == "usdc" || coin == "usdt") && (
+          <PurchaseActionButton onClick={approveToken} text='Approve Token' />
+        )}
+        {web3Provider && (!(coin == "usdc" || coin == "usdt") && +allowance) && (
+          <PurchaseActionButton onClick={transferToken} text='Buy' />
+        )}
+        {web3Provider && chainId !== Chains.MATIC_MAINNET.chainId && (
+          <PurchaseActionButton
+            onClick={() => {
+              changeChain(provider, Chains.MATIC_MAINNET.chainId)
+            }}
+            text='Switch to Polygon'
+          />
+        )}
+        {web3Provider && chainId !== Chains.ETHEREUM_MAINNET.chainId && (
+          <PurchaseActionButton
+            onClick={() => {
+              changeChain(provider, Chains.ETHEREUM_MAINNET.chainId)
+            }}
+            text='Switch to Ethereum'
+          />
+        )}
+      </div>
+    </>
   )
 }
 
