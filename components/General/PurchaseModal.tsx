@@ -9,10 +9,8 @@ import {
     PurchaseOptionButton
 } from '../../components/Purchase/index'
 import { PurchaseProvider } from '../../components/Purchase/purchaseContext'
-import WalletModal from '../WalletModal'
 
 const PurchaseModal = ({ onDismiss }: any) => {
-    const { web3Provider, disconnectWallet } = useConnectWeb3();
     const coinValueTest = {
         ethereum: { usd: 5 },
         wmatic: { usd: 2 },
@@ -27,32 +25,24 @@ const PurchaseModal = ({ onDismiss }: any) => {
     const [buttonOption, setButtonOption] = useState<1 | 3 | 12>(12)
 
     return (
-        <>
-            {
-                web3Provider
-                    ? (
-                        <div className="fixed top-0 left-0 flex items-center justify-center h-screen w-screen z-50 pt-20 md:pt-0">
-                            <div onClick={onDismiss} className="absolute h-full w-full bg-black bg-opacity-40 backdrop-filter backdrop-blur" />
-                            <div className="z-10 w-[80%] h-[90%] transform scale-85 sm:scale-100 flex flex-col items-stretch shadow-dark text-center p-5 space-y-10 rounded-xl border border-white border-opacity-20 bg-grey-darkest bg-opacity-100 backdrop-filter backdrop-blur-xl text-gray-200 overflow-y-scroll scrollbar--y scrollbar">
-                                <p className="text-3xl font-medium">Unlock premium Metaverse data tools!</p>
-                                <PurchaseProvider>
-                                    <PurchaseOptionButton option={buttonOption} />
-                                    <div className='flex flex-row gap-5'>
-                                        <PurchaseActionButton onClick={() => { setButtonOption(1) }} text={"1 Month"} />
-                                        <PurchaseActionButton onClick={() => { setButtonOption(3) }} text={"3 Month"} />
-                                        <PurchaseActionButton onClick={() => { setButtonOption(12) }} text={"12 Month"} />
-                                    </div>
-                                    <PurchaseKeyFeatures />
-                                    <PurchaseBuyForm coinValues={coinValueTest} />
-                                    <PurchaseCoinList />
-                                </PurchaseProvider>
-
-                                <p onClick={onDismiss} className="cursor-pointer max-w-max self-center font-medium text-gray-400">Close</p>
-                            </div>
-                        </div>
-                    ) : <WalletModal onDismiss={() => { onDismiss() }} />
-            }
-        </>
+        <div className="fixed top-0 left-0 flex items-center justify-center h-screen w-screen z-50">
+            <div onClick={onDismiss} className="absolute h-full w-full bg-black bg-opacity-40 backdrop-filter backdrop-blur" />
+            <div className="z-10 w-[80%] h-[90%] transform scale-85 sm:scale-100 flex flex-col items-stretch shadow-dark text-center p-5 space-y-10 rounded-xl border border-white border-opacity-20 bg-grey-darkest bg-opacity-100 backdrop-filter backdrop-blur-xl text-gray-200 overflow-y-scroll scrollbar--y scrollbar">
+                <p className="text-3xl font-medium">Unlock premium Metaverse data tools!</p>
+                <PurchaseProvider>
+                    <PurchaseOptionButton option={buttonOption} />
+                    <div className='flex flex-row gap-5'>
+                        <PurchaseActionButton onClick={() => { setButtonOption(1) }} text={"1 Month"} />
+                        <PurchaseActionButton onClick={() => { setButtonOption(3) }} text={"3 Month"} />
+                        <PurchaseActionButton onClick={() => { setButtonOption(12) }} text={"12 Month"} />
+                    </div>
+                    <PurchaseKeyFeatures />
+                    <PurchaseBuyForm coinValues={coinValueTest} option={buttonOption}/>
+                    <PurchaseCoinList />
+                </PurchaseProvider>
+                        <p onClick={onDismiss} className="cursor-pointer max-w-max self-center font-medium text-gray-400">Close</p>
+                    </div>
+                    </div>
     )
 
 }

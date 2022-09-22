@@ -7,21 +7,20 @@ import { Chains } from '../../lib/chains'
 import { createERC20Contract } from '../../lib/ERC20utils'
 import { makeOwnProvider } from '../../lib/utilities'
 import { useAppSelector } from '../../state/hooks'
-import WalletButton from '../WalletButton'
 import { purchaseCoinOptions } from './purchaseCoinOptions'
 import { purchaseContext } from './purchaseContext'
-import { PurchaseCoinValues } from './purchaseTypes'
-import useConnectWeb3 from "../../backend/connectWeb3";
+import { PurchaseCoinValues, PurchaseMonthlyChoice } from './purchaseTypes'
 import WalletModal from '../WalletModal'
 
 const PurchaseBuyForm = ({
   coinValues,
+  option
 }: {
-  coinValues: PurchaseCoinValues
+  coinValues: PurchaseCoinValues,
+  option: number
 }) => {
 
   const [openModal, setOpenModal] = useState(false)
-  const { web3Provider, disconnectWallet } = useConnectWeb3();
   const { address, chainId } = useAppSelector((state) => state.account)
   const { monthlyChoice, coin } = useContext(purchaseContext)
   const [allowance, setAllowance] = useState(NaN)
@@ -96,28 +95,36 @@ const PurchaseBuyForm = ({
     }
   }
 
+  const calculateAmoun = () =>{
+    let amount = 0;
+    if (convertedMonthlyChoice){
+      amount = option * convertedMonthlyChoice;
+      if (option == 3)
+       amount= amount - (amount*25/100);
+      else if( option == 12)
+        amount= amount - (amount*50/100);
+    }
+    return amount.toFixed(2)
+  }
+
   return (
     <>
       {openModal && <WalletModal onDismiss={() => setOpenModal(false)} />}
       <div className='w-fit m-auto'>
+        
         {/* Show Amount */}
-        <h3>Total Amount: {convertedMonthlyChoice?.toFixed(2)} {coin?.toUpperCase()}</h3>
-
-        {/* Connect Wallet */}
-        {!web3Provider && (
-          <div className='w-full flex justify-center'>
-            <WalletButton onClick={() => setOpenModal(true)} disconnectWallet={disconnectWallet} />
-          </div>
-        )}
+        <h3>Total Amount: {calculateAmoun()} {coin?.toUpperCase()}</h3>
 
         {/* Action Buttons */}
-        {web3Provider && (coin == "usdc" || coin == "usdt") && (
+        {(coin == "usdc" || coin == "usdt") && (
           <PurchaseActionButton onClick={approveToken} text='Approve Token' />
         )}
-        {web3Provider && (!(coin == "usdc" || coin == "usdt") && +allowance) && (
+
+        {!((coin == "usdc" || coin == "usdt") && !(+allowance)) && (
           <PurchaseActionButton onClick={transferToken} text='Buy' />
         )}
-        {web3Provider && chainId !== Chains.MATIC_MAINNET.chainId && (
+
+        {chainId !== Chains.MATIC_MAINNET.chainId && (
           <PurchaseActionButton
             onClick={() => {
               changeChain(provider, Chains.MATIC_MAINNET.chainId)
@@ -125,7 +132,7 @@ const PurchaseBuyForm = ({
             text='Switch to Polygon'
           />
         )}
-        {web3Provider && chainId !== Chains.ETHEREUM_MAINNET.chainId && (
+        {chainId !== Chains.ETHEREUM_MAINNET.chainId && (
           <PurchaseActionButton
             onClick={() => {
               changeChain(provider, Chains.ETHEREUM_MAINNET.chainId)
