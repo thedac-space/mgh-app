@@ -35,7 +35,7 @@ const Liquidity: NextPage = () => {
                 {openModal && <PurchaseModal onDismiss={() => setOpenModal(false)}/>}
                 {web3Provider &&(
                     <><h3 className='text-slate-50'>Activa aqui el Purchasin Modal</h3>
-                    <PurchaseActionButton onClick={() => { setOpenModal(true) } } text={"click me"} />
+                    <PurchaseActionButton onClick={() => { setOpenModal(true) } } disabled={false} text={"click me"} />
                     </>
                     )}
             </div>

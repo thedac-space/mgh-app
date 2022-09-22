@@ -27,6 +27,7 @@ const PurchaseBuyForm = ({
   const provider = useProvider()
   const mghWallet = '0x2CE9f1CA1650B495fF8F7A81BB55828A53bfdd5A' // change to proper address
   const isERC20 = coin && !['eth', 'matic'].includes(coin)
+  const [USDAllowance, setUSDAllowance] = useState(0)
   const convertedMonthlyChoice =
     coin && monthlyChoice && monthlyChoice / coinValues[apiTokenNames[coin]].usd
 
@@ -44,6 +45,7 @@ const PurchaseBuyForm = ({
     }
     getAllowance()
   }, [coin])
+
   const approveToken = async () => {
     if (!provider) return
     const ethersWeb3Provider = new ethers.providers.Web3Provider(provider)
@@ -59,6 +61,8 @@ const PurchaseBuyForm = ({
       )
 
       await tx.wait()
+
+      setUSDAllowance(Number(tx))
     }
   }
 
@@ -69,13 +73,14 @@ const PurchaseBuyForm = ({
     const signer = ethersWeb3Provider.getSigner()
     const amountToPay =
       convertedMonthlyChoice &&
-      convertedMonthlyChoice * 10 ** purchaseCoinOptions[coin].decimals
+      calculateAmoun() * 10 ** purchaseCoinOptions[coin].decimals
     if (!amountToPay) return
     if (isERC20) {
       const coinContract = createERC20Contract(
         signer,
         purchaseCoinOptions[coin].contractAddress
       )
+
       if (allowance < amountToPay) return
       const tx = await coinContract.transferFrom(
         address,
@@ -104,7 +109,7 @@ const PurchaseBuyForm = ({
       else if( option == 12)
         amount= amount - (amount*50/100);
     }
-    return amount.toFixed(2)
+    return amount
   }
 
   return (
@@ -113,15 +118,19 @@ const PurchaseBuyForm = ({
       <div className='w-fit m-auto'>
         
         {/* Show Amount */}
-        <h3>Total Amount: {calculateAmoun()} {coin?.toUpperCase()}</h3>
+        <h3>Total Amount: {calculateAmoun().toFixed(2)} {coin?.toUpperCase()}</h3>
 
         {/* Action Buttons */}
         {(coin == "usdc" || coin == "usdt") && (
-          <PurchaseActionButton onClick={approveToken} text='Approve Token' />
+          <PurchaseActionButton onClick={approveToken} disabled={false}  text='Approve Token' />
         )}
 
-        {!((coin == "usdc" || coin == "usdt") && !(+allowance)) && (
-          <PurchaseActionButton onClick={transferToken} text='Buy' />
+        {!((coin == "usdc" || coin == "usdt") && !(+USDAllowance)) && (
+          <><PurchaseActionButton onClick={transferToken} disabled={allowance < calculateAmoun()} text='Buy' />
+
+          <p className='text-red-500 self-center font-medium pt-0.5 h-2'>
+            {allowance < calculateAmoun() ? "You don't have enough tokens." : ""}
+          </p></>
         )}
 
         {chainId !== Chains.MATIC_MAINNET.chainId && (
@@ -129,6 +138,7 @@ const PurchaseBuyForm = ({
             onClick={() => {
               changeChain(provider, Chains.MATIC_MAINNET.chainId)
             }}
+            disabled={false} 
             text='Switch to Polygon'
           />
         )}
@@ -137,6 +147,7 @@ const PurchaseBuyForm = ({
             onClick={() => {
               changeChain(provider, Chains.ETHEREUM_MAINNET.chainId)
             }}
+            disabled={false} 
             text='Switch to Ethereum'
           />
         )}
