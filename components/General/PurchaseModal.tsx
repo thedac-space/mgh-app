@@ -31,7 +31,7 @@ const PurchaseModal = ({ onDismiss }: any) => {
             {
                 web3Provider
                     ? (
-                        <div className="fixed top-0 left-0 flex items-center justify-center h-screen w-screen z-50">
+                        <div className="fixed top-0 left-0 flex items-center justify-center h-screen w-screen z-50 pt-20 md:pt-0">
                             <div onClick={onDismiss} className="absolute h-full w-full bg-black bg-opacity-40 backdrop-filter backdrop-blur" />
                             <div className="z-10 w-[80%] h-[90%] transform scale-85 sm:scale-100 flex flex-col items-stretch shadow-dark text-center p-5 space-y-10 rounded-xl border border-white border-opacity-20 bg-grey-darkest bg-opacity-100 backdrop-filter backdrop-blur-xl text-gray-200 overflow-y-scroll scrollbar--y scrollbar">
                                 <p className="text-3xl font-medium">Unlock premium Metaverse data tools!</p>
@@ -50,7 +50,7 @@ const PurchaseModal = ({ onDismiss }: any) => {
                                 <p onClick={onDismiss} className="cursor-pointer max-w-max self-center font-medium text-gray-400">Close</p>
                             </div>
                         </div>
-                    ) : <WalletModal onDismiss={() => {onDismiss()}} />
+                    ) : <WalletModal onDismiss={() => { onDismiss() }} />
             }
         </>
     )

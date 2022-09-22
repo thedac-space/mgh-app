@@ -14,8 +14,8 @@ const PurchaseCoinList = () => {
 
   return (
     <ul className='grid grid-cols-4 md:grid-cols-4  justify-items-center lg:flex flex-wrap lg:gap-4 lg:justify-around mb-16'>
-      {typedKeys(purchaseCoinOptions).map((coin) => (
-        <li>
+      {typedKeys(purchaseCoinOptions).map((coin, index) => (
+        <li key={index}>
           <button onClick={() => setCoin(coin)}>
             <img
               src={purchaseCoinOptions[coin].img}
