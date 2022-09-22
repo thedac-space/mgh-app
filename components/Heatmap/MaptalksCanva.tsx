@@ -53,7 +53,6 @@ const MaptalksCanva = ({
             baseLayer: imageLayer,
         })
 
-        let layer = new maptalks.VectorLayer('vector').addTo(map)
 
         const landColection: any = []
         Object.entries(atlas.ITRM).forEach(([key, value]: any) => {
@@ -96,13 +95,13 @@ const MaptalksCanva = ({
             landColection.push(polygon)
         })
         let collection = new maptalks.GeometryCollection(landColection)
-        layer.addGeometry(collection)
+        let layer = new maptalks.VectorLayer('vector', collection).addTo(map)
 
         /* map.on('click', function (e: any) {
-      layer.forEach(function (g: any) {
-        //alert('clicked')
-      });
-    }); */
+            layer.forEach(function (g: any) {
+                alert('clicked')
+            });
+        }); */
 
     }, [atlas])
 
