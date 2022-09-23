@@ -25,7 +25,9 @@ const PurchaseBuyForm = ({
   const { monthlyChoice, coin } = useContext(purchaseContext)
   const [allowance, setAllowance] = useState(NaN)
   const provider = useProvider()
-  const mghWallet = '0x2CE9f1CA1650B495fF8F7A81BB55828A53bfdd5A' // change to proper address
+  const mghWallet = '0xe1879f748561bC1A103F9d8529626b8f7a627B6A' // change to proper address
+  const ETHWallet = '0xBE780FD39A192c864F47f60F7ad842AFEf6aaff9'
+  const USDWallet = '0x4624e0295b610a89d12FE918C6fBD188F862e1a8'
   const isERC20 = coin && !['eth', 'matic'].includes(coin)
   const [USDAllowance, setUSDAllowance] = useState(0)
   const convertedMonthlyChoice =
@@ -81,22 +83,36 @@ const PurchaseBuyForm = ({
         purchaseCoinOptions[coin].contractAddress
       )
 
-      if (allowance < amountToPay) return
-      const tx = await coinContract.transferFrom(
-        address,
+      const contract = new ethers.Contract(
         mghWallet,
-        amountToPay.toString()
+        //Abi,
+        provider
+    );
+
+      if (allowance < amountToPay) return
+        let coinAddress;
+        if (coin == "usdc" || coin == "usdt")
+          coinAddress= USDWallet;
+          else if (coin == "eth")
+          coinAddress=ETHWallet;
+          else if(coin == "matic" || coin == "mgh")
+          coinAddress=mghWallet
+
+      const tx = await contract.purchaseRole(
+        [ address, 1, 5, option ], coinAddress, []
       )
 
       await tx.wait()
       // ETH & MATIC. THIS CAN BE TRIGGERED ON TESTNETS AS WELL. SO CHECK
       // ON MAINNET CONTRACT.
     } else {
+
       const tx = await signer.sendTransaction({
         to: mghWallet,
         value: BigNumber.from(amountToPay.toString()),
       })
       await tx.wait()
+
     }
   }
 
