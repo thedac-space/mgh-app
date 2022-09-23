@@ -12,7 +12,7 @@ export const convertETHPrediction = (
   const ethUSD = coinPrices.ethereum.usd
   const usdPrediction = ethPrediction * ethUSD
   const formattedMetaverse = metaverse === 'sandbox' ? 'the-sandbox' : metaverse
-  const metaverseUSD = coinPrices[formattedMetaverse].usd
+  const metaverseUSD = (coinPrices as any)[formattedMetaverse].usd
   const metaversePrediction = usdPrediction / metaverseUSD
   
   return { ethPrediction, usdPrediction, metaversePrediction }
@@ -90,7 +90,7 @@ export const handleLandName = (
     decentraland: 'Parcel',
     'axie-infinity': 'Plot',
   }
-  if (!landName) return `${options[metaverse]} ${coords.x}, ${coords.y}`
+  if (!landName) return `${(options as any)[metaverse]} ${coords.x}, ${coords.y}`
   if (metaverse === 'decentraland') {
     return `${options[metaverse]} (${coords.x}, ${coords.y})`
   } else {
