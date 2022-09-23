@@ -23,15 +23,10 @@ const TableItem = ({ item } : { item: TopSellingRequestItem }) => {
         </span>
       </th>
       <td className={tdStyle} >
-        {
-          priceLoader()
-        }
+        { priceLoader() }
       </td>
       <td className={tdStyle} >
-        <span className="mr-2">{dataTable.from || 'anonymous'}</span>
-      </td>
-      <td className={tdStyle} >
-        <span className="mr-2">{dataTable.to || 'anonymous'}</span>
+        <span className="mr-2">{dataTable.buyer || 'anonymous'}</span>
       </td>
       <td className={tdStyle} >
         <span className="mr-2">{dataTable.date}</span>

@@ -19,8 +19,7 @@ export const fetchITRMAtlas = async (
             try {
                 // Getting valuations from ITRM
                 let valuationRes: any = await fetch(
-                    `https://services.itrmachines.com/test/${metaverse}/map?from=${
-                        i * LANDS_PER_REQUEST
+                    `https://services.itrmachines.com${metaverse=="somnium-space" || metaverse== "axie-infinity"?"":"/test"}/${metaverse}/${metaverse=="axie-infinity"?"requestMap":"map"}?from=${i * LANDS_PER_REQUEST
                     }&size=${LANDS_PER_REQUEST}&reduced=true`
                 )
                 valuationRes = await valuationRes.json()
@@ -55,21 +54,21 @@ export const fetchITRMAtlas = async (
                                     valuationRes[
                                         value.token_id
                                     ].current_price_eth = value.current_price
-                                        ? value.current_price.eth_price
-                                        : undefined
+                                            ? value.current_price.eth_price
+                                            : undefined
                                     valuationRes[value.token_id].percent =
                                         value.current_price
                                             ? 100 *
-                                              (value.current_price.eth_price /
-                                                  pred_price -
-                                                  1)
+                                            (value.current_price.eth_price /
+                                                pred_price -
+                                                1)
                                             : undefined
                                 }
                                 valuationRes[
                                     value.token_id
                                 ].best_offered_price_eth = value.best_offered_price
-                                    ? value.best_offered_price.eth_price
-                                    : undefined
+                                        ? value.best_offered_price.eth_price
+                                        : undefined
                             }
                         } catch (error) {
                             ores = undefined
@@ -87,10 +86,18 @@ export const fetchITRMAtlas = async (
                 typedKeys(valuations).map((key) => {
                     {
                         // Making a name to fit with our tile map
-                        const name =
-                            valuations[key]?.coords.x +
-                            ',' +
-                            valuations[key]?.coords.y
+                        let name = ""
+                        if (valuations[key]?.coords) {
+                            name =
+                                valuations[key]?.coords.x +
+                                ',' +
+                                valuations[key]?.coords.y
+                        } else {
+                            name =
+                                valuations[key]?.center.x +
+                                ',' +
+                                valuations[key]?.center.y
+                        }
                         // // Setting the land info in the valuation atlas
                         valuationAtlas[name] = valuations[key]!
                         valuationAtlas[name].land_id = key
