@@ -32,17 +32,17 @@ const PurchaseModal = ({ onDismiss }: any) => {
                 <PurchaseProvider>
                     <PurchaseOptionButton option={buttonOption} />
                     <div className='flex flex-row gap-5'>
-                        <PurchaseActionButton onClick={() => { setButtonOption(1) }} disabled={false}  text={"1 Month"} />
-                        <PurchaseActionButton onClick={() => { setButtonOption(3) }} disabled={false}  text={"3 Month"} />
-                        <PurchaseActionButton onClick={() => { setButtonOption(12) }} disabled={false}  text={"12 Month"} />
+                        <PurchaseActionButton onClick={() => { setButtonOption(1) }} disabled={false} text={"1 Month"} />
+                        <PurchaseActionButton onClick={() => { setButtonOption(3) }} disabled={false} text={"3 Month"} />
+                        <PurchaseActionButton onClick={() => { setButtonOption(12) }} disabled={false} text={"12 Month"} />
                     </div>
                     <PurchaseKeyFeatures />
-                    <PurchaseBuyForm coinValues={coinValueTest} option={buttonOption}/>
+                    <PurchaseBuyForm coinValues={coinValueTest} option={buttonOption} />
                     <PurchaseCoinList />
                 </PurchaseProvider>
-                        <p onClick={onDismiss} className="cursor-pointer max-w-max self-center font-medium text-gray-400">Close</p>
-                    </div>
-                    </div>
+                <p onClick={onDismiss} className="cursor-pointer max-w-max self-center font-medium text-gray-400">Close</p>
+            </div>
+        </div>
     )
 
 }

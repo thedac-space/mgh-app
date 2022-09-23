@@ -19,8 +19,6 @@ const PurchaseBuyForm = ({
   coinValues: PurchaseCoinValues,
   option: number
 }) => {
-
-  const [openModal, setOpenModal] = useState(false)
   const { address, chainId } = useAppSelector((state) => state.account)
   const { monthlyChoice, coin } = useContext(purchaseContext)
   const [allowance, setAllowance] = useState(NaN)
@@ -87,19 +85,19 @@ const PurchaseBuyForm = ({
         mghWallet,
         //Abi,
         provider
-    );
+      );
 
       if (allowance < amountToPay) return
-        let coinAddress;
-        if (coin == "usdc" || coin == "usdt")
-          coinAddress= USDWallet;
-          else if (coin == "eth")
-          coinAddress=ETHWallet;
-          else if(coin == "matic" || coin == "mgh")
-          coinAddress=mghWallet
+      let coinAddress;
+      if (coin == "usdc" || coin == "usdt")
+        coinAddress = USDWallet;
+      else if (coin == "eth")
+        coinAddress = ETHWallet;
+      else if (coin == "matic" || coin == "mgh")
+        coinAddress = mghWallet
 
       const tx = await contract.purchaseRole(
-        [ address, 1, 5, option ], coinAddress, []
+        [address, 1, 5, option], coinAddress, []
       )
 
       await tx.wait()
@@ -116,37 +114,37 @@ const PurchaseBuyForm = ({
     }
   }
 
-  const calculateAmoun = () =>{
+  const calculateAmoun = () => {
     let amount = 0;
-    if (convertedMonthlyChoice){
+    if (convertedMonthlyChoice) {
       amount = option * convertedMonthlyChoice;
       if (option == 3)
-       amount= amount - (amount*25/100);
-      else if( option == 12)
-        amount= amount - (amount*50/100);
+        amount = amount - (amount * 25 / 100);
+      else if (option == 12)
+        amount = amount - (amount * 50 / 100);
     }
     return amount
   }
 
   return (
     <>
-      {openModal && <WalletModal onDismiss={() => setOpenModal(false)} />}
       <div className='w-fit m-auto'>
-        
+
         {/* Show Amount */}
         <h3>Total Amount: {calculateAmoun().toFixed(2)} {coin?.toUpperCase()}</h3>
 
         {/* Action Buttons */}
         {(coin == "usdc" || coin == "usdt") && (
-          <PurchaseActionButton onClick={approveToken} disabled={false}  text='Approve Token' />
+          <PurchaseActionButton onClick={approveToken} disabled={false} text='Approve Token' />
         )}
 
         {!((coin == "usdc" || coin == "usdt") && !(+USDAllowance)) && (
-          <><PurchaseActionButton onClick={transferToken} disabled={allowance < calculateAmoun()} text='Buy' />
-
-          <p className='text-red-500 self-center font-medium pt-0.5 h-2'>
-            {allowance < calculateAmoun() ? "You don't have enough tokens." : ""}
-          </p></>
+          <>
+            <PurchaseActionButton onClick={transferToken} disabled={allowance < calculateAmoun()} text='Buy' />
+            <p className='text-red-500 self-center font-medium pt-0.5 h-8 xs:h-2'>
+              {allowance < calculateAmoun() ? "You don't have enough tokens." : ""}
+            </p>
+          </>
         )}
 
         {chainId !== Chains.MATIC_MAINNET.chainId && (
@@ -154,7 +152,7 @@ const PurchaseBuyForm = ({
             onClick={() => {
               changeChain(provider, Chains.MATIC_MAINNET.chainId)
             }}
-            disabled={false} 
+            disabled={false}
             text='Switch to Polygon'
           />
         )}
@@ -163,7 +161,7 @@ const PurchaseBuyForm = ({
             onClick={() => {
               changeChain(provider, Chains.ETHEREUM_MAINNET.chainId)
             }}
-            disabled={false} 
+            disabled={false}
             text='Switch to Ethereum'
           />
         )}
