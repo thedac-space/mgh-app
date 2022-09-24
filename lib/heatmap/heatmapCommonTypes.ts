@@ -48,6 +48,7 @@ type valuationTransfer = {
 
 // This is how the End Valuation Tile looks, some information is added after the API Request
 export type ValuationTile = {
+  name: string
   predicted_price: number
   eth_predicted_price: number
   history?: valuationTransfer[]
@@ -57,6 +58,7 @@ export type ValuationTile = {
   manipulation_index: number
   suggested_operation?: string
   coords: { x: number; y: number }
+  center: { x: number; y: number }
   current_price_eth?: number
   best_offered_price_eth?: number
   percent?: number

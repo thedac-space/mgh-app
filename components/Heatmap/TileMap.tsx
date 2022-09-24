@@ -124,6 +124,7 @@ export class TileMap extends React.PureComponent<Props, State> {
   }
 
   componentDidUpdate() {
+    
     this.debouncedRenderMap()
     this.oldState = this.state
   }
@@ -158,6 +159,7 @@ export class TileMap extends React.PureComponent<Props, State> {
       this.canvas.removeEventListener('mouseout', this.handleMouseOut)
     }
     this.mounted = false
+
   }
 
   generateState(
