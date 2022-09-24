@@ -10,7 +10,8 @@ import { useAppSelector } from '../../state/hooks'
 import { purchaseCoinOptions } from './purchaseCoinOptions'
 import { purchaseContext } from './purchaseContext'
 import { PurchaseCoinValues, PurchaseMonthlyChoice } from './purchaseTypes'
-import WalletModal from '../WalletModal'
+import PurchaseAbi from '../../backend/abi/purchaseAbi.json'
+import { Interface } from "@ethersproject/abi";
 
 const PurchaseBuyForm = ({
   coinValues,
@@ -26,10 +27,19 @@ const PurchaseBuyForm = ({
   const mghWallet = '0xe1879f748561bC1A103F9d8529626b8f7a627B6A' // change to proper address
   const ETHWallet = '0xBE780FD39A192c864F47f60F7ad842AFEf6aaff9'
   const USDWallet = '0x4624e0295b610a89d12FE918C6fBD188F862e1a8'
+  let amount = 0
   const isERC20 = coin && !['eth', 'matic'].includes(coin)
   const [USDAllowance, setUSDAllowance] = useState(0)
   const convertedMonthlyChoice =
-    coin && monthlyChoice && monthlyChoice / coinValues[apiTokenNames[coin]].usd
+    coin && monthlyChoice && monthlyChoice / coinValues[apiTokenNames[coin]].usd;
+
+  const contractAbi = new Interface(PurchaseAbi)
+  
+  const contract = new ethers.Contract(
+    mghWallet,
+    contractAbi,
+    provider
+  );
 
   useEffect(() => {
     const getAllowance = async () => {
@@ -39,6 +49,7 @@ const PurchaseBuyForm = ({
         provider,
         purchaseCoinOptions[coin].contractAddress
       )
+      
       setAllowance(
         (await coinContract.allowance(address, mghWallet)).toNumber()
       )
@@ -55,6 +66,7 @@ const PurchaseBuyForm = ({
         ethersWeb3Provider.getSigner(),
         purchaseCoinOptions[coin].contractAddress
       )
+
       const tx = await coinContract.approve(
         mghWallet,
         ethers.constants.MaxUint256
@@ -69,11 +81,12 @@ const PurchaseBuyForm = ({
   const transferToken = async () => {
     if (!coin || !provider || !address || !monthlyChoice) return
 
+    let coinAddress;
     const ethersWeb3Provider = new ethers.providers.Web3Provider(provider)
     const signer = ethersWeb3Provider.getSigner()
     const amountToPay =
       convertedMonthlyChoice &&
-      calculateAmoun() * 10 ** purchaseCoinOptions[coin].decimals
+      amount * 10 ** purchaseCoinOptions[coin].decimals
     if (!amountToPay) return
     if (isERC20) {
       const coinContract = createERC20Contract(
@@ -81,20 +94,11 @@ const PurchaseBuyForm = ({
         purchaseCoinOptions[coin].contractAddress
       )
 
-      const contract = new ethers.Contract(
-        mghWallet,
-        //Abi,
-        provider
-      );
-
       if (allowance < amountToPay) return
-      let coinAddress;
-      if (coin == "usdc" || coin == "usdt")
-        coinAddress = USDWallet;
-      else if (coin == "eth")
-        coinAddress = ETHWallet;
-      else if (coin == "matic" || coin == "mgh")
-        coinAddress = mghWallet
+        
+        if (coin == "usdc" || coin == "usdt")
+          coinAddress= USDWallet;
+        
 
       const tx = await contract.purchaseRole(
         [address, 1, 5, option], coinAddress, []
@@ -105,25 +109,23 @@ const PurchaseBuyForm = ({
       // ON MAINNET CONTRACT.
     } else {
 
-      const tx = await signer.sendTransaction({
-        to: mghWallet,
-        value: BigNumber.from(amountToPay.toString()),
-      })
+      if (coin == "eth")
+          coinAddress=ETHWallet;
+        else if(coin == "matic" || coin == "mgh")
+          coinAddress=0x0000000000000000000000000000000000000000
+
+      const tx = await contract.purchaseRole(
+        [ address, 1, 5, option ], coinAddress, amountToPay, []
+      )
       await tx.wait()
 
     }
   }
 
-  const calculateAmoun = () => {
-    let amount = 0;
-    if (convertedMonthlyChoice) {
-      amount = option * convertedMonthlyChoice;
-      if (option == 3)
-        amount = amount - (amount * 25 / 100);
-      else if (option == 12)
-        amount = amount - (amount * 50 / 100);
-    }
-    return amount
+  const calculateAmoun = async () =>{
+    amount = await contract.callStatic.transfer(convertedMonthlyChoice, coin)
+    console.log(amount)
+    return amount.toFixed(2)
   }
 
   return (
@@ -131,7 +133,7 @@ const PurchaseBuyForm = ({
       <div className='w-fit m-auto'>
 
         {/* Show Amount */}
-        <h3>Total Amount: {calculateAmoun().toFixed(2)} {coin?.toUpperCase()}</h3>
+        <h3>Total Amount: {calculateAmoun()} {coin?.toUpperCase()}</h3>
 
         {/* Action Buttons */}
         {(coin == "usdc" || coin == "usdt") && (
@@ -139,12 +141,11 @@ const PurchaseBuyForm = ({
         )}
 
         {!((coin == "usdc" || coin == "usdt") && !(+USDAllowance)) && (
-          <>
-            <PurchaseActionButton onClick={transferToken} disabled={allowance < calculateAmoun()} text='Buy' />
-            <p className='text-red-500 self-center font-medium pt-0.5 h-8 xs:h-2'>
-              {allowance < calculateAmoun() ? "You don't have enough tokens." : ""}
-            </p>
-          </>
+          <><PurchaseActionButton onClick={transferToken} disabled={allowance < amount} text='Buy' />
+
+          <p className='text-red-500 self-center font-medium pt-0.5 h-2'>
+            {allowance < amount ? "You don't have enough tokens." : ""}
+          </p></>
         )}
 
         {chainId !== Chains.MATIC_MAINNET.chainId && (

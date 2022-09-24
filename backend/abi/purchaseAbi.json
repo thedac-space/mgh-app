@@ -1,0 +1,54 @@
+[
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "recipient",
+              "type": "address"
+            },
+            {
+              "internalType": "uint8",
+              "name": "roleId",
+              "type": "uint8"
+            },
+            {
+              "internalType": "enum IAccessControlNFT.Tier",
+              "name": "tier",
+              "type": "uint8"
+            },
+            {
+              "internalType": "uint256",
+              "name": "intervals",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct IAccessControlNFT.GiveRoleParams",
+          "name": "params",
+          "type": "tuple"
+        },
+        {
+          "internalType": "address",
+          "name": "currency",
+          "type": "address"
+        },
+        {
+          "internalType": "bytes",
+          "name": "referralSig",
+          "type": "bytes"
+        }
+      ],
+      "name": "purchaseRole",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "payable",
+      "type": "function",
+      "payable": true
+    }
+  ]
