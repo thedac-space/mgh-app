@@ -24,4 +24,5 @@ module.exports = {
       'cdn.axieinfinity.com',
     ],
   },
+  env: { ITRM_SERVICE: process.env.ITRM_SERVICE }
 }

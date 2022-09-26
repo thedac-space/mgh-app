@@ -117,10 +117,10 @@ const Analytics: NextPage<Props> = ({ prices }) => {
                     /* Charts Wrapper */
                     <ul className="flex flex-col gap-12">
                         {/* Charts */}
-                        {chartRoutes.map((element) => {
+                        {chartRoutes.map((element, index) => {
                             if (values[element.route])
                                 return (
-                                    <li>
+                                    <li key={index}>
                                         <h3 className="text-gray-300 relative text-lg md:text-xl lg:text-2xl flex h-[70px]">
                                             {element.label}{' '}
                                                 <BsQuestionCircle className="text-gray-300 cursor-pointer peer bottom-[2px] ml-[5px] " />

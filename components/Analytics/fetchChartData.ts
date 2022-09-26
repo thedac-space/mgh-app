@@ -15,7 +15,7 @@ export interface RichList {
 
 export const fetchChartData = async (metaverse: Metaverse, route: string) => {
   const response = await fetch(
-    'https://services.itrmachines.com/val-analytics/' +
+    process.env.ITRM_SERVICE + '/val-analytics/' +
       route +
       '?metaverse=' +
       metaverse

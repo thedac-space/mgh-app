@@ -19,7 +19,7 @@ export const fetchITRMAtlas = async (
             try {
                 // Getting valuations from ITRM
                 let valuationRes: any = await fetch(
-                    `https://services.itrmachines.com${metaverse=="somnium-space" || metaverse== "axie-infinity"?"":"/test"}/${metaverse}/${metaverse=="axie-infinity"?"requestMap":"map"}?from=${i * LANDS_PER_REQUEST
+                    `${process.env.ITRM_SERVICE}${metaverse == "somnium-space" || metaverse == "axie-infinity" ? "" : "/test"}/${metaverse}/${metaverse == "axie-infinity" ? "requestMap" : "map"}?from=${i * LANDS_PER_REQUEST
                     }&size=${LANDS_PER_REQUEST}&reduced=true`
                 )
                 valuationRes = await valuationRes.json()
@@ -34,7 +34,7 @@ export const fetchITRMAtlas = async (
                     do {
                         try {
                             let urlOpensea =
-                                'https://services.itrmachines.com/test-opensea/service/getTokens'
+                                process.env.ITRM_SERVICE + '/test-opensea/service/getTokens'
                             let data = {
                                 collection: metaverseAddress,
                                 tokenIds: tokenIds,
