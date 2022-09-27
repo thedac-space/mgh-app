@@ -50,10 +50,10 @@ const MaptalksCanva = ({
             pitch: 45,
             attribution: false,
             dragRotate: true, // set to true if you want a rotatable map
-            baseLayer: imageLayer,
         })
-
-        let layer = new maptalks.VectorLayer('vector').addTo(map)
+        //added background map layer
+        //console.log('1:', JSON.parse(JSON.stringify(map)))
+        map.addLayer(imageLayer)
 
         const landColection: any = []
         Object.entries(atlas.ITRM).forEach(([key, value]: any) => {
@@ -96,13 +96,15 @@ const MaptalksCanva = ({
             landColection.push(polygon)
         })
         let collection = new maptalks.GeometryCollection(landColection)
-        layer.addGeometry(collection)
+        let layer = new maptalks.VectorLayer('vector', collection).addTo(map)
+        //console.log('2:',JSON.parse(JSON.stringify(map)))
+
 
         /* map.on('click', function (e: any) {
-      layer.forEach(function (g: any) {
-        //alert('clicked')
-      });
-    }); */
+            layer.forEach(function (g: any) {
+                alert('clicked')
+            });
+        }); */
 
     }, [atlas])
 
