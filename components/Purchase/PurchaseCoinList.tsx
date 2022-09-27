@@ -3,7 +3,6 @@ import { purchaseCoinOptions } from '.'
 import { typedKeys } from '../../lib/utilities'
 import { OptimizedImage } from '../General'
 import { purchaseContext } from './purchaseContext'
-import { PurchaseCoin } from './purchaseTypes'
 
 const PurchaseCoinList = () => {
   const {

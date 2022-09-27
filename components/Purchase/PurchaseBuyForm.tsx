@@ -28,6 +28,7 @@ const PurchaseBuyForm = ({
   const ETHWallet = '0xBE780FD39A192c864F47f60F7ad842AFEf6aaff9'
   const USDWallet = '0x4624e0295b610a89d12FE918C6fBD188F862e1a8'
   let amount = 0
+  let coinAddress = '';
   const isERC20 = coin && !['eth', 'matic'].includes(coin)
   const [USDAllowance, setUSDAllowance] = useState(0)
   const convertedMonthlyChoice =
@@ -81,25 +82,20 @@ const PurchaseBuyForm = ({
   const transferToken = async () => {
     if (!coin || !provider || !address || !monthlyChoice) return
 
-    let coinAddress;
-    const ethersWeb3Provider = new ethers.providers.Web3Provider(provider)
-    const signer = ethersWeb3Provider.getSigner()
     const amountToPay =
       convertedMonthlyChoice &&
       amount * 10 ** purchaseCoinOptions[coin].decimals
+
     if (!amountToPay) return
     if (isERC20) {
-      const coinContract = createERC20Contract(
-        signer,
-        purchaseCoinOptions[coin].contractAddress
-      )
 
       if (allowance < amountToPay) return
         
         if (coin == "usdc" || coin == "usdt")
           coinAddress= USDWallet;
+        else if ( coin== "eth")
+          coinAddress = ETHWallet
         
-
       const tx = await contract.purchaseRole(
         [address, 1, 5, option], coinAddress, []
       )
@@ -109,21 +105,29 @@ const PurchaseBuyForm = ({
       // ON MAINNET CONTRACT.
     } else {
 
-      if (coin == "eth")
-          coinAddress=ETHWallet;
-        else if(coin == "matic" || coin == "mgh")
-          coinAddress=0x0000000000000000000000000000000000000000
-
       const tx = await contract.purchaseRole(
-        [ address, 1, 5, option ], coinAddress, amountToPay, []
+        [ address, 1, 5, option ], 0x0000000000000000000000000000000000000000, []
       )
+
       await tx.wait()
 
     }
   }
 
   const calculateAmoun = async () =>{
-    amount = await contract.callStatic.transfer(convertedMonthlyChoice, coin)
+    if (isERC20){
+      if (coin == "usdc" || coin == "usdt")
+        coinAddress= USDWallet;
+      else if ( coin== "eth")
+        coinAddress = ETHWallet;
+
+      amount = await contract.purchaseRole(
+        [address, 1, 5, option], coinAddress, []
+      )
+    }else
+      amount = await contract.callStatic.purchaseRole(
+        [address, 1, 5, option], 0x0000000000000000000000000000000000000000 ,[]
+      )
     console.log(amount)
     return amount.toFixed(2)
   }
