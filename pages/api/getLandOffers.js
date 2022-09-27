@@ -18,11 +18,11 @@ export default async function handler(req, res) {
 			);
 		} else if (tokenID) {
 			response = await fetch(
-				`https://services.itrmachines.com/${metaverse}/predict?tokenId=${tokenID}`,
+				`${process.env.ITRM_SERVICE}/${metaverse}/predict?tokenId=${tokenID}`,
 			);
 		} else {
 			response = await fetch(
-				`https://services.itrmachines.com/${metaverse}/predict?x=${X}&y=${Y}`,
+				`${process.env.ITRM_SERVICE}/${metaverse}/predict?x=${X}&y=${Y}`,
 			);
 		}
 

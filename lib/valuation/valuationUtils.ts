@@ -22,8 +22,8 @@ export const convertETHPrediction = (
         metaverse === 'sandbox'
             ? 'the-sandbox'
             : metaverse === 'somnium-space'
-            ? 'somnium-space-cubes'
-            : metaverse
+                ? 'somnium-space-cubes'
+                : metaverse
     const metaverseUSD = coinPrices[formattedMetaverse].usd
     const metaversePrediction = usdPrediction / metaverseUSD
 
@@ -204,7 +204,7 @@ export const getAxieDailyTradeVolume = async () => {
 }
 
 export const fetchLandList = async (metaverse: Metaverse, lands: string[]) => {
-    let link = `https://services.itrmachines.com/${metaverse}/requestMap?tokenId=`
+    let link = process.env.ITRM_SERVICE + `/${metaverse}/requestMap?tokenId=`
     lands.forEach((land, i) => {
         link = link + land + (i !== lands.length - 1 ? ',' : '')
     })

@@ -107,14 +107,6 @@ const Analytics: NextPage<Props> = ({ prices }) => {
                                 <RiLoader3Fill className="animate-spin-slow h-5 w-5 xs:h-6 xs:w-6" />
                             )}
                         </p>
-                        <p className="flex gap-1">
-                            Market Cap:{' '}
-                            {loaded ? (
-                                `${markCap.toFixed(2)} ETH`
-                            ) : (
-                                <RiLoader3Fill className="animate-spin-slow h-5 w-5 xs:h-6 xs:w-6" />
-                            )}
-                        </p>
                     </div>
                 </div>
 
@@ -125,10 +117,10 @@ const Analytics: NextPage<Props> = ({ prices }) => {
                     /* Charts Wrapper */
                     <ul className="flex flex-col gap-12">
                         {/* Charts */}
-                        {chartRoutes.map((element) => {
+                        {chartRoutes.map((element, index) => {
                             if (values[element.route])
                                 return (
-                                    <li>
+                                    <li key={index}>
                                         <h3 className="text-gray-300 relative text-lg md:text-xl lg:text-2xl flex h-[70px]">
                                             {element.label}{' '}
                                                 <BsQuestionCircle className="text-gray-300 cursor-pointer peer bottom-[2px] ml-[5px] " />

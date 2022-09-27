@@ -17,7 +17,7 @@ const TopPicksLands = ({ metaverse }: Props) => {
       setLoading(true)
     
       await axios
-        .get('https://services.itrmachines.com/val-analytics/topPicks', {
+        .get(process.env.ITRM_SERVICE + '/val-analytics/topPicks', {
           params: { metaverse: metaverse },
         })
         .then((response) => {
