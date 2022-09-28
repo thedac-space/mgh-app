@@ -62,7 +62,7 @@ export const findHeatmapLand = (
     }
   }
 
-  const landCoords = { x: map[land].coords.x, y: map[land].coords.y }
+  const landCoords = { x: map[land].coords.x ? map[land].coords.x : map[land].center.x, y: map[land].coords.y ? map[land].coords.y : map[land].center.y}
   setOpenSeaLink(land)
 
   const predictions = convertETHPrediction(

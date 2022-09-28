@@ -41,7 +41,7 @@ const MaptalksCanva = ({
                 extent: [-1, -1, 1, 1],
                 opacity: 1,
             },
-        ]) 
+        ])
 
         map = new maptalks.Map('map', {
             center: [0, 0],
@@ -51,7 +51,7 @@ const MaptalksCanva = ({
             pitch: 45,
             attribution: false,
             dragRotate: true, // set to true if you want a rotatable map
-            
+
         })
         //added background map layer
         //console.log('1:', JSON.parse(JSON.stringify(map)))
@@ -93,24 +93,16 @@ const MaptalksCanva = ({
                     },
                     cursor: 'pointer',
                 }
-            )
-            polygon.setProperties({x:value.center.x,y:value.center.y})
+            ).on('click', () => {
+                console.log(value.center.x, value.center.y)
+                //onClick(value.center.x, value.center.y)
+            })
             landColection.push(polygon)
         })
-        //landColection=[landColection[3]]
-        let collection = new maptalks.GeometryCollection(landColection).on(
-            'click',
-            (e) => {
-                const polygon = e.target._geometries.filter((_el:any)=>{
-                  return _el.containsPoint(e.coordinate) })[0]
-                  console.log(polygon.getProperties().x)
-                //onClick(polygon.getProperties().x,polygon.getProperties().y);
-            }
-        )
-        let layer = new maptalks.VectorLayer('vector', collection).addTo(map)
+        let layer = new maptalks.VectorLayer('vector', landColection).addTo(map)
     }, [atlas])
 
-    return <div style={{width,height}} id="map"/>
+    return <div style={{ width, height }} id="map" />
 }
 
 export default MaptalksCanva
