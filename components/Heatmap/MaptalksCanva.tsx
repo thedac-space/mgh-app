@@ -10,7 +10,6 @@ import {
 import { filteredLayer } from '../../lib/heatmap/heatmapLayers'
 import React from 'react'
 
-
 interface IMaptalksCanva {
     width: number | string | undefined
     height: number | string | undefined
@@ -21,6 +20,8 @@ interface IMaptalksCanva {
     onHover: (x: any, y: any) => void
     onClick: (x: any, y: any) => void
 }
+
+
 
 const MaptalksCanva = ({
     width,
@@ -40,7 +41,7 @@ const MaptalksCanva = ({
                 extent: [-1, -1, 1, 1],
                 opacity: 1,
             },
-        ])
+        ]) 
 
         map = new maptalks.Map('map', {
             center: [0, 0],
@@ -50,12 +51,12 @@ const MaptalksCanva = ({
             pitch: 45,
             attribution: false,
             dragRotate: true, // set to true if you want a rotatable map
+            
         })
         //added background map layer
         //console.log('1:', JSON.parse(JSON.stringify(map)))
         map.addLayer(imageLayer)
-
-        const landColection: any = []
+        let landColection: any = []
         Object.entries(atlas.ITRM).forEach(([key, value]: any) => {
             let tile: any
 
@@ -93,22 +94,23 @@ const MaptalksCanva = ({
                     cursor: 'pointer',
                 }
             )
+            polygon.setProperties({x:value.center.x,y:value.center.y})
             landColection.push(polygon)
         })
-        let collection = new maptalks.GeometryCollection(landColection)
+        //landColection=[landColection[3]]
+        let collection = new maptalks.GeometryCollection(landColection).on(
+            'click',
+            (e) => {
+                const polygon = e.target._geometries.filter((_el:any)=>{
+                  return _el.containsPoint(e.coordinate) })[0]
+                  console.log(polygon.getProperties().x)
+                //onClick(polygon.getProperties().x,polygon.getProperties().y);
+            }
+        )
         let layer = new maptalks.VectorLayer('vector', collection).addTo(map)
-        //console.log('2:',JSON.parse(JSON.stringify(map)))
-
-
-        /* map.on('click', function (e: any) {
-            layer.forEach(function (g: any) {
-                alert('clicked')
-            });
-        }); */
-
     }, [atlas])
 
-    return <canvas width={width} height={height} id="map"></canvas>
+    return <div style={{width,height}} id="map"/>
 }
 
 export default MaptalksCanva
