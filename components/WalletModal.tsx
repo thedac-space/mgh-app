@@ -13,6 +13,7 @@ const WalletModal = ({ onDismiss }: any) => {
         detectEthereumProvider().then((res: any) => {
             mounted.current && setProvider(res)
         })
+        console.log("CONNECT")
         return () => { mounted.current = false }
     }, [])
 
