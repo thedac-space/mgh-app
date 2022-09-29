@@ -9,15 +9,12 @@ import { makeOwnProvider } from '../../lib/utilities'
 import { useAppSelector } from '../../state/hooks'
 import { purchaseCoinOptions } from './purchaseCoinOptions'
 import { purchaseContext } from './purchaseContext'
-import { PurchaseCoinValues, PurchaseMonthlyChoice } from './purchaseTypes'
 import PurchaseAbi from '../../backend/abi/purchaseAbi.json'
 import { Interface } from "@ethersproject/abi";
 
 const PurchaseBuyForm = ({
-  coinValues,
   option
 }: {
-  coinValues: PurchaseCoinValues,
   option: number
 }) => {
   const { address, chainId } = useAppSelector((state) => state.account)
@@ -27,12 +24,10 @@ const PurchaseBuyForm = ({
   const mghWallet = '0xe1879f748561bC1A103F9d8529626b8f7a627B6A' // change to proper address
   const ETHWallet = '0xBE780FD39A192c864F47f60F7ad842AFEf6aaff9'
   const USDWallet = '0x4624e0295b610a89d12FE918C6fBD188F862e1a8'
-  let amount = 0
+  let amount = 0;
   let coinAddress = '';
   const isERC20 = coin && !['eth', 'matic'].includes(coin)
   const [USDAllowance, setUSDAllowance] = useState(0)
-  const convertedMonthlyChoice =
-    coin && monthlyChoice && monthlyChoice / coinValues[apiTokenNames[coin]].usd;
 
   const contractAbi = new Interface(PurchaseAbi)
   
@@ -82,17 +77,19 @@ const PurchaseBuyForm = ({
   const transferToken = async () => {
     if (!coin || !provider || !address || !monthlyChoice) return
 
-    const amountToPay =
-      convertedMonthlyChoice &&
-      amount * 10 ** purchaseCoinOptions[coin].decimals
+      const amountToPay =
+        monthlyChoice &&
+        amount * 10 ** purchaseCoinOptions[coin].decimals
 
     if (!amountToPay) return
     if (isERC20) {
 
       if (allowance < amountToPay) return
         
-        if (coin == "usdc" || coin == "usdt")
+        if (coin == "usdc")
           coinAddress= USDWallet;
+        else if ( coin == "usdt")
+          coinAddress = USDWallet;
         else if ( coin== "eth")
           coinAddress = ETHWallet
         
@@ -106,7 +103,7 @@ const PurchaseBuyForm = ({
     } else {
 
       const tx = await contract.purchaseRole(
-        [ address, 1, 5, option ], 0x0000000000000000000000000000000000000000, []
+        [ address, 1, 5, option ], 0x0000000000000000000000000000000000000000, [], {value: amountToPay}
       )
 
       await tx.wait()
@@ -137,7 +134,7 @@ const PurchaseBuyForm = ({
       <div className='w-fit m-auto'>
 
         {/* Show Amount */}
-        <h3>Total Amount: {calculateAmoun()} {coin?.toUpperCase()}</h3>
+        <h3>Total Amount: {calculateAmoun} {coin?.toUpperCase()}</h3>
 
         {/* Action Buttons */}
         {(coin == "usdc" || coin == "usdt") && (

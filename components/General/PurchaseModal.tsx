@@ -11,16 +11,6 @@ import {
 import { PurchaseProvider } from '../../components/Purchase/purchaseContext'
 
 const PurchaseModal = ({ onDismiss }: any) => {
-    const coinValueTest = {
-        ethereum: { usd: 5 },
-        wmatic: { usd: 2 },
-        "metagamehub-dao": { usd: 1 },
-        "usd-coin": { usd: 3 },
-        tether: { usd: 4 },
-        "ocean-protocol": { usd: 6 },
-        "the-sandbox": { usd: 8 },
-        decentraland: { usd: 7 }
-    }
 
     const [buttonOption, setButtonOption] = useState<1 | 3 | 12>(12)
 
@@ -37,7 +27,7 @@ const PurchaseModal = ({ onDismiss }: any) => {
                         <PurchaseActionButton onClick={() => { setButtonOption(12) }} disabled={false} text={"12 Month"} />
                     </div>
                     <PurchaseKeyFeatures />
-                    <PurchaseBuyForm coinValues={coinValueTest} option={buttonOption} />
+                    <PurchaseBuyForm option={buttonOption} />
                     <PurchaseCoinList />
                 </PurchaseProvider>
                 <p onClick={onDismiss} className="cursor-pointer max-w-max self-center font-medium text-gray-400">Close</p>
