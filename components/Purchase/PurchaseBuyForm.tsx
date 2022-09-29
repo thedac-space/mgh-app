@@ -38,7 +38,7 @@ const PurchaseBuyForm = ({ option }: { option: number }) => {
               _provider,
                 purchaseCoinOptions[coin].contractAddress
             )
-            setContract(new ethers.Contract(mghWallet, contractAbi, provider))
+            setContract(new ethers.Contract(mghWallet, contractAbi, provider?.getSigner()))
             setAllowance(
                 (await coinContract.allowance(address, mghWallet)).toNumber()
             )
