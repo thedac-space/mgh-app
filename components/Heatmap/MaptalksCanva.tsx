@@ -96,13 +96,25 @@ const MaptalksCanva = ({
             ).on('click', () => {
                 console.log(value.center.x, value.center.y)
                 //onClick(value.center.x, value.center.y)
+            }).on('mouseenter', (e) => {
+                e.target.updateSymbol({
+                    polygonFill: '#db2777',
+                    lineWidth: 3,
+                    lineColor: '#db2777'
+                })
+            }).on('mouseout', (e) => {
+                e.target.updateSymbol({
+                    polygonFill: color,
+                    lineWidth: 0
+                })
             })
+
             landColection.push(polygon)
         })
         let layer = new maptalks.VectorLayer('vector', landColection).addTo(map)
     }, [atlas])
 
-    return <div style={{ width, height }} id="map" />
+    return <canvas width={width} height={height} /* style={{ width, height }} */ id="map" />
 }
 
 export default MaptalksCanva
