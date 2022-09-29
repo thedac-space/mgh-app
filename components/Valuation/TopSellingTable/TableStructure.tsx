@@ -8,7 +8,7 @@ interface filterBy {
   data: [key: TopSellingRequestItem]
 }
 
-const TableStructure = ({filterby} : {filterby: filterBy}) => {
+const TableStructure = ({ filterby }: { filterby: filterBy }) => {
   const filterData = (data: any) => {
     let result: any = []
     data.map((value: any) => value.position ? result.push(value) : false)
@@ -23,29 +23,28 @@ const TableStructure = ({filterby} : {filterby: filterBy}) => {
   useEffect(() => {
     setResponse(filterData(filterby.data))
   }, [filterby])
-  
-  return(
+
+  return (
     <>
       {
         response[0] ?
-        <table className="items-center w-full bg-transparent border-collapse">
-          <thead>
-            <tr>
-              <th className={thStyle} onClick={() => handleOrderRank(sortDir, setSortDir, response, setResponse)} >Rank</th>
-              <th className={thStyle} onClick={() => handleOrderAsset(sortDir, setSortDir, response, setResponse)}>Asset</th>
-              <th className={thStyle} onClick={() => handleOrderPrice(sortDir, setSortDir, response, setResponse)}>Price</th>
-              <th className={thStyle} onClick={() => handleOrder('from', sortDir, setSortDir, response, setResponse)}>From</th>
-              <th className={thStyle} onClick={() => handleOrder('to', sortDir, setSortDir, response, setResponse)}>To</th>
-              <th className={thStyle} onClick={() => handleOrder('date', sortDir, setSortDir, response, setResponse)}>Purchased </th>
-            </tr>
-          </thead>
-          <tbody className="bg-transparent items-center justify-between w-full h-52">
-            {
-              response.map((value) =><TableItem key={value.position} item={value}/>)
-            }
-          </tbody>
-        </ table> :
-        <h3 className="px-6 text-lg text-white">NO LANDS</h3>
+          <table className="items-center w-full bg-transparent border-collapse">
+            <thead>
+              <tr>
+                <th className={thStyle} onClick={() => handleOrderRank(sortDir, setSortDir, response, setResponse)} >Rank</th>
+                <th className={thStyle} >Asset</th>
+                <th className={thStyle} >Price</th>
+                <th className={thStyle} >Buyer</th>
+                <th className={thStyle} >Purchased</th>
+              </tr>
+            </thead>
+            <tbody className="bg-transparent items-center justify-between w-full h-52">
+              {
+                response.map((value) => <TableItem key={value.position} item={value} />)
+              }
+            </tbody>
+          </ table> :
+          <h3 className="px-6 text-lg text-white">NO LANDS</h3>
       }
     </>
   )

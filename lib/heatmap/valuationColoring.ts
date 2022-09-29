@@ -314,7 +314,6 @@ export const getTileColor = (
   mapFilter?: MapFilter
 ) => {
   let color!: string
-
   // If land's percent is more than 100 then show dark-red
   if (percent > 100) {
     color = filterIs(100, percentFilter) ? 'rgb(120,0,0)' : generateColor(0)

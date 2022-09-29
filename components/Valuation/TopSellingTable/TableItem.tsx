@@ -6,7 +6,7 @@ const TableItem = ({ item } : { item: TopSellingRequestItem }) => {
   const priceLoader = () => {
     if(dataTable.price == 0)
       return <span className="mr-2">Loading...</span>
-    return <span className="mr-2">{`${dataTable.price} ${dataTable.symbol}`}</span>
+    return <span className="mr-2">{`${Number.parseFloat(dataTable.eth_price).toFixed(3)} ${dataTable.symbol}`}</span>
   }
 
   const tdStyle = "border-t-0 px-8 align-middle border-l-0 border-r-0 text-sm whitespace-nowrap p-4"
@@ -23,15 +23,10 @@ const TableItem = ({ item } : { item: TopSellingRequestItem }) => {
         </span>
       </th>
       <td className={tdStyle} >
-        {
-          priceLoader()
-        }
+        { priceLoader() }
       </td>
       <td className={tdStyle} >
-        <span className="mr-2">{dataTable.from || 'anonymous'}</span>
-      </td>
-      <td className={tdStyle} >
-        <span className="mr-2">{dataTable.to || 'anonymous'}</span>
+        <span className="mr-2">{dataTable.buyer || 'anonymous'}</span>
       </td>
       <td className={tdStyle} >
         <span className="mr-2">{dataTable.date}</span>

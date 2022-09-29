@@ -1,6 +1,6 @@
 export const fetchNonce = async (address: string) => {
   const nonceRes = await fetch(
-    'https://services.itrmachines.com/mgh-login/login/nonce',
+    process.env.ITRM_SERVICE + '/mgh-login/login/nonce',
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -14,7 +14,7 @@ export const fetchNonce = async (address: string) => {
 
 export const sendSignedNonce = async (signedNonce: string, address: string) => {
   const loginRes = await fetch(
-    'https://services.itrmachines.com/mgh-login/login/login',
+    process.env.ITRM_SERVICE +'/mgh-login/login/login',
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },

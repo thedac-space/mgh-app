@@ -233,7 +233,6 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
     };
     changeColours();
   }, [filterBy, percentFilter]);
-
   return (
     <>
       <Head>
@@ -389,7 +388,6 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                       // Filter lands by utility (watchlist, portfolio, etc..). On bottom right
                       legendFilter={legendFilter}
                       atlas={atlas}
-                      className="atlas"
                       width={dims.width}
                       height={dims.height}
                       onHover={(x: any, y: any) => {
