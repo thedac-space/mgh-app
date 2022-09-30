@@ -17,11 +17,9 @@ interface IMaptalksCanva {
     percentFilter: PercentFilter
     legendFilter: LegendFilter
     atlas: Atlas
-    onHover: (x: any, y:any) => void
+    onHover: (x: any, y: any) => void
     onClick: (x: any, y: any) => void
 }
-
-
 
 const MaptalksCanva = ({
     width,
@@ -43,7 +41,6 @@ const MaptalksCanva = ({
             },
         ])
 
-        
         map = new maptalks.Map('map', {
             center: [0, 0],
             zoom: 10,
@@ -52,7 +49,6 @@ const MaptalksCanva = ({
             pitch: 45,
             attribution: false,
             dragRotate: true, // set to true if you want a rotatable map
-            
         })
         //added background map layer
         //console.log('1:', JSON.parse(JSON.stringify(map)))
@@ -94,30 +90,45 @@ const MaptalksCanva = ({
                     },
                     cursor: 'pointer',
                 }
-            ).on('click', () => {
-                onClick(value.center.x, value.center.y)
-            }).on('mouseenter', (e) => {
-                e.target.updateSymbol({
-                    polygonFill: '#db2777',
-                    lineWidth: 3,
-                    lineColor: '#db2777'
+            )
+                .on('click', () => {
+                    onClick(value.center.x, value.center.y)
                 })
-                onHover(value.center.x, value.center.y)
-            }).on('mouseout', (e) => {
-                e.target.updateSymbol({
-                    polygonFill: color,
-                    lineWidth: 0
+                .on('mouseenter', (e) => {
+                    e.target.updateSymbol({
+                        polygonFill: '#db2777',
+                        lineWidth: 3,
+                        lineColor: '#db2777',
+                    })
+                    onHover(value.center.x, value.center.y)
                 })
-            })
+                .on('mouseout', (e) => {
+                    e.target.updateSymbol({
+                        polygonFill: color,
+                        lineWidth: 0,
+                    })
+                })
 
             landColection.push(polygon)
         })
-        let layer = new maptalks.VectorLayer('vector', landColection).addTo(map)
+        let layer = new maptalks.VectorLayer('vector', landColection, {
+            forceRenderOnMoving: true,
+            forceRenderOnRotating:true,
+            forceRenderOnZooming:true
+        }).addTo(map)
 
-        return () => {map.remove()}
+        return () => {
+            map.remove()
+        }
     }, [atlas])
 
-    return <canvas width={width} height={height} /* style={{ width, height }} */ id="map" />
+    return (
+        <canvas
+            width={width}
+            height={height}
+            /* style={{ width, height }} */ id="map"
+        />
+    )
 }
 
 export default MaptalksCanva
