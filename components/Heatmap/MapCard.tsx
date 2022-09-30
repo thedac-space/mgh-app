@@ -20,7 +20,8 @@ interface Props {
   landCoords?: { x: string | number; y: string | number }
   metaverse: Metaverse
   setIsVisible: React.Dispatch<React.SetStateAction<boolean>>
-  mapState: ValuationState
+  mapState: ValuationState,
+  name?: string
 }
 const MapCard = ({
   apiData,
@@ -29,6 +30,7 @@ const MapCard = ({
   metaverse,
   setIsVisible,
   mapState,
+  name
 }: Props) => {
   const imgSize = 150
   const [loadingQuery, loadedQuery, errorQuery] = getState(mapState, [
@@ -90,8 +92,8 @@ const MapCard = ({
                   <h3 className='text-base font-normal md:text-2xl p-0 leading-4'>
                     {handleLandName(metaverse, {
                       x: landCoords.x,
-                      y: landCoords.y,
-                    })}
+                      y: landCoords.y
+                    }, name ? name : undefined )}
                   </h3>
                   <p className='text-gray-400'>
                     {/* ID: {handleTokenID(apiData.tokenId)}{' '} */}

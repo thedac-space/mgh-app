@@ -18,7 +18,7 @@ interface IMaptalksCanva {
     legendFilter: LegendFilter
     atlas: Atlas
     onHover: (x: any, y: any) => void
-    onClick: (x: any, y: any) => void
+    onClick: (x: any, y: any, name: string) => void
 }
 
 const MaptalksCanva = ({
@@ -92,7 +92,7 @@ const MaptalksCanva = ({
                 }
             )
                 .on('click', () => {
-                    onClick(value.center.x, value.center.y)
+                    onClick(value.center.x, value.center.y, value.name)
                 })
                 .on('mouseenter', (e) => {
                     e.target.updateSymbol({
@@ -113,20 +113,19 @@ const MaptalksCanva = ({
         })
         let layer = new maptalks.VectorLayer('vector', landColection, {
             forceRenderOnMoving: true,
-            forceRenderOnRotating:true,
-            forceRenderOnZooming:true
+            forceRenderOnRotating: true,
+            forceRenderOnZooming: true
         }).addTo(map)
 
-        return () => {
-            map.remove()
-        }
+        return () => { map.remove() }
     }, [atlas])
 
     return (
         <canvas
             width={width}
             height={height}
-            /* style={{ width, height }} */ id="map"
+            /* style={{ width, height }} */
+            id="map"
         />
     )
 }

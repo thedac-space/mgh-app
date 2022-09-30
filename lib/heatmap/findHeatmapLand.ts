@@ -70,5 +70,5 @@ export const findHeatmapLand = (
     apiData.prices.eth_predicted_price,
     metaverse
   )
-  return { apiData, predictions, landCoords }
+  return { apiData, predictions, landCoords, name }
 }
