@@ -62,6 +62,7 @@ export const findHeatmapLand = (
     }
   }
 
+  const name = map[land].name ? map[land].name : undefined
   const landCoords = { x: map[land].coords ? map[land].coords.x : map[land].center.x, y: map[land].coords ? map[land].coords.y : map[land].center.y }
   setOpenSeaLink(land)
 

@@ -73,6 +73,7 @@ interface CardData {
   apiData: IAPIData;
   predictions: IPredictions;
   landCoords: { x: string | number; y: string | number };
+  name: string | undefined;
 }
 
 interface Hovered {
@@ -102,7 +103,6 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
   const [landsLoaded, setLandsLoaded] = useState<number>(0);
   const [heatmapSize, setHeatmapSize] = useState<HeatmapSize>();
   const [cardData, setCardData] = useState<CardData>();
-  const [cardName, setCardName] = useState<string>();
   function isSelected(x: number, y: number) {
     return selected?.x === x && selected?.y === y;
   }
@@ -278,14 +278,21 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
               <div className="absolute top-0 z-20 flex gap-4 p-2 md:w-fit w-full">
                 <div>
                   {/* Top left Coordinates */}
-                  <div className="mb-2 hidden md:block w-[190px]">
-                    <MapLandSummary
-                      owner={hovered.owner}
-                      name={hovered.name}
-                      coordinates={hovered.coords}
-                      metaverse={metaverse}
-                    />
-                  </div>
+                  {
+                    metaverse === 'somnium-space'
+                      ? (
+                        <div className="md:block w-[190px]"></div>
+                      ) : (
+                        <div className="mb-2 hidden md:block w-[190px]">
+                          <MapLandSummary
+                            owner={hovered.owner}
+                            name={hovered.name}
+                            coordinates={hovered.coords}
+                            metaverse={metaverse}
+                          />
+                        </div>
+                      )
+                  }
                   {/* 'Search By' Forms */}
                   <MapSearch
                     mapState={mapState}
@@ -395,8 +402,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                       onHover={(x, y) => {
                         handleHover(x, y);
                       }}
-                      onClick={(x, y, name?:string) => {
-                        name ? setCardName(name) : 0
+                      onClick={(x, y, name?: string) => {
                         if (isSelected(x, y)) {
                           setSelected(undefined);
                         } else {
@@ -419,8 +425,8 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                       apiData={cardData?.apiData}
                       predictions={cardData?.predictions}
                       landCoords={cardData?.landCoords}
+                      name={cardData?.name}
                       mapState={mapState}
-                      name={cardName}
                     />
                   </Fade>
                 </div>
