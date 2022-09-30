@@ -79,7 +79,7 @@ export const fetchITRMAtlas = async (
                 }
                 const valuations = valuationRes as Record<
                     string,
-                    ValuationTile | undefined
+                    ValuationTile
                 >
                 //console.log(valuations);
                 // Mapping through those valuations
@@ -87,7 +87,7 @@ export const fetchITRMAtlas = async (
                     {
                         // Making a name to fit with our tile map
                         let name = ""
-                        if (valuations[key]?.coords) {
+                        if (valuations[key].coords) {
                             name =
                                 valuations[key]?.coords.x +
                                 ',' +

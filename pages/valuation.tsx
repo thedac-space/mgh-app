@@ -390,9 +390,6 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                       atlas={atlas}
                       width={dims.width}
                       height={dims.height}
-                      onHover={(x: any, y: any) => {
-                        handleHover(x, y);
-                      }}
                       onClick={(x: any, y: any) => {
                         if (isSelected(x, y)) {
                           setSelected(undefined);

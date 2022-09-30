@@ -17,7 +17,6 @@ interface IMaptalksCanva {
     percentFilter: PercentFilter
     legendFilter: LegendFilter
     atlas: Atlas
-    onHover: (x: any, y: any) => void
     onClick: (x: any, y: any) => void
 }
 
@@ -30,7 +29,6 @@ const MaptalksCanva = ({
     percentFilter,
     legendFilter,
     atlas,
-    onHover,
     onClick,
 }: IMaptalksCanva) => {
     useEffect(() => {
@@ -94,8 +92,7 @@ const MaptalksCanva = ({
                     cursor: 'pointer',
                 }
             ).on('click', () => {
-                console.log(value.center.x, value.center.y)
-                //onClick(value.center.x, value.center.y)
+                onClick(value.center.x, value.center.y)
             }).on('mouseenter', (e) => {
                 e.target.updateSymbol({
                     polygonFill: '#db2777',

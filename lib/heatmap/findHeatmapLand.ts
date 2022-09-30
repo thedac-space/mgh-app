@@ -17,7 +17,7 @@ export const findHeatmapLand = (
   const landOptions = {
     sandbox: { contract: Contracts.LAND.ETHEREUM_MAINNET.newAddress },
     decentraland: { contract: Contracts.PARCEL.ETHEREUM_MAINNET.address },
-    'somnium-space':{contract:''}
+    'somnium-space': { contract: '' }
   }
 
   const setOpenSeaLink = (key: string) => {
@@ -62,7 +62,7 @@ export const findHeatmapLand = (
     }
   }
 
-  const landCoords = { x: map[land].coords.x ? map[land].coords.x : map[land].center.x, y: map[land].coords.y ? map[land].coords.y : map[land].center.y}
+  const landCoords = { x: map[land].coords ? map[land].coords.x : map[land].center.x, y: map[land].coords ? map[land].coords.y : map[land].center.y }
   setOpenSeaLink(land)
 
   const predictions = convertETHPrediction(
