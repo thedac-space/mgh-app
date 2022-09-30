@@ -15,7 +15,7 @@ const TopPicksLands = ({ metaverse }: Props) => {
   useEffect(() => {
     const setData = async () => {
       setLoading(true)
-    
+
       await axios
         .get(process.env.ITRM_SERVICE + '/val-analytics/topPicks', {
           params: { metaverse: metaverse },
@@ -23,7 +23,7 @@ const TopPicksLands = ({ metaverse }: Props) => {
         .then((response) => {
           setPicks(response.data)
           setLoading(false)
-        }).catch((error) => {console.log(error)})
+        }).catch((error) => { console.log(error) })
     }
     setData().catch((e) => console.log(e))
   }, [metaverse])
@@ -71,8 +71,7 @@ const TopPicksLands = ({ metaverse }: Props) => {
                       className='text-sm lg:text-2xl font-medium md:text-base'
                       href={picks[key]['external_link']}
                     >
-                      X:{picks[key]['coords']['x']}, Y:
-                      {picks[key]['coords']['y']}
+                      {picks[key]['coords'] ? `(x:${picks[key]['coords']['x']}, y:${picks[key]['coords']['y']})` : picks[key]['center'] ? `(${picks[key]['name']})` : `no-asset`}
                     </a>
                   </td>
                   <td className='flex justify-start px-4 content-center items-center text-sm lg:text-2xl font-medium md:text-base text-gray-300 pt-0.5 w-1/5'>

@@ -2,13 +2,12 @@ export const chartRoutes = [
     {
         route: 'avgPriceParcel',
         label: 'Average Sale Price per Parcel',
-        description:
-            'Average sale price for a 1x1 plot of LAND for a given timeframe',
+        description: 'Average sale price for a 1x1 plot of LAND for a given timeframe',
     },
     {
         route: 'floorPrice',
-        label: 'Floor Price',
-        description: 'Lowest listing price of a 1x1 plot of LAND on Opensea',
+        label: 'Cheapest sale',
+        description: 'Lowest listing price of a 1x1 plot of LAND on Opensea for a given timeframe',
     },
     {
         route: 'avgPriceParcelPerArea',
@@ -18,7 +17,7 @@ export const chartRoutes = [
     { route: 'totalNumberOfSales', label: 'Total Sales', description: 'Total plots of LAND sold in a given period of time' },
     { route: 'stdSalesPrices', label: 'Standard Deviation', description: 'Standard deviation of average sales prices' },
     { route: 'salesVolume', label: 'Daily Sales Volume', description: 'LAND sales volume for a given timeframe' },
-    { route: 'maxPrice', label: 'Max Price', description: 'Highest price paid for a plot of LAND in a given timeframe'}
+    { route: 'maxPrice', label: 'Max Price', description: 'Highest price paid for a plot of LAND in a given timeframe' }
 ]
 
 export const chartSymbolOptions = {
@@ -29,6 +28,6 @@ export const chartSymbolOptions = {
         sandbox: 'SAND',
         decentraland: 'MANA',
         'axie-infinity': 'AXS',
-        'somnium-space':''
+        'somnium-space': 'CUBE'
     },
 } as const

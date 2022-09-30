@@ -17,6 +17,7 @@ interface IMaptalksCanva {
     percentFilter: PercentFilter
     legendFilter: LegendFilter
     atlas: Atlas
+    onHover: (x: any, y:any) => void
     onClick: (x: any, y: any) => void
 }
 
@@ -29,6 +30,7 @@ const MaptalksCanva = ({
     percentFilter,
     legendFilter,
     atlas,
+    onHover,
     onClick,
 }: IMaptalksCanva) => {
     useEffect(() => {
@@ -41,6 +43,7 @@ const MaptalksCanva = ({
             },
         ])
 
+        
         map = new maptalks.Map('map', {
             center: [0, 0],
             zoom: 10,
@@ -49,7 +52,7 @@ const MaptalksCanva = ({
             pitch: 45,
             attribution: false,
             dragRotate: true, // set to true if you want a rotatable map
-
+            
         })
         //added background map layer
         //console.log('1:', JSON.parse(JSON.stringify(map)))
@@ -99,6 +102,7 @@ const MaptalksCanva = ({
                     lineWidth: 3,
                     lineColor: '#db2777'
                 })
+                onHover(value.center.x, value.center.y)
             }).on('mouseout', (e) => {
                 e.target.updateSymbol({
                     polygonFill: color,
@@ -109,6 +113,8 @@ const MaptalksCanva = ({
             landColection.push(polygon)
         })
         let layer = new maptalks.VectorLayer('vector', landColection).addTo(map)
+
+        return () => {map.remove()}
     }, [atlas])
 
     return <canvas width={width} height={height} /* style={{ width, height }} */ id="map" />
