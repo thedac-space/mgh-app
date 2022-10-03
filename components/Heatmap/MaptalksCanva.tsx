@@ -32,6 +32,7 @@ const MaptalksCanva = ({
     onClick,
 }: IMaptalksCanva) => {
     useEffect(() => {
+        if (!atlas) return undefined
         let map: any
         var imageLayer = new maptalks.ImageLayer('images', [
             {
@@ -58,8 +59,8 @@ const MaptalksCanva = ({
             let tile: any
 
             tile = filteredLayer(
-                value.center.x,
-                value.center.y,
+                value?.center.x,
+                value?.center.y,
                 atlas,
                 filter,
                 percentFilter,

@@ -17,7 +17,7 @@ type PanZoomEvent = {
   y0: number
 }
 
-function panzoom(target: any, cb: (e: PanZoomEvent) => void) {
+function panzoom(target: HTMLElement, cb: (e: PanZoomEvent) => void) {
   //enable panning
   let pos = position.emitter({
     element: target,
