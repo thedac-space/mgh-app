@@ -65,7 +65,7 @@ const MaptalksCanva = ({
                 percentFilter,
                 legendFilter
             )
-            const { color, top, left, topLeft, scale } = tile
+            const { color } = tile
             let polygon = new maptalks.Polygon(
                 [
                     [
@@ -118,7 +118,7 @@ const MaptalksCanva = ({
         }).addTo(map)
 
         return () => { map.remove() }
-    }, [atlas])
+    }, [atlas, legendFilter])
 
     return (
         <canvas

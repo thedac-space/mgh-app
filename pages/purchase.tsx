@@ -85,7 +85,7 @@ const Purchase: NextPage<{ coinValues: PurchaseCoinValues }> = ({
 export async function getServerSideProps() {
   // Using wmatic instead of matic cause coingecko isn't working for matic..
   const coinRes = await fetch(
-    `https://api.coingecko.com/api/v3/simple/price?ids=ethereum%2Cthe-sandbox%2Cdecentraland%2Cocean-protocol%2Cmetagamehub-dao%2Cwmatic%2Cusd-coin%2Ctether&vs_currencies=usd`
+    `https://api.coingecko.com/api/v3/simple/price?ids=ethereum%2Cthe-sandbox%2Cdecentraland%2Cocean-protocol%2Cmetagamehub-dao%2Cwmatic%2Cusd-coin%2Ctether%2Csomnium-space-cubes&vs_currencies=usd`
   )
   const coinValues = (await coinRes.json()) as PurchaseCoinValues
   return {

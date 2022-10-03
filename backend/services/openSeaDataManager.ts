@@ -14,7 +14,7 @@ async function getCollectionStats(collectionName: string) {
 
 async function getEthExchangePrice() {
   const data = await fetch(
-    `https://api.coingecko.com/api/v3/simple/price?ids=ethereum%2Cthe-sandbox%2Cdecentraland%2Caxie-infinity&vs_currencies=usd`
+    `https://api.coingecko.com/api/v3/simple/price?ids=ethereum%2Cthe-sandbox%2Cdecentraland%2Caxie-infinity%2Csomnium-space-cubes&vs_currencies=usd`
   )
   const data_json = await data.json()
   return data_json
