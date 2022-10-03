@@ -35,7 +35,7 @@ const OptimizedImage = ({
       layout={layout}
       height={height || 150}
       loading='lazy'
-      objectFit={'cover'}
+      objectFit={objectFit || 'cover'}
       className={'rounded-' + rounded + ' ' + className}
     />
   )

@@ -57,10 +57,11 @@ const MaptalksCanva = ({
         let landColection: any = []
         Object.entries(atlas.ITRM).forEach(([key, value]: any) => {
             let tile: any
+            if (!value.center) return
 
             tile = filteredLayer(
-                value?.center.x,
-                value?.center.y,
+                value.center.x,
+                value.center.y,
                 atlas,
                 filter,
                 percentFilter,
