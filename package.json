@@ -40,6 +40,7 @@
     "react-redux": "^7.2.6",
     "react-use-scroll-direction": "^0.1.0",
     "recharts": "^2.1.9",
+    "socket.io-client": "^4.5.2",
     "touch-pinch": "^1.0.1",
     "touch-position": "^2.0.0"
   },

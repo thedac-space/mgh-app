@@ -58,6 +58,8 @@ import { getLandSummary } from "../lib/heatmap/getLandSummary";
 import { findHeatmapLand } from "../lib/heatmap/findHeatmapLand";
 import Head from "next/head";
 
+
+
 // Making this state as an object in order to iterate easily through it
 export const VALUATION_STATE_OPTIONS = [
   "loading",

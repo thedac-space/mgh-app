@@ -8,8 +8,9 @@ import {
     PercentFilter,
 } from '../../lib/heatmap/heatmapCommonTypes'
 import { filteredLayer } from '../../lib/heatmap/heatmapLayers'
+import { io } from 'socket.io-client'
 import React from 'react'
-
+const socket = io('http://localhost:3001', { transports: ['websocket'] })
 interface IMaptalksCanva {
     width: number | string | undefined
     height: number | string | undefined
@@ -31,6 +32,7 @@ const MaptalksCanva = ({
     onHover,
     onClick,
 }: IMaptalksCanva) => {
+
     useEffect(() => {
         if (!atlas) return undefined
         let map: any
@@ -54,8 +56,16 @@ const MaptalksCanva = ({
         //added background map layer
         //console.log('1:', JSON.parse(JSON.stringify(map)))
         map.addLayer(imageLayer)
+        let layer = new maptalks.VectorLayer('vector',[], {
+            forceRenderOnMoving: true,
+            forceRenderOnRotating: true,
+            forceRenderOnZooming: true,
+        }).addTo(map)
         let landColection: any = []
-        Object.entries(atlas.ITRM).forEach(([key, value]: any) => {
+        socket.emit('render', 'somnium-space')
+        socket.on('render', (land) => {
+            console.log(land)
+            let value = land[1]
             let tile: any
             if (!value.center) return
 
@@ -110,16 +120,14 @@ const MaptalksCanva = ({
                         lineWidth: 0,
                     })
                 })
-
-            landColection.push(polygon)
+                layer.addGeometry(polygon)
         })
-        let layer = new maptalks.VectorLayer('vector', landColection, {
-            forceRenderOnMoving: true,
-            forceRenderOnRotating: true,
-            forceRenderOnZooming: true
-        }).addTo(map)
 
-        return () => { map.remove() }
+
+
+        return () => {
+            map.remove()
+        }
     }, [atlas, legendFilter])
 
     return (
