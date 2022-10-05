@@ -20,7 +20,7 @@ interface IMaptalksCanva {
     x: number | undefined
     y: number | undefined
     onHover: (x: any, y: any) => void
-    onClick: (x: any, y: any, name: string) => void
+    onClick: (x: any, y: any, name: string) => void 
 }
 
 const MaptalksCanva = ({
