@@ -1,7 +1,9 @@
+import { Contracts } from "../../lib/contracts";
+
 export const purchaseCoinOptions = {
   mgh: {
     img: '/images/mgh_logo.png',
-    contractAddress: '0x8765b1a0eb57ca49be7eacd35b24a574d0203656',
+    contractAddress: Contracts.MGH_TOKEN.ETHEREUM_MAINNET.address,
     chain: 1,
     decimals: 18,
   },
