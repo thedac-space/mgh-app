@@ -102,7 +102,7 @@ const MaptalksCanva = ({
                     drawOnAxis: null, // force dragging stick on a axis, can be: x, y
                     symbol: {
                         lineWidth: borderSize,
-                        lineColor: '#ff0044',
+                        lineColor: borderColor,
                         polygonFill: color,
                         polygonOpacity: 1,
                     },
