@@ -59,7 +59,7 @@ const MaptalksCanva = ({
         //console.log('1:', JSON.parse(JSON.stringify(map)))
         map.addLayer(imageLayer)
         let landColection: any = []
-        if (x && y){ map.setCenter(new maptalks.Coordinate(x, y)) }
+        if (x && y) { map.setCenter(new maptalks.Coordinate(x, y)) }
         Object.entries(atlas.ITRM).forEach(([key, value]: any) => {
             let tile: any
             if (!value.center) return
@@ -133,6 +133,9 @@ const MaptalksCanva = ({
             forceRenderOnRotating: true,
             forceRenderOnZooming: true
         }).addTo(map)
+
+        // set map's max extent to map's map view power by 2
+        map.setMaxExtent(new maptalks.Extent(-2, -2, 2, 2))
 
         return () => { map.remove() }
     }, [atlas, legendFilter, x, y])
