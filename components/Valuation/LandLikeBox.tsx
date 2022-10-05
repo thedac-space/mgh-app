@@ -101,7 +101,7 @@ const LandLikeBox = ({ landId, metaverse, twitterLink }: Props) => {
       const disliked = score?.dislikes.includes(address) || false
       setUserReacted({ liked: liked, disliked: disliked })
     }
-    fetchLikes()
+    fetchLikes().then()
   }, [landId, refetch, address])
 
   return (
