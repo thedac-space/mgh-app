@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import * as maptalks from 'maptalks'
 import {
     Atlas,
@@ -32,7 +32,9 @@ const MaptalksCanva = ({
     onHover,
     onClick,
 }: IMaptalksCanva) => {
-
+    const [map, setMap] = useState<maptalks.Map>()
+    const [mapData, setMapData] = useState([])
+    const [layer, setLayer] = useState<any>()
     useEffect(() => {
         if (!atlas) return undefined
         let map: any
@@ -56,7 +58,7 @@ const MaptalksCanva = ({
         //added background map layer
         //console.log('1:', JSON.parse(JSON.stringify(map)))
         map.addLayer(imageLayer)
-        let layer = new maptalks.VectorLayer('vector',[], {
+        let layer = new maptalks.VectorLayer('vector', [], {
             forceRenderOnMoving: true,
             forceRenderOnRotating: true,
             forceRenderOnZooming: true,
@@ -64,7 +66,6 @@ const MaptalksCanva = ({
         let landColection: any = []
         socket.emit('render', 'somnium-space')
         socket.on('render', (land) => {
-            console.log(land)
             let value = land[1]
             let tile: any
             if (!value.center) return
@@ -120,13 +121,29 @@ const MaptalksCanva = ({
                         lineWidth: 0,
                     })
                 })
-                layer.addGeometry(polygon)
+            layer.addGeometry(polygon)
+            landColection.push(polygon)
         })
-
-
+        socket.on('render-finish', () => {
+            console.log('FINISH')
+            setMapData(landColection)
+            setMap(map)
+            setLayer(layer)
+        })
 
         return () => {
             map.remove()
+        }
+    }, [])
+    useEffect(() => {
+        if (map) {
+            map.removeLayer('vector')
+                new maptalks.VectorLayer('vector', mapData, {
+                    forceRenderOnMoving: true,
+                    forceRenderOnRotating: true,
+                    forceRenderOnZooming: true,
+                }).addTo(map)
+            
         }
     }, [atlas, legendFilter])
 
