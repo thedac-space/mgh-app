@@ -89,7 +89,7 @@ const MapCard = ({
               {/* Main Land Info */}
               <div className='flex flex-col justify-between'>
                 <div>
-                  <h3 className='text-base font-normal md:text-2xl p-0 leading-4'>
+                  <h3 className='text-base font-normal md:text-2xl p-0 leading-4 max-w-xs'>
                     {handleLandName(metaverse, {
                       x: landCoords.x,
                       y: landCoords.y
