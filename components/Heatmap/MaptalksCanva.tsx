@@ -17,6 +17,8 @@ interface IMaptalksCanva {
     percentFilter: PercentFilter
     legendFilter: LegendFilter
     atlas: Atlas
+    x: number | undefined
+    y: number | undefined
     onHover: (x: any, y: any) => void
     onClick: (x: any, y: any, name: string) => void
 }
@@ -28,12 +30,14 @@ const MaptalksCanva = ({
     percentFilter,
     legendFilter,
     atlas,
+    x,
+    y,
     onHover,
     onClick,
 }: IMaptalksCanva) => {
+    let map: maptalks.Map
     useEffect(() => {
         if (!atlas) return undefined
-        let map: any
         var imageLayer = new maptalks.ImageLayer('images', [
             {
                 url: '/images/Waterfront_Extended_Parcels_Map_allgreen.jpg',
@@ -55,6 +59,7 @@ const MaptalksCanva = ({
         //console.log('1:', JSON.parse(JSON.stringify(map)))
         map.addLayer(imageLayer)
         let landColection: any = []
+        if (x && y){ map.setCenter(new maptalks.Coordinate(x, y)) }
         Object.entries(atlas.ITRM).forEach(([key, value]: any) => {
             let tile: any
             if (!value.center) return
@@ -67,7 +72,17 @@ const MaptalksCanva = ({
                 percentFilter,
                 legendFilter
             )
-            const { color } = tile
+            let { color } = tile
+            let borderColor = '#000'
+            let borderSize = 0
+
+            //set color if the land is selected
+            if (value.center.x == x && value.center.y == y) {
+                color = '#ff9990'
+                borderColor = '#ff0044'
+                borderSize = 3
+            }
+
             let polygon = new maptalks.Polygon(
                 [
                     [
@@ -86,16 +101,15 @@ const MaptalksCanva = ({
                     dragShadow: false, // display a shadow during dragging
                     drawOnAxis: null, // force dragging stick on a axis, can be: x, y
                     symbol: {
-                        lineWidth: 0,
+                        lineWidth: borderSize,
+                        lineColor: borderColor,
                         polygonFill: color,
                         polygonOpacity: 1,
                     },
                     cursor: 'pointer',
                 }
             )
-                .on('click', () => {
-                    onClick(value.center.x, value.center.y, value.name)
-                })
+                .on('click', () => { onClick(value.center.x, value.center.y, value.name) })
                 .on('mouseenter', (e) => {
                     e.target.updateSymbol({
                         polygonFill: '#db2777',
@@ -107,7 +121,7 @@ const MaptalksCanva = ({
                 .on('mouseout', (e) => {
                     e.target.updateSymbol({
                         polygonFill: color,
-                        lineWidth: 0,
+                        lineWidth: borderSize
                     })
                 })
 
@@ -120,7 +134,7 @@ const MaptalksCanva = ({
         }).addTo(map)
 
         return () => { map.remove() }
-    }, [atlas, legendFilter])
+    }, [atlas, legendFilter, x, y])
 
     return (
         <canvas
