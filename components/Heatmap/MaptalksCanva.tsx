@@ -121,7 +121,8 @@ const MaptalksCanva = ({
                 .on('mouseout', (e) => {
                     e.target.updateSymbol({
                         polygonFill: color,
-                        lineWidth: borderSize
+                        lineWidth: borderSize,
+                        lineColor: borderColor
                     })
                 })
 
