@@ -49,3 +49,55 @@ export const purchaseCoinOptions = {
     decimals: 18,
   },
 } as const
+
+export const devMumbaiPurchaseCoinOptions = {
+usdc: {
+  img: '/images/usd-coin-usdc-logo.png',
+  contractAddress: '0x4624e0295b610a89d12FE918C6fBD188F862e1a8',
+  chain: 80001,
+  decimals: 6,
+},
+matic: {
+  img: '/images/polygon-matic-logo.png',
+  contractAddress: '',
+  chain: 80001,
+  decimals: 18,
+},
+eth: {
+  img: '/images/usd-coin-usdc-logo.png',
+  contractAddress: '0xBE780FD39A192c864F47f60F7ad842AFEf6aaff9',
+  chain: 80001,
+  decimals: 18,
+},
+mgh : {
+  img: '/images/usd-coin-usdc-logo.png',
+  contractAddress: '0x4624e0295b610a89d12FE918C6fBD188F862e1a8',
+  chain: 80001,
+  decimals: 6,
+},
+usdt: {
+  img: '/images/usd-coin-usdc-logo.png',
+  contractAddress: '0x4624e0295b610a89d12FE918C6fBD188F862e1a8',
+  chain: 80001,
+  decimals: 6,
+},
+ocean:{
+  img: '/images/usd-coin-usdc-logo.png',
+  contractAddress: '0x4624e0295b610a89d12FE918C6fBD188F862e1a8',
+  chain: 80001,
+  decimals: 6,
+},
+sand:{
+  img: '/images/usd-coin-usdc-logo.png',
+  contractAddress: '0x4624e0295b610a89d12FE918C6fBD188F862e1a8',
+  chain: 80001,
+  decimals: 6,
+},
+mana:{
+  img: '/images/usd-coin-usdc-logo.png',
+  contractAddress: '0x4624e0295b610a89d12FE918C6fBD188F862e1a8',
+  chain: 80001,
+  decimals: 6,
+},
+
+} as const

@@ -10,7 +10,7 @@ import {
 } from '../../components/Purchase/index'
 import { PurchaseProvider } from '../../components/Purchase/purchaseContext'
 
-const PurchaseModal = ({ onDismiss }: any) => {
+const PurchaseModal = ({ web3Provider, onDismiss }: any) => {
 
     const [buttonOption, setButtonOption] = useState<1 | 3 | 12>(12)
 
@@ -27,7 +27,7 @@ const PurchaseModal = ({ onDismiss }: any) => {
                         <PurchaseActionButton onClick={() => { setButtonOption(12) }} disabled={false} text={"12 Month"} />
                     </div>
                     <PurchaseKeyFeatures />
-                    <PurchaseBuyForm option={buttonOption} />
+                    <PurchaseBuyForm web3Provider={web3Provider} option={buttonOption} />
                     <PurchaseCoinList />
                 </PurchaseProvider>
                 <p onClick={onDismiss} className="cursor-pointer max-w-max self-center font-medium text-gray-400">Close</p>

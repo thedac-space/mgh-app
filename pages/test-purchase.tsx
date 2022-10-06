@@ -43,7 +43,7 @@ const Liquidity: NextPage = () => {
                     <WalletModal onDismiss={() => setOpenModalWallet(false)} />
                 )}
                 {openModal && (
-                    <PurchaseModal onDismiss={() => setOpenModal(false)} />
+                    <PurchaseModal web3Provider={web3Provider} onDismiss={() => setOpenModal(false)} />
                 )}
                 {web3Provider && (
                     <>
