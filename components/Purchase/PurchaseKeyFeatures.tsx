@@ -25,7 +25,7 @@ const PurchaseKeyFeatures = () => {
         </div>
         {/* Looping Video */}
         <video className='w-2/4' autoPlay loop muted controls>
-          <source src='/videos/heatmap-video.mp4' type='video/mp4' />
+          <source src='/videos/heatmap-video-compressed.mp4' type='video/mp4' />
         </video>
       </div>
     </>
