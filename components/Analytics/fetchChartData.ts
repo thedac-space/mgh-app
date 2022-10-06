@@ -22,7 +22,6 @@ export const fetchChartData = async (metaverse: Metaverse, route: string) => {
       )
     try {
         const data = (await response.json()) as ChartInfo[] | number | RichList
-        console.log(data.length)
         return data
     } catch (err) {}
 }
