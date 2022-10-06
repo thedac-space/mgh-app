@@ -395,6 +395,10 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                       // Filter lands by percentage. On bottom left
                       percentFilter={percentFilter}
                       // Filter lands by utility (watchlist, portfolio, etc..). On bottom right
+                      // starting position of the map
+                      x={typeof(selected?.x) == 'string' ? parseFloat(selected?.x) : selected?.x}
+                      y={typeof(selected?.y) == 'string' ? parseFloat(selected?.y) : selected?.y}
+                      //legend filter
                       legendFilter={legendFilter}
                       atlas={atlas}
                       width={dims.width}
