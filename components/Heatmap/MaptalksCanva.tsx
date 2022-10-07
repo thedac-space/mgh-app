@@ -34,7 +34,7 @@ const MaptalksCanva = ({
 }: IMaptalksCanva) => {
     const [map, setMap] = useState<maptalks.Map>()
     const [mapData, setMapData] = useState([])
-    const [layer, setLayer] = useState<any>()
+
     useEffect(() => {
         if (!atlas) return undefined
         let map: any
@@ -63,9 +63,12 @@ const MaptalksCanva = ({
             forceRenderOnRotating: true,
             forceRenderOnZooming: true,
         }).addTo(map)
-        let landColection: any = []
+
+        let lands: any = []
+        let polygons: any = []
         socket.emit('render', 'somnium-space')
         socket.on('render', (land) => {
+            lands.push(land[1])
             let value = land[1]
             let tile: any
             if (!value.center) return
@@ -122,13 +125,12 @@ const MaptalksCanva = ({
                     })
                 })
             layer.addGeometry(polygon)
-            landColection.push(polygon)
+            polygons.push(polygon)
         })
         socket.on('render-finish', () => {
             console.log('FINISH')
-            setMapData(landColection)
+            setMapData(lands)
             setMap(map)
-            setLayer(layer)
         })
 
         return () => {
@@ -137,13 +139,70 @@ const MaptalksCanva = ({
     }, [])
     useEffect(() => {
         if (map) {
+            let lands: any = []
             map.removeLayer('vector')
-                new maptalks.VectorLayer('vector', mapData, {
-                    forceRenderOnMoving: true,
-                    forceRenderOnRotating: true,
-                    forceRenderOnZooming: true,
-                }).addTo(map)
-            
+            mapData.forEach((value: any) => {
+                let tile: any
+                if (!value.center) return
+
+                tile = filteredLayer(
+                    value.center.x,
+                    value.center.y,
+                    atlas,
+                    filter,
+                    percentFilter,
+                    legendFilter
+                )
+                const { color } = tile
+                let polygon = new maptalks.Polygon(
+                    [
+                        [
+                            [value.geometry[0].x, value.geometry[0].y],
+                            [value.geometry[1].x, value.geometry[1].y],
+                            [value.geometry[2].x, value.geometry[2].y],
+                            [value.geometry[3].x, value.geometry[3].y],
+                        ],
+                    ],
+                    {
+                        visible: true,
+                        editable: true,
+                        shadowBlur: 0,
+                        shadowColor: 'black',
+                        draggable: false,
+                        dragShadow: false, // display a shadow during dragging
+                        drawOnAxis: null, // force dragging stick on a axis, can be: x, y
+                        symbol: {
+                            lineWidth: 0,
+                            polygonFill: color,
+                            polygonOpacity: 1,
+                        },
+                        cursor: 'pointer',
+                    }
+                )
+                    .on('click', () => {
+                        onClick(value.center.x, value.center.y, value.name)
+                    })
+                    .on('mouseenter', (e) => {
+                        e.target.updateSymbol({
+                            polygonFill: '#db2777',
+                            lineWidth: 3,
+                            lineColor: '#db2777',
+                        })
+                        onHover(value.center.x, value.center.y)
+                    })
+                    .on('mouseout', (e) => {
+                        e.target.updateSymbol({
+                            polygonFill: color,
+                            lineWidth: 0,
+                        })
+                    })
+                lands.push(polygon)
+            })
+            new maptalks.VectorLayer('vector', lands, {
+                forceRenderOnMoving: true,
+                forceRenderOnRotating: true,
+                forceRenderOnZooming: true,
+            }).addTo(map)
         }
     }, [atlas, legendFilter])
 
