@@ -1,26 +1,13 @@
 import { TopSellingRequestItem } from "../../../types/TopSelling"
 
-export const handleOrderAsset = (sortDir: boolean, setSortDir: Function, data: [key: TopSellingRequestItem], setData: Function) => {
-  let sortArray = data
-  sortArray.sort((a: TopSellingRequestItem, b: TopSellingRequestItem) => {
-    let returns = 0
-    if (a.dataTable.coords.y > b.dataTable.coords.y)
-      returns = 1
-    if (a.dataTable.coords.y < b.dataTable.coords.y)
-      returns = -1
-    return sortDir ? returns : - returns
-  })
-  sortArray.sort((a: TopSellingRequestItem, b: TopSellingRequestItem) => {
-    let returns = 0
-    if (a.dataTable.coords.x > b.dataTable.coords.x)
-      returns = 1
-    if (a.dataTable.coords.x < b.dataTable.coords.x)
-      returns = -1
-    return sortDir ? returns : - returns
-  })
-  setSortDir(!sortDir)
-  setData(sortArray)
-}
+type MapAtribute =
+|  'asset'
+|  'date'
+|  'external_link'
+|  'image'
+|  'buyer'
+|  'eth_price'
+|  'symbol'
 
 export const handleOrderRank = (sortDir: boolean, setSortDir: Function, data: [key: TopSellingRequestItem], setData: Function) => {
   let sortArray = data
@@ -39,26 +26,15 @@ export const handleOrderPrice = (sortDir: boolean, setSortDir: Function, data: [
   let sortArray = data
   sortArray.sort((a: TopSellingRequestItem, b: TopSellingRequestItem) => {
     let returns = 0
-    if (parseInt(a.dataTable.price) > parseInt(b.dataTable.price))
+    if (parseInt(a.dataTable.eth_price) > parseInt(b.dataTable.eth_price))
       returns = 1
-    if (parseInt(a.dataTable.price) < parseInt(b.dataTable.price))
+    if (parseInt(a.dataTable.eth_price) < parseInt(b.dataTable.eth_price))
       returns = -1
     return sortDir ? returns : - returns
   })
   setSortDir(!sortDir)
   setData(sortArray)
 }
-
-type MapAtribute =
-|  'asset'
-|  'date'
-|  'external_link'
-|  'from'
-|  'image'
-|  'owner'
-|  'price'
-|  'symbol'
-|  'to'
 
 export const handleOrder = ( atribute: MapAtribute, sortDir: boolean, setSortDir: Function, data: [key: TopSellingRequestItem], setData: Function ) => {
   let sortArray = data
@@ -67,6 +43,22 @@ export const handleOrder = ( atribute: MapAtribute, sortDir: boolean, setSortDir
     if (a.dataTable[atribute] > b.dataTable[atribute])
       returns = 1
     if (a.dataTable[atribute] < b.dataTable[atribute])
+      returns = -1
+    return sortDir ? returns : - returns
+  })
+  setSortDir(!sortDir)
+  setData(sortArray)
+}
+
+export const handleDate = (sortDir: boolean, setSortDir: Function, data: [key: TopSellingRequestItem], setData: Function) => {
+  let sortArray = data
+  sortArray.sort((a: TopSellingRequestItem, b: TopSellingRequestItem) => {
+    let returns = 0
+    const dateA = Date.parse(a.dataTable.date)/1000
+    const dateB = Date.parse(b.dataTable.date)/1000
+    if (dateA > dateB)
+      returns = 1
+    else
       returns = -1
     return sortDir ? returns : - returns
   })
