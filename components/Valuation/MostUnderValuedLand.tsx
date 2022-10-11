@@ -1,3 +1,4 @@
+import { Contracts } from '../../lib/contracts'
 import { IPriceCard } from '../../lib/valuation/valuationTypes'
 import { HorizontalPriceCard } from '../General'
 
@@ -17,7 +18,7 @@ const MostUnderValuedLand = ({
     metaverse: 'sandbox',
     name: 'LAND (136, 4)',
     opensea_link:
-      'https://opensea.io/assets/0x50f5474724e0ee42d9a4e711ccfb275809fd6d4a/85204',
+      `https://opensea.io/assets/${Contracts.LAND.ETHEREUM_MAINNET.oldAddress}/85204`,
     tokenId: '85204',
   }
 

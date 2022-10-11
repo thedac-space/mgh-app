@@ -2,17 +2,11 @@ export interface TopSellingDataTable {
   asset: string,
   date: string,
   external_link: string,
-  from: string,
-  to: string,
+  buyer: string,
   image: string,
-  owner: string,
-  price: string,
+  eth_price: string,
   symbol: string
   landId: number,
-  coords: {
-    x: number,
-    y: number
-  }
 }
 
 export interface TopSellingRequestItem {

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import TableItem from "./TableItem"
-import { handleOrder, handleOrderAsset, handleOrderRank, handleOrderPrice } from "./Order"
+import { handleOrder, handleOrderRank, handleOrderPrice, handleDate } from "./Order"
 import { TopSellingRequestItem } from "../../../types/TopSelling"
 
 interface filterBy {
@@ -32,10 +32,10 @@ const TableStructure = ({ filterby }: { filterby: filterBy }) => {
             <thead>
               <tr>
                 <th className={thStyle} onClick={() => handleOrderRank(sortDir, setSortDir, response, setResponse)} >Rank</th>
-                <th className={thStyle} >Asset</th>
-                <th className={thStyle} >Price</th>
-                <th className={thStyle} >Buyer</th>
-                <th className={thStyle} >Purchased</th>
+                <th className={thStyle} onClick={() => handleOrder('asset', sortDir, setSortDir, response, setResponse)}>Asset</th>
+                <th className={thStyle} onClick={() => handleOrderPrice(sortDir, setSortDir, response, setResponse)}>Price</th>
+                <th className={thStyle} onClick={() => handleOrder('buyer', sortDir, setSortDir, response, setResponse)}>Buyer</th>
+                <th className={thStyle} onClick={() => handleDate(sortDir, setSortDir, response, setResponse)}>Purchased</th>
               </tr>
             </thead>
             <tbody className="bg-transparent items-center justify-between w-full h-52">
