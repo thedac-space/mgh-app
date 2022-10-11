@@ -44,6 +44,7 @@ type valuationTransfer = {
   price: number
   priceUsd: number
   owner: string
+  eth_price: number
 }
 
 // This is how the End Valuation Tile looks, some information is added after the API Request

@@ -93,7 +93,7 @@ const MapCard = ({
                     {handleLandName(metaverse, {
                       x: landCoords.x,
                       y: landCoords.y
-                    }, name ? name : undefined )}
+                    }, name ? name : undefined)}
                   </h3>
                   <p className='text-gray-400'>
                     {/* ID: {handleTokenID(apiData.tokenId)}{' '} */}
