@@ -1,10 +1,15 @@
+import { Metaverse } from "../../../lib/metaverse"
 import { TopSellingDataTable, TopSellingRequestItem } from "../../../types/TopSelling"
 
-const TableItem = ({ item } : { item: TopSellingRequestItem }) => {
+const getExternalLink = (metaverse: Metaverse, dataTable: TopSellingDataTable) => {
+  return metaverse === 'somnium-space' ? ("https://somniumspace.com/parcel/" + dataTable.landId) : dataTable.external_link
+}
+
+const TableItem = ({ item, metaverse }: { item: TopSellingRequestItem, metaverse: Metaverse }) => {
   let dataTable: TopSellingDataTable | any = item.dataTable || null
-    
+
   const priceLoader = () => {
-    if(dataTable.price == 0)
+    if (dataTable.price == 0)
       return <span className="mr-2">Loading...</span>
     return <span className="mr-2">{`${Number.parseFloat(dataTable.eth_price).toFixed(3)} ${dataTable.symbol}`}</span>
   }
@@ -15,15 +20,15 @@ const TableItem = ({ item } : { item: TopSellingRequestItem }) => {
     <tr>
       <td className={tdStyle}>{item.position}</td>
       <th className={`${tdStyle} text-left flex items-center`}>
-        <img src={dataTable.image} className="h-12 w-12 bg-white rounded-full border" alt={`Land ${dataTable.asset} image`}/>
+        <img src={dataTable.image} className="h-12 w-12 bg-white rounded-full border" alt={`Land ${dataTable.asset} image`} />
         <span className="ml-3 font-bold text-white">
-          Land: <a className="hover:underline text-sky-600" href={dataTable.external_link} target='_blank'>
-            { dataTable.asset }
-          </a> 
+          Land: <a className="hover:underline text-sky-600" href={getExternalLink(metaverse, dataTable)} target='_blank'>
+            {dataTable.asset}
+          </a>
         </span>
       </th>
       <td className={tdStyle} >
-        { priceLoader() }
+        {priceLoader()}
       </td>
       <td className={tdStyle} >
         <span className="mr-2">{dataTable.buyer || 'anonymous'}</span>

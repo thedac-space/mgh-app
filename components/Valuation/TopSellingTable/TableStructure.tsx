@@ -2,13 +2,14 @@ import { useEffect, useState } from "react"
 import TableItem from "./TableItem"
 import { handleOrder, handleOrderRank, handleOrderPrice, handleDate } from "./Order"
 import { TopSellingRequestItem } from "../../../types/TopSelling"
+import { Metaverse } from "../../../lib/metaverse"
 
 interface filterBy {
   element: String,
   data: [key: TopSellingRequestItem]
 }
 
-const TableStructure = ({ filterby }: { filterby: filterBy }) => {
+const TableStructure = ({ filterby, metaverse }: { filterby: filterBy, metaverse: Metaverse }) => {
   const filterData = (data: any) => {
     let result: any = []
     data.map((value: any) => value.position ? result.push(value) : false)
@@ -40,7 +41,7 @@ const TableStructure = ({ filterby }: { filterby: filterBy }) => {
             </thead>
             <tbody className="bg-transparent items-center justify-between w-full h-52">
               {
-                response.map((value) => <TableItem key={value.position} item={value} />)
+                response.map((value) => <TableItem key={value.position} item={value} metaverse={metaverse}/>)
               }
             </tbody>
           </ table> :
