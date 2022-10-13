@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import TableItem from "./TableItem"
-import { handleOrder, handleOrderRank, handleOrderPrice, handleDate } from "./Order"
+import { handleOrder, handleOrderRank, handleOrderPrice, handleDate } from "../../../lib/valuation/topSellingLands/Order"
 import { TopSellingRequestItem } from "../../../types/TopSelling"
 import { Metaverse } from "../../../lib/metaverse"
 
