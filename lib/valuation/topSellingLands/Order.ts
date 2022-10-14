@@ -26,9 +26,9 @@ export const handleOrderPrice = (sortDir: boolean, setSortDir: Function, data: [
   let sortArray = data
   sortArray.sort((a: TopSellingRequestItem, b: TopSellingRequestItem) => {
     let returns = 0
-    if (parseInt(a.dataTable.eth_price) > parseInt(b.dataTable.eth_price))
+    if (parseFloat(a.dataTable.eth_price) > parseFloat(b.dataTable.eth_price))
       returns = 1
-    if (parseInt(a.dataTable.eth_price) < parseInt(b.dataTable.eth_price))
+    if (parseFloat(a.dataTable.eth_price) < parseFloat(b.dataTable.eth_price))
       returns = -1
     return sortDir ? returns : - returns
   })
