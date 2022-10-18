@@ -102,6 +102,7 @@ export const filteredLayer: Layer = (
     }
     // If there is no legend filter. And mapFilter is not on basic then generate a color based on percentage.
   } else {
+    //console.log(atlas.ITRM[id].percent)
     color = getTileColor(atlas.ITRM[id].percent ?? 0, percentFilter, mapFilter);
   }
 

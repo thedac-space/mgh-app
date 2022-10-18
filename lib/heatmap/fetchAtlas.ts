@@ -63,6 +63,7 @@ export const fetchITRMAtlas = async (
                                                 pred_price -
                                                 1)
                                             : undefined
+                                            //console.log(valuationRes[value.token_id].percent)
                                 }
                                 valuationRes[
                                     value.token_id

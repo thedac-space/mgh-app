@@ -28,7 +28,7 @@ export const getPercentage = (
 }
 
 // Calculating Percentages depending on the current chosen filter.
-export const setColours = async (
+export const setColours =   (
   valuationAtlas: Record<string, ValuationTile>,
   element: MapFilter
 ) => {
