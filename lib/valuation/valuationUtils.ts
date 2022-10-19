@@ -184,7 +184,7 @@ export const getAxieDailyTradeVolume = async () => {
 }
 
 export const fetchLandList = async (metaverse: Metaverse, lands: string[]) => {
-  let link = metaverse=="axie-infinity"?`https://services.itrmachines.com/${metaverse}/requestMap?tokenId=`:`https://services.itrmachines.com/test/${metaverse}/map?tokenId=`
+  let link = `https://services.itrmachines.com/${metaverse}/requestMap?tokenId=`
   lands.forEach((land, i) => {
     link = link + land + (i !== lands.length - 1 ? ',' : '')
   })
