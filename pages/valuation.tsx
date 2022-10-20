@@ -230,7 +230,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
             if (metaverse === 'decentraland') {
                 decentralandAtlas = await fetchDecentralandAtlas()
             }
-            const atlasWithColours =  setColours(ITRMAtlas, filterBy)
+            const atlasWithColours = setColours(ITRMAtlas, filterBy)
             const heatmapSize = getHeatmapSize({ ITRM: ITRMAtlas })
             setHeatmapSize(heatmapSize)
             setAtlas({
@@ -361,7 +361,6 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                                     />
                                 </div>
                             )}
-
                             {/* Full screen button - Hides when MapCard is showing (all screens) */}
                             {!isVisible && (
                                 <div className="absolute z-20 top-2 right-2 gray-box bg-opacity-100 w-fit h-15">
@@ -372,71 +371,75 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                                 </div>
                             )}
                             {/*  Map */}
-                            {metaverse !== 'somnium-space' ? (
-                                <TileMap
-                                    // min and max values for x and y
-                                    minX={heatmapSize.minX}
-                                    maxX={heatmapSize.maxX}
-                                    minY={heatmapSize.minY}
-                                    maxY={heatmapSize.maxY}
-                                    // starting position of the map
-                                    x={Number(
-                                        selected?.x || heatmapSize.initialY
-                                    )}
-                                    y={Number(
-                                        selected?.y || heatmapSize.initialX
-                                    )}
-                                    // map filter (predicted_price, transfers, etc..)
-                                    filter={filterBy}
-                                    // Filter lands by percentage. On bottom left
-                                    percentFilter={percentFilter}
-                                    // Filter lands by utility (watchlist, portfolio, etc..). On bottom right
-                                    legendFilter={legendFilter}
-                                    atlas={atlas}
-                                    className="atlas"
-                                    width={dims.width}
-                                    height={dims.height}
-                                    layers={[
-                                        decentralandAPILayer,
-                                        filteredLayer,
-                                        selectedStrokeLayer,
-                                        selectedFillLayer,
-                                        hoverLayer,
-                                    ]}
-                                    onHover={(x, y) => {
-                                        handleHover(x, y)
-                                    }}
-                                    onClick={(x, y) => {
-                                        if (isSelected(x, y)) {
-                                            setSelected(undefined)
-                                        } else {
-                                            handleMapSelection(x, y)
-                                        }
-                                    }}
-                                />
-                            ) : (
-                                <MaptalksCanva
-                                    filter={filterBy}
-                                    // Filter lands by percentage. On bottom left
-                                    percentFilter={percentFilter}
-                                    // Filter lands by utility (watchlist, portfolio, etc..). On bottom right
-                                    legendFilter={legendFilter}
-                                    width={dims.width}
-                                    metaverse={metaverse}
-                                    height={dims.height}
-                                    onHover={(x, y) => {
-                                        handleHover(x, y)
-                                    }}
-                                    onClick={(x, y, name?: string) => {
-                                        if (isSelected(x, y)) {
-                                            setSelected(undefined)
-                                        } else {
-                                            handleMapSelection(x, y)
-                                        }
-                                    }}
-                                    atlas={atlas}
-                                />
-                            )}
+                            {
+                                metaverse !== 'somnium-space'
+                                    ? (
+                                        <TileMap
+                                            // min and max values for x and y
+                                            minX={heatmapSize.minX}
+                                            maxX={heatmapSize.maxX}
+                                            minY={heatmapSize.minY}
+                                            maxY={heatmapSize.maxY}
+                                            // starting position of the map
+                                            x={Number(selected?.x || heatmapSize.initialY)}
+                                            y={Number(selected?.y || heatmapSize.initialX)}
+                                            // map filter (predicted_price, transfers, etc..)
+                                            filter={filterBy}
+                                            // Filter lands by percentage. On bottom left
+                                            percentFilter={percentFilter}
+                                            // Filter lands by utility (watchlist, portfolio, etc..). On bottom right
+                                            legendFilter={legendFilter}
+                                            atlas={atlas}
+                                            className="atlas"
+                                            width={dims.width}
+                                            height={dims.height}
+                                            layers={[
+                                                decentralandAPILayer,
+                                                filteredLayer,
+                                                selectedStrokeLayer,
+                                                selectedFillLayer,
+                                                hoverLayer,
+                                            ]}
+                                            onHover={(x, y) => {
+                                                handleHover(x, y);
+                                            }}
+                                            onClick={(x, y) => {
+                                                if (isSelected(x, y)) {
+                                                    setSelected(undefined);
+                                                } else {
+                                                    handleMapSelection(x, y);
+
+                                                }
+                                            }}
+                                        />
+                                    )
+                                    : (
+                                        <MaptalksCanva
+                                            filter={filterBy}
+                                            // Filter lands by percentage. On bottom left
+                                            percentFilter={percentFilter}
+                                            // Filter lands by utility (watchlist, portfolio, etc..). On bottom right
+                                            // starting position of the map
+                                            x={typeof (selected?.x) == 'string' ? parseFloat(selected?.x) : selected?.x}
+                                            y={typeof (selected?.y) == 'string' ? parseFloat(selected?.y) : selected?.y}
+                                            //legend filter
+                                            legendFilter={legendFilter}
+                                            width={dims.width}
+                                            height={dims.height}
+                                            onHover={(x, y) => {
+                                                handleHover(x, y);
+                                            }}
+                                            onClick={(x, y, name?: string) => {
+                                                if (isSelected(x, y)) {
+                                                    setSelected(undefined);
+                                                } else {
+                                                    handleMapSelection(x, y);
+                                                }
+                                            }}
+                                            metaverse={metaverse}
+                                        />
+                                    )
+                            }
                             {/* Selected Land Card */}
                             {isVisible && (
                                 <div
@@ -458,18 +461,17 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                             )}
 
                             {/* Map Legend - Hides when MapCard is showing (all screens) */}
-                            {filterBy === 'basic' ? (
-                                !isVisible && (
-                                    <MapLegend
-                                        className="absolute bottom-2 right-2"
-                                        legendFilter={legendFilter}
-                                        setLegendFilter={setLegendFilter}
-                                        metaverse={metaverse}
-                                    />
-                                )
-                            ) : (
-                                <></>
-                            )}
+                            {
+                                filterBy === 'basic'
+                                    ? !isVisible && (
+                                        <MapLegend
+                                            className="absolute bottom-2 right-2"
+                                            legendFilter={legendFilter}
+                                            setLegendFilter={setLegendFilter}
+                                            metaverse={metaverse}
+                                        />
+                                    ) : (<></>)
+                            }
                         </>
                     )}
                 </div>
@@ -479,16 +481,10 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                     <Fade duration={600} className="w-full">
                         <div className="flex flex-col sm:flex-row space-y-5 sm:space-y-0 space-x-0 sm:space-x-5 md:space-x-10 items-stretch justify-between w-full mb-8">
                             {/* Daily Volume */}
-                            <SalesVolumeDaily
-                                metaverse={metaverse}
-                                coinPrices={prices}
-                            />
+                            <SalesVolumeDaily metaverse={metaverse} coinPrices={prices} />
                             {/* Floor Price */}
                             <div className="flex flex-col justify-between w-full space-y-5 md:space-y-10 lg:space-y-5">
-                                <FloorPriceTracker
-                                    metaverse={metaverse}
-                                    coinPrices={prices}
-                                />
+                                <FloorPriceTracker metaverse={metaverse} coinPrices={prices} />
                             </div>
                         </div>
                         <h3 className="text-transparent bg-clip-text lg:text-3xl text-2xl bg-gradient-to-br from-blue-500 via-green-400 to-green-500 mb-0 sm:mb-2">
@@ -502,32 +498,27 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 
                         <div className="flex flex-col items-start shadow-blck rounded-xl py-3 px-4 w-full bg-grey-dark bg-opacity-20 text-left mb-8">
                             <p className="text-xs sm:text-sm text-gray-400">
-                                The MGH DAO does not provide, personalized
-                                investment recommendations or advisory services.
-                                Any information provided through the land
-                                evaluation tool and others is not, and should
-                                not be, considered as advice of any kind and is
-                                for information purposes only. That land is
-                                “valuated” does not mean, that it is in any way
-                                approved, checked audited, and/or has a real or
-                                correct value. In no event shall the MGH DAO be
-                                liable for any special, indirect, or
-                                consequential damages, or any other damages of
-                                any kind, including but not limited to loss of
-                                use, loss of profits, or loss of data, arising
-                                out of or in any way connected with the use of
-                                or inability to use the Service, including
-                                without limitation any damages resulting from
-                                reliance by you on any information obtained from
-                                using the Service.
+                                The MGH DAO does not provide, personalized investment
+                                recommendations or advisory services. Any information provided
+                                through the land evaluation tool and others is not, and should
+                                not be, considered as advice of any kind and is for information
+                                purposes only. That land is “valuated” does not mean, that it is
+                                in any way approved, checked audited, and/or has a real or
+                                correct value. In no event shall the MGH DAO be liable for any
+                                special, indirect, or consequential damages, or any other
+                                damages of any kind, including but not limited to loss of use,
+                                loss of profits, or loss of data, arising out of or in any way
+                                connected with the use of or inability to use the Service,
+                                including without limitation any damages resulting from reliance
+                                by you on any information obtained from using the Service.
                             </p>
                         </div>
                     </Fade>
                 )}
             </section>
         </>
-    )
-}
+    );
+};
 
 export async function getServerSideProps() {
     const coin = await fetch(

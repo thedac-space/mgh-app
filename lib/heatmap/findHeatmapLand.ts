@@ -6,6 +6,40 @@ import { ICoinPrices } from '../valuation/valuationTypes'
 import { convertETHPrediction } from '../valuation/valuationUtils'
 import { LandCoords, MapFilter, ValuationTile } from './heatmapCommonTypes'
 
+const CalculateMaxPriceOnHistory = (landFromAtlas: ValuationTile) => {
+  let maxPrice = 0
+  landFromAtlas.history?.map(historyPoint => {
+    historyPoint
+      ? maxPrice = historyPoint.eth_price > maxPrice ? historyPoint.eth_price : maxPrice
+      : 0
+  })
+
+  return maxPrice
+}
+
+const getPriceByFilter = (map: ValuationTile, prices: ICoinPrices, filterBy?: MapFilter) => {
+  if (!filterBy) return ({
+    eth_predicted_price: map.eth_predicted_price,
+    predicted_price: map.eth_predicted_price * prices.ethereum.usd,
+  })
+  if (filterBy === 'floor_adjusted_predicted_price') {
+    return ({
+      eth_predicted_price: map.floor_adjusted_predicted_price || 0,
+      predicted_price: (map.floor_adjusted_predicted_price || 0) * prices.ethereum.usd,
+    })
+  } else if (filterBy === 'last_month_sells') {
+    return ({
+      eth_predicted_price: CalculateMaxPriceOnHistory(map) || 0,
+      predicted_price: (CalculateMaxPriceOnHistory(map) || 0) * prices.ethereum.usd,
+    })
+  } else {
+    return ({
+      eth_predicted_price: map.eth_predicted_price,
+      predicted_price: map.eth_predicted_price * prices.ethereum.usd,
+    })
+  }
+}
+
 export const findHeatmapLand = (
   map: Record<string, ValuationTile>,
   prices: ICoinPrices,
@@ -17,7 +51,7 @@ export const findHeatmapLand = (
   const landOptions = {
     sandbox: { contract: Contracts.LAND.ETHEREUM_MAINNET.newAddress },
     decentraland: { contract: Contracts.PARCEL.ETHEREUM_MAINNET.address },
-    'somnium-space': { contract: '' }
+    'somnium-space': { contract: Contracts.CUBES.ETHEREUM_MAINNET.address }
   }
 
   const setOpenSeaLink = (key: string) => {
@@ -40,26 +74,11 @@ export const findHeatmapLand = (
 
   if (!land) return
   let apiData: IAPIData
-  if (filterBy === 'floor_adjusted_predicted_price') {
-    apiData = {
-      ...map[land],
-      metaverse: metaverse,
-      tokenId: map[land].land_id!,
-      prices: {
-        eth_predicted_price: map[land].floor_adjusted_predicted_price || 0,
-        predicted_price: (map[land].floor_adjusted_predicted_price || 0) * prices.ethereum.usd,
-      },
-    }
-  } else {
-    apiData = {
-      ...map[land],
-      metaverse: metaverse,
-      tokenId: map[land].land_id!,
-      prices: {
-        eth_predicted_price: map[land].eth_predicted_price,
-        predicted_price: map[land].eth_predicted_price * prices.ethereum.usd,
-      },
-    }
+  apiData = {
+    ...map[land],
+    metaverse: metaverse,
+    tokenId: map[land].land_id!,
+    prices: getPriceByFilter(map[land], prices, filterBy)
   }
 
   const name = map[land].name ? map[land].name : undefined

@@ -27,6 +27,22 @@ export const getPercentage = (
   return Math.ceil((partialValue * 100) / totalValue)
 }
 
+const CalculateMaxPriceOnHistoryDependGivenDays = (landFromAtlas: ValuationTile, givenDays: number) => {
+  let maxPrice = 0
+  let now = new Date()
+  let deathLine = now.setDate(now.getDate() - givenDays)
+  landFromAtlas.history?.map(historyPoint => {
+    let historyTime = new Date(historyPoint.timestamp).getTime()
+    if (historyTime > deathLine) {
+      historyPoint
+        ? maxPrice = historyPoint.eth_price > maxPrice ? historyPoint.eth_price : maxPrice
+        : 0
+    }
+  })
+
+  return maxPrice
+}
+
 // Calculating Percentages depending on the current chosen filter.
 export const setColours =   (
   valuationAtlas: Record<string, ValuationTile>,
@@ -85,7 +101,7 @@ export const setColours =   (
     last_month_sells: {
       predictions: typedKeys(valuationAtlas).map((valuation) => {
         if (getLandDependingOnGivenNumberOfDays(valuation, 30) > 0)
-          return valuationAtlas[valuation].eth_predicted_price
+          return (CalculateMaxPriceOnHistoryDependGivenDays(valuationAtlas[valuation], 30))
         return 0
       })
     }
@@ -130,7 +146,7 @@ export const setColours =   (
         : NaN,
       floor_adjusted_predicted_price: getPercentage(valuationAtlas[valuation]?.floor_adjusted_predicted_price, max),
       last_month_sells: getLandDependingOnGivenNumberOfDays(valuation, 30)
-        ? getPercentage(valuationAtlas[valuation].eth_predicted_price, max)
+        ? getPercentage((CalculateMaxPriceOnHistoryDependGivenDays(valuationAtlas[valuation], 30)), max)
         : NaN
     }
 

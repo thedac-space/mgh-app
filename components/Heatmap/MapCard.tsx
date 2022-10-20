@@ -14,6 +14,7 @@ import { ValuationState } from '../../pages/valuation'
 import { SocialMediaOptions } from '../../lib/socialMediaOptions'
 import DataComparisonBox from '../Valuation/DataComparison/DataComparisonBox'
 import { Metaverse } from '../../lib/metaverse'
+import { TopSellingDataTable } from '../../types/TopSelling'
 interface Props {
   apiData?: IAPIData
   predictions?: IPredictions
@@ -23,6 +24,11 @@ interface Props {
   mapState: ValuationState,
   name?: string
 }
+
+const getExternalLink = (metaverse: Metaverse, dataTable: IAPIData) => {
+  return metaverse === 'somnium-space' ? ("https://somniumspace.com/parcel/" + dataTable.tokenId) : dataTable.external_link
+}
+
 const MapCard = ({
   apiData,
   predictions,
@@ -89,11 +95,11 @@ const MapCard = ({
               {/* Main Land Info */}
               <div className='flex flex-col justify-between'>
                 <div>
-                  <h3 className='text-base font-normal md:text-2xl p-0 leading-4'>
+                  <h3 className='text-base font-normal md:text-2xl p-0 leading-4 max-w-xs'>
                     {handleLandName(metaverse, {
                       x: landCoords.x,
                       y: landCoords.y
-                    }, name ? name : undefined )}
+                    }, name ? name : undefined)}
                   </h3>
                   <p className='text-gray-400'>
                     {/* ID: {handleTokenID(apiData.tokenId)}{' '} */}
@@ -117,7 +123,7 @@ const MapCard = ({
                     <ExternalLink href={apiData.opensea_link} text='OpenSea' />
                   )}
                   <ExternalLink
-                    href={apiData.external_link}
+                    href={getExternalLink(metaverse, apiData)}
                     text={formatName(metaverse)}
                   />
                 </nav>

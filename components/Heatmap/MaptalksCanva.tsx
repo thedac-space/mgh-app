@@ -21,10 +21,11 @@ interface IMaptalksCanva {
     filter: MapFilter
     percentFilter: PercentFilter
     legendFilter: LegendFilter
+    x: number | undefined
+    y: number | undefined
     onHover: (x: any, y: any) => void
     onClick: (x: any, y: any, name: string) => void
     metaverse: Metaverse
-    atlas: Atlas
 }
 
 const MaptalksCanva = ({
@@ -33,10 +34,11 @@ const MaptalksCanva = ({
     filter,
     percentFilter,
     legendFilter,
+    x,
+    y,
     onHover,
     onClick,
     metaverse,
-    atlas
 }: IMaptalksCanva) => {
     const [map, setMap] = useState<maptalks.Map>()
     const [mapData, setMapData] = useState<Record<string, ValuationTile>>()
@@ -93,7 +95,17 @@ const MaptalksCanva = ({
                 percentFilter,
                 legendFilter
             )
-            const { color } = tile
+            let { color } = tile
+            let borderColor = '#000'
+            let borderSize = 0
+
+            //set color if the land is selected
+            if (value.center.x == x && value.center.y == y) {
+                color = '#ff9990'
+                borderColor = '#ff0044'
+                borderSize = 3
+            }
+
             let polygon = new maptalks.Polygon(
                 [
                     [
@@ -112,16 +124,15 @@ const MaptalksCanva = ({
                     dragShadow: false, // display a shadow during dragging
                     drawOnAxis: null, // force dragging stick on a axis, can be: x, y
                     symbol: {
-                        lineWidth: 0,
+                        lineWidth: borderSize,
+                        lineColor: borderColor,
                         polygonFill: color,
                         polygonOpacity: 1,
                     },
                     cursor: 'pointer',
                 }
             )
-                .on('click', () => {
-                    onClick(value.center.x, value.center.y, value.name)
-                })
+                .on('click', () => { onClick(value.center.x, value.center.y, value.name) })
                 .on('mouseenter', (e) => {
                     e.target.updateSymbol({
                         polygonFill: '#db2777',
@@ -133,7 +144,8 @@ const MaptalksCanva = ({
                 .on('mouseout', (e) => {
                     e.target.updateSymbol({
                         polygonFill: color,
-                        lineWidth: 0,
+                        lineWidth: borderSize,
+                        lineColor: borderColor
                     })
                 })
             layer.addGeometry(polygon)
@@ -141,6 +153,9 @@ const MaptalksCanva = ({
         })
         socket.on('render-finish', () => {
             console.log('FINISH')
+            // set map's max extent to map's map view power by 2
+            map.setMaxExtent(new maptalks.Extent(-2, -2, 2, 2))
+            if (x && y) { map.setCenter(new maptalks.Coordinate(x, y)) }
             setMapData(lands)
             setMap(map)
         })
@@ -153,7 +168,7 @@ const MaptalksCanva = ({
         if (map) {
             let lands: any = []
             map.removeLayer('vector')
-            let coloredAtlas =  setColours(mapData!, filter)
+            let coloredAtlas = setColours(mapData!, filter)
             Object.values(mapData!).forEach((value: any) => {
                 let tile: any
                 tile = filteredLayer(
@@ -219,9 +234,13 @@ const MaptalksCanva = ({
                 forceRenderOnZooming: true,
             }).addTo(map)
         }
-    },[filter,
+    }, [filter,
         percentFilter,
         legendFilter])
+
+        useEffect(() => {
+            
+        })
 
     return (
         <canvas
