@@ -59,7 +59,7 @@ const MaptalksCanva = ({
             minZoom: 9,
             maxZoom: 12,
             attribution: false,
-            dragPitch: false,
+            //dragPitch: false,
             dragRotate: false,
         })
         map.addLayer(imageLayer)
@@ -98,13 +98,6 @@ const MaptalksCanva = ({
             let { color } = tile
             let borderColor = '#000'
             let borderSize = 0
-
-            //set color if the land is selected
-            if (value.center.x == x && value.center.y == y) {
-                color = '#ff9990'
-                borderColor = '#ff0044'
-                borderSize = 3
-            }
 
             let polygon = new maptalks.Polygon(
                 [
@@ -161,11 +154,15 @@ const MaptalksCanva = ({
             setMap(map)
         })
     }, [])
+
     useEffect(() => {
         if (map) {
             let lands: any = []
             map.removeLayer('vector')
             let coloredAtlas = setColours(mapData!, filter)
+
+            if (map && x && y) { map.setCenter(new maptalks.Coordinate(x, y)) }
+
             Object.values(mapData!).forEach((value: any) => {
                 let tile: any
                 tile = filteredLayer(
@@ -180,7 +177,18 @@ const MaptalksCanva = ({
                     percentFilter,
                     legendFilter
                 )
-                const { color } = tile
+
+                let { color } = tile
+                let borderColor = '#000'
+                let borderSize = 0
+
+                //set color if the land is selected
+                if (value.center.x == x && value.center.y == y) {
+                    color = '#ff9990'
+                    borderColor = '#ff0044'
+                    borderSize = 3
+                }
+
                 let polygon = new maptalks.Polygon(
                     [
                         [
@@ -199,7 +207,8 @@ const MaptalksCanva = ({
                         dragShadow: false, // display a shadow during dragging
                         drawOnAxis: null, // force dragging stick on a axis, can be: x, y
                         symbol: {
-                            lineWidth: 0,
+                            lineWidth: borderSize,
+                            lineColor: borderColor,
                             polygonFill: color,
                             polygonOpacity: 1,
                         },
@@ -220,7 +229,8 @@ const MaptalksCanva = ({
                     .on('mouseout', (e) => {
                         e.target.updateSymbol({
                             polygonFill: color,
-                            lineWidth: 0,
+                            lineWidth: borderSize,
+                            lineColor: borderColor,
                         })
                     })
                 lands.push(polygon)
@@ -231,13 +241,7 @@ const MaptalksCanva = ({
                 forceRenderOnZooming: true,
             }).addTo(map)
         }
-    }, [filter, percentFilter, legendFilter])
-
-    useEffect(() => {
-        if (map && x && y) {
-            map.setCenter(new maptalks.Coordinate(x, y))
-        }
-    }, [x, y])
+    }, [filter, percentFilter, legendFilter, x, y])
 
     return (
         <canvas
