@@ -56,9 +56,9 @@ const MaptalksCanva = ({
             zoom: 10,
             minZoom: 9,
             maxZoom: 12,
-            pitch: 45,
             attribution: false,
-            dragRotate: true, // set to true if you want a rotatable map
+            dragPitch: false,
+            dragRotate: false,
         })
         map.addLayer(imageLayer)
         let layer = new maptalks.VectorLayer('vector', [], {
