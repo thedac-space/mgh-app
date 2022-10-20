@@ -132,7 +132,9 @@ const MaptalksCanva = ({
                     cursor: 'pointer',
                 }
             )
-                .on('click', () => { onClick(value.center.x, value.center.y, value.name) })
+                .on('click', () => {
+                    onClick(value.center.x, value.center.y, value.name)
+                })
                 .on('mouseenter', (e) => {
                     e.target.updateSymbol({
                         polygonFill: '#db2777',
@@ -145,7 +147,7 @@ const MaptalksCanva = ({
                     e.target.updateSymbol({
                         polygonFill: color,
                         lineWidth: borderSize,
-                        lineColor: borderColor
+                        lineColor: borderColor,
                     })
                 })
             layer.addGeometry(polygon)
@@ -155,14 +157,9 @@ const MaptalksCanva = ({
             console.log('FINISH')
             // set map's max extent to map's map view power by 2
             map.setMaxExtent(new maptalks.Extent(-2, -2, 2, 2))
-            if (x && y) { map.setCenter(new maptalks.Coordinate(x, y)) }
             setMapData(lands)
             setMap(map)
         })
-
-        return () => {
-            map.remove()
-        }
     }, [])
     useEffect(() => {
         if (map) {
@@ -234,13 +231,13 @@ const MaptalksCanva = ({
                 forceRenderOnZooming: true,
             }).addTo(map)
         }
-    }, [filter,
-        percentFilter,
-        legendFilter])
+    }, [filter, percentFilter, legendFilter])
 
-        useEffect(() => {
-            
-        })
+    useEffect(() => {
+        if (map && x && y) {
+            map.setCenter(new maptalks.Coordinate(x, y))
+        }
+    }, [x, y])
 
     return (
         <canvas
