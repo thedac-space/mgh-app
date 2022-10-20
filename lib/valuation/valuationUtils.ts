@@ -1,6 +1,6 @@
 import { formatEther } from 'ethers/lib/utils'
 import { Metaverse } from '../metaverse'
-import { IAPIData } from '../types'
+import { IAPIData, IAPIDataAxie } from '../types'
 import { ellipseAddress } from '../utilities'
 import { ICoinPrices, IPriceCard, LandListAPIResponse } from './valuationTypes'
 
@@ -13,6 +13,7 @@ export const convertETHPrediction = (
   const ethUSD = coinPrices.ethereum.usd
   const usdPrediction = ethPrediction * ethUSD
   const formattedMetaverse = metaverse === 'sandbox' ? 'the-sandbox' : metaverse
+  console.log(coinPrices,formattedMetaverse)
   const metaverseUSD = coinPrices[formattedMetaverse].usd
   const metaversePrediction = usdPrediction / metaverseUSD
 
@@ -52,7 +53,7 @@ export const formatLandAsset = async (
   coinPrices: ICoinPrices,
   metaverse: Metaverse
 ) => {
-  const apiData: IAPIData = await getLandData(metaverse, assetId)
+  const apiData: IAPIData | IAPIDataAxie = await getLandData(metaverse, assetId)
   const formattedAsset = {
     apiData: apiData,
     showCard: true,
@@ -62,7 +63,7 @@ export const formatLandAsset = async (
   Object.defineProperty(formattedAsset, 'predictions', {
     value: convertETHPrediction(
       coinPrices,
-      apiData.prices!.eth_predicted_price,
+      metaverse=="axie-infinity"?(apiData as IAPIDataAxie) .prices!.eth_predicted_price:(apiData as IAPIData).floor_adjusted_predicted_price,
       metaverse
     ),
   })

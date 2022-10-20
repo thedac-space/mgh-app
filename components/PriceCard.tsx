@@ -1,7 +1,7 @@
 import { BsTwitter } from 'react-icons/bs'
 import { FiExternalLink } from 'react-icons/fi'
 import { SocialMediaOptions } from '../lib/socialMediaOptions'
-import { IAPIData, IPredictions } from '../lib/types'
+import { IAPIData, IAPIDataAxie, IPredictions } from '../lib/types'
 import { ellipseAddress } from '../lib/utilities'
 import { useAppSelector } from '../state/hooks'
 import { PriceList } from './General'
@@ -10,7 +10,7 @@ import { AddToWatchlistButton, LandLikeBox } from './Valuation'
 export interface PriceCardProps {
   showCard: boolean
   processing: boolean
-  apiData: IAPIData | undefined
+  apiData: IAPIData | IAPIDataAxie | undefined
   predictions: IPredictions | undefined
 }
 
@@ -38,7 +38,7 @@ const PriceCard = ({
       return tokenID
     }
   }
-
+//console.log(apiData)
   return (
     <div
       className={`${showCard ? 'animate__fadeIn' : 'hidden'} ${

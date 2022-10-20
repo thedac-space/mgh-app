@@ -55,6 +55,26 @@ export interface IAPIData {
     image_url: string
   }
   tokenId: string
+
+    predicted_price: number
+    floor_adjusted_predicted_price: number
+    history: { price: number; timestamp: number }[] | never[]
+    variation_last_four_weeks?: number
+    variation_last_six_months?: number
+    variation_last_week?: number
+  
+}
+
+export interface IAPIDataAxie {
+  coords: { x: number; y: number }
+  metaverse: Metaverse
+  name?: string
+  opensea_link?: string
+  external_link: string
+  images: {
+    image_url: string
+  }
+  tokenId: string
   prices: {
     predicted_price: number
     eth_predicted_price: number
@@ -62,8 +82,8 @@ export interface IAPIData {
     variation_last_four_weeks?: number
     variation_last_six_months?: number
     variation_last_week?: number
-  }
-}
+  
+}}
 
 export interface IPredictions {
   ethPrediction: number
