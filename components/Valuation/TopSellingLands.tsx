@@ -5,11 +5,12 @@ import { TopSellings } from "../../types/TopSelling"
 import { Metaverse } from "../../lib/metaverse"
 import TopSellingFilter, { TopSellingFilterBy } from "./TopSellingTable/TopSellingFilter"
 import { fetchChartData } from "../Analytics/fetchChartData"
+import { RiLoader3Fill } from "react-icons/ri"
 
-const TopSellingLands = (props : {metaverse : Metaverse}) => {
+const TopSellingLands = (props: { metaverse: Metaverse }) => {
   const [topSellings, setTopSellings] = useState<TopSellings | any>({})
   const [filterBy, setFilterBy] = useState<TopSellingFilterBy>('totalTop')
-  
+
   async function waitingData(metaverse: Metaverse) {
     const data = await fetchChartData(metaverse, 'topSellingLands')
     setTopSellings(data)
@@ -20,16 +21,20 @@ const TopSellingLands = (props : {metaverse : Metaverse}) => {
   return (
     <div className='flex flex-col items-start rounded-xl py-3 px-4 w-full gray-box text-left mb-10'>
       {
-        Object.entries(topSellings).length === 0 ?
-        <p className={`text-xs sm:text-sm text-gray-400`}>LOADING TOP SELLINGS...</p> :
-        <div className="relative flex flex-col min-w-0 break-words w-full mb-6 rounded text-white">
-          <div className="block w-full overflow-x-auto">
-            <TopSellingFilter filterBy={filterBy} setFilterBy={setFilterBy}/>
+        Object.entries(topSellings).length === 0 ? (
+          <p className='text-gray-300 flex gap-2'>
+            Loading Top Sells{' '}
+            <RiLoader3Fill className='animate-spin-slow h-5 w-5 xs:h-6 xs:w-6' />
+          </p>
+        ) :
+          <div className="relative flex flex-col min-w-0 break-words w-full mb-6 rounded text-white">
+            <div className="block w-full overflow-x-auto">
+              <TopSellingFilter filterBy={filterBy} setFilterBy={setFilterBy} />
+            </div>
+            <div className="block w-full overflow-x-scroll scrollbar--x scrollbar">
+              <TableStructure metaverse={props.metaverse} filterby={{ element: filterBy, data: topSellings[filterBy] }} />
+            </div>
           </div>
-          <div className="block w-full overflow-x-scroll scrollbar--x scrollbar">
-            <TableStructure metaverse={props.metaverse} filterby={{element: filterBy, data: topSellings[filterBy]}}/>
-          </div>
-        </div>
       }
     </div>
   )

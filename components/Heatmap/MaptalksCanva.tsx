@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react'
 import * as maptalks from 'maptalks'
 import {
     Atlas,
-    Layer,
     LegendFilter,
     MapFilter,
     PercentFilter,
@@ -12,7 +11,6 @@ import { filteredLayer } from '../../lib/heatmap/heatmapLayers'
 import { io } from 'socket.io-client'
 import React from 'react'
 import { Metaverse } from '../../lib/metaverse'
-import { typedKeys } from '../../lib/utilities'
 import { setColours } from '../../lib/heatmap/valuationColoring'
 const socket = io('http://localhost:3005', { transports: ['websocket'] })
 interface IMaptalksCanva {
@@ -50,6 +48,7 @@ const MaptalksCanva = ({
                 url: '/images/Waterfront_Extended_Parcels_Map_allgreen.jpg',
                 extent: [-1, -1, 1, 1],
                 opacity: 1,
+
             },
         ])
 
@@ -59,8 +58,8 @@ const MaptalksCanva = ({
             minZoom: 9,
             maxZoom: 12,
             attribution: false,
-            //dragPitch: false,
-            dragRotate: false,
+            dragPitch: false,
+            //dragRotate: false,
         })
         map.addLayer(imageLayer)
         let layer = new maptalks.VectorLayer('vector', [], {
@@ -68,6 +67,7 @@ const MaptalksCanva = ({
             forceRenderOnRotating: true,
             forceRenderOnZooming: true,
         }).addTo(map)
+
         let lands: any = {}
         let polygons: any = []
         socket.emit('render', 'somnium-space')
@@ -156,91 +156,90 @@ const MaptalksCanva = ({
     }, [])
 
     useEffect(() => {
-        if (map) {
-            let lands: any = []
-            map.removeLayer('vector')
-            let coloredAtlas = setColours(mapData!, filter)
+        if (!map) return
+        let lands: any = []
+        map.removeLayer('vector')
+        let coloredAtlas = setColours(mapData!, filter)
 
-            if (map && x && y) { map.setCenter(new maptalks.Coordinate(x, y)) }
+        if (map && x && y) { map.setCenter(new maptalks.Coordinate(x, y)) }
 
-            Object.values(mapData!).forEach((value: any) => {
-                let tile: any
-                tile = filteredLayer(
-                    value.center.x,
-                    value.center.y,
-                    {
-                        ITRM: metaverse != 'decentraland' ? coloredAtlas : null,
-                        decentraland:
-                            metaverse == 'decentraland' ? mapData : null,
-                    } as Atlas,
-                    filter,
-                    percentFilter,
-                    legendFilter
-                )
+        Object.values(mapData!).forEach((value: any) => {
+            let tile: any
+            tile = filteredLayer(
+                value.center.x,
+                value.center.y,
+                {
+                    ITRM: metaverse != 'decentraland' ? coloredAtlas : null,
+                    decentraland:
+                        metaverse == 'decentraland' ? mapData : null,
+                } as Atlas,
+                filter,
+                percentFilter,
+                legendFilter
+            )
 
-                let { color } = tile
-                let borderColor = '#000'
-                let borderSize = 0
+            let { color } = tile
+            let borderColor = '#000'
+            let borderSize = 0
 
-                //set color if the land is selected
-                if (value.center.x == x && value.center.y == y) {
-                    color = '#ff9990'
-                    borderColor = '#ff0044'
-                    borderSize = 3
-                }
+            //set color if the land is selected
+            if (value.center.x == x && value.center.y == y) {
+                color = '#ff9990'
+                borderColor = '#ff0044'
+                borderSize = 3
+            }
 
-                let polygon = new maptalks.Polygon(
+            let polygon = new maptalks.Polygon(
+                [
                     [
-                        [
-                            [value.geometry[0].x, value.geometry[0].y],
-                            [value.geometry[1].x, value.geometry[1].y],
-                            [value.geometry[2].x, value.geometry[2].y],
-                            [value.geometry[3].x, value.geometry[3].y],
-                        ],
+                        [value.geometry[0].x, value.geometry[0].y],
+                        [value.geometry[1].x, value.geometry[1].y],
+                        [value.geometry[2].x, value.geometry[2].y],
+                        [value.geometry[3].x, value.geometry[3].y],
                     ],
-                    {
-                        visible: true,
-                        editable: true,
-                        shadowBlur: 0,
-                        shadowColor: 'black',
-                        draggable: false,
-                        dragShadow: false, // display a shadow during dragging
-                        drawOnAxis: null, // force dragging stick on a axis, can be: x, y
-                        symbol: {
-                            lineWidth: borderSize,
-                            lineColor: borderColor,
-                            polygonFill: color,
-                            polygonOpacity: 1,
-                        },
-                        cursor: 'pointer',
-                    }
-                )
-                    .on('click', () => {
-                        onClick(value.center.x, value.center.y, value.name)
+                ],
+                {
+                    visible: true,
+                    editable: true,
+                    shadowBlur: 0,
+                    shadowColor: 'black',
+                    draggable: false,
+                    dragShadow: false, // display a shadow during dragging
+                    drawOnAxis: null, // force dragging stick on a axis, can be: x, y
+                    symbol: {
+                        lineWidth: borderSize,
+                        lineColor: borderColor,
+                        polygonFill: color,
+                        polygonOpacity: 1,
+                    },
+                    cursor: 'pointer',
+                }
+            )
+                .on('click', () => {
+                    onClick(value.center.x, value.center.y, value.name)
+                })
+                .on('mouseenter', (e) => {
+                    e.target.updateSymbol({
+                        polygonFill: '#db2777',
+                        lineWidth: 3,
+                        lineColor: '#db2777',
                     })
-                    .on('mouseenter', (e) => {
-                        e.target.updateSymbol({
-                            polygonFill: '#db2777',
-                            lineWidth: 3,
-                            lineColor: '#db2777',
-                        })
-                        onHover(value.center.x, value.center.y)
+                    onHover(value.center.x, value.center.y)
+                })
+                .on('mouseout', (e) => {
+                    e.target.updateSymbol({
+                        polygonFill: color,
+                        lineWidth: borderSize,
+                        lineColor: borderColor,
                     })
-                    .on('mouseout', (e) => {
-                        e.target.updateSymbol({
-                            polygonFill: color,
-                            lineWidth: borderSize,
-                            lineColor: borderColor,
-                        })
-                    })
-                lands.push(polygon)
-            })
-            new maptalks.VectorLayer('vector', lands, {
-                forceRenderOnMoving: true,
-                forceRenderOnRotating: true,
-                forceRenderOnZooming: true,
-            }).addTo(map)
-        }
+                })
+            lands.push(polygon)
+        })
+        new maptalks.VectorLayer('vector', lands, {
+            forceRenderOnMoving: true,
+            forceRenderOnRotating: true,
+            forceRenderOnZooming: true,
+        }).addTo(map)
     }, [filter, percentFilter, legendFilter, x, y])
 
     return (

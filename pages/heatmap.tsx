@@ -1,6 +1,6 @@
 import { NextPage } from 'next'
 import React from 'react'
-import {Heatmap2D} from '../components/Heatmap/index'
+import { Heatmap2D } from '../components/Heatmap/index'
 
 const Heatmap: NextPage = () => {
     return (
@@ -10,10 +10,18 @@ const Heatmap: NextPage = () => {
             filter={'basic'}
             percentFilter={undefined}
             legendFilter={undefined}
-            atlas={{} as any}
             metaverse={"sandbox"}
-            onHover={function (x: any, y: any): void { } }
-            onClick={function (x: any, y: any, name: string): void { } }     />
+            onHover={function (x: any, y: any): void { }}
+            onClick={function (x: any, y: any, name: string): void { }}
+            x={0}
+            y={0}
+            minX={150}
+            maxX={150}
+            minY={150}
+            maxY={150}
+            initialX={0}
+            initialY={0}
+        />
     )
 }
 

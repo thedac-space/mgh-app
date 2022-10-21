@@ -57,6 +57,7 @@ import { Metaverse } from '../lib/metaverse'
 import { getLandSummary } from '../lib/heatmap/getLandSummary'
 import { findHeatmapLand } from '../lib/heatmap/findHeatmapLand'
 import Head from 'next/head'
+import { Heatmap2D } from '../components/Heatmap/index'
 
 // Making this state as an object in order to iterate easily through it
 export const VALUATION_STATE_OPTIONS = [
@@ -374,7 +375,39 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                             {
                                 metaverse !== 'somnium-space'
                                     ? (
-                                        <TileMap
+                                        <>
+                                            <Heatmap2D
+                                                // min and max values for x and y
+                                                minX={heatmapSize.minX}
+                                                maxX={heatmapSize.maxX}
+                                                minY={heatmapSize.minY}
+                                                maxY={heatmapSize.maxY}
+                                                initialX={heatmapSize.initialX}
+                                                initialY={heatmapSize.initialY}
+                                                filter={filterBy}
+                                                // Filter lands by percentage. On bottom left
+                                                percentFilter={percentFilter}
+                                                // Filter lands by utility (watchlist, portfolio, etc..). On bottom right
+                                                // starting position of the map
+                                                x={typeof (selected?.x) == 'string' ? parseFloat(selected?.x) : selected?.x}
+                                                y={typeof (selected?.y) == 'string' ? parseFloat(selected?.y) : selected?.y}
+                                                //legend filter
+                                                legendFilter={legendFilter}
+                                                width={dims.width}
+                                                height={dims.height}
+                                                onHover={(x, y) => {
+                                                    handleHover(x, y);
+                                                }}
+                                                onClick={(x, y, name?: string) => {
+                                                    if (isSelected(x, y)) {
+                                                        setSelected(undefined);
+                                                    } else {
+                                                        handleMapSelection(x, y);
+                                                    }
+                                                }}
+                                                metaverse={metaverse}
+                                            />
+                                            {/* <TileMap
                                             // min and max values for x and y
                                             minX={heatmapSize.minX}
                                             maxX={heatmapSize.maxX}
@@ -411,7 +444,8 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 
                                                 }
                                             }}
-                                        />
+                                        /> */}
+                                        </>
                                     )
                                     : (
                                         <MaptalksCanva

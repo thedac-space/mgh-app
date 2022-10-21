@@ -32,7 +32,7 @@ const TopPicksLands = ({ metaverse }: Props) => {
     <div className='flex flex-col items-start gray-box'>
       {loading ? (
         <p className='text-gray-300 flex gap-2'>
-          Loading Lands{' '}
+          Loading Top Picks{' '}
           <RiLoader3Fill className='animate-spin-slow h-5 w-5 xs:h-6 xs:w-6' />
         </p>
       ) : (
