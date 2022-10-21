@@ -131,7 +131,7 @@ const MaptalksCanva = ({
                     }
                 )
                     .on('click', () => {
-                        onClick(value.center?.x, value.center?.y, value.name)
+                        onClick(value.coords?.x, value.coords?.y, value.name)
                     })
                     .on('mouseenter', (e) => {
                         e.target.updateSymbol({
@@ -139,7 +139,7 @@ const MaptalksCanva = ({
                             lineWidth: 3,
                             lineColor: '#db2777',
                         })
-                        onHover(value.center?.x, value.center?.y)
+                        onHover(value.coords?.x, value.coords?.y)
                     })
                     .on('mouseout', (e) => {
                         e.target.updateSymbol({
@@ -161,96 +161,6 @@ const MaptalksCanva = ({
     }, [])
 
     useEffect(() => {
-        if (!map) return
-        let lands: any = []
-        map.removeLayer('vector')
-        let polygons: any = []
-        let coloredAtlas = setColours(mapData!, filter)
-
-        let layer = new maptalks.VectorLayer('vector', [], {
-            forceRenderOnMoving: true,
-            forceRenderOnRotating: true,
-            forceRenderOnZooming: true,
-            enableSimplify: false,
-        }).addTo(map)
-
-        if (map && x && y) { map.setCenter(new maptalks.Coordinate(x, y)) }
-
-        Object.values(mapData!).forEach((value: any) => {
-            let tile: any
-            
-            tile = filteredLayer(
-                value.coords.x,
-                value.coords.y,
-                {
-                    ITRM: metaverse != 'decentraland' ? lands : null,
-                    decentraland:
-                        metaverse == 'decentraland' ? lands : null,
-                } as Atlas,
-                filter,
-                percentFilter,
-                legendFilter
-            )
-
-            let { color } = tile
-            let borderColor = '#000'
-            let borderSize = 0
-
-            //set color if the land is selected
-            if (value.center.x == x && value.center.y == y) {
-                color = '#ff9990'
-                borderColor = '#ff0044'
-                borderSize = 3
-            }
-
-            let polygon = new maptalks.Rectangle(
-                new maptalks.Coordinate(
-                    value.coords.x / 10,
-                    value.coords.y / 10
-                ),
-                10000,
-                10000,
-                {
-                    symbol: {
-                        lineWidth: borderSize,
-                        lineColor: borderColor,
-                        polygonFill: color,
-                        polygonOpacity: 1,
-                    },
-                    cursor: 'pointer',
-                    //id: name,
-                }
-            )
-                .on('click', () => {
-                    onClick(value.center?.x, value.center?.y, value.name)
-                })
-                .on('mouseenter', (e) => {
-                    e.target.updateSymbol({
-                        polygonFill: '#db2777',
-                        lineWidth: 3,
-                        lineColor: '#db2777',
-                    })
-                    onHover(value.center?.x, value.center?.y)
-                })
-                .on('mouseout', (e) => {
-                    e.target.updateSymbol({
-                        polygonFill: color,
-                        lineWidth: borderSize,
-                        lineColor: borderColor,
-                    })
-                })
-            //console.log(polygon)
-            layer.addGeometry(polygon)
-            polygons.push(polygon)
-        })
-
-        new maptalks.VectorLayer('vector', lands, {
-            forceRenderOnMoving: true,
-            forceRenderOnRotating: true,
-            forceRenderOnZooming: true,
-        }).addTo(map)
-    }, [filter, percentFilter, legendFilter, x, y])
-    /*     useEffect(() => {
         if (map) {
             let lands: any = []
             map.removeLayer('vector')
@@ -258,8 +168,8 @@ const MaptalksCanva = ({
             Object.values(mapData!).forEach((value: any) => {
                 let tile: any
                 tile = filteredLayer(
-                    value.center.x,
-                    value.center.y,
+                    value.coords.x,
+                    value.coords.y,
                     {
                         ITRM: metaverse != 'decentraland' ? coloredAtlas : null,
                         decentraland:
@@ -270,33 +180,29 @@ const MaptalksCanva = ({
                     legendFilter
                 )
                 const { color } = tile
-                let polygon = new maptalks.Polygon(
-                    [
-                        [
-                            [value.geometry[0].x, value.geometry[0].y],
-                            [value.geometry[1].x, value.geometry[1].y],
-                            [value.geometry[2].x, value.geometry[2].y],
-                            [value.geometry[3].x, value.geometry[3].y],
-                        ],
-                    ],
+                let borderColor = '#000'
+                let borderSize = 0
+
+                let polygon = new maptalks.Rectangle(
+                    new maptalks.Coordinate(
+                        value.coords.x / 10,
+                        value.coords.y / 10
+                    ),
+                    10000,
+                    10000,
                     {
-                        visible: true,
-                        editable: true,
-                        shadowBlur: 0,
-                        shadowColor: 'black',
-                        draggable: false,
-                        dragShadow: false, // display a shadow during dragging
-                        drawOnAxis: null, // force dragging stick on a axis, can be: x, y
                         symbol: {
-                            lineWidth: 0,
+                            lineWidth: borderSize,
+                            lineColor: borderColor,
                             polygonFill: color,
                             polygonOpacity: 1,
                         },
                         cursor: 'pointer',
+                        id: value.name,
                     }
                 )
                     .on('click', () => {
-                        onClick(value.center.x, value.center.y, value.name)
+                        onClick(value.coords?.x, value.coords?.y, value.name)
                     })
                     .on('mouseenter', (e) => {
                         e.target.updateSymbol({
@@ -304,23 +210,25 @@ const MaptalksCanva = ({
                             lineWidth: 3,
                             lineColor: '#db2777',
                         })
-                        onHover(value.center.x, value.center.y)
+                        onHover(value.coords?.x, value.coords?.y)
                     })
                     .on('mouseout', (e) => {
                         e.target.updateSymbol({
                             polygonFill: color,
-                            lineWidth: 0,
+                            lineWidth: borderSize,
+                            lineColor: borderColor,
                         })
                     })
                 lands.push(polygon)
             })
+            
             new maptalks.VectorLayer('vector', lands, {
                 forceRenderOnMoving: true,
                 forceRenderOnRotating: true,
                 forceRenderOnZooming: true,
             }).addTo(map)
         }
-    }, [filter, percentFilter, legendFilter]) */
+    }, [filter, percentFilter, legendFilter])
 
     return (
         <canvas
