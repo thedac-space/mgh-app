@@ -12,7 +12,6 @@ import { filteredLayer } from '../../lib/heatmap/heatmapLayers'
 import { io } from 'socket.io-client'
 import React from 'react'
 import { Metaverse } from '../../lib/metaverse'
-import { typedKeys } from '../../lib/utilities'
 import { setColours } from '../../lib/heatmap/valuationColoring'
 const socket = io('http://localhost:3005', { transports: ['websocket'] })
 interface IMaptalksCanva {
@@ -165,6 +164,8 @@ const MaptalksCanva = ({
             let lands: any = []
             map.removeLayer('vector')
             let coloredAtlas = setColours(mapData!, filter)
+            if (map && x && y) { map.setCenter(new maptalks.Coordinate(x/10, y/10)) }
+
             Object.values(mapData!).forEach((value: any) => {
                 let tile: any
                 tile = filteredLayer(
@@ -179,9 +180,17 @@ const MaptalksCanva = ({
                     percentFilter,
                     legendFilter
                 )
-                const { color } = tile
+
+                let { color } = tile
                 let borderColor = '#000'
                 let borderSize = 0
+
+                //set color if the land is selected
+                if (value.coords.x == x && value.coords.y == y) {
+                    color = '#ff9990'
+                    borderColor = '#ff0044'
+                    borderSize = 3
+                }
 
                 let polygon = new maptalks.Rectangle(
                     new maptalks.Coordinate(
@@ -221,14 +230,14 @@ const MaptalksCanva = ({
                     })
                 lands.push(polygon)
             })
-            
+
             new maptalks.VectorLayer('vector', lands, {
                 forceRenderOnMoving: true,
                 forceRenderOnRotating: true,
                 forceRenderOnZooming: true,
             }).addTo(map)
         }
-    }, [filter, percentFilter, legendFilter])
+    }, [filter, percentFilter, legendFilter, x, y])
 
     return (
         <canvas
