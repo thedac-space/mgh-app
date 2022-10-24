@@ -58,6 +58,7 @@ const MaptalksCanva = ({
             minZoom: 9,
             maxZoom: 12,
             attribution: false,
+            pitch: 1, 
             dragPitch: false,
             //dragRotate: false,
         })
