@@ -78,6 +78,7 @@ const MaptalksCanva = ({
         let c = 0
         socket.emit('render', metaverse)
         socket.on('render', (land) => {
+            console.log(land)
             if (
                 c < Infinity /* && land.coords.y < 50 && land.coords.y > -55 */
             ) {
@@ -98,9 +99,8 @@ const MaptalksCanva = ({
                     value.coords.x,
                     value.coords.y,
                     {
-                        ITRM: metaverse != 'decentraland' ? lands : null,
-                        decentraland:
-                            metaverse == 'decentraland' ? lands : null,
+                        ITRM: lands,
+                        decentraland: undefined,
                     } as Atlas,
                     filter,
                     percentFilter,
@@ -147,7 +147,6 @@ const MaptalksCanva = ({
                             lineColor: borderColor,
                         })
                     })
-                //console.log(polygon)
                 layer.addGeometry(polygon)
                 polygons.push(polygon)
             }
