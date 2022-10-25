@@ -21,7 +21,6 @@ interface IMaptalksCanva {
     legendFilter: LegendFilter
     x: number | undefined
     y: number | undefined
-    onHover: (x: any, y: any) => void
     onClick: (x: any, y: any, name: string) => void
     metaverse: Metaverse
 }
@@ -34,7 +33,6 @@ const MaptalksCanva = ({
     legendFilter,
     x,
     y,
-    onHover,
     onClick,
     metaverse,
 }: IMaptalksCanva) => {
@@ -135,7 +133,6 @@ const MaptalksCanva = ({
                         lineWidth: 3,
                         lineColor: '#db2777',
                     })
-                    onHover(value.center.x, value.center.y)
                 })
                 .on('mouseout', (e) => {
                     e.target.updateSymbol({
@@ -225,7 +222,6 @@ const MaptalksCanva = ({
                         lineWidth: 3,
                         lineColor: '#db2777',
                     })
-                    onHover(value.center.x, value.center.y)
                 })
                 .on('mouseout', (e) => {
                     e.target.updateSymbol({

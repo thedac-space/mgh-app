@@ -20,7 +20,7 @@ interface IMaptalksCanva {
     filter: MapFilter
     percentFilter: PercentFilter
     legendFilter: LegendFilter
-    onHover: (x: any, y: any) => void
+    onHover: (x: number, y:number, name: string | undefined, owner: string | undefined) => void
     onClick: (x: any, y: any, name: string) => void
     metaverse: Metaverse
     x: number | undefined
@@ -138,7 +138,7 @@ const MaptalksCanva = ({
                             lineWidth: 3,
                             lineColor: '#db2777',
                         })
-                        onHover(value.coords?.x, value.coords?.y)
+                        onHover(value.coords?.x, value.coords?.y, value.name, value.owner)
                     })
                     .on('mouseout', (e) => {
                         e.target.updateSymbol({
@@ -218,7 +218,7 @@ const MaptalksCanva = ({
                         lineWidth: 3,
                         lineColor: '#db2777',
                     })
-                    onHover(value.coords?.x, value.coords?.y)
+                    onHover(value.coords?.x, value.coords?.y, value.name, value.owner)
                 })
                 .on('mouseout', (e) => {
                     e.target.updateSymbol({

@@ -88,7 +88,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
     const { web3Provider } = useConnectWeb3()
 
     const [mapState, setMapState] = useState<ValuationState>('loading')
-    const [loading] = getState(mapState, ['loading'])
+    /* const [loading] = getState(mapState, ['loading']) */
 
     const [selected, setSelected] = useState<LandCoords>()
     const [hovered, setHovered] = useState<Hovered>({
@@ -136,15 +136,8 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
         })
     }
 
-    const handleHover = (x: number, y: number) => {
-        if (!atlas) return
-        const map =
-            metaverse === 'decentraland' ? atlas.decentraland : atlas.ITRM
-        const { name, owner, coords } = getLandSummary(
-            atlas,
-            { x, y },
-            metaverse
-        )
+    const handleHover = (x: number, y: number, name: string | undefined, owner: string | undefined) => {
+        const coords = { x, y }
         setHovered({ coords, owner, name })
     }
 
@@ -296,13 +289,13 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                             setMetaverse={setMetaverse}
                         />
                     )}
-                    {loading && metaverse && (
+                    {/* {loading && metaverse && (
                         <HeatmapLoader
                             landsLoaded={landsLoaded}
                             metaverse={metaverse}
                         />
-                    )}
-                    {atlas && heatmapSize && !loading && metaverse && (
+                    )} */}
+                    {/* atlas && heatmapSize && !loading && */ metaverse && (
                         <>
                             <div className="absolute top-0 z-20 flex gap-4 p-2 md:w-fit w-full">
                                 <div>
@@ -378,12 +371,12 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                                         <>
                                             <Heatmap2D
                                                 // min and max values for x and y
-                                                minX={heatmapSize.minX}
-                                                maxX={heatmapSize.maxX}
-                                                minY={heatmapSize.minY}
-                                                maxY={heatmapSize.maxY}
-                                                initialX={heatmapSize.initialX}
-                                                initialY={heatmapSize.initialY}
+                                                minX={heatmapSize?.minX || 0}
+                                                maxX={heatmapSize?.maxX || 0}
+                                                minY={heatmapSize?.minY || 0}
+                                                maxY={heatmapSize?.maxY || 0}
+                                                initialX={heatmapSize?.initialX || 0}
+                                                initialY={heatmapSize?.initialY || 0}
                                                 filter={filterBy}
                                                 // Filter lands by percentage. On bottom left
                                                 percentFilter={percentFilter}
@@ -395,8 +388,8 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                                                 legendFilter={legendFilter}
                                                 width={dims.width}
                                                 height={dims.height}
-                                                onHover={(x, y) => {
-                                                    handleHover(x, y);
+                                                onHover={(x, y, name, owner) => {
+                                                    handleHover(x, y, name, owner);
                                                 }}
                                                 onClick={(x, y, name?: string) => {
                                                     if (isSelected(x, y)) {
@@ -460,9 +453,6 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                                             legendFilter={legendFilter}
                                             width={dims.width}
                                             height={dims.height}
-                                            onHover={(x, y) => {
-                                                handleHover(x, y);
-                                            }}
                                             onClick={(x, y, name?: string) => {
                                                 if (isSelected(x, y)) {
                                                     setSelected(undefined);
