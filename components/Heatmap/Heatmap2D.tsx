@@ -13,7 +13,7 @@ import { io } from 'socket.io-client'
 import React from 'react'
 import { Metaverse } from '../../lib/metaverse'
 import { setColours } from '../../lib/heatmap/valuationColoring'
-const socket = io('http://localhost:3005', { transports: ['websocket'] })
+const socket = io('http://localhost:3004', { transports: ['websocket'] })
 interface IMaptalksCanva {
     width: number | string | undefined
     height: number | string | undefined
@@ -78,6 +78,7 @@ const MaptalksCanva = ({
         let c = 0
         socket.emit('render', metaverse)
         socket.on('render', (land) => {
+            console.log(land)
             if (
                 c < Infinity /* && land.coords.y < 50 && land.coords.y > -55 */
             ) {
@@ -98,9 +99,8 @@ const MaptalksCanva = ({
                     value.coords.x,
                     value.coords.y,
                     {
-                        ITRM: metaverse != 'decentraland' ? lands : null,
-                        decentraland:
-                            metaverse == 'decentraland' ? lands : null,
+                        ITRM: lands,
+                        decentraland: undefined,
                     } as Atlas,
                     filter,
                     percentFilter,
@@ -147,7 +147,6 @@ const MaptalksCanva = ({
                             lineColor: borderColor,
                         })
                     })
-                //console.log(polygon)
                 layer.addGeometry(polygon)
                 polygons.push(polygon)
             }
@@ -164,7 +163,9 @@ const MaptalksCanva = ({
             let lands: any = []
             map.removeLayer('vector')
             let coloredAtlas = setColours(mapData!, filter)
-            if (map && x && y) { map.setCenter(new maptalks.Coordinate(x/10, y/10)) }
+            if (map && x && y) {
+                map.setCenter(new maptalks.Coordinate(x / 10, y / 10))
+            }
 
             Object.values(mapData!).forEach((value: any) => {
                 let tile: any
