@@ -160,83 +160,83 @@ const MaptalksCanva = ({
     }, [])
 
     useEffect(() => {
-        if (map) {
-            let lands: any = []
-            map.removeLayer('vector')
-            let coloredAtlas = setColours(mapData!, filter)
-            if (map && x && y) { map.setCenter(new maptalks.Coordinate(x/10, y/10)) }
+        if (!map) return
+        let lands: any = []
+        map.removeLayer('vector')
+        let coloredAtlas = setColours(mapData!, filter)
+        if (map && x && y) { map.setCenter(new maptalks.Coordinate(x / 10, y / 10)) }
 
-            Object.values(mapData!).forEach((value: any) => {
-                let tile: any
-                tile = filteredLayer(
-                    value.coords.x,
-                    value.coords.y,
-                    {
-                        ITRM: metaverse != 'decentraland' ? coloredAtlas : null,
-                        decentraland:
-                            metaverse == 'decentraland' ? mapData : null,
-                    } as Atlas,
-                    filter,
-                    percentFilter,
-                    legendFilter
-                )
+        Object.values(mapData!).forEach((value: any) => {
+            let tile: any
+            tile = filteredLayer(
+                value.coords.x,
+                value.coords.y,
+                {
+                    ITRM: metaverse != 'decentraland' ? coloredAtlas : null,
+                    decentraland:
+                        metaverse == 'decentraland' ? mapData : null,
+                } as Atlas,
+                filter,
+                percentFilter,
+                legendFilter
+            )
 
-                let { color } = tile
-                let borderColor = '#000'
-                let borderSize = 0
+            let { color } = tile
+            let borderColor = '#000'
+            let borderSize = 0
 
-                //set color if the land is selected
-                if (value.coords.x == x && value.coords.y == y) {
-                    color = '#ff9990'
-                    borderColor = '#ff0044'
-                    borderSize = 3
+            //set color if the land is selected
+            if (value.coords.x == x && value.coords.y == y) {
+                color = '#ff9990'
+                borderColor = '#ff0044'
+                borderSize = 3
+            }
+
+            let polygon = new maptalks.Rectangle(
+                new maptalks.Coordinate(
+                    value.coords.x / 10,
+                    value.coords.y / 10
+                ),
+                10000,
+                10000,
+                {
+                    symbol: {
+                        lineWidth: borderSize,
+                        lineColor: borderColor,
+                        polygonFill: color,
+                        polygonOpacity: 1,
+                    },
+                    cursor: 'pointer',
+                    id: value.name,
                 }
+            )
+                .on('click', () => {
+                    onClick(value.coords?.x, value.coords?.y, value.name)
+                })
+                .on('mouseenter', (e) => {
+                    e.target.updateSymbol({
+                        polygonFill: '#db2777',
+                        lineWidth: 3,
+                        lineColor: '#db2777',
+                    })
+                    onHover(value.coords?.x, value.coords?.y)
+                })
+                .on('mouseout', (e) => {
+                    e.target.updateSymbol({
+                        polygonFill: color,
+                        lineWidth: borderSize,
+                        lineColor: borderColor,
+                    })
+                })
+            lands.push(polygon)
+        })
 
-                let polygon = new maptalks.Rectangle(
-                    new maptalks.Coordinate(
-                        value.coords.x / 10,
-                        value.coords.y / 10
-                    ),
-                    10000,
-                    10000,
-                    {
-                        symbol: {
-                            lineWidth: borderSize,
-                            lineColor: borderColor,
-                            polygonFill: color,
-                            polygonOpacity: 1,
-                        },
-                        cursor: 'pointer',
-                        id: value.name,
-                    }
-                )
-                    .on('click', () => {
-                        onClick(value.coords?.x, value.coords?.y, value.name)
-                    })
-                    .on('mouseenter', (e) => {
-                        e.target.updateSymbol({
-                            polygonFill: '#db2777',
-                            lineWidth: 3,
-                            lineColor: '#db2777',
-                        })
-                        onHover(value.coords?.x, value.coords?.y)
-                    })
-                    .on('mouseout', (e) => {
-                        e.target.updateSymbol({
-                            polygonFill: color,
-                            lineWidth: borderSize,
-                            lineColor: borderColor,
-                        })
-                    })
-                lands.push(polygon)
-            })
+        new maptalks.VectorLayer('vector', lands, {
+            forceRenderOnMoving: true,
+            forceRenderOnRotating: true,
+            forceRenderOnZooming: true,
+        }).addTo(map)
 
-            new maptalks.VectorLayer('vector', lands, {
-                forceRenderOnMoving: true,
-                forceRenderOnRotating: true,
-                forceRenderOnZooming: true,
-            }).addTo(map)
-        }
     }, [filter, percentFilter, legendFilter, x, y])
 
     return (
