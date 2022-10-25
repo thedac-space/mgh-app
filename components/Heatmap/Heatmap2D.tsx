@@ -21,7 +21,7 @@ interface IMaptalksCanva {
     percentFilter: PercentFilter
     legendFilter: LegendFilter
     onHover: (x: number, y:number, name: string | undefined, owner: string | undefined) => void
-    onClick: (x: any, y: any, name: string) => void
+    onClick: (land: ValuationTile, name: string) => void
     metaverse: Metaverse
     x: number | undefined
     y: number | undefined
@@ -130,7 +130,7 @@ const MaptalksCanva = ({
                     }
                 )
                     .on('click', () => {
-                        onClick(value.coords?.x, value.coords?.y, value.name)
+                        onClick(value, value.name)
                     })
                     .on('mouseenter', (e) => {
                         e.target.updateSymbol({
@@ -210,7 +210,7 @@ const MaptalksCanva = ({
                 }
             )
                 .on('click', () => {
-                    onClick(value.coords?.x, value.coords?.y, value.name)
+                    onClick(value, value.name)
                 })
                 .on('mouseenter', (e) => {
                     e.target.updateSymbol({

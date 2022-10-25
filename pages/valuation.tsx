@@ -10,6 +10,7 @@ import {
     LegendFilter,
     MapFilter,
     PercentFilter,
+    ValuationTile,
 } from '../lib/heatmap/heatmapCommonTypes'
 import { useVisible } from '../lib/hooks'
 import { formatName, getState, typedKeys } from '../lib/utilities'
@@ -143,17 +144,18 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 
     // Main Search Function through Clicks,Form inputs.
     const handleMapSelection = async (
+        land: ValuationTile, 
         x?: number,
         y?: number,
         tokenId?: string
     ) => {
-        if (!atlas || !atlas?.ITRM || !metaverse) return
+        if (!metaverse) return
         x && y && setSelected({ x: x, y: y })
         setCardData(undefined)
         setMapState('loadingQuery')
         setIsVisible(true)
         const landData = findHeatmapLand(
-            atlas.ITRM,
+            land,
             prices,
             metaverse,
             tokenId,
@@ -168,15 +170,15 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
             return setTimeout(() => setIsVisible(false), 1100)
         }
         const id = landData?.landCoords.x + ',' + landData?.landCoords.y
-        if (
-            !(id in atlas.ITRM) ||
-            (atlas.decentraland &&
-                (!(id in atlas.decentraland) ||
-                    [5, 6, 7, 8, 12].includes(atlas.decentraland[id].type)))
-        ) {
-            setMapState('errorQuery')
-            return setTimeout(() => setIsVisible(false), 1100)
-        }
+        // if (
+        //     !(id in atlas.ITRM) ||
+        //     (atlas.decentraland &&
+        //         (!(id in atlas.decentraland) ||
+        //             [5, 6, 7, 8, 12].includes(atlas.decentraland[id].type)))
+        // ) {
+        //     setMapState('errorQuery')
+        //     return setTimeout(() => setIsVisible(false), 1100)
+        // }
         setSelected({ x: landData.landCoords.x, y: landData.landCoords.y })
         setMapState('loadedQuery')
         setCardData(landData)
@@ -391,11 +393,11 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                                                 onHover={(x, y, name, owner) => {
                                                     handleHover(x, y, name, owner);
                                                 }}
-                                                onClick={(x, y, name?: string) => {
-                                                    if (isSelected(x, y)) {
+                                                onClick={(land: ValuationTile, name?: string) => {
+                                                    if (isSelected(land.coords.x, land.coords.y)) {
                                                         setSelected(undefined);
                                                     } else {
-                                                        handleMapSelection(x, y);
+                                                        handleMapSelection(land, land.coords.x, land.coords.y);
                                                     }
                                                 }}
                                                 metaverse={metaverse}
