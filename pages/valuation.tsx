@@ -19,10 +19,6 @@ import {
     decentralandAPILayer,
     filteredLayer,
 } from '../lib/heatmap/heatmapLayers'
-import {
-    fetchDecentralandAtlas,
-    fetchITRMAtlas,
-} from '../lib/heatmap/fetchAtlas'
 import { setColours } from '../lib/heatmap/valuationColoring'
 import { getHeatmapSize } from '../lib/heatmap/getHeatmapSize'
 
@@ -203,7 +199,6 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
             setLandsLoaded(0)
             setSelected(undefined)
             setMapState('loading')
-            const ITRMAtlas = await fetchITRMAtlas(metaverse, setLandsLoaded)
 
             if (address && web3Provider) {
                 // Lands in User's Watchlist
@@ -223,7 +218,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                         watchlistData[metaverse + '-watchlist'],
                 }
                 // Iterating through User's Portfolio and Watchlist
-                for (let key of typedKeys(userLands)) {
+/*                 for (let key of typedKeys(userLands)) {
                     // Iterating through Map
                     typedKeys(ITRMAtlas).forEach((land) => {
                         // For each Land in user's Portfolio/Watchlist
@@ -232,19 +227,8 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                                 (ITRMAtlas[land][key] = true)
                         })
                     })
-                }
+                } */
             }
-            let decentralandAtlas: Record<string, AtlasTile> | undefined
-            if (metaverse === 'decentraland') {
-                decentralandAtlas = await fetchDecentralandAtlas()
-            }
-            const atlasWithColours = setColours(ITRMAtlas, filterBy)
-            const heatmapSize = getHeatmapSize({ ITRM: ITRMAtlas })
-            setHeatmapSize(heatmapSize)
-            setAtlas({
-                ITRM: atlasWithColours,
-                decentraland: decentralandAtlas,
-            })
             setMapState('loaded')
         }
         setData()

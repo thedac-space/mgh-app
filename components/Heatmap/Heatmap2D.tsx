@@ -69,25 +69,21 @@ const MaptalksCanva = ({
             maxZoom: 10,
             dragPitch: false,
             dragRotate: false,
+            
         })
 
         let layer = new maptalks.VectorLayer('vector', [], {
             forceRenderOnMoving: true,
             forceRenderOnRotating: true,
             forceRenderOnZooming: true,
-            enableSimplify: false,
+            enableSimplify:true,
+            hitDetect:false
         }).addTo(map)
 
         let lands: any = {}
         let polygons: any = []
-        let c = 0
         socket.emit('render', metaverse)
         socket.on('render', (land) => {
-            if (
-                c < Infinity /* && land.coords.y < 50 && land.coords.y > -55 */
-            ) {
-                c++
-                //flag = false //console.log(land)
                 let name = ''
                 if (land.coords) {
                     name = land?.coords.x + ',' + land?.coords.y
@@ -132,6 +128,7 @@ const MaptalksCanva = ({
                         },
                         cursor: 'pointer',
                         id: name,
+                        
                     }
                 )
                     .on('click', () => {
@@ -159,7 +156,7 @@ const MaptalksCanva = ({
                     })
                 layer.addGeometry(polygon)
                 polygons.push(polygon)
-            }
+            
         })
         socket.on('render-finish', () => {
             console.log('FINISH')
@@ -183,14 +180,13 @@ const MaptalksCanva = ({
                 value.coords.x,
                 value.coords.y,
                 {
-                    ITRM: metaverse != 'decentraland' ? coloredAtlas : null,
-                    decentraland: metaverse == 'decentraland' ? mapData : null,
+                    ITRM: coloredAtlas ,
+                    decentraland: undefined,
                 } as Atlas,
                 filter,
                 percentFilter,
                 legendFilter
             )
-
             let { color } = tile
             let borderColor = '#000'
             let borderSize = 0
@@ -215,9 +211,10 @@ const MaptalksCanva = ({
                         lineColor: borderColor,
                         polygonFill: color,
                         polygonOpacity: 1,
+                        
                     },
                     cursor: 'pointer',
-                    id: value.name,
+                    enableSimplify:true,
                 }
             )
                 .on('click', () => {
