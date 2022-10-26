@@ -467,11 +467,11 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                                             legendFilter={legendFilter}
                                             width={dims.width}
                                             height={dims.height}
-                                            onClick={(x, y, name?: string) => {
+                                            onClick={(land, x, y, name?: string) => {
                                                 if (isSelected(x, y)) {
                                                     setSelected(undefined);
                                                 } else {
-                                                    handleMapSelection(x, y);
+                                                    handleMapSelection(land, x, y);
                                                 }
                                             }}
                                             metaverse={metaverse}
