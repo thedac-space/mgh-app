@@ -20,7 +20,12 @@ interface IMaptalksCanva {
     filter: MapFilter
     percentFilter: PercentFilter
     legendFilter: LegendFilter
-    onHover: (x: number, y:number, name: string | undefined, owner: string | undefined) => void
+    onHover: (
+        x: number,
+        y: number,
+        name: string | undefined,
+        owner: string | undefined
+    ) => void
     onClick: (land: ValuationTile, name: string) => void
     metaverse: Metaverse
     x: number | undefined
@@ -78,7 +83,6 @@ const MaptalksCanva = ({
         let c = 0
         socket.emit('render', metaverse)
         socket.on('render', (land) => {
-            console.log(land)
             if (
                 c < Infinity /* && land.coords.y < 50 && land.coords.y > -55 */
             ) {
@@ -104,7 +108,8 @@ const MaptalksCanva = ({
                     } as Atlas,
                     filter,
                     percentFilter,
-                    legendFilter
+                    legendFilter,
+                    land
                 )
 
                 let { color } = tile
@@ -138,7 +143,12 @@ const MaptalksCanva = ({
                             lineWidth: 3,
                             lineColor: '#db2777',
                         })
-                        onHover(value.coords?.x, value.coords?.y, value.name, value.owner)
+                        onHover(
+                            value.coords?.x,
+                            value.coords?.y,
+                            value.name,
+                            value.owner
+                        )
                     })
                     .on('mouseout', (e) => {
                         e.target.updateSymbol({
@@ -163,7 +173,9 @@ const MaptalksCanva = ({
         let lands: any = []
         map.removeLayer('vector')
         let coloredAtlas = setColours(mapData!, filter)
-        if (map && x && y) { map.setCenter(new maptalks.Coordinate(x / 10, y / 10)) }
+        if (map && x && y) {
+            map.setCenter(new maptalks.Coordinate(x / 10, y / 10))
+        }
 
         Object.values(mapData!).forEach((value: any) => {
             let tile: any
@@ -172,8 +184,7 @@ const MaptalksCanva = ({
                 value.coords.y,
                 {
                     ITRM: metaverse != 'decentraland' ? coloredAtlas : null,
-                    decentraland:
-                        metaverse == 'decentraland' ? mapData : null,
+                    decentraland: metaverse == 'decentraland' ? mapData : null,
                 } as Atlas,
                 filter,
                 percentFilter,
@@ -218,7 +229,12 @@ const MaptalksCanva = ({
                         lineWidth: 3,
                         lineColor: '#db2777',
                     })
-                    onHover(value.coords?.x, value.coords?.y, value.name, value.owner)
+                    onHover(
+                        value.coords?.x,
+                        value.coords?.y,
+                        value.name,
+                        value.owner
+                    )
                 })
                 .on('mouseout', (e) => {
                     e.target.updateSymbol({
@@ -235,7 +251,6 @@ const MaptalksCanva = ({
             forceRenderOnRotating: true,
             forceRenderOnZooming: true,
         }).addTo(map)
-
     }, [filter, percentFilter, legendFilter, x, y])
 
     return (
