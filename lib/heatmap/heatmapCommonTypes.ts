@@ -13,7 +13,8 @@ export type Layer = (
   atlas?: Atlas,
   filter?: MapFilter,
   percentFilter?: PercentFilter,
-  legendFilter?: LegendFilter
+  legendFilter?: LegendFilter,
+  land?:any,
 ) => Tile | null
 
 export type Tile = {
