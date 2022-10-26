@@ -20,7 +20,7 @@ export const filteredLayer: Layer = (
     /** This second Statement checks that in Decentraland
      * the land is an actual land and not a Road, Plaza, etc...
      */
-    if (new Set([5, 6, 7, 8, 12]).has(land.tile.type))
+    if (new Set([5, 6, 7, 8, 12]).has(land?.tile?.type))
         return decentralandAPILayer(x, y, land)
     /* Don't show a layer if user is tier0 and metaverse is decentraland. (we already have decentralands Map for that)  */
     let color!: string
