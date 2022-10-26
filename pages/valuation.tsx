@@ -144,22 +144,24 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 
     // Main Search Function through Clicks,Form inputs.
     const handleMapSelection = async (
+        lands?: ValuationTile,
         x?: number,
         y?: number,
         tokenId?: string
     ) => {
-        let data
-        const parameters = x && y ? `x=${x}&y=${y}` : tokenId ? `tokenId=${tokenId}` : null
-        const response = await fetch(
-            `${process.env.ITRM_SERVICE}${metaverse == "somnium-space" || metaverse == "axie-infinity" ? "" : "/test"}/${metaverse}/${metaverse == "axie-infinity" ? "requestMap" : "map"}?${parameters}`
-            , {
-            method: 'GET', // *GET, POST, PUT, DELETE, etc.
-            body: JSON.stringify(data) // body data type must match "Content-Type" header
-          });
-        let lands: ValuationTile = await response.json();
-        console.log(lands)
-        if(true) return
-        if (!metaverse) return
+        if (!lands) {
+            let data
+            const parameters = x && y ? `x=${x}&y=${y}` : tokenId ? `tokenId=${tokenId}` : null
+            const response = await fetch(
+                `${process.env.ITRM_SERVICE}${metaverse == "somnium-space" || metaverse == "axie-infinity" ? "" : "/test"}/${metaverse}/${metaverse == "axie-infinity" ? "predict" : "map"}?${parameters}`
+                , {
+                    method: 'GET', // *GET, POST, PUT, DELETE, etc.
+                    body: JSON.stringify(data) // body data type must match "Content-Type" header
+                });
+            
+            lands = await response.json();
+        }
+        if (!lands || !metaverse) return
         x && y && setSelected({ x: x, y: y })
         setCardData(undefined)
         setMapState('loadingQuery')
@@ -407,7 +409,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                                                     if (isSelected(land.coords.x, land.coords.y)) {
                                                         setSelected(undefined);
                                                     } else {
-                                                        handleMapSelection(land.coords.x, land.coords.y);
+                                                        handleMapSelection(land, land.coords.x, land.coords.y);
                                                     }
                                                 }}
                                                 metaverse={metaverse}
