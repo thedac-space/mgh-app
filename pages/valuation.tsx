@@ -108,19 +108,6 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
     function isSelected(x: number, y: number) {
         return selected?.x === x && selected?.y === y
     }
-    const selectedStrokeLayer: Layer = (x, y) => {
-        return isSelected(x, y) ? { color: '#ff0044', scale: 1.4 } : null
-    }
-
-    const hoverLayer: Layer = (x, y) => {
-        return hovered?.coords?.x === x && hovered?.coords?.y === y
-            ? { color: '#db2777', scale: 1.4 }
-            : null
-    }
-
-    const selectedFillLayer: Layer = (x, y) => {
-        return isSelected(x, y) ? { color: '#ff9990', scale: 1.2 } : null
-    }
 
     const mapDivRef = useRef<HTMLDivElement>(null)
     const [dims, setDims] = useState({
@@ -144,7 +131,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 
     // Main Search Function through Clicks,Form inputs.
     const handleMapSelection = async (
-        lands?: ValuationTile,
+        lands?: ValuationTile | any,
         x?: number,
         y?: number,
         tokenId?: string
@@ -158,8 +145,15 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                     method: 'GET', // *GET, POST, PUT, DELETE, etc.
                     body: JSON.stringify(data) // body data type must match "Content-Type" header
                 });
-            
+            console.log(`${process.env.ITRM_SERVICE}${metaverse == "somnium-space" || metaverse == "axie-infinity" ? "" : "/test"}/${metaverse}/${metaverse == "axie-infinity" ? "predict" : "map"}?${parameters}`)
             lands = await response.json();
+
+            if (metaverse !== 'axie-infinity') {
+                Object.entries(lands).forEach(([key, value]) => {
+                    lands = value
+                    lands.land_id = key
+                });
+            }
         }
         if (!lands || !metaverse) return
         x && y && setSelected({ x: x, y: y })
