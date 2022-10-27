@@ -117,6 +117,9 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
         y?: number,
         tokenId?: string
     ) => {
+        setCardData(undefined)
+        setMapState('loadingQuery')
+        setIsVisible(true)
         if (!lands) {
             let data
             const parameters = x && y ? `x=${x}&y=${y}` : tokenId ? `tokenId=${tokenId}` : null
@@ -135,11 +138,8 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                 });
             }
         }
-        if (!lands || !metaverse) return
         x && y && setSelected({ x: x, y: y })
-        setCardData(undefined)
-        setMapState('loadingQuery')
-        setIsVisible(true)
+        if (!lands || !metaverse) return
         const landData = findHeatmapLand(
             lands,
             prices,

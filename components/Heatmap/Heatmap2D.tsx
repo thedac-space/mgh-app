@@ -153,6 +153,31 @@ const MaptalksCanva = ({
         }).addTo(map)
     }, [filter, percentFilter, legendFilter, x, y])
 
+    useEffect(() => {
+        if (!map) return
+        map.remove()
+
+        const initialCoords = {
+            x: initialX,
+            y: initialY
+        }
+        const filters = {
+            filter,
+            percentFilter,
+            legendFilter
+        }
+
+        firstChargeLands(
+            metaverse,
+            initialCoords,
+            filters,
+            onClick,
+            onHover,
+            setMapData,
+            setMap
+        )
+    }, [metaverse])
+
     return (
         <canvas
             width={width}
