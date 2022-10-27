@@ -137,33 +137,35 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                         lands.land_id = key
                     });
                 }
-            } catch (e){
+            } catch (e) {
                 setMapState('errorQuery')
                 return setTimeout(() => setIsVisible(false), 1100)
             }
-          
-            
+
+
         }
         x && y && setSelected({ x: x, y: y })
         if (!lands || !metaverse) return
-        const landData = findHeatmapLand(
-            lands,
-            prices,
-            metaverse,
-            tokenId,
-            {
-                x: x,
-                y: y,
-            },
-            filterBy
-        )
-        if (!landData) {
+        try {
+            const landData = findHeatmapLand(
+                lands,
+                prices,
+                metaverse,
+                tokenId,
+                {
+                    x: x,
+                    y: y,
+                },
+                filterBy
+            )
+            setSelected({ x: landData?.landCoords.x, y: landData?.landCoords.y })
+            setMapState('loadedQuery')
+            setCardData(landData)
+
+        } catch (e) {
             setMapState('errorQuery')
             return setTimeout(() => setIsVisible(false), 1100)
         }
-        setSelected({ x: landData.landCoords.x, y: landData.landCoords.y })
-        setMapState('loadedQuery')
-        setCardData(landData)
     }
 
     // Use Effect for Metaverse Fetching and Map creation
@@ -337,7 +339,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                                             onHover={(x, y, name, owner) => {
                                                 handleHover(x, y, name, owner);
                                             }}
-                                            onClick={(land: ValuationTile, x:number, y:number, name?: string) => {
+                                            onClick={(land: ValuationTile, x: number, y: number, name?: string) => {
                                                 if (isSelected(x, y)) {
                                                     setSelected(undefined);
                                                 } else {
