@@ -16,7 +16,6 @@ interface Props {
     tokenId?: string | undefined
   ) => Promise<NodeJS.Timeout | undefined>
 }
-
 const MapSearch = ({ mapState, handleMapSelection }: Props) => {
   const [landId, setLandId] = useState('')
   const [coordinates, setCoordinates] = useState({ X: '', Y: '' })
@@ -29,29 +28,20 @@ const MapSearch = ({ mapState, handleMapSelection }: Props) => {
 
   const [searchBy, setSearchBy] = useState<'coordinates' | 'id'>('coordinates')
   const searchById = (e: React.FormEvent<HTMLFormElement>) => {
-    try {
-      if (landId){
+
+      
         e.preventDefault()
         handleMapSelection(undefined, undefined, undefined, landId)
-      } else {
-        errorQuery
-      }
-    } catch (error){
-      console.log(error);
-    }
+      
     
   }
   const searchByCoordinates = (e: React.FormEvent<HTMLFormElement>) => {
-    try {
-      if (Number(coordinates.X) && Number(coordinates.Y)) {
+
+   
         e.preventDefault()
         handleMapSelection(undefined, Number(coordinates.X), Number(coordinates.Y), undefined)
-      } else {
-        errorQuery
-      }
-    } catch (error){
-      console.log(error);
-    }
+      
+
     
   }
   const searchOptions = {
@@ -83,13 +73,7 @@ const MapSearch = ({ mapState, handleMapSelection }: Props) => {
     }
   }, [])
 
-  return errorQuery ? (
-    <div className='gray-box bg-opacity-100 z-30'>
-      <p className='text-lg font-semibold text-center text-gray-200'>
-        No a Valid Land or not enough Data yet!
-      </p>
-    </div>
-  ) : (
+  return (
     <div className='flex flex-col gap-6 md:absolute h-16 md:h-auto w-[190px]'>
       {/* Search */}
       <form

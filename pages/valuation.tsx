@@ -130,13 +130,18 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                     body: JSON.stringify(data)
                 });
             lands = await response.json();
-
-            if (metaverse !== 'axie-infinity') {
-                Object.entries(lands).forEach(([key, value]) => {
-                    lands = value
-                    lands.land_id = key
-                });
+            try {
+                if (metaverse !== 'axie-infinity') {
+                    Object.entries(lands).forEach(([key, value]) => {
+                        lands = value
+                        lands.land_id = key
+                    });
+                }
+            } catch (e){
+                setMapState('errorQuery')
+                return setTimeout(() => setIsVisible(false), 1100)
             }
+            
         }
         x && y && setSelected({ x: x, y: y })
         if (!lands || !metaverse) return
@@ -155,9 +160,6 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
             setMapState('errorQuery')
             return setTimeout(() => setIsVisible(false), 1100)
         }
-        setSelected({ x: landData.landCoords.x, y: landData.landCoords.y })
-        setMapState('loadedQuery')
-        setCardData(landData)
     }
 
     // Use Effect for Metaverse Fetching and Map creation
