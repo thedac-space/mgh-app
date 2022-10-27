@@ -30,9 +30,11 @@ const MapSearch = ({ mapState, handleMapSelection }: Props) => {
   const [searchBy, setSearchBy] = useState<'coordinates' | 'id'>('coordinates')
   const searchById = (e: React.FormEvent<HTMLFormElement>) => {
     try {
-      if (landId !== undefined){
+      if (landId){
         e.preventDefault()
         handleMapSelection(undefined, undefined, undefined, landId)
+      } else {
+        errorQuery
       }
     } catch (error){
       console.log(error);
@@ -41,9 +43,11 @@ const MapSearch = ({ mapState, handleMapSelection }: Props) => {
   }
   const searchByCoordinates = (e: React.FormEvent<HTMLFormElement>) => {
     try {
-      if (Number(coordinates.X) !== undefined || Number(coordinates.Y) !== undefined) {
+      if (Number(coordinates.X) && Number(coordinates.Y)) {
         e.preventDefault()
         handleMapSelection(undefined, Number(coordinates.X), Number(coordinates.Y), undefined)
+      } else {
+        errorQuery
       }
     } catch (error){
       console.log(error);
