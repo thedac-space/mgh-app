@@ -127,37 +127,43 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                     body: JSON.stringify(data)
                 });
             lands = await response.json();
-
-            if (metaverse !== 'axie-infinity') {
-                Object.entries(lands).forEach(([key, value]) => {
-                    lands = value
-                    lands.land_id = key
-                });
+            try {
+                if (metaverse !== 'axie-infinity') {
+                    Object.entries(lands).forEach(([key, value]) => {
+                        lands = value
+                        lands.land_id = key
+                    });
+                }
+            } catch (e){
+                setMapState('errorQuery')
+                return setTimeout(() => setIsVisible(false), 1100)
             }
+            
         }
         if (!lands || !metaverse) return
         x && y && setSelected({ x: x, y: y })
         setCardData(undefined)
         setMapState('loadingQuery')
         setIsVisible(true)
-        const landData = findHeatmapLand(
-            lands,
-            prices,
-            metaverse,
-            tokenId,
-            {
-                x: x,
-                y: y,
-            },
-            filterBy
-        )
-        if (!landData) {
+        try {
+            const landData = findHeatmapLand(
+                lands,
+                prices,
+                metaverse,
+                tokenId,
+                {
+                    x: x,
+                    y: y,
+                },
+                filterBy
+            )
+            setSelected({ x: landData?.landCoords.x, y: landData?.landCoords.y })
+            setMapState('loadedQuery')
+            setCardData(landData)
+        } catch(e) {
             setMapState('errorQuery')
             return setTimeout(() => setIsVisible(false), 1100)
         }
-        setSelected({ x: landData.landCoords.x, y: landData.landCoords.y })
-        setMapState('loadedQuery')
-        setCardData(landData)
     }
 
     // Use Effect for Metaverse Fetching and Map creation
