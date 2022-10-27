@@ -123,8 +123,8 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
             const response = await fetch(
                 `${process.env.ITRM_SERVICE}${metaverse == "somnium-space" || metaverse == "axie-infinity" ? "" : "/test"}/${metaverse}/${metaverse == "axie-infinity" ? "predict" : "map"}?${parameters}`
                 , {
-                    method: 'GET', // *GET, POST, PUT, DELETE, etc.
-                    body: JSON.stringify(data) // body data type must match "Content-Type" header
+                    method: 'GET',
+                    body: JSON.stringify(data)
                 });
             lands = await response.json();
 
