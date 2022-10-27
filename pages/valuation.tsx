@@ -12,7 +12,6 @@ import {
 import { useVisible } from '../lib/hooks'
 import { formatName } from '../lib/utilities'
 import { ICoinPrices } from '../lib/valuation/valuationTypes'
-
 import { IAPIData, IPredictions, UserData } from '../lib/types'
 import {
     FloorPriceTracker,
