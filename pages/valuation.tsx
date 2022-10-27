@@ -141,6 +141,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                 setMapState('errorQuery')
                 return setTimeout(() => setIsVisible(false), 1100)
             }
+          
             
         }
         x && y && setSelected({ x: x, y: y })
@@ -160,6 +161,9 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
             setMapState('errorQuery')
             return setTimeout(() => setIsVisible(false), 1100)
         }
+        setSelected({ x: landData.landCoords.x, y: landData.landCoords.y })
+        setMapState('loadedQuery')
+        setCardData(landData)
     }
 
     // Use Effect for Metaverse Fetching and Map creation
