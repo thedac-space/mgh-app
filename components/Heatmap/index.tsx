@@ -10,7 +10,6 @@ export { default as MapMobileFilters } from './MapMobileFilters'
 export { default as HeatmapLoader } from './HeatmapLoader'
 export { default as ColorGuide } from './ColorGuide'
 export { default as MapLegend } from './MapLegend'
-export { TileMap } from './TileMap'
 
 export const MaptalksCanva = dynamic(() => { return import('./MaptalksCanva')}, {ssr: false})
 export const Heatmap2D = dynamic(() => { return import('./Heatmap2D')}, {ssr: false})

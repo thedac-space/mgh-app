@@ -9,11 +9,11 @@ import {
     ValuationTile,
 } from '../../lib/heatmap/heatmapCommonTypes'
 import { filteredLayer } from '../../lib/heatmap/heatmapLayers'
-import { io } from 'socket.io-client'
 import React from 'react'
 import { Metaverse } from '../../lib/metaverse'
 import { setColours } from '../../lib/heatmap/valuationColoring'
-const socket = io('http://localhost:3005', { transports: ['websocket'] })
+import { firstChargeLands, rectangularLayer } from './maptalksLib'
+
 interface IMaptalksCanva {
     width: number | string | undefined
     height: number | string | undefined
@@ -26,7 +26,7 @@ interface IMaptalksCanva {
         name: string | undefined,
         owner: string | undefined
     ) => void
-    onClick: (land: ValuationTile, name: string) => void
+    onClick: (land: ValuationTile, x: number, y: number, name: string) => void
     metaverse: Metaverse
     x: number | undefined
     y: number | undefined
@@ -60,109 +60,25 @@ const MaptalksCanva = ({
     const [mapData, setMapData] = useState<Record<string, ValuationTile>>()
 
     useEffect(() => {
-        let map: any
+        const initialCoords = {
+            x: initialX,
+            y: initialY
+        }
+        const filters = {
+            filter,
+            percentFilter,
+            legendFilter
+        }
 
-        map = new maptalks.Map('map', {
-            center: [initialX / 10, initialY / 10],
-            zoom: 8,
-            minZoom: 6,
-            maxZoom: 10,
-            dragPitch: false,
-            dragRotate: false,
-            
-        })
-
-        let layer = new maptalks.VectorLayer('vector', [], {
-            forceRenderOnMoving: true,
-            forceRenderOnRotating: true,
-            forceRenderOnZooming: true,
-            enableSimplify:true,
-            hitDetect:false
-        }).addTo(map)
-
-        let lands: any = {}
-        let polygons: any = []
-        socket.emit('render', metaverse)
-        socket.on('render', (land) => {
-                let name = ''
-                if (land.coords) {
-                    name = land?.coords.x + ',' + land?.coords.y
-                } else {
-                    name = land?.center.x + ',' + land?.center.y
-                }
-                lands[name] = land!
-                lands[name].land_id = land.tokenId
-                let value = land
-                let tile: any
-
-                tile = filteredLayer(
-                    value.coords.x,
-                    value.coords.y,
-                    {
-                        ITRM: lands,
-                        decentraland: undefined,
-                    } as Atlas,
-                    filter,
-                    percentFilter,
-                    legendFilter,
-                    land
-                )
-
-                let { color } = tile
-                let borderColor = '#000'
-                let borderSize = 0
-
-                let polygon = new maptalks.Rectangle(
-                    new maptalks.Coordinate(
-                        value.coords.x / 10,
-                        value.coords.y / 10
-                    ),
-                    10000,
-                    10000,
-                    {
-                        symbol: {
-                            lineWidth: borderSize,
-                            lineColor: borderColor,
-                            polygonFill: color,
-                            polygonOpacity: 1,
-                        },
-                        cursor: 'pointer',
-                        id: name,
-                        
-                    }
-                )
-                    .on('click', () => {
-                        onClick(value, value.name)
-                    })
-                    .on('mouseenter', (e) => {
-                        e.target.updateSymbol({
-                            polygonFill: '#db2777',
-                            lineWidth: 3,
-                            lineColor: '#db2777',
-                        })
-                        onHover(
-                            value.coords?.x,
-                            value.coords?.y,
-                            value.name,
-                            value.owner
-                        )
-                    })
-                    .on('mouseout', (e) => {
-                        e.target.updateSymbol({
-                            polygonFill: color,
-                            lineWidth: borderSize,
-                            lineColor: borderColor,
-                        })
-                    })
-                layer.addGeometry(polygon)
-                polygons.push(polygon)
-            
-        })
-        socket.on('render-finish', () => {
-            console.log('FINISH')
-            setMapData(lands)
-            setMap(map)
-        })
+        firstChargeLands(
+            metaverse,
+            initialCoords,
+            filters,
+            onClick,
+            onHover,
+            setMapData,
+            setMap
+        )
     }, [])
 
     useEffect(() => {
@@ -180,7 +96,7 @@ const MaptalksCanva = ({
                 value.coords.x,
                 value.coords.y,
                 {
-                    ITRM: coloredAtlas ,
+                    ITRM: coloredAtlas,
                     decentraland: undefined,
                 } as Atlas,
                 filter,
@@ -198,28 +114,15 @@ const MaptalksCanva = ({
                 borderSize = 3
             }
 
-            let polygon = new maptalks.Rectangle(
-                new maptalks.Coordinate(
-                    value.coords.x / 10,
-                    value.coords.y / 10
-                ),
-                10000,
-                10000,
-                {
-                    symbol: {
-                        lineWidth: borderSize,
-                        lineColor: borderColor,
-                        polygonFill: color,
-                        polygonOpacity: 1,
-                        
-                    },
-                    cursor: 'pointer',
-                    enableSimplify:true,
-                }
-            )
-                .on('click', () => {
-                    onClick(value, value.name)
-                })
+            let polygon = rectangularLayer(value, color, borderSize, borderColor)
+            polygon.on('click', () => {
+                onClick(
+                    value,
+                    value.coords ? value.coords?.x : value.center?.x,
+                    value.coords ? value.coords?.x : value.center?.y,
+                    value.name
+                )
+            })
                 .on('mouseenter', (e) => {
                     e.target.updateSymbol({
                         polygonFill: '#db2777',

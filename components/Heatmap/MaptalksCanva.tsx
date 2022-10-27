@@ -55,15 +55,18 @@ const MaptalksCanva = ({
             minZoom: 9,
             maxZoom: 12,
             attribution: false,
-            pitch: 1, 
+            pitch: 1,
             dragPitch: false,
             //dragRotate: false,
         })
         map.addLayer(imageLayer)
+
         let layer = new maptalks.VectorLayer('vector', [], {
             forceRenderOnMoving: true,
             forceRenderOnRotating: true,
             forceRenderOnZooming: true,
+            enableSimplify: true,
+            hitDetect: false
         }).addTo(map)
 
         let lands: any = {}

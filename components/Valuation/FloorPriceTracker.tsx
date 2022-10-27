@@ -23,8 +23,10 @@ const FloorPriceTracker = ({ coinPrices, metaverse }: Props) => {
       const stats = await getCollectionData(metaverse)
       if (metaverse === 'axie-infinity') {
         // Fetch Data from Axie Market
-        const floorPrice = Number(await getAxieFloorPrice())
-        stats.floor_price = floorPrice
+        try {
+          const floorPrice = Number(await getAxieFloorPrice())
+          stats.floor_price = floorPrice
+        } catch (error) { }
       }
 
       const formattedMetaverse =

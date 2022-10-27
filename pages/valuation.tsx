@@ -30,7 +30,6 @@ import {
     MapLandSummary,
     MapMobileFilters,
     MapSearch,
-    TileMap,
     MaptalksCanva,
 } from '../components/Heatmap'
 import { getUserInfo } from '../lib/FirebaseUtilities'
@@ -332,11 +331,11 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                                             onHover={(x, y, name, owner) => {
                                                 handleHover(x, y, name, owner);
                                             }}
-                                            onClick={(land: ValuationTile, name?: string) => {
-                                                if (isSelected(land.coords.x, land.coords.y)) {
+                                            onClick={(land: ValuationTile, x:number, y:number, name?: string) => {
+                                                if (isSelected(x, y)) {
                                                     setSelected(undefined);
                                                 } else {
-                                                    handleMapSelection(land, land.coords.x, land.coords.y);
+                                                    handleMapSelection(land, x, y);
                                                 }
                                             }}
                                             metaverse={metaverse}
