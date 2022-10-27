@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import * as maptalks from 'maptalks'
 import {
     Atlas,
@@ -46,7 +46,6 @@ const MaptalksCanva = ({
                 url: '/images/Waterfront_Extended_Parcels_Map_allgreen.jpg',
                 extent: [-1, -1, 1, 1],
                 opacity: 1,
-
             },
         ])
 
@@ -238,6 +237,11 @@ const MaptalksCanva = ({
             forceRenderOnZooming: true,
         }).addTo(map)
     }, [filter, percentFilter, legendFilter, x, y])
+
+    useEffect(() => {
+        if (!map) return
+        map.remove()
+    }, [metaverse])
 
     return (
         <canvas
