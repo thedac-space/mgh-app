@@ -181,6 +181,7 @@ export const getAxieFloorPrice = async () => {
         }
     )
     const floorPrice = await res.json()
+    console.log(floorPrice)
     return formatEther(floorPrice.data.lands.results[0].auction.currentPrice)
 }
 
