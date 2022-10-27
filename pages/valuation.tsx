@@ -141,10 +141,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                 setMapState('errorQuery')
                 return setTimeout(() => setIsVisible(false), 1100)
             }
-
-
         }
-        x && y && setSelected({ x: x, y: y })
         if (!lands || !metaverse) return
         try {
             const landData = findHeatmapLand(
@@ -161,7 +158,6 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
             setSelected({ x: landData?.landCoords.x, y: landData?.landCoords.y })
             setMapState('loadedQuery')
             setCardData(landData)
-
         } catch (e) {
             setMapState('errorQuery')
             return setTimeout(() => setIsVisible(false), 1100)
