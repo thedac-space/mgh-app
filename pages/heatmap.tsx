@@ -10,7 +10,7 @@ const Heatmap: NextPage = () => {
             filter={'basic'}
             percentFilter={undefined}
             legendFilter={undefined}
-            metaverse={"decentraland"}
+            metaverse={"axie-infinity"}
             onHover={function (x: any, y: any): void { }}
             onClick={function (x: any, y: any, name: string): void { }}
             x={0}
