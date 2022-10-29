@@ -241,10 +241,9 @@ const MaptalksCanva = ({
         }).addTo(map)
     }, [filter, percentFilter, legendFilter, x, y])
 
-/*     useEffect(() => {
-        if (!map) return
-        map.remove()
-    }, [metaverse]) */
+    useEffect(() => {
+        
+    })
 
     return (
         <canvas

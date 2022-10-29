@@ -60,6 +60,8 @@ const MaptalksCanva = ({
     const [mapData, setMapData] = useState<Record<string, ValuationTile>>()
 
     useEffect(() => {
+        if (map) map.remove()
+        
         const initialCoords = {
             x: initialX,
             y: initialY
