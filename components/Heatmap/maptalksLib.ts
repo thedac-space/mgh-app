@@ -31,7 +31,7 @@ export const firstChargeLands = (
   map = new maptalks.Map('map', {
     center: [initialCoords.x / 10, initialCoords.y / 10],
     zoom: 8,
-    minZoom: 6,
+    minZoom: 7,
     maxZoom: 10,
     dragPitch: false,
     dragRotate: false,

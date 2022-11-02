@@ -332,7 +332,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                                             legendFilter={legendFilter}
                                             width={dims.width}
                                             height={dims.height}
-                                            onHover={(x, y, name, owner) => {
+                                            onHover={(x: number, y: number, name?: string, owner?: string) => {
                                                 handleHover(x, y, name, owner);
                                             }}
                                             onClick={(land: ValuationTile, x: number, y: number, name?: string) => {
