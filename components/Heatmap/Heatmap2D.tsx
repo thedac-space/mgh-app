@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react'
-import * as maptalks from 'maptalks'
 import {
     Atlas,
     Layer,
@@ -13,8 +12,8 @@ import { io } from 'socket.io-client'
 import React from 'react'
 import { Metaverse } from '../../lib/metaverse'
 import { setColours } from '../../lib/heatmap/valuationColoring'
-import * as d3 from 'd3'
-const { tile } = require('d3-tile')
+import * as PIXI from 'pixi.js'
+import { Viewport } from 'pixi-viewport'
 
 const socket = io('http://localhost:3005', { transports: ['websocket'] })
 interface IMaptalksCanva {
@@ -59,36 +58,62 @@ const MaptalksCanva = ({
     initialX,
     initialY,
 }: IMaptalksCanva) => {
-    const [map, setMap] = useState<maptalks.Map>()
+    const [map, setMap] = useState<PIXI.Application>()
     const [mapData, setMapData] = useState<Record<string, ValuationTile>>()
-    let margin = { top: 80, right: 25, bottom: 30, left: 40 }
+
+    const rgbToHex = (values: any) => {
+        let a = values.split(',')
+        a.map(function (value: any) {
+            value = parseInt(value).toString(16)
+            return value.length == 1 ? '0' + value : value
+        })
+    }
 
     useEffect(() => {
         let map: any
-        map = d3.select('#map').attr('viewBox', [-300, -300, width, height]).attr('style','overflow-x:hidden;')
-        map.call(
-            d3
-                .zoom()
-                .scaleExtent([-10, 10])
-                .on('zoom', function ({transform}) {
-                    map.attr("transform", transform);
-/*     gX.call(xAxis.scale(transform.rescaleX(x)));
-    gY.call(yAxis.scale(transform.rescaleY(y))); */
-                })
-        )
+        map = new PIXI.Application({
+            width,
+            height,
+            resolution: 1,
+        })
+        let container: any = new Viewport({
+            worldWidth: width,
+            worldHeight: height,
+            passiveWheel: false,
+            interaction: map.renderer.plugins.interaction,
+        })
+        container.drag().pinch().wheel() //pixi-viewport docs
+        let currentTint: any
+        let currentSprite: any
+        container.on('mousemove', (e: any): any => {
+            if (e.target != e.currentTarget) {
+                if (currentSprite && e.target.name != currentSprite.name) {
+                    currentSprite.tint = currentTint
+                    currentTint = e.target.tint
+                }
+                if (!currentTint) currentTint = e.target.tint
+                currentSprite = e.target
+                e.target.tint = 0xdb2777
+            }  else {
+                if (currentSprite && e.target != currentSprite) {
+                    currentSprite.tint = currentTint
+                    currentSprite = null
+                    currentTint = null
+                }
+            } 
+        })
+        
 
-        const tileGroup = map
-            .append('g')
-            .attr('pointer-events', 'none')
-            .attr('font-family', 'var(--sans-serif)')
-            .attr('font-size', 16)
-
-        let _tile = tileGroup.selectAll('g')
+        map.stage.addChild(container)
+        document.getElementById('map')?.appendChild(map.view)
+        setMap(map)
 
         let lands: any = {}
         let polygons: any = []
+        let count = 0
         socket.emit('render', metaverse)
-        socket.on('render', (land) => {
+        socket.on('render', (land: any) => {
+            count++
             let name = ''
             if (land.coords) {
                 name = land?.coords.x + ',' + land?.coords.y
@@ -113,31 +138,21 @@ const MaptalksCanva = ({
                 land
             )
             let { color } = tile
-            let borderColor = '#000'
-            let borderSize = 0
-
-            _tile = _tile.data(polygons).join((enter: any) =>
-                enter
-                    .append('g')
-                    .attr('transform', ({ coords }: any) => {
-                        let { x, y } = coords
-                        return `translate(${x}, ${y}) scale(${1 / 100000})`
-                    })
-                    .call((g: any) =>
-                        g
-                            .append('rect')
-                            .attr('fill', (d: any) => color)
-                            .attr('fill-opacity', 0.5)
-                            .attr('stroke', 'black')
-                            .attr('width', 100000)
-                            .attr('height', 100000)
-                            
-                    )
-            )
-            map.selectAll('g')
+            color = color.includes('rgb')
+                ? rgbToHex(color.split('(')[1].split(')')[0])
+                : '0x' + color.split('#')[1]
+            let borderColor = 0x0
+            let borderSize = 1
+            let rectangle = new PIXI.Sprite(PIXI.Texture.WHITE)
+            rectangle.tint = color
+            rectangle.width = rectangle.height = 256
+            rectangle.position.set(land.coords.x * 256, land.coords.y * 256)
+            rectangle.interactive = true
+            rectangle.name = land.coords.x + ',' + land.coords.y
+            container.addChild(rectangle)
             polygons.push(land)
-            map.node()
         })
+
         socket.on('render-finish', () => {
             console.log('FINISH')
 
@@ -230,14 +245,7 @@ const MaptalksCanva = ({
         }).addTo(map)
     }, [filter, percentFilter, legendFilter, x, y]) */
 
-    return (
-        <svg
-            width={width}
-            height={height}
-            /* style={{ width, height }} */
-            id="map"
-        />
-    )
+    return <div id="map"></div>
 }
 
 export default MaptalksCanva
