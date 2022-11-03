@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import * as maptalks from 'maptalks'
 import {
     Atlas,
@@ -46,7 +46,6 @@ const MaptalksCanva = ({
                 url: '/images/Waterfront_Extended_Parcels_Map_allgreen.jpg',
                 extent: [-1, -1, 1, 1],
                 opacity: 1,
-
             },
         ])
 
@@ -56,15 +55,18 @@ const MaptalksCanva = ({
             minZoom: 9,
             maxZoom: 12,
             attribution: false,
-            pitch: 1, 
+            pitch: 1,
             dragPitch: false,
             //dragRotate: false,
         })
         map.addLayer(imageLayer)
+
         let layer = new maptalks.VectorLayer('vector', [], {
             forceRenderOnMoving: true,
             forceRenderOnRotating: true,
             forceRenderOnZooming: true,
+            enableSimplify: true,
+            hitDetect: false
         }).addTo(map)
 
         let lands: any = {}
@@ -238,6 +240,10 @@ const MaptalksCanva = ({
             forceRenderOnZooming: true,
         }).addTo(map)
     }, [filter, percentFilter, legendFilter, x, y])
+
+    useEffect(() => {
+        
+    })
 
     return (
         <canvas

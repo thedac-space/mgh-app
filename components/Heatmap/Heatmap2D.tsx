@@ -8,14 +8,17 @@ import {
     ValuationTile,
 } from '../../lib/heatmap/heatmapCommonTypes'
 import { filteredLayer } from '../../lib/heatmap/heatmapLayers'
-import { io } from 'socket.io-client'
 import React from 'react'
 import { Metaverse } from '../../lib/metaverse'
 import { setColours } from '../../lib/heatmap/valuationColoring'
 import * as PIXI from 'pixi.js'
 import { Viewport } from 'pixi-viewport'
+import { firstChargeLands, rectangularLayer } from './maptalksLib'
+import { io } from 'socket.io-client'
 
 const socket = io('http://localhost:3005', { transports: ['websocket'] })
+
+
 interface IMaptalksCanva {
     width: number
     height: number
@@ -28,7 +31,7 @@ interface IMaptalksCanva {
         name: string | undefined,
         owner: string | undefined
     ) => void
-    onClick: (land: ValuationTile, name: string) => void
+    onClick: (land: ValuationTile, x: number, y: number, name: string) => void
     metaverse: Metaverse
     x: number | undefined
     y: number | undefined
@@ -141,8 +144,6 @@ const MaptalksCanva = ({
             color = color.includes('rgb')
                 ? rgbToHex(color.split('(')[1].split(')')[0])
                 : '0x' + color.split('#')[1]
-            let borderColor = 0x0
-            let borderSize = 1
             let rectangle = new PIXI.Sprite(PIXI.Texture.WHITE)
             rectangle.tint = color
             rectangle.width = rectangle.height = 256
@@ -159,6 +160,26 @@ const MaptalksCanva = ({
             setMapData(lands)
             setMap(map)
         })
+        
+        const initialCoords = {
+            x: initialX,
+            y: initialY
+        }
+        const filters = {
+            filter,
+            percentFilter,
+            legendFilter
+        }
+
+/*         firstChargeLands(
+            metaverse,
+            initialCoords,
+            filters,
+            onClick,
+            onHover,
+            setMapData,
+            setMap
+        ) */
     }, [])
 
     /*     useEffect(() => {
@@ -245,7 +266,10 @@ const MaptalksCanva = ({
         }).addTo(map)
     }, [filter, percentFilter, legendFilter, x, y]) */
 
+    
+
     return <div id="map"></div>
+    
 }
 
 export default MaptalksCanva
