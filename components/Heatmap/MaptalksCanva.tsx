@@ -129,14 +129,14 @@ const MaptalksCanva = ({
                 .on('click', () => {
                     onClick(value, value.center.x, value.center.y, value.name)
                 })
-                .on('mouseenter', (e) => {
+                .on('mouseenter', (e: any) => {
                     e.target.updateSymbol({
                         polygonFill: '#db2777',
                         lineWidth: 3,
                         lineColor: '#db2777',
                     })
                 })
-                .on('mouseout', (e) => {
+                .on('mouseout', (e: any) => {
                     e.target.updateSymbol({
                         polygonFill: color,
                         lineWidth: borderSize,
@@ -218,14 +218,14 @@ const MaptalksCanva = ({
                 .on('click', () => {
                     onClick(value, value.center.x, value.center.y, value.name)
                 })
-                .on('mouseenter', (e) => {
+                .on('mouseenter', (e: any) => {
                     e.target.updateSymbol({
                         polygonFill: '#db2777',
                         lineWidth: 3,
                         lineColor: '#db2777',
                     })
                 })
-                .on('mouseout', (e) => {
+                .on('mouseout', (e: any) => {
                     e.target.updateSymbol({
                         polygonFill: color,
                         lineWidth: borderSize,

@@ -89,7 +89,7 @@ const MaptalksCanva = ({
         let currentTint: any
         let currentSprite: any
         container.on('mousemove', (e: any): any => {
-            if (e.target != e.currentTarget) {
+            if (e.target && e.target != e.currentTarget) {
                 if (currentSprite && e.target.name != currentSprite.name) {
                     currentSprite.tint = currentTint
                     currentTint = e.target.tint
@@ -97,15 +97,15 @@ const MaptalksCanva = ({
                 if (!currentTint) currentTint = e.target.tint
                 currentSprite = e.target
                 e.target.tint = 0xdb2777
-            }  else {
+            } else {
                 if (currentSprite && e.target != currentSprite) {
                     currentSprite.tint = currentTint
                     currentSprite = null
                     currentTint = null
                 }
-            } 
+            }
         })
-        
+
 
         map.stage.addChild(container)
         document.getElementById('map')?.appendChild(map.view)
@@ -160,7 +160,7 @@ const MaptalksCanva = ({
             setMapData(lands)
             setMap(map)
         })
-        
+
         const initialCoords = {
             x: initialX,
             y: initialY
@@ -171,16 +171,20 @@ const MaptalksCanva = ({
             legendFilter
         }
 
-/*         firstChargeLands(
-            metaverse,
-            initialCoords,
-            filters,
-            onClick,
-            onHover,
-            setMapData,
-            setMap
-        ) */
+        /*         firstChargeLands(
+                    metaverse,
+                    initialCoords,
+                    filters,
+                    onClick,
+                    onHover,
+                    setMapData,
+                    setMap
+                ) */
     }, [])
+
+    useEffect(() => {
+        map?.renderer.resize(width, height)
+    }, [width, height])
 
     /*     useEffect(() => {
         if (!map) return
@@ -266,10 +270,14 @@ const MaptalksCanva = ({
         }).addTo(map)
     }, [filter, percentFilter, legendFilter, x, y]) */
 
-    
 
-    return <div id="map"></div>
-    
+
+    return (
+        <div
+            id="map"
+            style={{ width, height }}
+        />
+    )
 }
 
 export default MaptalksCanva
