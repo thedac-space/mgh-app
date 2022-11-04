@@ -1,3 +1,4 @@
+import axios from 'axios'
 import { formatEther } from 'ethers/lib/utils'
 import { Metaverse } from '../metaverse'
 import { IAPIData } from '../types'
@@ -183,6 +184,20 @@ export const getAxieFloorPrice = async () => {
     const floorPrice = await res.json()
     console.log(floorPrice)
     return formatEther(floorPrice.data.lands.results[0].auction.currentPrice)
+}
+
+export const getSomniumSpaceFloorPrice = async () => {
+    let res = { value: 0 }
+    await axios
+        .get(process.env.ITRM_SERVICE + '/val-analytics/generalFloorPrice', {
+            params: { metaverse: 'somnium-space' },
+        })
+        .then((response) => {
+            res = response.data
+        }).catch((error) => { console.log(error) })
+    const floorPrice = res.value
+    return formatEther(floorPrice)
+
 }
 
 export const getAxieDailyTradeVolume = async () => {

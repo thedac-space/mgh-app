@@ -335,7 +335,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                                             onHover={(x: number, y: number, name?: string, owner?: string) => {
                                                 handleHover(x, y, name, owner);
                                             }}
-                                            onClick={(land: ValuationTile, x: number, y: number, name?: string) => {
+                                            onClick={(land: ValuationTile, x: number, y: number) => {
                                                 if (isSelected(x, y)) {
                                                     setSelected(undefined);
                                                 } else {
@@ -359,7 +359,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                                             legendFilter={legendFilter}
                                             width={dims.width}
                                             height={dims.height}
-                                            onClick={(land, x, y, name?: string) => {
+                                            onClick={(land, x, y) => {
                                                 if (isSelected(x, y)) {
                                                     setSelected(undefined);
                                                 } else {

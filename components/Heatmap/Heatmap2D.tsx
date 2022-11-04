@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
     Atlas,
     Layer,
@@ -13,7 +13,6 @@ import { Metaverse } from '../../lib/metaverse'
 import { setColours } from '../../lib/heatmap/valuationColoring'
 import * as PIXI from 'pixi.js'
 import { Viewport } from 'pixi-viewport'
-import { firstChargeLands, rectangularLayer } from './maptalksLib'
 import { io } from 'socket.io-client'
 import { Sprite } from 'pixi.js'
 
@@ -32,7 +31,7 @@ interface IMaptalksCanva {
         name: string | undefined,
         owner: string | undefined
     ) => void
-    onClick: (land: ValuationTile, x: number, y: number, name: string) => void
+    onClick: (land: ValuationTile, x: number, y: number) => void
     metaverse: Metaverse
     x: number | undefined
     y: number | undefined
@@ -63,7 +62,7 @@ const MaptalksCanva = ({
     initialY,
 }: IMaptalksCanva) => {
     const [map, setMap] = useState<PIXI.Application>()
-    const [mapData, setMapData] = useState<Record<string, ValuationTile>>()
+    const [mapData, setMapData] = useState<Record<string, ValuationTile>>({})
 
     const rgbToHex = (values: any) => {
         let a = values.split(',')
@@ -86,6 +85,7 @@ const MaptalksCanva = ({
             passiveWheel: false,
             interaction: map.renderer.plugins.interaction,
         })
+        let lands: any = {}
         container.drag().pinch().wheel() //pixi-viewport docs
         let currentTint: any
         let currentSprite: any
@@ -98,7 +98,12 @@ const MaptalksCanva = ({
                 if (!currentTint) currentTint = e.target.tint
                 currentSprite = e.target
                 e.target.tint = 0xdb2777
-                onHover(e.target.position.x / 256, e.target.position.y / 256, e.target?.name, e.target?.land?.owner)
+                onHover(
+                    e.target.position.x / 256,
+                    e.target.position.y / 256,
+                    e.target?.name,
+                    lands[e.target.position.x / 256 + ',' + e.target.position.y / 256]?.owner
+                )
             } else {
                 if (currentSprite && e.target != currentSprite) {
                     currentSprite.tint = currentTint
@@ -109,10 +114,12 @@ const MaptalksCanva = ({
         })
 
         container.on('click', (e: any) => {
-            alert('hola 1')
-            if (e.target) {
-                alert('hola 2')
-                onClick(e.target?.land, e.target.position.x / 256, e.target.position.y / 256, e.target?.name)
+            console.log(e)
+            if (e.target && e.target != e.currentTarget) {
+                if (e.target.land) {
+                    onClick(e.target.land, e.target.land.coords.x, e.target.land.coords.y)
+                    console.log(e.target.land)
+                }
             }
         })
 
@@ -120,7 +127,7 @@ const MaptalksCanva = ({
         document.getElementById('map')?.appendChild(map.view)
         setMap(map)
 
-        let lands: any = {}
+
         let polygons: any = []
         let count = 0
         socket.emit('render', metaverse)
@@ -153,13 +160,12 @@ const MaptalksCanva = ({
             color = color.includes('rgb')
                 ? rgbToHex(color.split('(')[1].split(')')[0])
                 : '0x' + color.split('#')[1]
-            let rectangle: any | Sprite = new PIXI.Sprite(PIXI.Texture.WHITE)
+            let rectangle: Sprite = new PIXI.Sprite(PIXI.Texture.WHITE)
             rectangle.tint = color
             rectangle.width = rectangle.height = 256
             rectangle.position.set(land.coords.x * 256, land.coords.y * 256)
             rectangle.interactive = true
             rectangle.name = land.name || land.coords.x + ',' + land.coords.y
-            rectangle.land = land
 
             container.addChild(rectangle)
             polygons.push(land)
