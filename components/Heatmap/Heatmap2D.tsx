@@ -18,7 +18,6 @@ import { Sprite } from 'pixi.js'
 
 const socket = io('http://localhost:3005', { transports: ['websocket'] })
 
-
 interface IMaptalksCanva {
     width: number | undefined
     height: number | undefined
@@ -102,7 +101,11 @@ const MaptalksCanva = ({
                     e.target.position.x / 256,
                     e.target.position.y / 256,
                     e.target?.name,
-                    lands[e.target.position.x / 256 + ',' + e.target.position.y / 256]?.owner
+                    lands[
+                        e.target.position.x / 256 +
+                            ',' +
+                            e.target.position.y / 256
+                    ]?.owner
                 )
             } else {
                 if (currentSprite && e.target != currentSprite) {
@@ -114,19 +117,17 @@ const MaptalksCanva = ({
         })
 
         container.on('click', (e: any) => {
-            console.log(e)
             if (e.target && e.target != e.currentTarget) {
-                if (e.target.land) {
-                    onClick(e.target.land, e.target.land.coords.x, e.target.land.coords.y)
-                    console.log(e.target.land)
-                }
+                const x = e.target.position.x / 256,
+                    y = e.target.position.y / 256
+                const land = lands[x + ',' + y]
+                onClick(land, x, y)
             }
         })
 
         map.stage.addChild(container)
         document.getElementById('map')?.appendChild(map.view)
         setMap(map)
-
 
         let polygons: any = []
         let count = 0
@@ -177,26 +178,12 @@ const MaptalksCanva = ({
             setMap(map)
         })
 
-        const initialCoords = {
-            x: initialX,
-            y: initialY
+        return () => {
+            document.getElementById('map')?.removeChild(map.view)
+            map.destroy()
+            onHover(0/0, 0/0, undefined, undefined)
         }
-        const filters = {
-            filter,
-            percentFilter,
-            legendFilter
-        }
-
-        /*         firstChargeLands(
-                    metaverse,
-                    initialCoords,
-                    filters,
-                    onClick,
-                    onHover,
-                    setMapData,
-                    setMap
-                ) */
-    }, [])
+    }, [metaverse])
 
     useEffect(() => {
         map?.renderer.resize(width || 0, height || 0)
@@ -286,14 +273,7 @@ const MaptalksCanva = ({
         }).addTo(map)
     }, [filter, percentFilter, legendFilter, x, y]) */
 
-
-
-    return (
-        <div
-            id="map"
-            style={{ width, height }}
-        />
-    )
+    return <div id="map" style={{ width, height }} />
 }
 
 export default MaptalksCanva
