@@ -104,8 +104,8 @@ const MaptalksCanva = ({
                     e.target?.name,
                     lands[
                         e.target.position.x / 256 +
-                            ',' +
-                            e.target.position.y / 256
+                        ',' +
+                        e.target.position.y / 256
                     ]?.owner
                 )
             } else {
@@ -122,7 +122,8 @@ const MaptalksCanva = ({
                 const x = e.target.position.x / 256,
                     y = e.target.position.y / 256
                 const land = lands[x + ',' + y]
-                onClick(land, x, y)
+                if (!e.currentTarget.moving)
+                    onClick(land, x, y)
             }
         })
 
@@ -182,7 +183,7 @@ const MaptalksCanva = ({
         return () => {
             document.getElementById('map')?.removeChild(map.view)
             map.destroy()
-            onHover(0/0, 0/0, undefined, undefined)
+            onHover(0 / 0, 0 / 0, undefined, undefined)
         }
     }, [metaverse])
 
