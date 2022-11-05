@@ -77,6 +77,7 @@ const MaptalksCanva = ({
             width,
             height,
             resolution: 1,
+            transparent: true
         })
         let container: any = new Viewport({
             worldWidth: width,
