@@ -65,10 +65,11 @@ const MaptalksCanva = ({
 
     const rgbToHex = (values: any) => {
         let a = values.split(',')
-        a.map(function (value: any) {
+        a = a.map(function (value: any) {
             value = parseInt(value).toString(16)
             return value.length == 1 ? '0' + value : value
         })
+        return '0x' + a.join('')
     }
 
     useEffect(() => {
@@ -77,7 +78,7 @@ const MaptalksCanva = ({
             width,
             height,
             resolution: 1,
-            transparent: true
+            transparent: true,
         })
         let container: any = new Viewport({
             worldWidth: width,
@@ -104,8 +105,8 @@ const MaptalksCanva = ({
                     e.target?.name,
                     lands[
                         e.target.position.x / 256 +
-                        ',' +
-                        e.target.position.y / 256
+                            ',' +
+                            e.target.position.y / 256
                     ]?.owner
                 )
             } else {
@@ -116,14 +117,19 @@ const MaptalksCanva = ({
                 }
             }
         })
-
+        let isDragging = false
+        container.on('drag-start', () => {
+            isDragging = true
+        })
+        container.on('drag-end', () => {
+            isDragging = false
+        })
         container.on('click', (e: any) => {
-            if (e.target && e.target != e.currentTarget) {
+            if (e.target && e.target != e.currentTarget && !isDragging) {
                 const x = e.target.position.x / 256,
                     y = e.target.position.y / 256
                 const land = lands[x + ',' + y]
-                if (!e.currentTarget.moving)
-                    onClick(land, x, y)
+                if (!e.currentTarget.moving) onClick(land, x, y)
             }
         })
 
