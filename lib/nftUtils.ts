@@ -45,13 +45,17 @@ export const getAxieLands = async (address: string) => {
         }),
       }
     )
-    const results = (await res.json()).data.lands.results as any[]
-    results.forEach((result) => filteredIds.push(result.tokenId))
+    try {
+      const results = (await res.json()).data.lands.results as any[]
+      results.forEach((result) => filteredIds.push(result.tokenId))
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   /* Current requests Caps at 100 Results.
    Looping and ofsetting in case user owns more than 100 lands */
-  for (let i = 0; i < 90601; ) {
+  for (let i = 0; i < 90601;) {
     await requestLands(i)
     i += 100
     if (filteredIds.length !== i) break
@@ -74,6 +78,7 @@ export const getUserNFTs = async (
     sandbox: Contracts.LAND.ETHEREUM_MAINNET.newAddress,
     decentraland: Contracts.PARCEL.ETHEREUM_MAINNET.address,
     'axie-infinity': Contracts.AXIE_LANDS.RONIN_MAINNET.address,
+    'somnium-space': Contracts.CUBES.ETHEREUM_MAINNET.address
   }
   const contract = createNFTContract(provider, (contracts as any)[metaverse])
   // Getting al transfer events that involve the user
