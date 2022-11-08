@@ -16,7 +16,7 @@ import { Viewport } from 'pixi-viewport'
 import { io } from 'socket.io-client'
 import { Container, Sprite } from 'pixi.js'
 
-const socket = io('http://localhost:3005', { transports: ['websocket'] })
+const socket = io(process.env.SOCKET_SERVICE!, { transports: ['websocket'] })
 
 interface IMaptalksCanva {
     width: number | undefined

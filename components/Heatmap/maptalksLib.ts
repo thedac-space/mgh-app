@@ -6,7 +6,7 @@ import * as maptalks from 'maptalks'
 import { filteredLayer } from "../../lib/heatmap/heatmapLayers"
 import { setColours } from "../../lib/heatmap/valuationColoring"
 
-const socket = io('http://localhost:3005', { transports: ['websocket'] })
+const socket = io(process.env.SOCKET_SERVICE!, { transports: ['websocket'] })
 
 export const firstChargeLands = (
   metaverse: Metaverse,

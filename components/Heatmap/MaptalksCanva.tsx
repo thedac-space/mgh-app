@@ -12,7 +12,7 @@ import { io } from 'socket.io-client'
 import React from 'react'
 import { Metaverse } from '../../lib/metaverse'
 import { setColours } from '../../lib/heatmap/valuationColoring'
-const socket = io('http://localhost:3005', { transports: ['websocket'] })
+const socket = io('https://01d3-186-116-221-6.ngrok.io ', { transports: ['websocket'] })
 interface IMaptalksCanva {
     width: number | string | undefined
     height: number | string | undefined
