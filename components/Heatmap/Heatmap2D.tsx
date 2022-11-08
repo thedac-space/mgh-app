@@ -14,7 +14,7 @@ import { setColours } from '../../lib/heatmap/valuationColoring'
 import * as PIXI from 'pixi.js'
 import { Viewport } from 'pixi-viewport'
 import { io } from 'socket.io-client'
-import { Sprite } from 'pixi.js'
+import { Container, Sprite } from 'pixi.js'
 
 const socket = io('http://localhost:3005', { transports: ['websocket'] })
 
@@ -62,7 +62,9 @@ const MaptalksCanva = ({
 }: IMaptalksCanva) => {
     const [map, setMap] = useState<PIXI.Application>()
     const [mapData, setMapData] = useState<Record<string, ValuationTile>>({})
-
+    const CHUNK_SIZE = 32
+    const TILE_SIZE = 64
+    const BLOCK_SIZE = CHUNK_SIZE * TILE_SIZE
     const rgbToHex = (values: any) => {
         let a = values.split(',')
         a = a.map(function (value: any) {
@@ -83,11 +85,12 @@ const MaptalksCanva = ({
         let container: any = new Viewport({
             worldWidth: width,
             worldHeight: height,
-            passiveWheel: false,
             interaction: map.renderer.plugins.interaction,
+            passiveWheel: false,
         })
         let lands: any = {}
-        container.drag().pinch().wheel() //pixi-viewport docs
+        let chunks: any = {}
+        container.drag().pinch().wheel()
         let currentTint: any
         let currentSprite: any
         container.on('mousemove', (e: any): any => {
@@ -99,14 +102,16 @@ const MaptalksCanva = ({
                 if (!currentTint) currentTint = e.target.tint
                 currentSprite = e.target
                 e.target.tint = 0xdb2777
+
+
                 onHover(
-                    e.target.position.x / 256,
-                    e.target.position.y / 256,
+                    e.target.landX,
+                    e.target.landY,
                     e.target?.name,
                     lands[
-                        e.target.position.x / 256 +
+                        e.target.landX +
                             ',' +
-                            e.target.position.y / 256
+                            e.target.landY
                     ]?.owner
                 )
             } else {
@@ -126,10 +131,46 @@ const MaptalksCanva = ({
         })
         container.on('click', (e: any) => {
             if (e.target && e.target != e.currentTarget && !isDragging) {
-                const x = e.target.position.x / 256,
-                    y = e.target.position.y / 256
+                const x = e.target.position.x / TILE_SIZE,
+                    y = e.target.position.y / TILE_SIZE
                 const land = lands[x + ',' + y]
-                if (!e.currentTarget.moving) onClick(land, x, y)
+                onClick(land, x, y)
+            }
+        })
+        let previousTopBlock: any,
+            previousLeftBlock: any,
+            previousRightBlock: any,
+            previousBottomBlock: any
+        container.on('moved', () => {
+            const { left, top, worldScreenWidth, worldScreenHeight } = container
+            const topBlock = Math.floor(top / BLOCK_SIZE)
+            const leftBlock = Math.floor(left / BLOCK_SIZE)
+            const rightBlock = Math.ceil((left + worldScreenWidth) / BLOCK_SIZE)
+            const bottomBlock = Math.ceil(
+                (top + worldScreenHeight) / BLOCK_SIZE
+            )
+
+            const skip =
+                previousTopBlock === topBlock &&
+                previousLeftBlock === leftBlock &&
+                previousRightBlock === rightBlock &&
+                previousBottomBlock === bottomBlock
+
+            if (skip) {
+                return
+            }
+
+            previousTopBlock = topBlock
+            previousLeftBlock = leftBlock
+            previousRightBlock = rightBlock
+            previousBottomBlock = bottomBlock
+            for (const key in chunks) {
+                const { x, y, width, height } = chunks[key]
+                chunks[key].visible =
+                    left < x + width &&
+                    left + worldScreenWidth > x &&
+                    top < y + height &&
+                    top + worldScreenHeight > y
             }
         })
 
@@ -169,18 +210,39 @@ const MaptalksCanva = ({
             color = color.includes('rgb')
                 ? rgbToHex(color.split('(')[1].split(')')[0])
                 : '0x' + color.split('#')[1]
-            let rectangle: Sprite = new PIXI.Sprite(PIXI.Texture.WHITE)
+            let rectangle: any = new PIXI.Sprite(PIXI.Texture.WHITE)
             rectangle.tint = color
-            rectangle.width = rectangle.height = 256
-            rectangle.position.set(land.coords.x * 256, land.coords.y * 256)
+            rectangle.width = rectangle.height = TILE_SIZE
             rectangle.interactive = true
             rectangle.name = land.name || land.coords.x + ',' + land.coords.y
+            const chunkX = Math.floor(land.coords.x / CHUNK_SIZE)
+            const chunkY = Math.floor(land.coords.y / CHUNK_SIZE)
+            const chunkKey = `${chunkX}:${chunkY}`
+            let chunkContainer = chunks[chunkKey]
+            rectangle.landX=land.coords.x
+            rectangle.landY=land.coords.y
+            rectangle.position.set(
+                land.coords.x * TILE_SIZE - chunkX * BLOCK_SIZE,
+                land.coords.y * TILE_SIZE - chunkY * BLOCK_SIZE
+            )
+            if (!chunkContainer) {
+                chunkContainer = chunks[chunkKey] = new Container()
+                chunkContainer.position.set(
+                    chunkX * BLOCK_SIZE,
+                    chunkY * BLOCK_SIZE
+                )
+            }
 
-            container.addChild(rectangle)
+            chunkContainer.addChild(rectangle)
+
+            container.addChild(chunkContainer)
             polygons.push(land)
         })
 
         socket.on('render-finish', () => {
+            /*             for (const key in chunks) {
+                chunks[key].cacheAsBitmap =true
+            } */
             console.log('FINISH')
             setMapData(lands)
             setMap(map)
