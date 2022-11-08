@@ -128,7 +128,31 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
         setCardData(undefined)
         setMapState('loadingQuery')
         setIsVisible(true)
-        if (!lands) {
+        if (lands && metaverse) {
+            try {
+                const landData = findHeatmapLand(
+                    lands,
+                    prices,
+                    metaverse,
+                    tokenId,
+                    {
+                        x: x,
+                        y: y,
+                    },
+                    filterBy
+                )
+                setSelected({
+                    x: landData?.landCoords.x,
+                    y: landData?.landCoords.y,
+                })
+                setMapState('loadedQuery')
+                setCardData(landData)
+            } catch (e) {
+                setMapState('errorQuery')
+                return setTimeout(() => setIsVisible(false), 1100)
+            }
+        } else if (!lands && !metaverse) return
+        else if (!lands) {
             let data
             const parameters =
                 x && y ? `x=${x}&y=${y}` : tokenId ? `tokenId=${tokenId}` : null
@@ -157,29 +181,6 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                 setMapState('errorQuery')
                 return setTimeout(() => setIsVisible(false), 1100)
             }
-        }
-        if (!lands || !metaverse) return
-        try {
-            const landData = findHeatmapLand(
-                lands,
-                prices,
-                metaverse,
-                tokenId,
-                {
-                    x: x,
-                    y: y,
-                },
-                filterBy
-            )
-            setSelected({
-                x: landData?.landCoords.x,
-                y: landData?.landCoords.y,
-            })
-            setMapState('loadedQuery')
-            setCardData(landData)
-        } catch (e) {
-            setMapState('errorQuery')
-            return setTimeout(() => setIsVisible(false), 1100)
         }
     }
 
@@ -217,7 +218,6 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 
         return () => window.removeEventListener('resize', resize)
     }, [metaverse, address])
-
 
     return (
         <>
