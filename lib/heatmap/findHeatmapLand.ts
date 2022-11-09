@@ -44,8 +44,8 @@ export const findHeatmapLand = (
   land:  ValuationTile,
   prices: ICoinPrices,
   metaverse: Metaverse,
+  coords: LandCoords,
   tokenId?: string,
-  coords?: LandCoords,
   filterBy?: MapFilter
 ) => {
   const landOptions = {
@@ -70,7 +70,7 @@ export const findHeatmapLand = (
   }
 
   const name = land.name ? land.name : undefined
-  const landCoords = { x: land.coords ? land.coords.x : land.center.x, y: land.coords ? land.coords.y : land.center.y }
+  const landCoords = { x:  coords.x , y: coords.y }
   setOpenSeaLink()
 
   const predictions = convertETHPrediction(
