@@ -3,6 +3,7 @@ import { typedKeys } from '../../lib/utilities'
 import { Metaverse } from '../../lib/metaverse'
 import axios from 'axios'
 import { RiLoader3Fill } from 'react-icons/ri'
+import Image from 'next/image'
 
 interface Props {
   metaverse: Metaverse
@@ -60,11 +61,16 @@ const TopPicksLands = ({ metaverse }: Props) => {
             {typedKeys(picks).map((key) => {
               return (
                 <tr key={key} className='flex w-full mb-4'>
-                  <td className='flex justify-start px-4 content-center w-1/5'>
-                    <img
-                      src={picks[key]['images']['image_url']}
-                      className='lg:h-12 lg:w-12 md:h-8 md:w-8 bg-white rounded-full border mb-4 mt-4 w-6 h-6'
-                    />
+                  <td className='flex justify-start px-4 content-center w-1/5 relative'>
+                    <div className='relative lg:h-12 lg:w-12 md:h-8 md:w-8 bg-white rounded-full border mb-4 mt-4 w-6 h-6'>
+                      <Image
+                        src={picks[key]['images']['image_url']}
+                        layout='fill'
+                        className='rounded-full'
+                        alt='land image'
+                        loading='lazy'
+                      />
+                    </div>
                   </td>
                   <td className='flex justify-start px-4 content-center items-center text-sky-400 pt-0.5 w-1/5 hover:underline'>
                     <a

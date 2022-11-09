@@ -22,6 +22,7 @@ module.exports = {
       'api.sandbox.game',
       'lh3.googleusercontent.com',
       'cdn.axieinfinity.com',
+      'i.seadn.io'
     ],
   },
   env: { ITRM_SERVICE: process.env.ITRM_SERVICE,SOCKET_SERVICE:process.env.SOCKET_SERVICE }
