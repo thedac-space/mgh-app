@@ -261,7 +261,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                     )}
                     {metaverse && (
                         <>
-                            <div className="absolute top-0 z-20 flex gap-4 p-2 md:w-fit w-full">
+                            <div className="absolute top-0 z-20 flex gap-4 p-2 md:w-fit w-full unselectable">
                                 <div>
                                     {/* Top left Coordinates */}
                                     {metaverse === 'somnium-space' ? (
@@ -309,7 +309,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                                 <div
                                     className={
                                         (isVisible && 'hidden') +
-                                        ' md:block absolute z-20 bottom-2 left-2'
+                                        ' md:block absolute z-20 bottom-2 left-2 unselectable'
                                     }
                                 >
                                     <ColorGuide
@@ -466,7 +466,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                         <h3 className="text-transparent bg-clip-text lg:text-3xl text-2xl bg-gradient-to-br from-blue-500 via-green-400 to-green-500 mb-0 sm:mb-2">
                             Our Top Picks
                         </h3>
-                        <TopPicksLands metaverse={metaverse} />
+                       {/*  <TopPicksLands metaverse={metaverse} /> */}
                         <h3 className="text-transparent bg-clip-text lg:text-3xl text-2xl bg-gradient-to-br from-blue-500 via-green-400 to-green-500 mb-0 sm:mb-2">
                             The Top Sells
                         </h3>
