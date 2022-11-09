@@ -91,7 +91,8 @@ module.exports = {
       },
       fontFamily: {
         // 'sans': ['Quicksand', 'sans-serif'],
-        // 'sans': ['Montserrat', 'sans-serif'],
+        'mont': ['Montserrat', 'sans-serif'],
+        'plus' : ['PlusJakartaSans', 'sans-serif'],
         'sans': ['Alterwave', 'sans-serif'],
         'prompt': ['Prompt', 'sans-serif'],
         'lighters': ['Lighters', 'sans-serif']
@@ -112,9 +113,12 @@ module.exports = {
         grey: {
           darker: '#24292e',
           other: '#333e4a',
-          darkest: '#101010',
-          dark: '#3c4858',
-          DEFAULT: '#c0ccda',
+          darkest: '#FFFFFF',
+          content: '#54575C',
+          sidebar: '#EDEDF5',
+          icon: '#9B9B9B',
+          dark: '#ECEEF8',
+          DEFAULT: '#FFFFFF',
           light: '#e0e6ed',
           lightest: '#f9fafc',
         }

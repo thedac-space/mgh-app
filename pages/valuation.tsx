@@ -244,18 +244,19 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
         />
       </Head>
       <section className="w-full h-full relative">
-        {/* Main Header */}
-        <div className="gray-box flex flex-col lg:flex-row justify-between items-center mb-8">
-          <h1 className="text-transparent bg-clip-text lg:text-5xl text-3xl bg-gradient-to-br from-blue-500 via-green-400 to-green-500 mb-0 sm:mb-2">
-            LAND Valuation
-          </h1>
+        <div className="bg-[#F8F9FD] rounded-lg p-8">
+          {/* Main Header */}
+          <div className="border-t border-l border-white/10 rounded-xl p-5 w-full bg-opacity-30; flex flex-col lg:flex-row justify-between items-center mb-8 bg-grey-dark">
+            <h1 className="text-grey-content font-plus font-normal rounded-2xl lg:text-5xl text-3xl mb-0 sm:mb-2">
+              LAND Valuation
+            </h1>
           {/* Links Wrapper */}
           <div className="flex gap-5">
             {/* Links */}
             {["portfolio", "watchlist", "analytics"].map((option) => (
               <Link key={option} href={`/${option}`}>
-                <a className="hover:scale-105 font-medium text-white px-5 py-3 flex items-center justify-center rounded-xl bg-gradient-to-br from-blue-500/30 to-green-500/30 transition-all duration-300">
-                  <span className="pt-1 text-xl">{formatName(option)}</span>
+                <a className="hover:scale-105  px-8 py-3 flex items-center justify-center rounded-3xl shadowNormal">
+                  <span className="pt-1 font-bold font-plus text-grey-content text-2xl">{formatName(option)}</span>
                 </a>
               </Link>
             ))}
@@ -491,6 +492,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
             </div>
           </Fade>
         )}
+        </div>
       </section>
     </>
   );

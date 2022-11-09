@@ -1,4 +1,5 @@
 import React from 'react'
+import { BsExclamationCircleFill } from 'react-icons/bs'
 import { Metaverse } from '../../lib/metaverse'
 import { formatName, typedKeys } from '../../lib/utilities'
 import { OptimizedImage } from '../General'
@@ -19,30 +20,37 @@ const MapInitMvChoice = ({ metaverse, setMetaverse }: Props) => {
   return (
     <div className='w-full h-full p-8'>
       {/* Title */}
-      <h2 className='text-transparent bg-clip-text lg:text-5xl text-3xl bg-gradient-to-br from-blue-500 via-green-400 to-green-500 text-center mb-8'>
+      <h2 className='text-grey-content font-plus font-normal rounded-2xl lg:text-5xl text-3xl text-center mb-8'>
         Choose a Metaverse
       </h2>
 
+      <div className='flex space-x-2 items-center justify-center bg-grey-dark rounded-xl w-full p-2'>
+        <BsExclamationCircleFill className={`text-2xl z-10 text-[#6196FF]`}/>
+        <p className='flex text-xs xs:text-base xl:text-lg font-normal font-plus text-grey-content'>
+          You can have &nbsp;<p className='font-bold'>5 free valuations</p>, after that pro version is needed
+        </p>
+      </div>
+
       {/* Metaverse Buttons */}
-      <div className='flex justify-center gap-4'>
+      <div className='flex justify-center gap-4 pt-10'>
         {typedKeys(mvOptions).map((landKey) => (
           <button
             key={landKey}
             onClick={() => setMetaverse(landKey)}
-            className={`flex flex-col items-center justify-center space-y-2 rounded-xl cursor-pointer p-2 px-3 pt-4 md:w-30 md:h-[9.7rem] w-24 h-24 group focus:outline-none ${metaverse === landKey
-                ? 'border-opacity-100 text-gray-200'
-                : 'border-opacity-40 hover:border-opacity-100 text-gray-400 hover:text-gray-200'
-              } border border-gray-400 focus:border-opacity-100 transition duration-300 ease-in-out`}
+            className={`flex flex-col shadowMetaverse items-center justify-center space-y-2 rounded-xl cursor-pointer p-2 px-3 pt-4 w-[200px] h-[250px] group focus:outline-none ${metaverse === landKey
+                ? ' text-gray-200'
+                : ' hover:border-opacity-100  '
+              }`}
           >
             <OptimizedImage
               src={mvOptions[landKey].logo}
-              height={60}
-              width={60}
+              height={100}
+              width={100}
               objectFit='contain'
               className={`w-10 ${metaverse === landKey ? 'grayscale-0' : 'grayscale'
                 } group-hover:grayscale-0 transition duration-300 ease-in-out`}
             />
-            <p className='font-medium text-xs md:text-sm pt-1'>
+            <p className='text-grey-content font-plus font-normal text-lg md:text-xl pt-7'>
               {formatName(landKey)}
             </p>
           </button>

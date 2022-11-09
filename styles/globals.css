@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 @layer base {
-  /* @font-face {
+  @font-face {
     font-family: 'Montserrat';
     font-weight: 100;
     src: url("./fonts/Montserrat/Montserrat-Thin.ttf");
@@ -27,7 +27,7 @@
     font-family: 'Montserrat';
     font-weight: 800;
     src: url("./fonts/Montserrat/Montserrat-Bold.ttf");
-  } */
+  }
 
   .scrollbar--y::-webkit-scrollbar {
     width: 8px;
@@ -71,7 +71,29 @@
   }
 
   @font-face {
-    font-family: 'Lighters';
+    font-family: 'PlusJakartaSans';
+    font-weight: 200;
+    src: url('./fonts/PlusJacarta/PlusJakartaSans-ExtraLight.ttf');
+  }
+  @font-face {
+    font-family: 'PlusJakartaSans';
+    font-weight: 300;
+    src: url('./fonts/PlusJacarta/PlusJakartaSans-Light.ttf');
+  }
+  @font-face {
+    font-family: 'PlusJakartaSans';
+    font-weight: 400;
+    src: url('./fonts/PlusJacarta/PlusJakartaSans-Regular.ttf');
+  }
+  @font-face {
+    font-family: 'PlusJakartaSans';
+    font-weight: 700;
+    src: url('./fonts/PlusJacarta/PlusJakartaSans-Bold.ttf');
+  }
+
+
+  @font-face {
+    font-family: 'LighPlusJakartaSansters';
     font-weight: 400;
     src: url('./fonts/Lighters-Regular.ttf');
   }
@@ -613,3 +635,26 @@ h6 {
   display: grid;
   grid-template-columns: repeat(264, 1fr);
 }
+
+/*layout*/
+
+.shadowNavItem {
+  background: #EBEBF3;
+  border: 1px solid #FFFFFF;
+  box-shadow: -2px -2px 4px #FFFFFF, 4px 6px 14px #CBCFDB, inset -2px -3px 4px #FFFFFF, inset 4px 1px 9px rgba(141, 141, 141, 0.25);
+}
+.shadowNormal {
+  background: #F9FAFB;
+  box-shadow: 4px 6px 14px #CBCFDB, -2px -2px 4px #FFFFFF;
+}
+.shadowDiv {
+  background: #F9FAFB;
+  box-shadow: 2.87012px 3.58765px 4.30518px #DADEF0, -4.30518px -2.87012px 4.30518px #FFFFFF;
+  border-radius: 13px;
+}
+.shadowMetaverse {
+  background: #F9FAFB;
+  box-shadow: inset -18px -13px 24px #FFFFFF, inset 11px 11px 33px #E9ECF7;
+  border-radius: 15.7857px;
+}
+
