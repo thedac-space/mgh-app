@@ -134,19 +134,19 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                     lands,
                     prices,
                     metaverse,
-                    tokenId,
                     {
                         x: x,
                         y: y,
                     },
+                    tokenId,
                     filterBy
                 )
                 setSelected({
-                    x: landData?.landCoords.x,
-                    y: landData?.landCoords.y,
+                    x,
+                    y,
                 })
                 setMapState('loadedQuery')
-                setCardData(landData)
+                setCardData(landData as CardData)
             } catch (e) {
                 setMapState('errorQuery')
                 return setTimeout(() => setIsVisible(false), 1100)

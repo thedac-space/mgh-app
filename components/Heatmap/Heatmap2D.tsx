@@ -51,19 +51,12 @@ const MaptalksCanva = ({
     onHover,
     onClick,
     metaverse,
-    x = 0,
-    y = 0,
-    minX,
-    maxX,
-    minY,
-    maxY,
-    initialX,
-    initialY,
 }: IMaptalksCanva) => {
     const [map, setMap] = useState<PIXI.Application>()
     const [mapData, setMapData] = useState<Record<string, ValuationTile>>({})
     const CHUNK_SIZE = 32
     const TILE_SIZE = 64
+    const BORDE_SIZE = 14
     const BLOCK_SIZE = CHUNK_SIZE * TILE_SIZE
     const rgbToHex = (values: any) => {
         let a = values.split(',')
@@ -94,25 +87,36 @@ const MaptalksCanva = ({
         let currentTint: any
         let currentSprite: any
         container.on('mousemove', (e: any): any => {
-            if (e.target && e.target != e.currentTarget) {
-                if (currentSprite && e.target.name != currentSprite.name) {
+            let { x, y } = container.toLocal(e.data.global)
+
+            x = Math.floor(x / TILE_SIZE)
+            y = Math.floor(y / TILE_SIZE)
+
+            const chunkX = Math.floor(x / CHUNK_SIZE)
+            const chunkY = Math.floor(y / CHUNK_SIZE)
+            const chunkKey = `${chunkX}:${chunkY}`
+            let chunkContainer = chunks[chunkKey]
+
+            x = x * TILE_SIZE - chunkX * BLOCK_SIZE
+            y = y * TILE_SIZE - chunkY * BLOCK_SIZE
+
+            const child = chunkContainer?.children.find(
+                (child: any) => child.x === x && child.y === y
+            )
+            if (child) {
+                if (currentSprite && child.name != child) {
                     currentSprite.tint = currentTint
-                    currentTint = e.target.tint
+                    currentTint = child.tint
                 }
-                if (!currentTint) currentTint = e.target.tint
-                currentSprite = e.target
-                e.target.tint = 0xdb2777
-
-
+                if (!currentTint) currentTint = child.tint
+                currentSprite = child
+                currentSprite.tint = 0xdb2777
                 onHover(
-                    e.target.landX,
-                    e.target.landY,
-                    e.target?.name,
-                    lands[
-                        e.target.landX +
-                            ',' +
-                            e.target.landY
-                    ]?.owner
+                    currentSprite.landX,
+                    currentSprite.landY * -1,
+                    currentSprite?.name,
+                    lands[`${currentSprite.landX},${currentSprite.landY}`]
+                        ?.owner
                 )
             } else {
                 if (currentSprite && e.target != currentSprite) {
@@ -130,11 +134,11 @@ const MaptalksCanva = ({
             isDragging = false
         })
         container.on('click', (e: any) => {
-            if (e.target && e.target != e.currentTarget && !isDragging) {
-                const x = e.target.position.x / TILE_SIZE,
-                    y = e.target.position.y / TILE_SIZE
+            if (currentSprite && !isDragging) {
+                const x = currentSprite.landX,
+                    y = currentSprite.landY
                 const land = lands[x + ',' + y]
-                onClick(land, x, y)
+                onClick(land, x, y * -1)
             }
         })
         let previousTopBlock: any,
@@ -179,15 +183,12 @@ const MaptalksCanva = ({
         setMap(map)
 
         let polygons: any = []
-        let count = 0
         socket.emit('render', metaverse)
         socket.on('render', (land: any) => {
-            count++
             let name = ''
+            land.coords.y*= -1
             if (land.coords) {
-                name = land?.coords.x + ',' + land?.coords.y
-            } else {
-                name = land?.center.x + ',' + land?.center.y
+                name = land.coords.x + ',' + land.coords.y
             }
             lands[name] = land!
             lands[name].land_id = land.tokenId
@@ -210,17 +211,17 @@ const MaptalksCanva = ({
             color = color.includes('rgb')
                 ? rgbToHex(color.split('(')[1].split(')')[0])
                 : '0x' + color.split('#')[1]
-            let rectangle: any = new PIXI.Sprite(PIXI.Texture.WHITE)
-            rectangle.tint = color
-            rectangle.width = rectangle.height = TILE_SIZE
-            rectangle.interactive = true
-            rectangle.name = land.name || land.coords.x + ',' + land.coords.y
+            const rectangle: any = new PIXI.Sprite(PIXI.Texture.WHITE)
             const chunkX = Math.floor(land.coords.x / CHUNK_SIZE)
             const chunkY = Math.floor(land.coords.y / CHUNK_SIZE)
             const chunkKey = `${chunkX}:${chunkY}`
             let chunkContainer = chunks[chunkKey]
-            rectangle.landX=land.coords.x
-            rectangle.landY=land.coords.y
+            rectangle.tint = color
+            rectangle.width = rectangle.height = TILE_SIZE - BORDE_SIZE
+            rectangle.name = land.name 
+            rectangle.landX = land.coords.x
+            rectangle.landY = land.coords.y
+
             rectangle.position.set(
                 land.coords.x * TILE_SIZE - chunkX * BLOCK_SIZE,
                 land.coords.y * TILE_SIZE - chunkY * BLOCK_SIZE
@@ -240,9 +241,6 @@ const MaptalksCanva = ({
         })
 
         socket.on('render-finish', () => {
-            /*             for (const key in chunks) {
-                chunks[key].cacheAsBitmap =true
-            } */
             console.log('FINISH')
             setMapData(lands)
             setMap(map)
