@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
     Atlas,
     Layer,
@@ -51,9 +51,12 @@ const MaptalksCanva = ({
     onHover,
     onClick,
     metaverse,
+    x,
+    y,
 }: IMaptalksCanva) => {
     const [map, setMap] = useState<PIXI.Application>()
-    const [mapData, setMapData] = useState<Record<string, ValuationTile>>({})
+    const [mapData, setMapData] = useState()
+    const [chunks, setChunks] = useState<any>()
     const CHUNK_SIZE = 32
     const TILE_SIZE = 64
     const BORDE_SIZE = 14
@@ -68,19 +71,21 @@ const MaptalksCanva = ({
     }
 
     useEffect(() => {
-        let map: any
-        map = new PIXI.Application({
+        let map: any = new PIXI.Application({
             width,
             height,
             resolution: 1,
             transparent: true,
         })
+
         let container: any = new Viewport({
             worldWidth: width,
             worldHeight: height,
             interaction: map.renderer.plugins.interaction,
             passiveWheel: false,
         })
+        setMap(map)
+
         let lands: any = {}
         let chunks: any = {}
         container.drag().pinch().wheel()
@@ -186,7 +191,7 @@ const MaptalksCanva = ({
         socket.emit('render', metaverse)
         socket.on('render', (land: any) => {
             let name = ''
-            land.coords.y*= -1
+            land.coords.y *= -1
             if (land.coords) {
                 name = land.coords.x + ',' + land.coords.y
             }
@@ -218,10 +223,9 @@ const MaptalksCanva = ({
             let chunkContainer = chunks[chunkKey]
             rectangle.tint = color
             rectangle.width = rectangle.height = TILE_SIZE - BORDE_SIZE
-            rectangle.name = land.name 
+            rectangle.name = land.name
             rectangle.landX = land.coords.x
             rectangle.landY = land.coords.y
-
             rectangle.position.set(
                 land.coords.x * TILE_SIZE - chunkX * BLOCK_SIZE,
                 land.coords.y * TILE_SIZE - chunkY * BLOCK_SIZE
@@ -232,18 +236,15 @@ const MaptalksCanva = ({
                     chunkX * BLOCK_SIZE,
                     chunkY * BLOCK_SIZE
                 )
+                setChunks(chunks)
             }
-
             chunkContainer.addChild(rectangle)
-
             container.addChild(chunkContainer)
-            polygons.push(land)
         })
 
         socket.on('render-finish', () => {
             console.log('FINISH')
             setMapData(lands)
-            setMap(map)
         })
 
         return () => {
@@ -257,89 +258,29 @@ const MaptalksCanva = ({
         map?.renderer.resize(width || 0, height || 0)
     }, [width, height])
 
-    /*     useEffect(() => {
-        if (!map) return
-        let lands: any = []
-        map.removeLayer('vector')
+    useEffect(() => {
+        if (!chunks) return
         let coloredAtlas = setColours(mapData!, filter)
-        if (map && x && y) {
-            map.setCenter(new maptalks.Coordinate(x / 10, y / 10))
-        }
-
-        Object.values(mapData!).forEach((value: any) => {
-            let tile: any
-            tile = filteredLayer(
-                value.coords.x,
-                value.coords.y,
-                {
-                    ITRM: coloredAtlas,
-                    decentraland: undefined,
-                } as Atlas,
-                filter,
-                percentFilter,
-                legendFilter
-            )
-            let { color } = tile
-            let borderColor = '#000'
-            let borderSize = 0
-
-            //set color if the land is selected
-            if (value.coords.x == x && value.coords.y == y) {
-                color = '#ff9990'
-                borderColor = '#ff0044'
-                borderSize = 3
+        for (const key in chunks) {
+            for (const child of chunks[key].children) {
+                let tile: any = filteredLayer(
+                    child.landX,
+                    child.landY,
+                    {
+                        ITRM: coloredAtlas,
+                        decentraland: undefined,
+                    } as Atlas,
+                    filter,
+                    percentFilter,
+                    legendFilter
+                )
+                let { color } = tile
+                child.tint = color.includes('rgb')
+                ? rgbToHex(color.split('(')[1].split(')')[0])
+                : '0x' + color.split('#')[1]
             }
-
-            let polygon = new maptalks.Rectangle(
-                new maptalks.Coordinate(
-                    value.coords.x / 10,
-                    value.coords.y / 10
-                ),
-                10000,
-                10000,
-                {
-                    symbol: {
-                        lineWidth: borderSize,
-                        lineColor: borderColor,
-                        polygonFill: color,
-                        polygonOpacity: 1,
-                    },
-                    cursor: 'pointer',
-                    enableSimplify: true,
-                }
-            )
-                .on('click', () => {
-                    onClick(value, value.name)
-                })
-                .on('mouseenter', (e) => {
-                    e.target.updateSymbol({
-                        polygonFill: '#db2777',
-                        lineWidth: 3,
-                        lineColor: '#db2777',
-                    })
-                    onHover(
-                        value.coords?.x,
-                        value.coords?.y,
-                        value.name,
-                        value.owner
-                    )
-                })
-                .on('mouseout', (e) => {
-                    e.target.updateSymbol({
-                        polygonFill: color,
-                        lineWidth: borderSize,
-                        lineColor: borderColor,
-                    })
-                })
-            lands.push(polygon)
-        })
-
-        new maptalks.VectorLayer('vector', lands, {
-            forceRenderOnMoving: true,
-            forceRenderOnRotating: true,
-            forceRenderOnZooming: true,
-        }).addTo(map)
-    }, [filter, percentFilter, legendFilter, x, y]) */
+        }
+    }, [filter, percentFilter, legendFilter])
 
     return <div id="map" style={{ width, height }} />
 }
