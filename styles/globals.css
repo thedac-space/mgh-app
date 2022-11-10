@@ -652,9 +652,27 @@ h6 {
   box-shadow: 2.87012px 3.58765px 4.30518px #DADEF0, -4.30518px -2.87012px 4.30518px #FFFFFF;
   border-radius: 13px;
 }
+
+.stake{
+  background: #F9FAFB;
+  box-shadow: -14.8774px -10.7448px 19.8365px #FFFFFF, 9px 11px 37px #E9ECF7;
+  border-radius: 9.06334px;
+}
 .shadowMetaverse {
   background: #F9FAFB;
   box-shadow: inset -18px -13px 24px #FFFFFF, inset 11px 11px 33px #E9ECF7;
   border-radius: 15.7857px;
 }
+.shadowCoord {
+  background: #F8F9FA;
+  box-shadow: inset 2.87012px 2.87012px 2.87012px #D7DEEB;
+  border-radius: 7px;
+}
 
+.stakestyletext {
+  background: linear-gradient(184.91deg, #BAD6FF -31.9%, #005897 108.8%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+
+}

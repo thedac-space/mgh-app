@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Fade } from 'react-awesome-reveal'
+import { AiFillQuestionCircle } from 'react-icons/ai'
 import { BsQuestionCircle } from 'react-icons/bs'
 import { IoIosArrowDown } from 'react-icons/io'
 import { getState, typedKeys } from '../../lib/utilities'
@@ -64,7 +65,7 @@ const MapSearch = ({ mapState, handleMapSelection }: Props) => {
     <div className='flex flex-col gap-6 md:absolute h-16 md:h-auto w-[190px]'>
       {/* Search */}
       <form
-        className='gray-box bg-opacity-100'
+        className='gray-box bg-[#F9FAFB]'
         onSubmit={(e) => searchOptions[searchBy].search(e)}
       >
         <div
@@ -77,7 +78,7 @@ const MapSearch = ({ mapState, handleMapSelection }: Props) => {
           <p
             className={
               (opened && 'mb-4') +
-              ' font-semibold text-gray-200 md:text-lg md:pt-1 whitespace-nowrap'
+              ' font-bold font-plus text-grey-content md:text-lg md:pt-1 whitespace-nowrap'
             }
           >
             Search by
@@ -86,7 +87,7 @@ const MapSearch = ({ mapState, handleMapSelection }: Props) => {
             <IoIosArrowDown
               className={
                 (opened ? 'rotate-180' : '') +
-                ' transition-all duration-500 relative bottom-[6px] text-gray-200'
+                ' transition-all duration-500 relative bottom-[6px] text-grey-content'
               }
             />
           )}
@@ -104,16 +105,16 @@ const MapSearch = ({ mapState, handleMapSelection }: Props) => {
                     checked={searchBy === filter}
                     onChange={() => setSearchBy(filter)}
                   />
-                  <label className='text-gray-200 text-sm font-semibold'>
+                  <label className='text-grey-content font-plus text-sm font-bold'>
                     {filter[0].toLocaleUpperCase() + filter.substring(1)}
                   </label>
                   {searchOptions[filter].hasGuide && (
-                    <>
-                      <BsQuestionCircle className='text-gray-300 cursor-pointer peer relative bottom-[2px]' />
+                    <div className='items-center justify-center'>
+                      <AiFillQuestionCircle className='text-grey-content cursor-pointer peer relative bottom-[2px]' />
                       <p className='absolute -top-7 border border-gray-500 -left-6 xs:left-0 p-2 rounded-lg bg-black bg-opacity-10 backdrop-filter backdrop-blur font-medium text-xs text-gray-200 hidden peer-hover:block w-70'>
                         Find LAND on Opensea &gt; Details &gt; Token ID
                       </p>
-                    </>
+                    </div>
                   )}
                 </span>
               ))}
@@ -142,7 +143,7 @@ const MapSearch = ({ mapState, handleMapSelection }: Props) => {
                       }
                       value={coordinates[coord]}
                       placeholder={coord}
-                      className='font-semibold border-gray-300 placeholder-gray-300 bg-transparent block w-16  text-white p-3 focus:outline-none border border-opacity-40 hover:border-opacity-100 focus:border-opacity-100 transition duration-300 ease-in-out rounded-xl placeholder-opacity-75'
+                      className='font-light font-plus border-gray-300 shadowCoord placeholder-grey-content block w-16  text-grey-content p-3 focus:outline-none border border-opacity-40 hover:border-opacity-100 focus:border-opacity-100 transition duration-300 ease-in-out rounded-xl'
                     />
                   ))
                 ) : (

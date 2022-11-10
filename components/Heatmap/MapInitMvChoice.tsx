@@ -24,15 +24,15 @@ const MapInitMvChoice = ({ metaverse, setMetaverse }: Props) => {
         Choose a Metaverse
       </h2>
 
-      <div className='flex space-x-2 items-center justify-center bg-grey-dark rounded-xl w-full p-2'>
+      <div className='flex space-x-2 items-center justify-center bg-grey-dark rounded-2xl w-[70%] m-auto p-2'>
         <BsExclamationCircleFill className={`text-2xl z-10 text-[#6196FF]`}/>
-        <p className='flex text-xs xs:text-base xl:text-lg font-normal font-plus text-grey-content'>
+        <p className='flex text-xs xs:text-base xl:text-lg font-normal font-plus text-grey-content pl-3'>
           You can have &nbsp;<p className='font-bold'>5 free valuations</p>, after that pro version is needed
         </p>
       </div>
 
       {/* Metaverse Buttons */}
-      <div className='flex justify-center gap-4 pt-10'>
+      <div className='flex justify-center gap-8 pt-10'>
         {typedKeys(mvOptions).map((landKey) => (
           <button
             key={landKey}

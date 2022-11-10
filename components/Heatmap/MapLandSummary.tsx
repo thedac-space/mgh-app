@@ -11,12 +11,12 @@ interface Props {
 
 const MapLandSummary = ({ name, owner, coordinates, metaverse }: Props) => {
   return (
-    <div className='gray-box bg-opacity-100 flex flex-col gap-2 text-sm overflow-auto'>
+    <div className='gray-box bg-[#F9FAFB] flex flex-col gap-2 text-sm overflow-auto'>
       <div className='flex gap-4'>
         {typedKeys(coordinates).map((coord) => (
           <span
             key={coord}
-            className='text-white font-semibold whitespace-nowrap text-base'
+            className='text-grey-content font-light whitespace-nowrap text-base'
           >
             {coord.toUpperCase()}:{' '}
             {isNaN(coordinates[coord]) ? 'xx' : coordinates[coord]}
@@ -27,13 +27,13 @@ const MapLandSummary = ({ name, owner, coordinates, metaverse }: Props) => {
       {metaverse !== 'sandbox' && (
         <>
           {metaverse === 'decentraland' && (
-            <p className='text-white font-semibold whitespace-nowrap'>
+            <p className='text-grey-content font-light text-base whitespace-nowrap'>
               {name
                 ? handleLongLandName(name, 13)
                 : `Parcel ${coordinates.x}, ${coordinates.y}`}
             </p>
           )}
-          <p className='text-white font-semibold whitespace-nowrap'>
+          <p className='text-grey-content font-light font-plus whitespace-nowrap'>
             Owner: {owner ? owner : 'None'}
           </p>
         </>

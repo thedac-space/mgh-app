@@ -243,7 +243,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
           content="Land Valuation with our Custom Heatmap"
         />
       </Head>
-      <section className="w-full h-full relative">
+      <section className="w-full relative">
         <div className="bg-[#F8F9FD] rounded-lg p-8">
           {/* Main Header */}
           <div className="border-t border-l border-white/10 rounded-xl p-5 w-full bg-opacity-30; flex flex-col lg:flex-row justify-between items-center mb-8 bg-grey-dark">
@@ -275,7 +275,8 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
             <HeatmapLoader landsLoaded={landsLoaded} metaverse={metaverse} />
           )}
           {atlas && heatmapSize && !loading && metaverse && (
-            <>
+            <div className="rounded-3xl shadowDiv p-5">
+
               <div className="absolute top-0 z-20 flex gap-4 p-2 md:w-fit w-full">
                 <div>
                   {/* Top left Coordinates */}
@@ -449,7 +450,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                     />
                   ) : (<></>)
               }
-            </>
+            </div>
           )}
         </div>
 

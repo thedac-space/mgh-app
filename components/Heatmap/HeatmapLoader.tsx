@@ -14,7 +14,7 @@ const HeatmapLoader = ({ landsLoaded, metaverse }: Props) => {
   return (
     <div className='absolute top-2/4 left-2/4 -translate-x-2/4 -translate-y-2/4 flex flex-col gap-6'>
       <Loader />
-      <p className='text-gray-300 text-lg font-semibold'>
+      <p className='text-grey-content font-plus text-sm font-bold'>
         Loaded {landsLoaded} Lands of {heatmapMvOptions[metaverse].lands}
       </p>
       <ProgressBar progress={progress} />
