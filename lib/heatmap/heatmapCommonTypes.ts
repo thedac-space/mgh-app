@@ -10,7 +10,6 @@ export type Atlas = {
 export type Layer = (
   x: number,
   y: number,
-  atlas?: Atlas,
   filter?: MapFilter,
   percentFilter?: PercentFilter,
   legendFilter?: LegendFilter,
