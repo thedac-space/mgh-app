@@ -9,17 +9,11 @@ import {
 export const filteredLayer: Layer = (
     x,
     y,
-    atlas,
     mapFilter,
     percentFilter,
     legendFilter,
     land
 ) => {
-    const id = x + ',' + y
-    if (!atlas || !atlas.ITRM || !(id in atlas.ITRM)) return null
-    /** This second Statement checks that in Decentraland
-     * the land is an actual land and not a Road, Plaza, etc...
-     */
     if (new Set([5, 6, 7, 8, 12]).has(land?.tile?.type))
         return decentralandAPILayer(x, y, land)
     /* Don't show a layer if user is tier0 and metaverse is decentraland. (we already have decentralands Map for that)  */
@@ -33,12 +27,12 @@ export const filteredLayer: Layer = (
     // If the legend filter is on Sale (the one on the bottom right)
     if (legendFilter === 'on-sale') {
         // If land is on sale (therefore having the current_price_eth)
-        atlas.ITRM[id].current_price_eth
+        land.current_price_eth
             ? mapFilter === 'basic' // If map filter is basic
                 ? (color = LEGEND_COLORS['on-sale']) // If filter is basic then return color purple
                 : // If filter is not basic, it means we should calculate color based on percetage with getTileColor()
                   (color = getTileColor(
-                      atlas.ITRM[id].percent ?? 0,
+                      land.percent ?? 0,
                       percentFilter,
                       mapFilter
                   ))
@@ -47,14 +41,14 @@ export const filteredLayer: Layer = (
         // If legend filter on bottom right is set on watchlist
     } else if (legendFilter === 'watchlist') {
         //if the land is on users watchlist it will have a .watchlist attribute
-        atlas.ITRM[id].watchlist
+        land.watchlist
             ? mapFilter === 'basic'
                 ? // If its in users watchlist and the filter is basic change color to fixed color and scale to big
                   (color = LEGEND_COLORS.watchlist) &&
                   (scale = scaleOptions.big)
                 : // If its in users watchlist and filter is not basic then generate a proper color and set scale to big.
                   (color = getTileColor(
-                      atlas.ITRM[id].percent ?? 0,
+                      land.percent ?? 0,
                       percentFilter,
                       mapFilter
                   )) && (scale = scaleOptions.big)
@@ -63,14 +57,14 @@ export const filteredLayer: Layer = (
         // If legend filter on bottom right is on portfolio
     } else if (legendFilter === 'portfolio') {
         // If its on users portolio the land will have a .portfolio
-        atlas.ITRM[id].portfolio
+        land.portfolio
             ? mapFilter === 'basic'
                 ? // if on our portfolio and filter basic, set color to fixed color and scale to big
                   (color = LEGEND_COLORS.portfolio) &&
                   (scale = scaleOptions.big)
                 : // if on our portfolio but filter is not basic then generate proper color
                   (color = getTileColor(
-                      atlas.ITRM[id].percent ?? 0,
+                      land.percent ?? 0,
                       percentFilter,
                       mapFilter
                   )) && (scale = scaleOptions.big)
@@ -78,37 +72,24 @@ export const filteredLayer: Layer = (
         // If there's no legend filter and mapFilter is on basic
     } else if (mapFilter === 'basic') {
         // If we are on decentraland and we land isnt on sale or on watchlist or on portfolio then return null
-        if (
-            atlas.decentraland &&
-            !atlas.ITRM[id].portfolio &&
-            !atlas.ITRM[id].watchlist &&
-            !atlas.ITRM[id].current_price_eth
-        ) {
-            return null
-            // if mapFilter is basic and land is on portfolio set color to fixedcolor and scale to mid
-        } else if (atlas.ITRM[id].portfolio) {
+if (land.portfolio) {
             color = LEGEND_COLORS.portfolio
             scale = scaleOptions.mid
             // if mapFilter is basic and land is on watchlist set color to fixed color and scale to mid
-        } else if (atlas.ITRM[id].watchlist) {
+        } else if (land.watchlist) {
             color = LEGEND_COLORS.watchlist
             scale = scaleOptions.mid
             // if mapFilter is basic and land is on sale set color to fixed color and scale to mid
-        } else if (atlas.ITRM[id].current_price_eth) {
+        } else if (land.current_price_eth) {
             color = LEGEND_COLORS['on-sale']
         } else {
-            color = '#43ba58' //'#12b630' // Green color for basic view with no filters and lands that are not on sale or watchlist or portfolio
+            color = land.tile?.type ? '#323333' : '#43ba58' //'#12b630' // Green color for basic view with no filters and lands that are not on sale or watchlist or portfolio
         }
         // If there is no legend filter. And mapFilter is not on basic then generate a color based on percentage.
     } else {
-        //console.log(atlas.ITRM[id].percent)
-        color = getTileColor(
-            atlas.ITRM[id].percent ?? 0,
-            percentFilter,
-            mapFilter
-        )
+        //console.log(land.percent)
+        color = getTileColor(land.percent ?? 0, percentFilter, mapFilter)
     }
-
     const top = undefined
     const left = undefined
     const topLeft = undefined
@@ -121,20 +102,19 @@ export const filteredLayer: Layer = (
     }
 }
 
-export const decentralandAPILayer = (x:any, y:any,land:any) => {
+export const decentralandAPILayer = (x: any, y: any, land: any) => {
     const id = x + ',' + y
-        const tile = land
-        const color = DECENTRALAND_API_COLORS[tile.tile.type]
+    const tile = land
+    const color = DECENTRALAND_API_COLORS[tile.tile.type]
 
-        const top = !!tile.top
-        const left = !!tile.left
-        const topLeft = !!tile.topLeft
+    const top = !!tile.top
+    const left = !!tile.left
+    const topLeft = !!tile.topLeft
 
-        return {
-            color,
-            top,
-            left,
-            topLeft,
-        }
+    return {
+        color,
+        top,
+        left,
+        topLeft,
     }
-
+}
