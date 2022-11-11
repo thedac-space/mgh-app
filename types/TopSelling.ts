@@ -7,6 +7,7 @@ export interface TopSellingDataTable {
   eth_price: string,
   symbol: string
   landId: number,
+  valuation: string
 }
 
 export interface TopSellingRequestItem {
