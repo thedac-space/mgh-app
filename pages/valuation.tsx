@@ -157,12 +157,10 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
             const parameters =
                 x && y ? `x=${x}&y=${y}` : tokenId ? `tokenId=${tokenId}` : null
             const response = await fetch(
-                `${process.env.ITRM_SERVICE}${
-                    metaverse == 'somnium-space' || metaverse == 'axie-infinity'
-                        ? ''
-                        : '/test'
-                }/${metaverse}/${
-                    metaverse == 'axie-infinity' ? 'predict' : 'map'
+                `${process.env.ITRM_SERVICE}${metaverse == 'somnium-space' || metaverse == 'axie-infinity'
+                    ? ''
+                    : '/test'
+                }/${metaverse}/${metaverse == 'axie-infinity' ? 'predict' : 'map'
                 }?${parameters}`,
                 {
                     method: 'GET',
@@ -466,7 +464,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                         <h3 className="text-transparent bg-clip-text lg:text-3xl text-2xl bg-gradient-to-br from-blue-500 via-green-400 to-green-500 mb-0 sm:mb-2">
                             Our Top Picks
                         </h3>
-                       {/*  <TopPicksLands metaverse={metaverse} /> */}
+                        <TopPicksLands metaverse={metaverse} />
                         <h3 className="text-transparent bg-clip-text lg:text-3xl text-2xl bg-gradient-to-br from-blue-500 via-green-400 to-green-500 mb-0 sm:mb-2">
                             The Top Sells
                         </h3>

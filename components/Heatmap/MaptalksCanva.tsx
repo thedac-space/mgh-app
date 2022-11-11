@@ -12,7 +12,11 @@ import { io } from 'socket.io-client'
 import React from 'react'
 import { Metaverse } from '../../lib/metaverse'
 import { setColours } from '../../lib/heatmap/valuationColoring'
-const socket = io('https://01d3-186-116-221-6.ngrok.io ', { transports: ['websocket'] })
+const socket = io(process.env.SOCKET_SERVICE!, {
+    path: '/heatmap-backend',
+    transports: ['websocket'],
+})
+
 interface IMaptalksCanva {
     width: number | string | undefined
     height: number | string | undefined
@@ -88,13 +92,10 @@ const MaptalksCanva = ({
             tile = filteredLayer(
                 value.center.x,
                 value.center.y,
-                {
-                    ITRM: metaverse != 'decentraland' ? lands : null,
-                    decentraland: metaverse == 'decentraland' ? lands : null,
-                } as Atlas,
                 filter,
                 percentFilter,
-                legendFilter
+                legendFilter,
+                value
             )
             let { color } = tile
             let borderColor = '#000'
@@ -168,14 +169,10 @@ const MaptalksCanva = ({
             tile = filteredLayer(
                 value.center.x,
                 value.center.y,
-                {
-                    ITRM: metaverse != 'decentraland' ? coloredAtlas : null,
-                    decentraland:
-                        metaverse == 'decentraland' ? mapData : null,
-                } as Atlas,
                 filter,
                 percentFilter,
-                legendFilter
+                legendFilter,
+                value
             )
 
             let { color } = tile
