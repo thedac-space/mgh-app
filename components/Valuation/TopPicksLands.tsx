@@ -12,6 +12,7 @@ interface Props {
 const TopPicksLands = ({ metaverse }: Props) => {
   const [loading, setLoading] = useState(true)
   const [picks, setPicks] = useState({})
+  const [controlIndex, setControlIndex] = useState<number>(0)
 
   useEffect(() => {
     const setData = async () => {
@@ -58,44 +59,46 @@ const TopPicksLands = ({ metaverse }: Props) => {
             </tr>
           </thead>
           <tbody className='bg-transparent flex flex-col items-center justify-between overflow-y-scroll w-full h-52 scrollbar--y scrollbar overflow-x-hidden'>
-            {typedKeys(picks).map((key) => {
-              return (
-                <tr key={key} className='flex w-full mb-4'>
-                  <td className='flex justify-start px-4 content-center w-1/5 relative'>
-                    <div className='relative lg:h-12 lg:w-12 md:h-8 md:w-8 bg-white rounded-full border mb-4 mt-4 w-6 h-6'>
-                      <Image
-                        src={picks[key]['images']['image_url']}
-                        layout='fill'
-                        className='rounded-full'
-                        alt='land image'
-                        loading='lazy'
-                      />
-                    </div>
-                  </td>
-                  <td className='flex justify-start px-4 content-center items-center text-sky-400 pt-0.5 w-1/5 hover:underline'>
-                    <a
-                      className='text-sm lg:text-2xl font-medium md:text-base'
-                      href={picks[key]['external_link']}
-                    >
-                      {picks[key]['coords'] ? `(x:${picks[key]['coords']['x']}, y:${picks[key]['coords']['y']})` : picks[key]['center'] ? `(${picks[key]['name']})` : `no-asset`}
-                    </a>
-                  </td>
-                  <td className='flex justify-start px-4 content-center items-center text-sm lg:text-2xl font-medium md:text-base text-gray-300 pt-0.5 w-1/5'>
-                    <span>
-                      {parseFloat(picks[key]['current_price_eth']).toFixed(2)}
-                    </span>
-                  </td>
-                  <td className='flex justify-start px-4 content-center items-center text-sm lg:text-2xl font-medium md:text-base text-gray-300 pt-0.5 w-1/5'>
-                    <span>
-                      {parseFloat(picks[key]['eth_predicted_price']).toFixed(2)}
-                    </span>
-                  </td>
-                  <td className='flex justify-start px-4 content-center items-center text-sm lg:text-2xl font-medium md:text-base text-gray-300 pt-0.5 w-1/5'>
-                    <span>{parseFloat(picks[key]['gap']).toFixed(2)}%</span>
-                  </td>
-                </tr>
-              )
-            })}
+            {
+              typedKeys(picks).map((key) => {
+                return (
+                  <tr key={key} className='flex w-full mb-4'>
+                    <td className='flex justify-start px-4 content-center w-1/5 relative'>
+                      <div className='relative lg:h-12 lg:w-12 md:h-8 md:w-8 bg-white rounded-full border mb-4 mt-4 w-6 h-6'>
+                        <Image
+                          src={picks[key]['images']['image_url']}
+                          layout='fill'
+                          className='rounded-full'
+                          alt='land image'
+                          loading='lazy'
+                        />
+                      </div>
+                    </td>
+                    <td className='flex justify-start px-4 content-center items-center text-sky-400 pt-0.5 w-1/5 hover:underline'>
+                      <a
+                        className='text-sm lg:text-2xl font-medium md:text-base'
+                        href={picks[key]['external_link']}
+                      >
+                        {picks[key]['coords'] ? `(x:${picks[key]['coords']['x']}, y:${picks[key]['coords']['y']})` : picks[key]['center'] ? `(${picks[key]['name']})` : `no-asset`}
+                      </a>
+                    </td>
+                    <td className='flex justify-start px-4 content-center items-center text-sm lg:text-2xl font-medium md:text-base text-gray-300 pt-0.5 w-1/5'>
+                      <span>
+                        {parseFloat(picks[key]['current_price_eth']).toFixed(2)}
+                      </span>
+                    </td>
+                    <td className='flex justify-start px-4 content-center items-center text-sm lg:text-2xl font-medium md:text-base text-gray-300 pt-0.5 w-1/5'>
+                      <span>
+                        {parseFloat(picks[key]['eth_predicted_price']).toFixed(2)}
+                      </span>
+                    </td>
+                    <td className='flex justify-start px-4 content-center items-center text-sm lg:text-2xl font-medium md:text-base text-gray-300 pt-0.5 w-1/5'>
+                      <span>{parseFloat(picks[key]['gap']).toFixed(2)}%</span>
+                    </td>
+                  </tr>
+                )
+              })
+            }
           </tbody>
         </table>
       )}
