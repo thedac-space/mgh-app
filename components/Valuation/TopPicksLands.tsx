@@ -27,6 +27,7 @@ const TopPicksLands = ({ metaverse }: Props) => {
           setPicks(response.data)
           setLoading(false)
           setPageLenght(Math.trunc((response.data.length / 10) + 1))
+          setControlPageIndex(0)
         }).catch((error) => { console.log(error) })
     }
     setData().catch((e) => console.log(e))
@@ -109,7 +110,7 @@ const TopPicksLands = ({ metaverse }: Props) => {
                   {'Next Page >'}
                 </button>)
             }
-            <form className='w-full col-span-3 grid grid-cols-2 mb-7'>
+            <div className='w-full col-span-3 grid grid-cols-2 mb-7'>
               <button
                 type="button"
                 className="py-2.5 px-5 mr-2 mb-2 text-sm font-small focus:outline-none rounded-lg border bg-gray-800 text-gray-200 border-gray-600 hover:text-white hover:bg-gray-700 h-full"
@@ -123,7 +124,7 @@ const TopPicksLands = ({ metaverse }: Props) => {
                 {'Search by Number of Page:'}
               </button>
               <input type="number" id="phone" className="border text-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500" placeholder={`1 - ${pageLenght}`} required value={pageSearcher} onChange={(event) => { setPageSearcher(parseInt(event.target.value)) }} />
-            </form>
+            </div>
           </div>
           <table className='w-full table-fixed border-collapse'>
             <thead className='bg-transparent text-slate-200 w-full'>
