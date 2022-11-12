@@ -1,7 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 import {
-    Atlas,
-    Layer,
     LegendFilter,
     MapFilter,
     PercentFilter,
