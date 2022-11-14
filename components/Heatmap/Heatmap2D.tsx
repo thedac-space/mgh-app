@@ -1,7 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 import {
-    Atlas,
-    Layer,
     LegendFilter,
     MapFilter,
     PercentFilter,
@@ -83,7 +81,14 @@ const MaptalksCanva = ({
             interaction: map.renderer.plugins.interaction,
             passiveWheel: false,
         })
+
         viewport.drag().pinch().wheel()
+        viewport.clampZoom({
+            minWidth: 512,
+            minHeight: 512,
+            maxWidth: 25600,
+            maxHeight: 25600
+        })
         let currentTint: any
         let currentSprite: any
         viewport.on('mousemove', (e: any): any => {
