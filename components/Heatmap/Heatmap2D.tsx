@@ -134,7 +134,7 @@ const MaptalksCanva = ({
         viewport.on('drag-end', () => {
             isDragging = false
         })
-        viewport.on('click', (e: any) => {
+        viewport.on('click', () => {
             if (currentSprite && !isDragging) {
                 const x = currentSprite.landX,
                     y = currentSprite.landY
@@ -149,7 +149,7 @@ const MaptalksCanva = ({
             transports: ['websocket'],
         })
         console.log(socket)
-        socket.emit('render', metaverse)
+        socket.emit('render', metaverse, 0)
         setSocket(socket)
         setMap(map)
         setViewport(viewport)
@@ -164,7 +164,10 @@ const MaptalksCanva = ({
         if (!viewport || !socket) return
         let lands: any = mapData || {}
         let localChunks: any = chunks || {}
-        const renderTile = (land: any) => {
+        let localCheckpoint: number = 0
+        const renderTile = (land: any, checkpoint: number) => {
+            console.log('render', checkpoint)
+            if (!localCheckpoint) localCheckpoint = checkpoint
             let name = ''
             land.coords.y *= -1
             if (land.coords) {
@@ -217,9 +220,12 @@ const MaptalksCanva = ({
             chunkContainer.addChild(rectangle)
             viewport.addChild(chunkContainer)
         }
-        socket.on('render', renderTile)
-        return () => {
-            socket.removeAllListeners('render')
+
+        if (!socket.listeners('render')[0]) {
+            console.log("socket on")
+            socket.on('render', renderTile)}
+        else {
+            socket.listeners('render')[0] = renderTile
         }
     }, [viewport, filter, percentFilter, legendFilter])
 
