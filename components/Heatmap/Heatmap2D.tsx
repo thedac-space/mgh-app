@@ -14,6 +14,11 @@ import { Viewport } from 'pixi-viewport'
 import { io } from 'socket.io-client'
 import { Container } from 'pixi.js'
 
+const socket = io(process.env.SOCKET_SERVICE!, {
+    path: '/heatmap-backend',
+    transports: ['websocket'],
+})
+
 interface IMaptalksCanva {
     width: number | undefined
     height: number | undefined
@@ -54,7 +59,6 @@ const MaptalksCanva = ({
     const [viewport, setViewport] = useState<any>()
     const [mapData, setMapData] = useState<any>({})
     const [chunks, setChunks] = useState<any>({})
-    const [socket, setSocket] = useState<any>()
     const CHUNK_SIZE = 32
     const TILE_SIZE = 64
     const BORDE_SIZE = 14
@@ -87,7 +91,7 @@ const MaptalksCanva = ({
             minWidth: 512,
             minHeight: 512,
             maxWidth: 25600,
-            maxHeight: 25600
+            maxHeight: 25600,
         })
         let currentTint: any
         let currentSprite: any
@@ -149,16 +153,15 @@ const MaptalksCanva = ({
         })
         map.stage.addChild(viewport)
         document.getElementById('map')?.appendChild(map.view)
-        const socket = io(process.env.SOCKET_SERVICE!, {
-            path: '/heatmap-backend',
-            transports:['websocket']
-        })
-        console.log(socket)
+        console.log('socket metaverse off')
+        socket.off()
+        console.log('socket create')
         socket.emit('render', metaverse, 0)
-        setSocket(socket)
         setMap(map)
         setViewport(viewport)
         return () => {
+            console.log('Close')
+            socket.off()
             document.getElementById('map')?.removeChild(map.view)
             map.destroy()
             onHover(0 / 0, 0 / 0, undefined, undefined)
@@ -225,12 +228,10 @@ const MaptalksCanva = ({
             chunkContainer.addChild(rectangle)
             viewport.addChild(chunkContainer)
         }
+        socket.on('render', renderTile)
 
-        if (!socket.listeners('render')[0]) {
-            console.log("socket on")
-            socket.on('render', renderTile)}
-        else {
-            socket.listeners('render')[0] = renderTile
+        return () => {
+            socket.off('render')
         }
     }, [viewport, filter, percentFilter, legendFilter])
 
