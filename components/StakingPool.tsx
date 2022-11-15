@@ -80,7 +80,7 @@ const StakingPool = ({ poolId, web3Provider, stake, unstake }: any) => {
                             </>
                         ) : (
                             <div className="flex flex-col p-5 items-center text-center">
-                                <p className="text-gray-200 text-2xl font-medium mt-1">Pool locked</p>
+                                <p className="text-grey-content font-plus text-2xl font-medium mt-1">Pool locked</p>
                                 {(timeUntilDeposit && timeUntilDeposit > 0) ? (<p className="text-gray-400 font-medium pt-2">Next Deposit in {timeUntilDeposit} days</p>) : (timeUntilDeposit === 0 && <p className="text-gray-400 font-medium pt-2">Deposit opens soon!</p>)}
                             </div >
                         )}

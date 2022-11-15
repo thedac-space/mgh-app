@@ -8,7 +8,7 @@ import { useAppSelector } from '../state/hooks'
 const Liquidity: NextPage = () => {
     const { chainId } = useAppSelector(state => state.account)
 
-    const link = (chainId === Chains.MATIC_MAINNET.chainId) ? `https://quickswap.exchange/#/add/${Contracts.MGH_TOKEN.MATIC_MAINNET.address}/ETH?theme=dark` : `https://app.uniswap.org/#/add/${Contracts.MGH_TOKEN.ETHEREUM_MAINNET.address}/ETH?theme=dark`
+    const link = (chainId === Chains.MATIC_MAINNET.chainId) ? `https://quickswap.exchange/#/add/${Contracts.MGH_TOKEN.MATIC_MAINNET.address}/ETH?theme=light` : `https://app.uniswap.org/#/add/${Contracts.MGH_TOKEN.ETHEREUM_MAINNET.address}/ETH?theme=light`
     
 
     return (

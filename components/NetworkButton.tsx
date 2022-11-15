@@ -23,12 +23,12 @@ const NetworkButton = ({ provider, chainId }: any) => {
                     <div className="absolute -bottom-28 top-auto h-28 left-0 sm:left-auto right-auto sm:right-0 w-44 rounded-xl p-5 space-y-5 font-medium bg-grey-darkest bg-opacity-100 xl:bg-opacity-20 backdrop-filter backdrop-blur-3xl z-50 flex flex-col justify-center items-start shadow-dark">
                         <div onClick={() => { changeChain(provider, Chains.ETHEREUM_MAINNET.chainId); setOpen(false) }} className={`flex items-center cursor-pointer ${chainId === Chains.ETHEREUM_MAINNET.chainId ? "opacity-100" : "opacity-70 hover:opacity-100"}`}>
                             <img src="/images/ethereum-eth-logo.png" className="h-8 w-8 z-10" />
-                            <span className="pt-1 z-10 text-gray-200 px-4 ">Ethereum</span>
+                            <span className="pt-1 z-10 text-grey-content font-plus font-normal px-4 ">Ethereum</span>
                         </div>
 
                         <div onClick={() => { changeChain(provider, Chains.MATIC_MAINNET.chainId); setOpen(false) }} className={`flex items-center cursor-pointer ${chainId === Chains.MATIC_MAINNET.chainId ? "opacity-100" : "opacity-70 hover:opacity-100"}`}>
                             <img src="/images/polygon-matic-logo.png" className="h-8 w-8 z-10" />
-                            <span className="pt-1 z-10 text-gray-200 px-4 ">Polygon</span>
+                            <span className="pt-1 z-10 text-grey-content font-plus font-normalpx-4 ">Polygon</span>
                         </div>
                     </div>
                 }

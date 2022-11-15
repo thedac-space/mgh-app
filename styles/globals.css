@@ -668,6 +668,11 @@ h6 {
   box-shadow: inset 2.87012px 2.87012px 2.87012px #D7DEEB;
   border-radius: 7px;
 }
+.searchBy {
+  background: #F9FAFB;
+  box-shadow: inset 2.49875px 2.49875px 2.49875px #D7DEEB;
+}
+
 
 .stakestyletext {
   background: linear-gradient(184.91deg, #BAD6FF -31.9%, #005897 108.8%);
