@@ -151,7 +151,7 @@ const MaptalksCanva = ({
         document.getElementById('map')?.appendChild(map.view)
         const socket = io(process.env.SOCKET_SERVICE!, {
             path: '/heatmap-backend',
-            transports: ['websocket'],
+            transports:['websocket']
         })
         console.log(socket)
         socket.emit('render', metaverse, 0)
