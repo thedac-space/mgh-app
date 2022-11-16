@@ -65,10 +65,6 @@ export const firstChargeLands = (
     tile = filteredLayer(
       value.coords.x,
       value.coords.y,
-      {
-        ITRM: lands,
-        decentraland: undefined,
-      } as Atlas,
       filters.filter,
       filters.percentFilter,
       filters.legendFilter,
