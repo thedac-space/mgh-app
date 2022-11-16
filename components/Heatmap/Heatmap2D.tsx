@@ -34,7 +34,7 @@ interface IMaptalksCanva {
         name: string | undefined,
         owner: string | undefined
     ) => void
-    onClick: (land: ValuationTile, x: number, y: number) => void
+    onClick: (land: ValuationTile | undefined, x: number, y: number) => void
     metaverse: Metaverse
     x: number | undefined
     y: number | undefined
@@ -175,17 +175,11 @@ const MaptalksCanva = ({
             if (currentSprite && !isDragging) {
                 const x = currentSprite.landX,
                     y = currentSprite.landY
-                const land = mapData[x + ',' + y]
-                onClick(land, x, y * -1)
+                onClick(undefined, x, y * -1)
             }
         })
     }, [viewport])
 
-    useEffect(() => {
-        ;(globalFilter = filter),
-            (globalPercentFilter = percentFilter),
-            (globalLegendFilter = legendFilter)
-    }, [filter, percentFilter, legendFilter])
 
     useEffect(() => {
         if (!viewport) return
@@ -260,6 +254,12 @@ const MaptalksCanva = ({
     }, [width, height])
 
     useEffect(() => {
+        ; (globalFilter = filter),
+            (globalPercentFilter = percentFilter),
+            (globalLegendFilter = legendFilter)
+    }, [filter, percentFilter, legendFilter])
+
+    useEffect(() => {
         if (!chunks || !mapData) return
         let lands = setColours(mapData, globalFilter)
         for (const key in chunks) {
@@ -281,11 +281,16 @@ const MaptalksCanva = ({
     }, [filter, percentFilter, legendFilter])
 
     useEffect(() => {
-        if (x && y)
-            viewport.moveCenter(x * TILE_SIZE, - y * TILE_SIZE)
+        if (!x || !y) return
+        viewport.moveCenter(x * TILE_SIZE, - y * TILE_SIZE)
+        /* const chunkX = Math.floor(x / CHUNK_SIZE)
+        const chunkY = Math.floor(y / CHUNK_SIZE)
+        const chunkKey = `${chunkX}:${chunkY}`
+        let chunckSelected = chunks[chunkKey]
+        console.log(chunckSelected) */
     }, [x, y])
-    
-    useEffect(() => {})
+
+    useEffect(() => { })
 
     return <div id="map" style={{ width, height }} />
 }
