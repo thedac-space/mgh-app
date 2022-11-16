@@ -176,6 +176,7 @@ export const setLandColour = (
     return land
 }
 
+
 // Calculating Percentages depending on the current chosen filter.
 export const setColours = (
     valuationAtlas: Record<string, any>,
