@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
     LegendFilter,
     MapFilter,
@@ -267,8 +267,9 @@ const MaptalksCanva = ({
     }, [filter, percentFilter, legendFilter])
 
     useEffect(() => {
-
-    },)
+        if (x && y)
+            viewport.moveCenter(x * TILE_SIZE, - y * TILE_SIZE)
+    }, [x, y])
 
     return <div id="map" style={{ width, height }} />
 }

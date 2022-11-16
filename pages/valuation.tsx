@@ -115,6 +115,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
         const coords = { x, y }
         setHovered({ coords, owner, name })
     }
+
     useEffect(() => {
         setIsVisible(false)
     }, [metaverse])
