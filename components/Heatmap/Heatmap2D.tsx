@@ -239,7 +239,7 @@ const MaptalksCanva = ({
         return () => {
             socket.off('render')
         }
-    }, [viewport, filter, percentFilter, legendFilter])
+    }, [viewport])
 
     useEffect(() => {
         if (map?.renderer) map?.renderer.resize(width || 0, height || 0)
