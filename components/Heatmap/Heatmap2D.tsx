@@ -55,7 +55,7 @@ const MaptalksCanva = ({
     x,
     y,
 }: IMaptalksCanva) => {
-    const [map, setMap] = useState<PIXI.Application>()
+    const [map, setMap] = useState<any>()
     const [viewport, setViewport] = useState<any>()
     const [mapData, setMapData] = useState<any>({})
     const [chunks, setChunks] = useState<any>({})
@@ -72,6 +72,10 @@ const MaptalksCanva = ({
         return '0x' + a.join('')
     }
     useEffect(() => {
+        setMap(null)
+        setViewport(null)
+        setChunks({})
+        setMapData({})
         const map: any = new PIXI.Application({
             width,
             height,
@@ -93,6 +97,23 @@ const MaptalksCanva = ({
             maxWidth: 25600,
             maxHeight: 25600,
         })
+
+        map.stage.addChild(viewport)
+        document.getElementById('map')?.appendChild(map.view)
+        socket.emit('render', metaverse, 0)
+        setMap(map)
+        setViewport(viewport)
+        return () => {
+            socket.off('render')
+            document.getElementById('map')?.removeChild(map.view)
+            map.destroy()
+            viewport.destroy()
+            onHover(0 / 0, 0 / 0, undefined, undefined)
+        }
+    }, [metaverse])
+
+    useEffect(() => {
+        if (!viewport) return
         let currentTint: any
         let currentSprite: any
         viewport.on('mousemove', (e: any): any => {
@@ -113,7 +134,7 @@ const MaptalksCanva = ({
                 (child: any) => child.x === x && child.y === y
             )
             if (child) {
-                if (currentSprite && child.name != child) {
+                if (currentSprite) {
                     currentSprite.tint = currentTint
                     currentTint = child.tint
                 }
@@ -136,6 +157,7 @@ const MaptalksCanva = ({
                 }
             }
         })
+
         let isDragging = false
         viewport.on('drag-start', () => {
             isDragging = true
@@ -151,25 +173,11 @@ const MaptalksCanva = ({
                 onClick(land, x, y * -1)
             }
         })
-        map.stage.addChild(viewport)
-        document.getElementById('map')?.appendChild(map.view)
-        console.log('socket metaverse off')
-        socket.off()
-        console.log('socket create')
-        socket.emit('render', metaverse, 0)
-        setMap(map)
-        setViewport(viewport)
-        return () => {
-            console.log('Close')
-            socket.off()
-            document.getElementById('map')?.removeChild(map.view)
-            map.destroy()
-            onHover(0 / 0, 0 / 0, undefined, undefined)
-        }
-    }, [metaverse])
+    }, [viewport])
 
     useEffect(() => {
-        if (!viewport || !socket) return
+        console.log(viewport)
+        if (!viewport) return
         let lands: any = mapData || {}
         let localChunks: any = chunks || {}
         let localCheckpoint: number = 0
