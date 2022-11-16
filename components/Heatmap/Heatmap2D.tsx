@@ -14,11 +14,14 @@ import { Viewport } from 'pixi-viewport'
 import { io } from 'socket.io-client'
 import { Container } from 'pixi.js'
 
-const socket = io(process.env.SOCKET_SERVICE!, {
+let socket = io(process.env.SOCKET_SERVICE!, {
     path: '/heatmap-backend',
     transports: ['websocket'],
 })
 
+let globalFilter: MapFilter,
+    globalPercentFilter: PercentFilter,
+    globalLegendFilter: LegendFilter
 interface IMaptalksCanva {
     width: number | undefined
     height: number | undefined
@@ -55,9 +58,9 @@ const MaptalksCanva = ({
     x,
     y,
     initialX,
-    initialY
+    initialY,
 }: IMaptalksCanva) => {
-    const [map, setMap] = useState<PIXI.Application>()
+    const [map, setMap] = useState<any>()
     const [viewport, setViewport] = useState<any>()
     const [mapData, setMapData] = useState<any>({})
     const [chunks, setChunks] = useState<any>({})
@@ -65,6 +68,7 @@ const MaptalksCanva = ({
     const TILE_SIZE = 64
     const BORDE_SIZE = 14
     const BLOCK_SIZE = CHUNK_SIZE * TILE_SIZE
+    let checkpoint = 0
     const rgbToHex = (values: any) => {
         let a = values.split(',')
         a = a.map(function (value: any) {
@@ -74,6 +78,10 @@ const MaptalksCanva = ({
         return '0x' + a.join('')
     }
     useEffect(() => {
+        setMap(null)
+        setViewport(null)
+        setChunks({})
+        setMapData({})
         const map: any = new PIXI.Application({
             width,
             height,
@@ -85,7 +93,7 @@ const MaptalksCanva = ({
             worldWidth: width,
             worldHeight: height,
             interaction: map.renderer.plugins.interaction,
-            passiveWheel: false
+            passiveWheel: false,
         })
 
         viewport.drag().pinch().wheel()
@@ -96,9 +104,22 @@ const MaptalksCanva = ({
             maxHeight: TILE_SIZE * 400,
         })
 
+        map.stage.addChild(viewport)
+        document.getElementById('map')?.appendChild(map.view)
+        setMap(map)
+        setViewport(viewport)
+        return () => {
+            document.getElementById('map')?.removeChild(map.view)
+            map.destroy()
+            viewport.destroy()
+            socket.disconnect()
+            onHover(0 / 0, 0 / 0, undefined, undefined)
+        }
+    }, [metaverse])
+
+    useEffect(() => {
+        if (!viewport) return
         viewport.moveCenter(initialX * TILE_SIZE, initialY * TILE_SIZE)
-
-
         let currentTint: any
         let currentSprite: any
         viewport.on('mousemove', (e: any): any => {
@@ -119,7 +140,7 @@ const MaptalksCanva = ({
                 (child: any) => child.x === x && child.y === y
             )
             if (child) {
-                if (currentSprite && child.name != child) {
+                if (currentSprite) {
                     currentSprite.tint = currentTint
                     currentTint = child.tint
                 }
@@ -142,6 +163,7 @@ const MaptalksCanva = ({
                 }
             }
         })
+
         let isDragging = false
         viewport.on('drag-start', () => {
             isDragging = true
@@ -157,33 +179,29 @@ const MaptalksCanva = ({
                 onClick(land, x, y * -1)
             }
         })
-        map.stage.addChild(viewport)
-        document.getElementById('map')?.appendChild(map.view)
-        console.log('socket metaverse off')
-        socket.off()
-        console.log('socket create')
-        socket.emit('render', metaverse, 0)
-        setMap(map)
-        setViewport(viewport)
-        return () => {
-            console.log('Close')
-            socket.off()
-            document.getElementById('map')?.removeChild(map.view)
-            map.destroy()
-            onHover(0 / 0, 0 / 0, undefined, undefined)
-        }
-    }, [metaverse])
+    }, [viewport])
 
     useEffect(() => {
-        if (!viewport || !socket) return
+        ;(globalFilter = filter),
+            (globalPercentFilter = percentFilter),
+            (globalLegendFilter = legendFilter)
+    }, [filter, percentFilter, legendFilter])
+
+    useEffect(() => {
+        if (!viewport) return
+        socket = io(process.env.SOCKET_SERVICE!, {
+            path: '/heatmap-backend',
+            transports: ['websocket'],
+        })
+        socket.emit('render', metaverse, checkpoint)
         let lands: any = mapData || {}
         let localChunks: any = chunks || {}
         let localCheckpoint: number = 0
-        const renderTile = (land: any, checkpoint: number) => {
-            console.log('render', checkpoint)
+        const renderTile = (land: any, _checkpoint: number) => {
             if (!localCheckpoint) localCheckpoint = checkpoint
             let name = ''
             land.coords.y *= -1
+
             if (land.coords) {
                 name = land.coords.x + ',' + land.coords.y
             }
@@ -192,16 +210,16 @@ const MaptalksCanva = ({
             setMapData(lands)
             let value = land
             let tile: any
-            land = setLandColour(land, filter)
             tile = filteredLayer(
                 value.coords.x,
                 value.coords.y,
-                filter,
-                percentFilter,
-                legendFilter,
-                land
+                globalFilter,
+                globalPercentFilter,
+                globalLegendFilter,
+                lands[land.name] ? lands[land.name] : land
             )
             let { color } = tile
+
             color = color.includes('rgb')
                 ? rgbToHex(color.split('(')[1].split(')')[0])
                 : '0x' + color.split('#')[1]
@@ -235,10 +253,6 @@ const MaptalksCanva = ({
             viewport.addChild(chunkContainer)
         }
         socket.on('render', renderTile)
-
-        return () => {
-            socket.off('render')
-        }
     }, [viewport])
 
     useEffect(() => {
@@ -247,7 +261,7 @@ const MaptalksCanva = ({
 
     useEffect(() => {
         if (!chunks || !mapData) return
-        let coloredAtlas = setColours(mapData, filter)
+        let lands = setColours(mapData, globalFilter)
         for (const key in chunks) {
             for (const child of chunks[key].children) {
                 let tile: any = filteredLayer(
@@ -256,7 +270,7 @@ const MaptalksCanva = ({
                     filter,
                     percentFilter,
                     legendFilter,
-                    coloredAtlas[child.name]
+                    lands[child.name]
                 )
                 let { color } = tile
                 child.tint = color.includes('rgb')
@@ -270,6 +284,8 @@ const MaptalksCanva = ({
         if (x && y)
             viewport.moveCenter(x * TILE_SIZE, - y * TILE_SIZE)
     }, [x, y])
+    
+    useEffect(() => {})
 
     return <div id="map" style={{ width, height }} />
 }

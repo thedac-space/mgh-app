@@ -70,12 +70,12 @@ const MaptalksCanva = ({
             forceRenderOnRotating: true,
             forceRenderOnZooming: true,
             enableSimplify: true,
-            hitDetect: false
+            hitDetect: false,
         }).addTo(map)
 
         let lands: any = {}
         let polygons: any = []
-        socket.emit('render', 'somnium-space')
+        socket.emit('render', 'somnium-space', 0)
         socket.on('render', (land) => {
             let name = ''
             if (land.coords) {
@@ -162,7 +162,9 @@ const MaptalksCanva = ({
         map.removeLayer('vector')
         let coloredAtlas = setColours(mapData!, filter)
 
-        if (map && x && y) { map.setCenter(new maptalks.Coordinate(x, y)) }
+        if (map && x && y) {
+            map.setCenter(new maptalks.Coordinate(x, y))
+        }
 
         Object.values(mapData!).forEach((value: any) => {
             let tile: any
@@ -238,9 +240,7 @@ const MaptalksCanva = ({
         }).addTo(map)
     }, [filter, percentFilter, legendFilter, x, y])
 
-    useEffect(() => {
-
-    })
+    useEffect(() => {})
 
     return (
         <canvas
