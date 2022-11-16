@@ -42,6 +42,7 @@ import { Metaverse } from '../lib/metaverse'
 import { findHeatmapLand } from '../lib/heatmap/findHeatmapLand'
 import Head from 'next/head'
 import { Heatmap2D } from '../components/Heatmap/index'
+import { metaverseInitialCenter } from '../lib/valuation/valuationUtils'
 
 // Making this state as an object in order to iterate easily through it
 export const VALUATION_STATE_OPTIONS = [
@@ -184,33 +185,8 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 
     // Use Effect for Metaverse Fetching and Map creation
     useEffect(() => {
-        const setData = async () => {
-            if (!metaverse) return
-            setSelected(undefined)
-            setMapState('loading')
-
-            if (address && web3Provider) {
-                // Lands in User's Watchlist
-                const watchlistData = await getUserInfo(address)
-                // Lands Owned by user
-                let userNFTs: string[] | undefined
-                chainId === Chains.ETHEREUM_MAINNET.chainId &&
-                    (userNFTs = await getUserNFTs(
-                        web3Provider,
-                        address,
-                        metaverse
-                    ))
-                const userLands: UserData = {
-                    portfolio: userNFTs,
-                    watchlist:
-                        watchlistData &&
-                        watchlistData[metaverse + '-watchlist'],
-                }
-            }
-            setHeatmapSize(heatmapSize)
-            setMapState('loaded')
-        }
-        setData()
+        if (metaverse)
+            setHeatmapSize(metaverseInitialCenter[metaverse])
         resize()
         window.addEventListener('resize', resize)
 

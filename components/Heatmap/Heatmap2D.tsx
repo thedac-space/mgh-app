@@ -54,6 +54,8 @@ const MaptalksCanva = ({
     metaverse,
     x,
     y,
+    initialX,
+    initialY
 }: IMaptalksCanva) => {
     const [map, setMap] = useState<PIXI.Application>()
     const [viewport, setViewport] = useState<any>()
@@ -83,16 +85,20 @@ const MaptalksCanva = ({
             worldWidth: width,
             worldHeight: height,
             interaction: map.renderer.plugins.interaction,
-            passiveWheel: false,
+            passiveWheel: false
         })
 
         viewport.drag().pinch().wheel()
         viewport.clampZoom({
-            minWidth: 512,
-            minHeight: 512,
-            maxWidth: 25600,
-            maxHeight: 25600,
+            minWidth: TILE_SIZE * 8,
+            minHeight: TILE_SIZE * 8,
+            maxWidth: TILE_SIZE * 400,
+            maxHeight: TILE_SIZE * 400,
         })
+
+        viewport.moveCenter(initialX * TILE_SIZE, initialY * TILE_SIZE)
+
+
         let currentTint: any
         let currentSprite: any
         viewport.on('mousemove', (e: any): any => {
@@ -259,6 +265,10 @@ const MaptalksCanva = ({
             }
         }
     }, [filter, percentFilter, legendFilter])
+
+    useEffect(() => {
+
+    },)
 
     return <div id="map" style={{ width, height }} />
 }
