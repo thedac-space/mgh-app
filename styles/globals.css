@@ -636,8 +636,6 @@ h6 {
   grid-template-columns: repeat(264, 1fr);
 }
 
-/*layout*/
-
 .shadowNavItem {
   background: #EBEBF3;
   border: 1px solid #FFFFFF;
@@ -672,7 +670,6 @@ h6 {
   background: #F9FAFB;
   box-shadow: inset 2.49875px 2.49875px 2.49875px #D7DEEB;
 }
-
 
 .stakestyletext {
   background: linear-gradient(184.91deg, #BAD6FF -31.9%, #005897 108.8%);

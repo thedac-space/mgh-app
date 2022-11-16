@@ -344,7 +344,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                 <div className="absolute z-20 top-2 right-2 gray-box bg-opacity-100 w-fit h-15">
                   <FullScreenButton
                     fullScreenRef={mapDivRef}
-                    className="text-lg text-gray-200 hover:text-white"
+                    className="text-lg text-grey-content hover:text-[#7c7b7b]"
                   />
                 </div>
               )}

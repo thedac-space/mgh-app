@@ -26,7 +26,7 @@ const MapMobileFilters = ({
     <div className='w-full xs:w-[177px]'>
       <button
         onClick={() => setOpened(true)}
-        className='h-16 gray-box bg-opacity-100 mb-2 items-center tracking-wider font-semibold text-gray-200 hover:text-white flex justify-between cursor-pointer transition-all'
+        className='h-16 gray-box bg-opacity-100 mb-2 items-center tracking-wider font-semibold text-grey-content hover:text-[#7c7b7b] flex justify-between cursor-pointer transition-all'
       >
         <p>Filters</p>
         <IoIosArrowDown
@@ -48,7 +48,7 @@ const MapMobileFilters = ({
           </Fade>
           <button
             onClick={() => setOpened(false)}
-            className='p-3 w-fit gray-box bg-opacity-100 items-center tracking-wider font-semibold text-gray-200 hover:text-white flex justify-between cursor-pointer transition-all absolute bottom-2 right-8'
+            className='p-3 w-fit gray-box bg-opacity-100 items-center tracking-wider font-semibold text-grey-content hover:text-[#7c7b7b] flex justify-between cursor-pointer transition-all absolute bottom-2 right-8'
           >
             <IoClose
               className={

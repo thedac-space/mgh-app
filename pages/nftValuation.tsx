@@ -2,6 +2,7 @@ import axios from "axios";
 import { NextPage } from "next";
 import Head from "next/head";
 import { useEffect, useState } from "react";
+import { FiSearch } from "react-icons/fi";
 import { IoClose } from "react-icons/io5";
 
 import NftCard from "../components/NftCard";
@@ -9,7 +10,29 @@ import NftCard from "../components/NftCard";
 const Home: NextPage = () => {
 	const [nftFluf, setnftFluf] = useState([]);
     const [nftFlufGlobal, setnftFlufGlobal] = useState();
-    const [nftId, setNftId] = useState('')
+	const [searchId, setSearchById] = useState(nftFluf)
+    const [nftId, setnftId] = useState('');
+
+
+    const filtered = (e:any) => {
+        const keyWord = e.target.value
+		const results = nftFluf.filter((fluf: any) => {
+            return fluf.tokenId == keyWord
+        });
+        setSearchById(results);
+		setnftId(keyWord);
+    }
+
+	const filters = (e:any) => {
+        const keyWord = e.target.value
+		const results = nftFluf.filter((fluf: any) => {
+			let result = false
+			if(fluf.traits)
+            return fluf.tokenId == keyWord
+        });
+        setSearchById(results);
+		setnftId(keyWord);
+    }
 
 	useEffect(() => {
 		let flag = 0;
@@ -19,7 +42,7 @@ const Home: NextPage = () => {
 			await axios
 				.get(
 					"https://services.itrmachines.com/" +
-						"fluf/collection?from=0&size=20"
+						"fluf/collection?from=0&size=10000"
 				)
 				.then((response) => {
 					Object.entries(response.data).forEach(([key, value]) => {
@@ -57,7 +80,7 @@ const Home: NextPage = () => {
 				/>
 			</Head>
 			<div className="bg-[#F8F9FD] rounded-lg p-8">
-				<div className="w-full flex flex-col items-center justify-start space-y-10 max-w-7xl mt-8 xl:mt-0">
+				<div className="w-full flex flex-col  space-y-10 max-w-7xl mt-8 xl:mt-0">
 					<span>
 						<img src="/images/imagenft.svg" alt="IMG" className="w-[1500px]" />
 					</span>
@@ -109,45 +132,57 @@ const Home: NextPage = () => {
 							</div>
 						</div>
 					</div>
-                    <div className="flex space-x-4">
-                        <div className="shadowDiv px-8 py-5 font-bold font-plus">
-                            <p>FILTRO</p>
-                            <button
-                                className='p-3 w-fit gray-box bg-opacity-100 items-center tracking-wider font-semibold text-gray-200 hover:text-white flex justify-between cursor-pointer transition-all absolute bottom-2 right-8'
-                            >
-                                <IoClose
-                                className={
-                                    'rotate-90 text-2xl transition-all duration-500 relative bottom-[1px]'
-                                }
-                                />
-                            </button>
-                        </div>
-                        
-                        <input
-                            type='number'
-                            // onChange={(e) => setNftId(e.target.value)}
-                            // value={landId}
-                            placeholder='Search by NFT ID'
-                            className='font-bold font-plus justify-center text-grey-content focus:outline-none placeholder-gray-300 p-3 searchBy rounded-xl'
-                        />
-                                                           
-                    </div>
-
-                                    
-					{nftFluf && (
-						<div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-5 xs:gap-2 sm:gap-5 w-full">
-							{nftFluf.map((fluf: any, key) => {
-								return (
-									<NftCard
-                                        key={key}
-										image={fluf.images.image_small}
-										text="Estimated Price: "
-										value={fluf.floor_adjusted_predicted_price}
-									/>
-								);
-							})}
+					<div className="flex space-x-12">
+						<select name="traits" className="shadowDiv rounded-full px-10 py-5 font-bold font-plus w-1/4 focus:outline-none">
+							<option value="traits1" className="shadowDiv rounded-full py-5 font-bold font-plus">TRAITS</option>
+							<option value="traits2" className="shadowDiv rounded-full py-5 font-bold font-plus">HEAD</option>
+							<option value="traits3" className="shadowDiv rounded-full py-5 font-bold font-plus">FUR</option>
+						</select>
+						<div className="relative searchBy rounded-full w-3/4 flex">
+							<input
+								type='number'
+								onChange={filtered}
+								value={nftId}
+								placeholder='Search by ID'
+								className="font-bold font-plus justify-center text-grey-content focus:outline-none placeholder-gray-300 p-3 searchBy rounded-full w-3/4"
+							/>
+							<button type="submit" className="absolute block right-4 top-6 text-grey-content text-xl"><FiSearch/></button> 
 						</div>
-					)}
+						
+					</div>
+					{ searchId && searchId.length > 0 ? (
+						<div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-5 xs:gap-2 sm:gap-5 w-full">
+						{searchId.map((fluf: any, key) => {
+							return (
+								<>
+								<NftCard
+									key={key}
+									image={fluf.images.image_small}
+									text="Estimated Price: "
+									value={fluf.floor_adjusted_predicted_price}
+								/>
+								</>
+								
+							)
+						})}
+						</div>
+						) : (
+							nftFluf && (
+								<div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-5 xs:gap-2 sm:gap-5 w-full">
+									{nftFluf.map((fluf: any, key:any) => {
+										return (
+											<NftCard
+												key={key}
+												image={fluf.images.image_small}
+												text="Estimated Price: "
+												value={fluf.floor_adjusted_predicted_price}
+											/>	
+										)
+									})}
+								</div>
+							)
+						)
+					}
 				</div>
 			</div>
 		</>

@@ -45,7 +45,7 @@ const ColorGuide = ({ percentFilter, setPercentFilter, filterBy }: Props) => {
   return (
     <ul className='flex gap-2 gray-box h-16 bg-opacity-100 items-baseline w-[248px]'>
       {/* Best/Min */}
-      <li className='text-gray-200 text-sm font-semibold'>
+      <li className='text-grey-content text-sm font-semibold'>
         {filterBy === 'price_difference' ? 'Best' : 'Min'}
       </li>
       {typedKeys(FILTER_COLORS).map(
@@ -64,7 +64,7 @@ const ColorGuide = ({ percentFilter, setPercentFilter, filterBy }: Props) => {
                 onClick={() => handleColorClick(colorOptions[i])}
               />
               {/* Text */}
-              <span className='hidden peer-hover:block absolute -top-5 text-gray-200 font-semibold text-xs'>
+              <span className='hidden peer-hover:block absolute -top-5 text-grey-content font-semibold text-xs'>
                 {colorOptions[i]}%
               </span>
             </li>
