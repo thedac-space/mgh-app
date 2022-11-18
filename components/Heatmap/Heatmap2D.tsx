@@ -90,19 +90,17 @@ const MaptalksCanva = ({
         })
 
         const viewport: any = new Viewport({
-            worldWidth: width,
-            worldHeight: height,
             interaction: map.renderer.plugins.interaction,
             passiveWheel: false,
-        })
-
-        viewport.drag().pinch().wheel()
-        viewport.clampZoom({
+        }).drag().pinch().wheel().clampZoom({
             minWidth: TILE_SIZE * 8,
             minHeight: TILE_SIZE * 8,
-            maxWidth: TILE_SIZE * 400,
-            maxHeight: TILE_SIZE * 400,
-        })
+            maxWidth: TILE_SIZE * 300,
+            maxHeight: TILE_SIZE * 300,
+        })/* .clamp({
+            direction: 'all',
+            underflow: 'center'
+        }) */
 
         map.stage.addChild(viewport)
         document.getElementById('map')?.appendChild(map.view)
@@ -217,6 +215,7 @@ const MaptalksCanva = ({
             color = color.includes('rgb')
                 ? rgbToHex(color.split('(')[1].split(')')[0])
                 : '0x' + color.split('#')[1]
+
             const rectangle: any = new PIXI.Sprite(PIXI.Texture.WHITE)
             const chunkX = Math.floor(land.coords.x / CHUNK_SIZE)
             const chunkY = Math.floor(land.coords.y / CHUNK_SIZE)
@@ -278,16 +277,29 @@ const MaptalksCanva = ({
                     : '0x' + color.split('#')[1]
             }
         }
-    }, [filter, percentFilter, legendFilter])
+    }, [filter, percentFilter, legendFilter, x, y])
 
     useEffect(() => {
         if (!x || !y) return
-        viewport.moveCenter(x * TILE_SIZE, - y * TILE_SIZE)
-        /* const chunkX = Math.floor(x / CHUNK_SIZE)
+        y = -y
+
+        viewport.moveCenter(x * TILE_SIZE, y * TILE_SIZE)
+
+        const chunkX = Math.floor(x / CHUNK_SIZE)
         const chunkY = Math.floor(y / CHUNK_SIZE)
         const chunkKey = `${chunkX}:${chunkY}`
-        let chunckSelected = chunks[chunkKey]
-        console.log(chunckSelected) */
+        let chunkContainer = chunks[chunkKey]
+
+        x = x * TILE_SIZE - chunkX * BLOCK_SIZE
+        y = y * TILE_SIZE - chunkY * BLOCK_SIZE
+
+        const child = chunkContainer?.children.find(
+            (child: any) => child.x === x && child.y === y
+        )
+
+        const prevColor = child.tint 
+        child.tint = 4 * 0xFF00E8
+        return (() => { child.tint = prevColor })
     }, [x, y])
 
     useEffect(() => { })
