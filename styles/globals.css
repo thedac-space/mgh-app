@@ -41,17 +41,17 @@
 
   .scrollbar::-webkit-scrollbar-track {
     border-radius: 100vh;
-    background: #1E293B;
+    background: #F8F9FA;
   }
 
   .scrollbar::-webkit-scrollbar-thumb {
-    background: #FFFFFF;
+    background: #D9D9D9;
     border-radius: 100vh;
-    border: 3px solid #1E293B;
+    border: 3px solid #D9D9D9;
   }
 
   .scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #8080f0;
+    background: #D9D9D9;
   }
 
   @font-face {

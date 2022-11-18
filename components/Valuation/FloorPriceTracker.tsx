@@ -50,14 +50,14 @@ const FloorPriceTracker = ({ coinPrices, metaverse }: Props) => {
 
   return !predictions ? (
     <>
-      <div className='flex flex-col items-start gray-box'>
+      <div className='flex flex-col items-start border-t border-l border-white/10 rounded-xl p-5 w-full bg-[#E9ECF6]'>
         <p className={`text-lg xl:text-xl font-medium text-grey-content font-plus`}>
           We couldn't obtain floor price for the {formatName(metaverse)} lands
           collection. Check{' '}
           <a
             href='https://opensea.io/collection'
             target='_blank'
-            className='hover:underline text-pink-600'
+            className='hover:underline text-grey-content'
           >
             Open Sea Market
           </a>{' '}
@@ -67,19 +67,23 @@ const FloorPriceTracker = ({ coinPrices, metaverse }: Props) => {
     </>
   ) : (
     <>
-      <div className='flex flex-col items-start gray-box'>
-        <p className={`text-lg xl:text-xl font-medium text-gray-300 mb-4`}>
-          Floor Price:{' '}
-        </p>
-        <div
-          className={
-            (loading ? 'opacity-0' : 'opacity-100') +
-            ' transition-all duration-300'
-          }
-        >
-          <PriceList predictions={predictions} metaverse={metaverse} />
-        </div>
+    <div>
+      <p className={`text-lg xl:text-xl font-medium font-plus text-grey-content mb-4`}>
+        Floor Price:{' '}
+      </p>
+      <div className='flex flex-col items-start border-t border-l border-white/10 rounded-xl p-5 w-full bg-[#E9ECF6]'>
+          
+          <div
+            className={
+              (loading ? 'opacity-0' : 'opacity-100') +
+              ' transition-all duration-300'
+            }
+          >
+            <PriceList predictions={predictions} metaverse={metaverse} />
+          </div>
       </div>
+    </div>
+      
     </>
   )
 }

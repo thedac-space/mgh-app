@@ -42,7 +42,7 @@ const Home: NextPage = () => {
 			await axios
 				.get(
 					"https://services.itrmachines.com/" +
-						"fluf/collection?from=0&size=10000"
+						"fluf/collection?from=0&size=5000"
 				)
 				.then((response) => {
 					Object.entries(response.data).forEach(([key, value]) => {
@@ -84,7 +84,7 @@ const Home: NextPage = () => {
 					<span>
 						<img src="/images/imagenft.svg" alt="IMG" className="w-[1500px]" />
 					</span>
-					<div className="flex  border-t border-l border-white/10 rounded-3xl shadowDiv p-5 bg-opacity-30 justify-between bg-[#F9FAFB]">
+					<div className="flex border-t border-l border-white/10 rounded-3xl shadowDiv p-5 bg-opacity-30 justify-between bg-[#F9FAFB]">
 						<div className="pr-5 w-3/4">
 							<h2 className="text-grey-content font-plus font-normal rounded-2xl lg:text-5xl text-3xl mb-0 sm:mb-2">
 								Description
@@ -175,7 +175,7 @@ const Home: NextPage = () => {
 												key={key}
 												image={fluf.images.image_small}
 												text="Estimated Price: "
-												value={fluf.floor_adjusted_predicted_price}
+												value={fluf.tokenId}
 											/>	
 										)
 									})}

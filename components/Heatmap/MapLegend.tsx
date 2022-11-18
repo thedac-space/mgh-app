@@ -46,7 +46,7 @@ const MapLegend = ({
             }
             onClick={() => handleLegendClick(key)}
           />
-          <span className='text-gray-200 text-sm md:text-base font-semibold'>
+          <span className='text-grey-content text-sm md:text-base font-semibold'>
             {formatName(key)}
           </span>
         </li>

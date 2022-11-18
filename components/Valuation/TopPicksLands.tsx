@@ -29,7 +29,7 @@ const TopPicksLands = ({ metaverse }: Props) => {
   }, [metaverse])
 
   return (
-    <div className='flex flex-col items-start gray-box'>
+    <div className='flex flex-col items-start'>
       {loading ? (
         <p className='text-gray-300 flex gap-2'>
           Loading Lands{' '}
@@ -38,7 +38,7 @@ const TopPicksLands = ({ metaverse }: Props) => {
       ) : (
         <table className='w-full table-fixed border-collapse'>
           <thead className='bg-transparent text-slate-200 w-full'>
-            <tr className='flex w-full mb-4 text-left bg-slate-800'>
+            <tr className='flex w-full mb-4 text-left text-grey-content font-plus bg-[#ECEEF8] rounded-lg'>
               <th className='p-4 w-1/5 text-xs lg:text-lg md:text-base '>
                 Land
               </th>
@@ -56,17 +56,17 @@ const TopPicksLands = ({ metaverse }: Props) => {
               </th>
             </tr>
           </thead>
-          <tbody className='bg-transparent flex flex-col items-center justify-between overflow-y-scroll w-full h-52 scrollbar--y scrollbar'>
+          <tbody className='bg-transparent flex flex-col w-full justify-between overflow-y-scroll h-52 scrollbar--y '>
             {typedKeys(picks).map((key) => {
               return (
-                <tr key={key} className='flex w-full mb-4'>
+                <tr key={key} className='flex mb-4 text-grey-content font-plus'>
                   <td className='flex justify-start px-4 content-center w-1/5'>
                     <img
                       src={picks[key]['images']['image_url']}
                       className='lg:h-12 lg:w-12 md:h-8 md:w-8 bg-white rounded-full border mb-4 mt-4 w-6 h-6'
                     />
                   </td>
-                  <td className='flex justify-start px-4 content-center items-center text-sky-400 pt-0.5 w-1/5 hover:underline'>
+                  <td className='flex justify-start px-4 content-center items-center pt-0.5 w-1/5 hover:underline'>
                     <a
                       className='text-sm lg:text-2xl font-medium md:text-base'
                       href={picks[key]['external_link']}
@@ -74,17 +74,17 @@ const TopPicksLands = ({ metaverse }: Props) => {
                       {picks[key]['coords'] ? `(x:${picks[key]['coords']['x']}, y:${picks[key]['coords']['y']})` : picks[key]['center'] ? `(${picks[key]['name']})` : `no-asset`}
                     </a>
                   </td>
-                  <td className='flex justify-start px-4 content-center items-center text-sm lg:text-2xl font-medium md:text-base text-gray-300 pt-0.5 w-1/5'>
+                  <td className='flex justify-start px-4 content-center items-center text-sm lg:text-2xl font-medium md:text-base pt-0.5 w-1/5'>
                     <span>
                       {parseFloat(picks[key]['current_price_eth']).toFixed(2)}
                     </span>
                   </td>
-                  <td className='flex justify-start px-4 content-center items-center text-sm lg:text-2xl font-medium md:text-base text-gray-300 pt-0.5 w-1/5'>
+                  <td className='flex justify-start px-4 content-center items-center text-sm lg:text-2xl font-medium md:text-base pt-0.5 w-1/5'>
                     <span>
                       {parseFloat(picks[key]['eth_predicted_price']).toFixed(2)}
                     </span>
                   </td>
-                  <td className='flex justify-start px-4 content-center items-center text-sm lg:text-2xl font-medium md:text-base text-gray-300 pt-0.5 w-1/5'>
+                  <td className='flex justify-start px-4 content-center items-center text-sm lg:text-2xl font-medium md:text-basept-0.5 w-1/5'>
                     <span>{parseFloat(picks[key]['gap']).toFixed(2)}%</span>
                   </td>
                 </tr>

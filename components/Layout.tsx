@@ -18,7 +18,7 @@ const Layout = ({ children }: any) => {
 
 	return (
 		<>
-			<div className="flex flex-row  xl:h-screen pt-0 bg-grey-darkest">
+			<div className="flex flex-row  xl:h-screen pt-0 bg-grey-darkest overflow-hidden">
 				{openModal && <WalletModal onDismiss={() => setOpenModal(false)} />}
 
 				{/* <div className="h-72 w-72 rounded-full border bg-gradient-to-br from-blue-500 to-pink-600 blur-3xl fixed top-0 left-0 xl:top-20 xl:left-0.15 2xl:left-0.125 opacity-80" />
@@ -58,8 +58,8 @@ const Layout = ({ children }: any) => {
 						</div>
 					</div>
 				</div>
-				<div className="hidden xl:flex xl:flex-col space-x-10 w-full p-5 bg-[#FFF]">
-					<div className="flex space-x-5 justify-end pb-3">
+				<div className="hidden xl:flex xl:flex-col space-x-10 w-full p-5 bg-[#FFF] overflow-hidden">
+					<div className="flex space-x-3 justify-end pb-3">
 						{web3Provider && chainId && ( 
 							<NetworkButton
 								provider={web3Provider.provider}

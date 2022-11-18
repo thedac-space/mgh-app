@@ -70,7 +70,7 @@ const AddLandForm = ({ state, addToWatchList, ids, landKeys }: Props) => {
       </div>
     </>
   ) : (
-    <div className='gray-box bg-opacity-10 transition-all w-fit mb-14 flex flex-col md:flex-row gap-6'>
+    <div className='gray-box bg-opacity-10 transition-all w-fit mb-14 flex flex-col md:flex-row gap-6 font-plus'>
       {/* Metaverse Options */}
       <div>
         <p className='font-medium mb-2 text-xs md:text-sm pt-1'>
@@ -100,7 +100,7 @@ const AddLandForm = ({ state, addToWatchList, ids, landKeys }: Props) => {
                   metaverse === landKey ? 'grayscale-0' : 'grayscale'
                 } group-hover:grayscale-0 transition duration-300 ease-in-out`}
               />
-              <p className='font-medium text-xs md:text-sm pt-1'>
+              <p className='font-medium text-xs md:text-sm pt-1 text-grey-content'>
                 {formatName(landKey)}
               </p>
             </button>
@@ -114,7 +114,7 @@ const AddLandForm = ({ state, addToWatchList, ids, landKeys }: Props) => {
           <div className='flex gap-2 relative items-center'>
             <p
               className={
-                'font-medium mb-2 text-xs md:text-sm pt-1 ' +
+                'font-medium mb-2 text-xs md:text-sm pt-1 font-plus ' +
                 (state === 'successId' && 'text-green-500')
               }
             >
@@ -138,7 +138,7 @@ const AddLandForm = ({ state, addToWatchList, ids, landKeys }: Props) => {
                 (state === 'successId'
                   ? 'border-green-500 placeholder-green-500'
                   : 'border-gray-300 placeholder-gray-300') +
-                ' bg-transparent block w-[8.5rem] text-white p-3 focus:outline-none border border-opacity-40 hover:border-opacity-100 focus:border-opacity-100 transition duration-300 ease-in-out rounded-xl placeholder-opacity-75'
+                ' bg-transparent block w-[8.5rem] text-grey-content p-3 focus:outline-none border border-opacity-40 hover:border-opacity-100 focus:border-opacity-100 transition duration-300 ease-in-out rounded-xl placeholder-opacity-75'
               }
             />
             {/* Add land Button */}
@@ -191,7 +191,7 @@ const AddLandForm = ({ state, addToWatchList, ids, landKeys }: Props) => {
                   (state === 'successCoordinates'
                     ? 'border-green-500 placeholder-green-500'
                     : 'border-gray-300 placeholder-gray-300') +
-                  ' bg-transparent block w-16  text-white p-3 focus:outline-none border border-opacity-40 hover:border-opacity-100 focus:border-opacity-100 transition duration-300 ease-in-out rounded-xl placeholder-opacity-75'
+                  ' bg-transparent block w-16  text-grey-content p-3 focus:outline-none border border-opacity-40 hover:border-opacity-100 focus:border-opacity-100 transition duration-300 ease-in-out rounded-xl placeholder-opacity-75'
                 }
               />
               <input
