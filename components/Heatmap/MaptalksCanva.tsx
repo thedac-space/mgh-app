@@ -238,10 +238,6 @@ const MaptalksCanva = ({
         }).addTo(map)
     }, [filter, percentFilter, legendFilter, x, y])
 
-    useEffect(() => {
-        return (() => {})
-    })
-
     return (
         <canvas
             width={width}

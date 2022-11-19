@@ -288,7 +288,7 @@ const MaptalksCanva = ({
         try {
             viewport.moveCenter(x * TILE_SIZE, y * TILE_SIZE)
         } catch (e) {
-            console.log('Center no set')
+            return
         }
 
         const chunkX = Math.floor(x / CHUNK_SIZE)
