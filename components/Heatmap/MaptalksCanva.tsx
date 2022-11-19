@@ -37,8 +37,7 @@ const MaptalksCanva = ({
     legendFilter,
     x,
     y,
-    onClick,
-    metaverse,
+    onClick
 }: IMaptalksCanva) => {
     const [map, setMap] = useState<maptalks.Map>()
     const [mapData, setMapData] = useState<Record<string, ValuationTile>>()
@@ -147,8 +146,8 @@ const MaptalksCanva = ({
             layer.addGeometry(polygon)
             polygons.push(polygon)
         })
-        socket.on('render-finish', () => {
-            console.log('FINISH')
+
+        socket.on('render', () => {
             // set map's max extent to map's map view power by 2
             map.setMaxExtent(new maptalks.Extent(-2, -2, 2, 2))
             setMapData(lands)
@@ -161,7 +160,6 @@ const MaptalksCanva = ({
         let lands: any = []
         map.removeLayer('vector')
         let coloredAtlas = setColours(mapData!, filter)
-
         if (map && x && y) {
             map.setCenter(new maptalks.Coordinate(x, y))
         }
@@ -240,7 +238,9 @@ const MaptalksCanva = ({
         }).addTo(map)
     }, [filter, percentFilter, legendFilter, x, y])
 
-    useEffect(() => {})
+    useEffect(() => {
+        return (() => {})
+    })
 
     return (
         <canvas

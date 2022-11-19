@@ -13,7 +13,7 @@ export type Layer = (
   filter?: MapFilter,
   percentFilter?: PercentFilter,
   legendFilter?: LegendFilter,
-  land?:any,
+  land?: any,
 ) => Tile | null
 
 export type Tile = {
@@ -70,6 +70,7 @@ export type ValuationTile = {
   owner?: string
   external_link: string,
   floor_adjusted_predicted_price?: number
+  tokenId?: string
 }
 
 export type MapFilter =

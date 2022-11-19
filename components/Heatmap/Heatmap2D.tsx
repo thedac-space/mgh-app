@@ -22,6 +22,7 @@ let socket = io(process.env.SOCKET_SERVICE!, {
 let globalFilter: MapFilter,
     globalPercentFilter: PercentFilter,
     globalLegendFilter: LegendFilter
+
 interface IMaptalksCanva {
     width: number | undefined
     height: number | undefined
@@ -173,6 +174,7 @@ const MaptalksCanva = ({
             if (currentSprite && !isDragging) {
                 const x = currentSprite.landX,
                     y = currentSprite.landY
+                currentTint = 4 * 0xFF9990
                 onClick(undefined, x, y * -1)
             }
         })
@@ -283,7 +285,11 @@ const MaptalksCanva = ({
         if (!x || !y) return
         y = -y
 
-        viewport.moveCenter(x * TILE_SIZE, y * TILE_SIZE)
+        try {
+            viewport.moveCenter(x * TILE_SIZE, y * TILE_SIZE)
+        } catch (e) {
+            console.log('Center no set')
+        }
 
         const chunkX = Math.floor(x / CHUNK_SIZE)
         const chunkY = Math.floor(y / CHUNK_SIZE)
@@ -297,12 +303,16 @@ const MaptalksCanva = ({
             (child: any) => child.x === x && child.y === y
         )
 
-        const prevColor = child.tint 
-        child.tint = 4 * 0xFF00E8
-        return (() => { child.tint = prevColor })
-    }, [x, y])
+        const prevColor = child.tint
+        const prevWidth = child.width
 
-    useEffect(() => { })
+        child.tint = 4 * 0xFF9990
+        child.width = child.height = TILE_SIZE - (BORDE_SIZE / 3)
+        return (() => {
+            child.tint = prevColor
+            child.width = child.height = prevWidth
+        })
+    }, [x, y])
 
     return <div id="map" style={{ width, height }} />
 }

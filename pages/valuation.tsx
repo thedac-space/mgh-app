@@ -161,7 +161,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
             }
         }
         try {
-            if (!lands.tokenId) throw "myException"
+            if (!lands.name) throw "myException"
             const landData = findHeatmapLand(
                 lands,
                 prices,
@@ -173,6 +173,8 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                 tokenId,
                 filterBy
             )
+            x = lands.coords ? lands.coords.x : lands.center.x
+            y = lands.coords ? lands.coords.y : lands.center.y
             setSelected({
                 x,
                 y,
