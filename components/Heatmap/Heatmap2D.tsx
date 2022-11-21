@@ -202,7 +202,6 @@ const MaptalksCanva = ({
             }
             lands[name] = land!
             lands[name].land_id = land.tokenId
-            console.log(land)
             setMapData(lands)
             let value = land
             let tile: any
