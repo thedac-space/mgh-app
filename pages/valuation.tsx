@@ -115,6 +115,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
         const coords = { x, y }
         setHovered({ coords, owner, name })
     }
+
     useEffect(() => {
         setIsVisible(false)
     }, [metaverse])
@@ -129,47 +130,24 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
         setCardData(undefined)
         setMapState('loadingQuery')
         setIsVisible(true)
-        if (lands && metaverse) {
+        if (!metaverse) return
+        if (!lands) {
             try {
-                const landData = findHeatmapLand(
-                    lands,
-                    prices,
-                    metaverse,
+                let data
+                const parameters =
+                    x && y ? `x=${x}&y=${y}` : tokenId ? `tokenId=${tokenId}` : null
+                const response = await fetch(
+                    `${process.env.ITRM_SERVICE}${metaverse == 'somnium-space' || metaverse == 'axie-infinity'
+                        ? ''
+                        : '/test'
+                    }/${metaverse}/${metaverse == 'axie-infinity' ? 'predict' : 'map'
+                    }?${parameters}`,
                     {
-                        x: x,
-                        y: y,
-                    },
-                    tokenId,
-                    filterBy
+                        method: 'GET',
+                        body: JSON.stringify(data),
+                    }
                 )
-                setSelected({
-                    x,
-                    y,
-                })
-                setMapState('loadedQuery')
-                setCardData(landData as CardData)
-            } catch (e) {
-                setMapState('errorQuery')
-                return setTimeout(() => setIsVisible(false), 1100)
-            }
-        } else if (!lands && !metaverse) return
-        else if (!lands) {
-            let data
-            const parameters =
-                x && y ? `x=${x}&y=${y}` : tokenId ? `tokenId=${tokenId}` : null
-            const response = await fetch(
-                `${process.env.ITRM_SERVICE}${metaverse == 'somnium-space' || metaverse == 'axie-infinity'
-                    ? ''
-                    : '/test'
-                }/${metaverse}/${metaverse == 'axie-infinity' ? 'predict' : 'map'
-                }?${parameters}`,
-                {
-                    method: 'GET',
-                    body: JSON.stringify(data),
-                }
-            )
-            lands = await response.json()
-            try {
+                lands = await response.json()
                 if (metaverse !== 'axie-infinity') {
                     Object.entries(lands).forEach(([key, value]) => {
                         lands = value
@@ -177,10 +155,37 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                     })
                 }
             } catch (e) {
+                console.log('error')
                 setMapState('errorQuery')
                 return setTimeout(() => setIsVisible(false), 1100)
             }
         }
+        try {
+            if (!lands.name) throw "myException"
+            const landData = findHeatmapLand(
+                lands,
+                prices,
+                metaverse,
+                {
+                    x: x,
+                    y: y,
+                },
+                tokenId,
+                filterBy
+            )
+            x = lands.coords ? lands.coords.x : lands.center.x
+            y = lands.coords ? lands.coords.y : lands.center.y
+            setSelected({
+                x,
+                y,
+            })
+            setMapState('loadedQuery')
+            setCardData(landData as CardData)
+        } catch (e) {
+            setMapState('errorQuery')
+            return setTimeout(() => setIsVisible(false), 1100)
+        }
+
     }
 
     // Use Effect for Metaverse Fetching and Map creation
@@ -340,7 +345,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                                         handleHover(x, y, name, owner)
                                     }}
                                     onClick={(
-                                        land: ValuationTile,
+                                        land: ValuationTile | undefined,
                                         x: number,
                                         y: number
                                     ) => {

@@ -28,21 +28,12 @@ const MapSearch = ({ mapState, handleMapSelection }: Props) => {
 
   const [searchBy, setSearchBy] = useState<'coordinates' | 'id'>('coordinates')
   const searchById = (e: React.FormEvent<HTMLFormElement>) => {
-
-      
-        e.preventDefault()
-        handleMapSelection(undefined, undefined, undefined, landId)
-      
-    
+    e.preventDefault()
+    handleMapSelection(undefined, undefined, undefined, landId)
   }
   const searchByCoordinates = (e: React.FormEvent<HTMLFormElement>) => {
-
-   
-        e.preventDefault()
-        handleMapSelection(undefined, Number(coordinates.X), Number(coordinates.Y), undefined)
-      
-
-    
+    e.preventDefault()
+    handleMapSelection(undefined, Number(coordinates.X), Number(coordinates.Y), undefined)
   }
   const searchOptions = {
     coordinates: {

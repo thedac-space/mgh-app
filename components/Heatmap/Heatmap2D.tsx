@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
     LegendFilter,
     MapFilter,
@@ -22,6 +22,7 @@ let socket = io(process.env.SOCKET_SERVICE!, {
 let globalFilter: MapFilter,
     globalPercentFilter: PercentFilter,
     globalLegendFilter: LegendFilter
+
 interface IMaptalksCanva {
     width: number | undefined
     height: number | undefined
@@ -34,7 +35,7 @@ interface IMaptalksCanva {
         name: string | undefined,
         owner: string | undefined
     ) => void
-    onClick: (land: ValuationTile, x: number, y: number) => void
+    onClick: (land: ValuationTile | undefined, x: number, y: number) => void
     metaverse: Metaverse
     x: number | undefined
     y: number | undefined
@@ -90,19 +91,17 @@ const MaptalksCanva = ({
         })
 
         const viewport: any = new Viewport({
-            worldWidth: width,
-            worldHeight: height,
             interaction: map.renderer.plugins.interaction,
             passiveWheel: false,
-        })
-
-        viewport.drag().pinch().wheel()
-        viewport.clampZoom({
+        }).drag().pinch().wheel().clampZoom({
             minWidth: TILE_SIZE * 8,
             minHeight: TILE_SIZE * 8,
-            maxWidth: TILE_SIZE * 400,
-            maxHeight: TILE_SIZE * 400,
-        })
+            maxWidth: TILE_SIZE * 300,
+            maxHeight: TILE_SIZE * 300,
+        })/* .clamp({
+            direction: 'all',
+            underflow: 'center'
+        }) */
 
         map.stage.addChild(viewport)
         document.getElementById('map')?.appendChild(map.view)
@@ -175,17 +174,12 @@ const MaptalksCanva = ({
             if (currentSprite && !isDragging) {
                 const x = currentSprite.landX,
                     y = currentSprite.landY
-                const land = mapData[x + ',' + y]
-                onClick(land, x, y * -1)
+                currentTint = 4 * 0xFF9990
+                onClick(undefined, x, y * -1)
             }
         })
     }, [viewport])
 
-    useEffect(() => {
-        ;(globalFilter = filter),
-            (globalPercentFilter = percentFilter),
-            (globalLegendFilter = legendFilter)
-    }, [filter, percentFilter, legendFilter])
 
     useEffect(() => {
         if (!viewport) return
@@ -225,6 +219,7 @@ const MaptalksCanva = ({
             color = color.includes('rgb')
                 ? rgbToHex(color.split('(')[1].split(')')[0])
                 : '0x' + color.split('#')[1]
+
             const rectangle: any = new PIXI.Sprite(PIXI.Texture.WHITE)
             const chunkX = Math.floor(land.coords.x / CHUNK_SIZE)
             const chunkY = Math.floor(land.coords.y / CHUNK_SIZE)
@@ -262,6 +257,12 @@ const MaptalksCanva = ({
     }, [width, height])
 
     useEffect(() => {
+        ; (globalFilter = filter),
+            (globalPercentFilter = percentFilter),
+            (globalLegendFilter = legendFilter)
+    }, [filter, percentFilter, legendFilter])
+
+    useEffect(() => {
         if (!chunks || !mapData) return
         let lands = setColours(mapData, globalFilter)
         for (const key in chunks) {
@@ -280,11 +281,40 @@ const MaptalksCanva = ({
                     : '0x' + color.split('#')[1]
             }
         }
-    }, [filter, percentFilter, legendFilter])
+    }, [filter, percentFilter, legendFilter, x, y])
+
     useEffect(() => {
-        console.log('MapData')
-        console.log(mapData, Object.keys(mapData)?.length)
-    }, [mapData])
+        if (!x || !y) return
+        y = -y
+
+        try {
+            viewport.moveCenter(x * TILE_SIZE, y * TILE_SIZE)
+        } catch (e) {
+            return
+        }
+
+        const chunkX = Math.floor(x / CHUNK_SIZE)
+        const chunkY = Math.floor(y / CHUNK_SIZE)
+        const chunkKey = `${chunkX}:${chunkY}`
+        let chunkContainer = chunks[chunkKey]
+
+        x = x * TILE_SIZE - chunkX * BLOCK_SIZE
+        y = y * TILE_SIZE - chunkY * BLOCK_SIZE
+
+        const child = chunkContainer?.children.find(
+            (child: any) => child.x === x && child.y === y
+        )
+
+        const prevColor = child.tint
+        const prevWidth = child.width
+
+        child.tint = 4 * 0xFF9990
+        child.width = child.height = TILE_SIZE - (BORDE_SIZE / 3)
+        return (() => {
+            child.tint = prevColor
+            child.width = child.height = prevWidth
+        })
+    }, [x, y])
 
     return <div id="map" style={{ width, height }} />
 }
