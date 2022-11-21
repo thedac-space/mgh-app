@@ -193,11 +193,12 @@ const MaptalksCanva = ({
             path: '/heatmap-backend',
             transports: ['websocket'],
         })
-        socket.emit('render', metaverse, checkpoint)
+        socket.emit('render', metaverse)
         let lands: any = mapData || {}
         let localChunks: any = chunks || {}
         let localCheckpoint: number = 0
-        const renderTile = (land: any, _checkpoint: number) => {
+        const renderTile = (land: any) => {
+            //console.log(land)
             if (!localCheckpoint) localCheckpoint = checkpoint
             let name = ''
             land.coords.y *= -1
@@ -207,6 +208,7 @@ const MaptalksCanva = ({
             }
             lands[name] = land!
             lands[name].land_id = land.tokenId
+            console.log(land)
             setMapData(lands)
             let value = land
             let tile: any
@@ -279,8 +281,10 @@ const MaptalksCanva = ({
             }
         }
     }, [filter, percentFilter, legendFilter])
-
-    useEffect(() => {})
+    useEffect(() => {
+        console.log('MapData')
+        console.log(mapData, Object.keys(mapData)?.length)
+    }, [mapData])
 
     return <div id="map" style={{ width, height }} />
 }
