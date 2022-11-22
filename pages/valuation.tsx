@@ -2,29 +2,16 @@ import { NextPage } from "next";
 import React, { useEffect, useRef, useState } from "react";
 import { Fade } from "react-awesome-reveal";
 import {
-	Atlas,
-	AtlasTile,
 	HeatmapSize,
 	LandCoords,
-	Layer,
 	LegendFilter,
 	MapFilter,
 	PercentFilter,
+	ValuationTile,
 } from "../lib/heatmap/heatmapCommonTypes";
 import { useVisible } from "../lib/hooks";
-import { formatName, getState, typedKeys } from "../lib/utilities";
+import { formatName } from "../lib/utilities";
 import { ICoinPrices } from "../lib/valuation/valuationTypes";
-import {
-	decentralandAPILayer,
-	filteredLayer,
-} from "../lib/heatmap/heatmapLayers";
-import {
-	fetchDecentralandAtlas,
-	fetchITRMAtlas,
-} from "../lib/heatmap/fetchAtlas";
-import { setColours } from "../lib/heatmap/valuationColoring";
-import { getHeatmapSize } from "../lib/heatmap/getHeatmapSize";
-
 import { IAPIData, IPredictions, UserData } from "../lib/types";
 import {
 	FloorPriceTracker,
@@ -35,7 +22,6 @@ import {
 import Link from "next/link";
 import {
 	ColorGuide,
-	HeatmapLoader,
 	MapCard,
 	MapChooseFilter,
 	MapChooseMetaverse,
@@ -44,7 +30,6 @@ import {
 	MapLandSummary,
 	MapMobileFilters,
 	MapSearch,
-	TileMap,
 	MaptalksCanva,
 } from "../components/Heatmap";
 import { getUserInfo } from "../lib/FirebaseUtilities";
@@ -54,9 +39,10 @@ import useConnectWeb3 from "../backend/connectWeb3";
 import { Chains } from "../lib/chains";
 import { FullScreenButton } from "../components/General";
 import { Metaverse } from "../lib/metaverse";
-import { getLandSummary } from "../lib/heatmap/getLandSummary";
 import { findHeatmapLand } from "../lib/heatmap/findHeatmapLand";
 import Head from "next/head";
+import { Heatmap2D } from "../components/Heatmap/index";
+import { metaverseInitialCenter } from "../lib/valuation/valuationUtils";
 
 // Making this state as an object in order to iterate easily through it
 export const VALUATION_STATE_OPTIONS = [
@@ -87,7 +73,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 	const { web3Provider } = useConnectWeb3();
 
 	const [mapState, setMapState] = useState<ValuationState>("loading");
-	const [loading] = getState(mapState, ["loading"]);
+	/* const [loading] = getState(mapState, ['loading']) */
 
 	const [selected, setSelected] = useState<LandCoords>();
 	const [hovered, setHovered] = useState<Hovered>({
@@ -99,26 +85,11 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 	const [filterBy, setFilterBy] = useState<MapFilter>("basic");
 	const [percentFilter, setPercentFilter] = useState<PercentFilter>();
 	const [legendFilter, setLegendFilter] = useState<LegendFilter>();
-	const [atlas, setAtlas] = useState<Atlas>();
-	const [landsLoaded, setLandsLoaded] = useState<number>(0);
 	const [heatmapSize, setHeatmapSize] = useState<HeatmapSize>();
 	const [cardData, setCardData] = useState<CardData>();
 	function isSelected(x: number, y: number) {
 		return selected?.x === x && selected?.y === y;
 	}
-	const selectedStrokeLayer: Layer = (x, y) => {
-		return isSelected(x, y) ? { color: "#ff0044", scale: 1.4 } : null;
-	};
-
-	const hoverLayer: Layer = (x, y) => {
-		return hovered?.coords?.x === x && hovered?.coords?.y === y
-			? { color: "#db2777", scale: 1.4 }
-			: null;
-	};
-
-	const selectedFillLayer: Layer = (x, y) => {
-		return isSelected(x, y) ? { color: "#ff9990", scale: 1.2 } : null;
-	};
 
 	const mapDivRef = useRef<HTMLDivElement>(null);
 	const [dims, setDims] = useState({
@@ -135,112 +106,98 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 		});
 	};
 
-	const handleHover = (x: number, y: number) => {
-		if (!atlas) return;
-		const map = metaverse === "decentraland" ? atlas.decentraland : atlas.ITRM;
-		const { name, owner, coords } = getLandSummary(atlas, { x, y }, metaverse);
+	const handleHover = (
+		x: number,
+		y: number,
+		name: string | undefined,
+		owner: string | undefined
+	) => {
+		const coords = { x, y };
 		setHovered({ coords, owner, name });
 	};
 
+	useEffect(() => {
+		setIsVisible(false);
+	}, [metaverse]);
+
 	// Main Search Function through Clicks,Form inputs.
 	const handleMapSelection = async (
+		lands?: ValuationTile | any,
 		x?: number,
 		y?: number,
 		tokenId?: string
 	) => {
-		if (!atlas || !atlas?.ITRM || !metaverse) return;
-		x && y && setSelected({ x: x, y: y });
 		setCardData(undefined);
 		setMapState("loadingQuery");
 		setIsVisible(true);
-		const landData = findHeatmapLand(
-			atlas.ITRM,
-			prices,
-			metaverse,
-			tokenId,
-			{
-				x: x,
-				y: y,
-			},
-			filterBy
-		);
-		if (!landData) {
+		if (!metaverse) return;
+		if (!lands) {
+			try {
+				let data;
+				const parameters =
+					x && y ? `x=${x}&y=${y}` : tokenId ? `tokenId=${tokenId}` : null;
+				const response = await fetch(
+					`${process.env.ITRM_SERVICE}${
+						metaverse == "somnium-space" || metaverse == "axie-infinity"
+							? ""
+							: "/test"
+					}/${metaverse}/${
+						metaverse == "axie-infinity" ? "predict" : "map"
+					}?${parameters}`,
+					{
+						method: "GET",
+						body: JSON.stringify(data),
+					}
+				);
+				lands = await response.json();
+				if (metaverse !== "axie-infinity") {
+					Object.entries(lands).forEach(([key, value]) => {
+						lands = value;
+						lands.land_id = key;
+					});
+				}
+			} catch (e) {
+				console.log("error");
+				setMapState("errorQuery");
+				return setTimeout(() => setIsVisible(false), 1100);
+			}
+		}
+		try {
+			if (!lands.name) throw "myException";
+			const landData = findHeatmapLand(
+				lands,
+				prices,
+				metaverse,
+				{
+					x: x,
+					y: y,
+				},
+				tokenId,
+				filterBy
+			);
+			x = lands.coords ? lands.coords.x : lands.center.x;
+			y = lands.coords ? lands.coords.y : lands.center.y;
+			setSelected({
+				x,
+				y,
+			});
+			setMapState("loadedQuery");
+			setCardData(landData as CardData);
+		} catch (e) {
 			setMapState("errorQuery");
 			return setTimeout(() => setIsVisible(false), 1100);
 		}
-		const id = landData?.landCoords.x + "," + landData?.landCoords.y;
-		if (
-			!(id in atlas.ITRM) ||
-			(atlas.decentraland &&
-				(!(id in atlas.decentraland) ||
-					[5, 6, 7, 8, 12].includes(atlas.decentraland[id].type)))
-		) {
-			setMapState("errorQuery");
-			return setTimeout(() => setIsVisible(false), 1100);
-		}
-		setSelected({ x: landData.landCoords.x, y: landData.landCoords.y });
-		setMapState("loadedQuery");
-		setCardData(landData);
 	};
 
 	// Use Effect for Metaverse Fetching and Map creation
 	useEffect(() => {
-		const setData = async () => {
-			if (!metaverse) return;
-			setLandsLoaded(0);
-			setSelected(undefined);
-			setMapState("loading");
-			const ITRMAtlas = await fetchITRMAtlas(metaverse, setLandsLoaded);
-
-			if (address && web3Provider) {
-				// Lands in User's Watchlist
-				const watchlistData = await getUserInfo(address);
-				// Lands Owned by user
-				let userNFTs: string[] | undefined;
-				chainId === Chains.ETHEREUM_MAINNET.chainId &&
-					(userNFTs = await getUserNFTs(web3Provider, address, metaverse));
-				const userLands: UserData = {
-					portfolio: userNFTs,
-					watchlist: watchlistData && watchlistData[metaverse + "-watchlist"],
-				};
-				// Iterating through User's Portfolio and Watchlist
-				for (let key of typedKeys(userLands)) {
-					// Iterating through Map
-					typedKeys(ITRMAtlas).forEach((land) => {
-						// For each Land in user's Portfolio/Watchlist
-						userLands[key]?.forEach((stateLandId: any) => {
-							ITRMAtlas[land].land_id === stateLandId &&
-								(ITRMAtlas[land][key] = true);
-						});
-					});
-				}
-			}
-			let decentralandAtlas: Record<string, AtlasTile> | undefined;
-			if (metaverse === "decentraland") {
-				decentralandAtlas = await fetchDecentralandAtlas();
-			}
-			const atlasWithColours = await setColours(ITRMAtlas, filterBy);
-			const heatmapSize = getHeatmapSize({ ITRM: ITRMAtlas });
-			setHeatmapSize(heatmapSize);
-			setAtlas({ ITRM: atlasWithColours, decentraland: decentralandAtlas });
-			setMapState("loaded");
-		};
-		setData();
+		if (metaverse) setHeatmapSize(metaverseInitialCenter[metaverse]);
 		resize();
 		window.addEventListener("resize", resize);
 
 		return () => window.removeEventListener("resize", resize);
 	}, [metaverse, address]);
 
-	// Use Effect for changing filters
-	useEffect(() => {
-		if (!atlas) return;
-		const changeColours = async () => {
-			const atlasWithColours = await setColours(atlas.ITRM, filterBy);
-			setAtlas({ ...atlas, ITRM: atlasWithColours });
-		};
-		changeColours();
-	}, [filterBy, percentFilter]);
 	return (
 		<>
 			<Head>
@@ -250,11 +207,11 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 					content="Land Valuation with our Custom Heatmap"
 				/>
 			</Head>
-			<section className="w-full relative">
+			<section className="w-full h-full relative">
 				<div className="bg-[#F8F9FD] rounded-lg p-8">
 					{/* Main Header */}
 					<div className="border-t border-l border-white/10 rounded-xl p-5 w-full bg-opacity-30; flex flex-col lg:flex-row justify-between items-center mb-8 bg-grey-dark">
-						<h1 className="text-grey-content font-plus font-normal rounded-2xl lg:text-5xl text-3xl mb-0 sm:mb-2">
+						<h1 className="text-grey-content font-plus font-normal rounded-2xl lg:text-5xl text-3xl  mb-0 sm:mb-2">
 							LAND Valuation
 						</h1>
 						{/* Links Wrapper */}
@@ -271,20 +228,18 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 							))}
 						</div>
 					</div>
+
 					{/* Heatmap */}
-					<div className="relative mb-8 h-[55vh] w-full" ref={mapDivRef}>
+					<div className="relative mb-8 h-[55vh]" ref={mapDivRef}>
 						{!metaverse && (
 							<MapInitMvChoice
 								metaverse={metaverse}
 								setMetaverse={setMetaverse}
 							/>
 						)}
-						{loading && metaverse && (
-							<HeatmapLoader landsLoaded={landsLoaded} metaverse={metaverse} />
-						)}
-						{atlas && heatmapSize && !loading && metaverse && (
-							<div className="shadowDiv">
-								<div className="absolute top-0 z-20 flex gap-4 p-2 md:w-fit w-full">
+						{metaverse && (
+							<>
+								<div className="absolute top-0 z-20 flex gap-4 p-2 md:w-fit w-full unselectable">
 									<div>
 										{/* Top left Coordinates */}
 										{metaverse === "somnium-space" ? (
@@ -332,7 +287,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 									<div
 										className={
 											(isVisible && "hidden") +
-											" md:block absolute z-20 bottom-2 left-2"
+											" md:block absolute z-20 bottom-2 left-2 unselectable"
 										}
 									>
 										<ColorGuide
@@ -342,54 +297,64 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 										/>
 									</div>
 								)}
-
 								{/* Full screen button - Hides when MapCard is showing (all screens) */}
 								{!isVisible && (
 									<div className="absolute z-20 top-2 right-2 gray-box bg-opacity-100 w-fit h-15">
 										<FullScreenButton
 											fullScreenRef={mapDivRef}
-											className="text-lg text-grey-content hover:text-[#7c7b7b]"
+											className="text-lg text-grey-content"
 										/>
 									</div>
 								)}
 								{/*  Map */}
 								{metaverse !== "somnium-space" ? (
-									<TileMap
+									<Heatmap2D
 										// min and max values for x and y
-										minX={heatmapSize.minX}
-										maxX={heatmapSize.maxX}
-										minY={heatmapSize.minY}
-										maxY={heatmapSize.maxY}
-										// starting position of the map
-										x={Number(selected?.x || heatmapSize.initialY)}
-										y={Number(selected?.y || heatmapSize.initialX)}
-										// map filter (predicted_price, transfers, etc..)
+										minX={heatmapSize?.minX || 0}
+										maxX={heatmapSize?.maxX || 0}
+										minY={heatmapSize?.minY || 0}
+										maxY={heatmapSize?.maxY || 0}
+										initialX={heatmapSize?.initialX || 0}
+										initialY={heatmapSize?.initialY || 0}
 										filter={filterBy}
 										// Filter lands by percentage. On bottom left
 										percentFilter={percentFilter}
 										// Filter lands by utility (watchlist, portfolio, etc..). On bottom right
+										// starting position of the map
+										x={
+											typeof selected?.x == "string"
+												? parseFloat(selected?.x)
+												: selected?.x
+										}
+										y={
+											typeof selected?.y == "string"
+												? parseFloat(selected?.y)
+												: selected?.y
+										}
+										//legend filter
 										legendFilter={legendFilter}
-										atlas={atlas}
-										className="atlas rounded-3xl"
 										width={dims.width}
 										height={dims.height}
-										layers={[
-											decentralandAPILayer,
-											filteredLayer,
-											selectedStrokeLayer,
-											selectedFillLayer,
-											hoverLayer,
-										]}
-										onHover={(x, y) => {
-											handleHover(x, y);
+										onHover={(
+											x: number,
+											y: number,
+											name?: string,
+											owner?: string
+										) => {
+											handleHover(x, y, name, owner);
 										}}
-										onClick={(x, y) => {
+										onClick={(
+											land: ValuationTile | undefined,
+											x: number,
+											y: number
+										) => {
 											if (isSelected(x, y)) {
 												setSelected(undefined);
 											} else {
-												handleMapSelection(x, y);
+												handleMapSelection(land, x, y);
 											}
 										}}
+										metaverse={metaverse}
 									/>
 								) : (
 									<MaptalksCanva
@@ -410,19 +375,16 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 										}
 										//legend filter
 										legendFilter={legendFilter}
-										atlas={atlas}
 										width={dims.width}
 										height={dims.height}
-										onHover={(x, y) => {
-											handleHover(x, y);
-										}}
-										onClick={(x, y, name?: string) => {
+										onClick={(land, x, y) => {
 											if (isSelected(x, y)) {
 												setSelected(undefined);
 											} else {
-												handleMapSelection(x, y);
+												handleMapSelection(land, x, y);
 											}
 										}}
+										metaverse={metaverse}
 									/>
 								)}
 								{/* Selected Land Card */}
@@ -449,7 +411,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 								{filterBy === "basic" ? (
 									!isVisible && (
 										<MapLegend
-											className="absolute bottom-2 right-1"
+											className="absolute bottom-2 right-2"
 											legendFilter={legendFilter}
 											setLegendFilter={setLegendFilter}
 											metaverse={metaverse}
@@ -458,27 +420,26 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 								) : (
 									<></>
 								)}
-							</div>
+							</>
 						)}
 					</div>
 
 					{/* Daily Volume and Floor Price Wrapper */}
 					{metaverse && (
 						<Fade duration={600} className="w-full">
-							<div className="flex flex-col sm:flex-row space-y-5 sm:space-y-0 space-x-0 sm:space-x-5 md:space-x-10 items-stretch justify-between w-full mb-8 pt-10">
+							<div className="flex flex-col sm:flex-row space-y-5 sm:space-y-0 space-x-0 sm:space-x-5 md:space-x-10 items-stretch justify-between w-full mb-8">
 								{/* Daily Volume */}
 								<div className="flex flex-col justify-between w-full space-y-5 md:space-y-10 lg:space-y-5">
-									<SalesVolumeDaily metaverse={metaverse} coinPrices={prices} />
-								</div>
-								{/* Floor Price */}
-								<div className="flex flex-col justify-between w-full space-y-5 md:space-y-10 lg:space-y-5">
-									<FloorPriceTracker
-										metaverse={metaverse}
-										coinPrices={prices}
-									/>
-								</div>
+                                <SalesVolumeDaily metaverse={metaverse} coinPrices={prices} />
+                            </div>
+                            {/* Floor Price */}
+                            <div className="flex flex-col justify-between w-full space-y-5 md:space-y-10 lg:space-y-5">
+                                <FloorPriceTracker
+                                    metaverse={metaverse}
+                                    coinPrices={prices}
+                                />
+                            </div>
 							</div>
-
 							<div className="rounded-3xl shadowDiv bg-[#F9FAFB] p-5 mb-10">
 								<h3 className="lg:text-3xl text-2xl text-grey-content font-plus mb-0 sm:mb-2">
 									Our Top Picks
@@ -487,8 +448,8 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 							</div>
 
 							<div className="rounded-3xl shadowDiv bg-[#F9FAFB] p-5">
-								<TopSellingLands metaverse={metaverse} />
-							</div>
+                                <TopSellingLands metaverse={metaverse} />
+                            </div>
 
 							<div className="flex flex-col items-start shadow-blck rounded-xl py-3 px-4 w-full bg-grey-dark bg-opacity-20 text-left mb-8">
 								<p className="text-xs sm:text-sm text-grey-content font-plus pt-44">

@@ -8,12 +8,13 @@ interface Props {
 }
 
 // Had to put this object outside to use it on the Props. If not, would usually keep it inside function
-const filterOptions = {
-	yesterdayTop: { title: "FILTERED BY LAST 24 HOURS", label: "1D" },
-	monthTop: { title: "FILTERED BY LAST MOUNTH", label: "1M" },
-	yearTop: { title: "FILTERED BY LAST YEAR", label: "1Y" },
-	totalTop: { title: "", label: "Max" },
-};
+const filterOptions = { 
+  yesterdayTop :{ title: 'FILTERED BY YESTERDAY', label: '2D' },
+  monthTop: { title: 'FILTERED BY LAST MOUNTH', label: '1M' },
+  yearTop:{ title: 'FILTERED BY LAST YEAR', label: '1Y' },
+  totalTop:{ title: '', label: 'Max' }
+ }
+
 
 const TopSellingFilter = ({ filterBy, setFilterBy }: Props) => {
 	return (

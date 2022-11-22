@@ -7,6 +7,7 @@ import TopSellingFilter, {
 	TopSellingFilterBy,
 } from "./TopSellingTable/TopSellingFilter";
 import { fetchChartData } from "../Analytics/fetchChartData";
+import { RiLoader3Fill } from "react-icons/ri";
 
 const TopSellingLands = (props: { metaverse: Metaverse }) => {
 	const [topSellings, setTopSellings] = useState<TopSellings | any>({});
@@ -24,12 +25,13 @@ const TopSellingLands = (props: { metaverse: Metaverse }) => {
 	return (
 		<div className="flex flex-col items-start rounded-xl py-3 px-4 w-full text-left mb-10">
 			{Object.entries(topSellings).length === 0 ? (
-				<p className={`text-xs sm:text-sm text-gray-400`}>
-					LOADING TOP SELLINGS...
+				<p className="text-gray-300 flex gap-2">
+					Loading Top Sells{" "}
+					<RiLoader3Fill className="animate-spin-slow h-5 w-5 xs:h-6 xs:w-6" />
 				</p>
 			) : (
 				<div className="relative flex flex-col min-w-0 break-words w-full mb-6 rounded text-grey-content">
-					<div className="flex w-full justify-between">
+					<div className="flex w-full justify-between mb-10">
 						<h3 className="lg:text-3xl text-2xl text-grey-content font-plus mb-0 sm:mb-2">
 							The Top Sells
 						</h3>

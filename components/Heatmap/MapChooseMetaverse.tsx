@@ -23,7 +23,7 @@ const MapChooseMetaverse = ({ metaverse, setMetaverse }: Props) => {
     <div className='relative z-50'>
       <button
         onClick={() => setOpened(!opened)}
-        className='h-16 gray-box bg-opacity-100 mb-2 items-center w-70  md:w-56 tracking-wider font-plus font-medium text-grey-content hover:text-[#7c7b7b] focus:outline-none flex justify-between cursor-pointer transition-all'
+        className='h-16 gray-box bg-[#F9FAFB] mb-2 items-center w-70  md:w-56 tracking-wider font-plus font-medium text-grey-content hover:text-[#7c7b7b] focus:outline-none flex justify-between cursor-pointer transition-all'
       >
         <div className='hidden sm:block'>
           <OptimizedImage

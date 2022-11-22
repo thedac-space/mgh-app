@@ -23,9 +23,9 @@ const SearchLandButton = ({ mapState, searchBy }: Props) => {
     <button
       className={
         (mapState === options[searchBy].success
-          ? 'bg-green-500 text-white'
-          : 'bg-gray-200  text-gray-800') +
-        ' items-center justify-center font-medium text-center transition-all flex grow gap-2 ease-in hover:shadow-subtleWhite z-10 p-2 rounded-xl md:hover:bg-white'
+          ? 'bg-gray-500 text-white'
+          : 'bg-gray-500 text-white') +
+        ' items-center justify-center font-medium text-center transition-all flex grow gap-2 ease-in hover:shadow-subtleWhite z-10 p-2 rounded-xl md:hover:bg-grey-content'
       }
     >
       {/* Loading Icon */}

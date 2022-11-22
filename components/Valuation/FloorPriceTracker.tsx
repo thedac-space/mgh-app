@@ -4,7 +4,7 @@ import { Metaverse } from '../../lib/metaverse'
 import { IPredictions } from '../../lib/types'
 import { formatName } from '../../lib/utilities'
 import { ICoinPrices } from '../../lib/valuation/valuationTypes'
-import { getAxieFloorPrice } from '../../lib/valuation/valuationUtils'
+import { getAxieFloorPrice, getSomniumSpaceFloorPrice } from '../../lib/valuation/valuationUtils'
 import { PriceList } from '../General'
 
 interface Props {
@@ -23,8 +23,18 @@ const FloorPriceTracker = ({ coinPrices, metaverse }: Props) => {
       const stats = await getCollectionData(metaverse)
       if (metaverse === 'axie-infinity') {
         // Fetch Data from Axie Market
-        const floorPrice = Number(await getAxieFloorPrice())
-        stats.floor_price = floorPrice
+        try {
+          const floorPrice = Number(await getAxieFloorPrice())
+          stats.floor_price = floorPrice
+        } catch (error) { }
+      }
+
+      if (metaverse === 'somnium-space') {
+        // Fetch Data from Somnium Space floor price ITRM service
+        try {
+          const floorPrice = Number(await getSomniumSpaceFloorPrice())
+          stats.floor_price = floorPrice
+        } catch (error) { }
       }
 
       const formattedMetaverse =

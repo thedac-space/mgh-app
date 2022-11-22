@@ -88,7 +88,7 @@ const MapChooseFilter = ({ filterBy, setFilterBy }: Props) => {
       {openModal && <InfoModal onDismiss={() => setOpenModal(false)}  name={filterOptions[filterBy].name} description={filterOptions[filterBy].description} />}
       <button
         onClick={() => setOpened(!opened)}
-        className='h-16 gray-box bg-opacity-100 mb-2 items-center w-96 tracking-wider font-plus font-medium text-grey-content hover:text-[#7c7b7b] flex justify-between cursor-pointer transition-all'
+        className='h-16 gray-box bg-[#F9FAFB] mb-2 items-center w-96 tracking-wider font-plus font-medium text-grey-content hover:text-[#7c7b7b] flex justify-between cursor-pointer transition-all'
       >
         {/* Icon */}
         <span className='hidden sm:block text-lg' onClick={() => setOpenModal(true)}>

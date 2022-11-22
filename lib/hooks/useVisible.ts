@@ -12,18 +12,18 @@ const useVisible = (initialIsVisible: boolean) => {
     }
   }
 
-  const handleClickOutside = (event: Event) => {
+/*   const handleClickOutside = (event: Event) => {
     if (ref.current && !ref.current.contains(event.target as Node)) {
       setIsVisible(false)
     }
-  }
+  } */
 
   useEffect(() => {
     document.addEventListener('keydown', handleHideDropdown, true)
-    document.addEventListener('click', handleClickOutside, true)
+/*     document.addEventListener('click', handleClickOutside, true) */
     return () => {
       document.removeEventListener('keydown', handleHideDropdown, true)
-      document.removeEventListener('click', handleClickOutside, true)
+/*       document.removeEventListener('click', handleClickOutside, true) */
     }
   }, [])
 

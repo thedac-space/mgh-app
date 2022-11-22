@@ -26,7 +26,7 @@ const MapMobileFilters = ({
     <div className='w-full xs:w-[177px]'>
       <button
         onClick={() => setOpened(true)}
-        className='h-16 gray-box bg-opacity-100 mb-2 items-center tracking-wider font-semibold text-grey-content hover:text-[#7c7b7b] flex justify-between cursor-pointer transition-all'
+        className='h-16 gray-box bg-[#F9FAFB] mb-2 items-center tracking-wider font-semibold text-grey-content hover:text-[#7c7b7b] flex justify-between cursor-pointer transition-all'
       >
         <p>Filters</p>
         <IoIosArrowDown

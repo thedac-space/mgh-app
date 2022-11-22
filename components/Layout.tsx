@@ -58,7 +58,7 @@ const Layout = ({ children }: any) => {
 						</div>
 					</div>
 				</div>
-				<div className="hidden xl:flex xl:flex-col space-x-10 w-full p-5 bg-[#FFF] overflow-hidden">
+				<div className="hidden lg:flex lg:flex-col space-x-10 w-full p-5 bg-[#FFF] overflow-hidden">
 					<div className="flex space-x-3 justify-end pb-3">
 						{web3Provider && chainId && ( 
 							<NetworkButton

@@ -16,7 +16,7 @@ const MapLandSummary = ({ name, owner, coordinates, metaverse }: Props) => {
         {typedKeys(coordinates).map((coord) => (
           <span
             key={coord}
-            className='text-grey-content font-light whitespace-nowrap text-base'
+            className='text-grey-content font-light text-base whitespace-nowrap'
           >
             {coord.toUpperCase()}:{' '}
             {isNaN(coordinates[coord]) ? 'xx' : coordinates[coord]}

@@ -1,3 +1,4 @@
+import axios from 'axios'
 import { formatEther } from 'ethers/lib/utils'
 import { Metaverse } from '../metaverse'
 import { IAPIData } from '../types'
@@ -9,6 +10,41 @@ const metaverseFormats = {
     decentraland: 'decentraland',
     'axie-infinity': 'axie-infinity',
     'somnium-space': 'somnium-space-cubes',
+}
+
+export const metaverseInitialCenter = {
+    sandbox: {
+        maxX: 0,
+        maxY: 0,
+        minX: 0,
+        minY: 0,
+        initialX: 62,
+        initialY: 204,
+    },
+    decentraland: {
+        maxX: 0,
+        maxY: 0,
+        minX: 0,
+        minY: 0,
+        initialX: 0,
+        initialY: 0,
+    },
+    'axie-infinity': {
+        maxX: 0,
+        maxY: 0,
+        minX: 0,
+        minY: 0,
+        initialX: -80,
+        initialY: 80,
+    },
+    'somnium-space': {
+        maxX: 0,
+        maxY: 0,
+        minX: 0,
+        minY: 0,
+        initialX: 0,
+        initialY: 0,
+    }
 }
 
 export const convertETHPrediction = (
@@ -181,7 +217,22 @@ export const getAxieFloorPrice = async () => {
         }
     )
     const floorPrice = await res.json()
+    console.log(floorPrice)
     return formatEther(floorPrice.data.lands.results[0].auction.currentPrice)
+}
+
+export const getSomniumSpaceFloorPrice = async () => {
+    let res = { value: 0 }
+    await axios
+        .get(process.env.ITRM_SERVICE + '/val-analytics/generalFloorPrice', {
+            params: { metaverse: 'somnium-space' },
+        })
+        .then((response) => {
+            res = response.data
+        }).catch((error) => { console.log(error) })
+    const floorPrice = res.value
+    return formatEther(floorPrice)
+
 }
 
 export const getAxieDailyTradeVolume = async () => {

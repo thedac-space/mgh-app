@@ -41,11 +41,11 @@ const getPriceByFilter = (map: ValuationTile, prices: ICoinPrices, filterBy?: Ma
 }
 
 export const findHeatmapLand = (
-  map: Record<string, ValuationTile>,
+  land:  ValuationTile,
   prices: ICoinPrices,
   metaverse: Metaverse,
+  coords: LandCoords,
   tokenId?: string,
-  coords?: LandCoords,
   filterBy?: MapFilter
 ) => {
   const landOptions = {
@@ -54,36 +54,24 @@ export const findHeatmapLand = (
     'somnium-space': { contract: Contracts.CUBES.ETHEREUM_MAINNET.address }
   }
 
-  const setOpenSeaLink = (key: string) => {
+  const setOpenSeaLink = () => {
     if (apiData && metaverse !== 'axie-infinity') {
-      apiData.opensea_link = `https://opensea.io/assets/${landOptions[metaverse].contract}/${map[key].land_id}`
+      apiData.opensea_link = `https://opensea.io/assets/${landOptions[metaverse].contract}/${land.land_id}`
     }
-  }
-
-  let land: string | undefined
-  // When user searches by Coords (using != null here to handle if user types/clicks on a 0)
-  if (coords?.x != null && coords.y != null) {
-    const name = coords.x + ',' + coords.y
-    land = typedKeys(map).find((key) => key === name)
-  }
-
-  // When user searches by TokenId
-  if (tokenId) {
-    land = typedKeys(map).find((key) => tokenId === map[key].land_id)
   }
 
   if (!land) return
   let apiData: IAPIData
   apiData = {
-    ...map[land],
+    ...land,
     metaverse: metaverse,
-    tokenId: map[land].land_id!,
-    prices: getPriceByFilter(map[land], prices, filterBy)
+    tokenId: land.land_id!,
+    prices: getPriceByFilter(land, prices, filterBy)
   }
 
-  const name = map[land].name ? map[land].name : undefined
-  const landCoords = { x: map[land].coords ? map[land].coords.x : map[land].center.x, y: map[land].coords ? map[land].coords.y : map[land].center.y }
-  setOpenSeaLink(land)
+  const name = land.name ? land.name : undefined
+  const landCoords = { x:  coords.x , y: coords.y }
+  setOpenSeaLink()
 
   const predictions = convertETHPrediction(
     prices,
