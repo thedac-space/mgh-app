@@ -349,19 +349,19 @@ const between = (x: number, max: number, min: number) => {
 
 // Using this to display those 5 squares on the map to use as filter buttons
 export const FILTER_COLORS = {
-  5: 'rgb(255,0,0)', //RED - Max
-  4: 'rgb(255,137,0)', // ORANGE
-  3: 'rgb(255,255,0)', // YELLOW
-  2: 'rgb(0,255,0)', // GREEN
-  1: 'rgb(0,255,255)', // BLUE -  Min
-  0: 'rgb(61,58,70)', // GRAY - None
+  5: 'rgb(255,56,56)', //RED - Max
+  4: 'rgb(255,135,98)', // ORANGE
+  3: 'rgb(255,220,98)', // YELLOW
+  2: 'rgb(38,236,117)', // GREEN
+  1: 'rgb(146,196,233)', // BLUE -  Min
+  0: 'rgb(176,176,176)', // GRAY - None
 }
 
 // Colors for dictionary filters
 export const LEGEND_COLORS = {
   watchlist: 'rgb(255,255,255)', // On User's Watchlist
   portfolio: 'rgb(30,94,255)', // Owned by User (On their portfolio)
-  'on-sale': 'rgb(248, 66, 201)', // On sale
+  'on-sale': 'rgb(255, 120, 193)', // On sale
 
   // Decentraland Only
   roads: '#716C7A', // roads
@@ -430,15 +430,15 @@ const filterKey = (mapFilter: MapFilter | undefined) => {
  *  then we can do: 255 - ((10-5)/ (20-5)) * (255 - 170) = colorFromReversePercentage
  * */
 export const generateColor = (percent: number, mapFilter?: MapFilter) => {
-  if (percent === 0 || !mapFilter) return 'rgb(50,50,50)'
+  if (percent === 0 || !mapFilter) return 'rgb(176,176,176)'
   const colors = [
     // CAREFUL WITH FORGETTING THE COMAS BETWEEN NUMBERS ON THE RGB!!!
 
     // LIGHT-BLUE: rgb(0, 255, 160..255)
-    `rgb(0,255,${255 -
+    `rgb(146, 196,${255 -
     Math.ceil(
       (percent / filterPercentages[filterKey(mapFilter)][1]) *
-      (255 - 160)
+      (255 - 220)
     )
     })`,
 
@@ -447,8 +447,8 @@ export const generateColor = (percent: number, mapFilter?: MapFilter) => {
       ((percent - filterPercentages[filterKey(mapFilter)][1]) /
         (filterPercentages[filterKey(mapFilter)][2] -
           filterPercentages[filterKey(mapFilter)][1])) *
-      170
-    )},255,0)`,
+      (100 - 38)
+    )},236,117)`,
 
     // YELLOW: rgb(255, 190..255, 0)
     `rgb(255,${255 -
@@ -458,7 +458,7 @@ export const generateColor = (percent: number, mapFilter?: MapFilter) => {
           filterPercentages[filterKey(mapFilter)][2])) *
       (255 - 190)
     )
-    },0)`,
+    },98)`,
 
     // ORANGE: rgb(255, 100..170, 0)
     `rgb(255,${170 -
@@ -468,16 +468,16 @@ export const generateColor = (percent: number, mapFilter?: MapFilter) => {
           filterPercentages[filterKey(mapFilter)][3])) *
       (170 - 100)
     )
-    },0)`,
+    },90)`,
 
     // RED: rgb(255, 0..70, 0)
     `rgb(255, ${70 -
     Math.ceil(
       ((percent - filterPercentages[filterKey(mapFilter)][4]) /
         (100 - filterPercentages[filterKey(mapFilter)][4])) *
-      70
+      56
     )
-    },0)`,
+    },56)`,
   ]
   let color!: string
   if (between(percent, 100, 0)) {

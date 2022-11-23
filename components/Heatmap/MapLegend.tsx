@@ -33,7 +33,7 @@ const MapLegend = ({
   return (
     <ul
       className={
-        'flex flex-col gap-2 gray-box bg-opacity-100 w-fit ' + className
+        'flex flex-col gap-2 gray-box bg-grey-bone w-fit ' + className
       }
     >
       {colors.map((key) => (

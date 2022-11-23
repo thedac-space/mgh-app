@@ -13,7 +13,7 @@ const Stake: NextPage = () => {
                 <meta name="description" content="Governance of metaverse related items, fair valuation and minting of NFT backed tokens and provision of metaverse market data." />
             </Head>
 
-            <div className="flex w-full bg-[#F8F9FD] rounded-xl h-full place-content-center py-[10%] space-x-9">
+            <div className="flex w-full bg-grey-lightest rounded-xl h-full place-content-center py-[10%] space-x-9">
                 <Link href="/stake-ethereum">
                     <a className="stake flex flex-col w-1/4 items-center px-3 py-6 xs:p-5 text-center justify-center rounded-xl">
                         <img src="/images/ethereum-eth-logo.png" className="mb-8 h-60" />

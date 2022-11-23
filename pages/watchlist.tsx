@@ -201,7 +201,7 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
           content='Governance of metaverse related items, fair valuation and minting of NFT backed tokens and provision of metaverse market data.'
         />
       </Head>
-      <div className='pt-12 xl:pt-0 animate-fade-in-slow flex flex-col items-center max-w-7xl bg-[#F8F9FD] rounded-lg p-8 text-grey-content w-full'>
+      <div className='pt-12 xl:pt-0 animate-fade-in-slow flex flex-col items-center max-w-7xl bg-grey-lightest rounded-lg p-8 text-grey-content w-full'>
         {/* Title */}
         <div className='sm:gray-box mb-8 border-t border-l border-white/10 rounded-xl p-5 mt-5 bg-grey-dark w-full'>
           <h1 className='md:text-5xl lg:text-6xl text-4xl text-grey-content font-plus'>

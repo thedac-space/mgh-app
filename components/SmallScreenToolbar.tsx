@@ -13,7 +13,7 @@ const SmallScreenToolbar = ({ onWalletClick, disconnectWallet, web3Provider, cha
 
     return (
         <>
-            {openSidebar && <div onClick={() => setOpenSidebar(false)} className="fixed top-0 left-0 h-screen w-screen bg-[#F9FAFB] bg-opacity-30 backdrop-filter backdrop-blur-sm z-20 overflow-hidden" />}
+            {openSidebar && <div onClick={() => setOpenSidebar(false)} className="fixed top-0 left-0 h-screen w-screen bg-grey-bone bg-opacity-30 backdrop-filter backdrop-blur-sm z-20 overflow-hidden" />}
 
             <div className="flex space-x-2 xs:space-x-4 sm:space-x-10 xl:hidden h-16 sm:h-20 md:h-24 w-full items-center justify-between p-5 z-30 fixed top-0 left-0 backdrop-filter backdrop-blur-3xl">
 

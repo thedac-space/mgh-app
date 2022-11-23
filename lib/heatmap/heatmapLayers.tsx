@@ -31,11 +31,11 @@ export const filteredLayer: Layer = (
             ? mapFilter === 'basic' // If map filter is basic
                 ? (color = LEGEND_COLORS['on-sale']) // If filter is basic then return color purple
                 : // If filter is not basic, it means we should calculate color based on percetage with getTileColor()
-                  (color = getTileColor(
-                      land.percent ?? 0,
-                      percentFilter,
-                      mapFilter
-                  ))
+                (color = getTileColor(
+                    land.percent ?? 0,
+                    percentFilter,
+                    mapFilter
+                ))
             : (color = FILTER_COLORS[0]) // if land is not on sale make color to gray
 
         // If legend filter on bottom right is set on watchlist
@@ -44,35 +44,35 @@ export const filteredLayer: Layer = (
         land.watchlist
             ? mapFilter === 'basic'
                 ? // If its in users watchlist and the filter is basic change color to fixed color and scale to big
-                  (color = LEGEND_COLORS.watchlist) &&
-                  (scale = scaleOptions.big)
+                (color = LEGEND_COLORS.watchlist) &&
+                (scale = scaleOptions.big)
                 : // If its in users watchlist and filter is not basic then generate a proper color and set scale to big.
-                  (color = getTileColor(
-                      land.percent ?? 0,
-                      percentFilter,
-                      mapFilter
-                  )) && (scale = scaleOptions.big)
+                (color = getTileColor(
+                    land.percent ?? 0,
+                    percentFilter,
+                    mapFilter
+                )) && (scale = scaleOptions.big)
             : // If its not on users watchlist set color to gray
-              (color = FILTER_COLORS[0])
+            (color = FILTER_COLORS[0])
         // If legend filter on bottom right is on portfolio
     } else if (legendFilter === 'portfolio') {
         // If its on users portolio the land will have a .portfolio
         land.portfolio
             ? mapFilter === 'basic'
                 ? // if on our portfolio and filter basic, set color to fixed color and scale to big
-                  (color = LEGEND_COLORS.portfolio) &&
-                  (scale = scaleOptions.big)
+                (color = LEGEND_COLORS.portfolio) &&
+                (scale = scaleOptions.big)
                 : // if on our portfolio but filter is not basic then generate proper color
-                  (color = getTileColor(
-                      land.percent ?? 0,
-                      percentFilter,
-                      mapFilter
-                  )) && (scale = scaleOptions.big)
+                (color = getTileColor(
+                    land.percent ?? 0,
+                    percentFilter,
+                    mapFilter
+                )) && (scale = scaleOptions.big)
             : (color = FILTER_COLORS[0])
         // If there's no legend filter and mapFilter is on basic
     } else if (mapFilter === 'basic') {
         // If we are on decentraland and we land isnt on sale or on watchlist or on portfolio then return null
-if (land.portfolio) {
+        if (land.portfolio) {
             color = LEGEND_COLORS.portfolio
             scale = scaleOptions.mid
             // if mapFilter is basic and land is on watchlist set color to fixed color and scale to mid
@@ -83,7 +83,7 @@ if (land.portfolio) {
         } else if (land.current_price_eth) {
             color = LEGEND_COLORS['on-sale']
         } else {
-            color = land.tile?.type ? '#323333' : '#43ba58' //'#12b630' // Green color for basic view with no filters and lands that are not on sale or watchlist or portfolio
+            color = land.tile?.type ? '#323333' : '#26EC75' //'#12b630' // Green color for basic view with no filters and lands that are not on sale or watchlist or portfolio
         }
         // If there is no legend filter. And mapFilter is not on basic then generate a color based on percentage.
     } else {

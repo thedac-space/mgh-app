@@ -79,12 +79,12 @@ const Home: NextPage = () => {
 					content="Swap your MGH, become a liquidity provider by staking your tokens and access our data ecosytem."
 				/>
 			</Head>
-			<div className="bg-[#F8F9FD] rounded-lg p-8">
+			<div className="bg-grey-lightest rounded-lg p-8">
 				<div className="w-full flex flex-col  space-y-10 max-w-7xl mt-8 xl:mt-0">
 					<span>
 						<img src="/images/imagenft.svg" alt="IMG" className="w-[1500px]" />
 					</span>
-					<div className="flex border-t border-l border-white/10 rounded-3xl shadowDiv p-5 bg-opacity-30 justify-between bg-[#F9FAFB]">
+					<div className="flex border-t border-l border-white/10 rounded-3xl shadowDiv p-5 bg-opacity-30 justify-between bg-grey-bone">
 						<div className="pr-5 w-3/4">
 							<h2 className="text-grey-content font-plus font-normal rounded-2xl lg:text-5xl text-3xl mb-0 sm:mb-2">
 								Description

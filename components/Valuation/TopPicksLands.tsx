@@ -37,7 +37,7 @@ const TopPicksLands = ({ metaverse }: Props) => {
 	}, [metaverse]);
 
 	const rowDataStyle =
-		"flex justify-start px-4 content-center items-center text-sm lg:text-2xl font-medium md:text-base pt-0.5 w-1/5";
+		"flex justify-center px-4 content-center items-center text-sm lg:text-2xl font-medium font-plus md:text-base pt-0.5 w-1/5";
 
 	const rowData = () => {
 		const rows: any = [];
@@ -52,7 +52,7 @@ const TopPicksLands = ({ metaverse }: Props) => {
 					key={index}
 					className="flex w-full mb-4 text-grey-content font-plus"
 				>
-					<td className="flex justify-start px-4 content-center w-1/5 relative">
+					<td className="flex justify-center px-4 content-center w-1/5 relative">
 						<div className="relative lg:h-12 lg:w-12 md:h-8 md:w-8 bg-white rounded-full border mb-4 mt-4 w-6 h-6">
 							<Image
 								src={picks[index]["images"]["image_url"]}
@@ -63,16 +63,16 @@ const TopPicksLands = ({ metaverse }: Props) => {
 							/>
 						</div>
 					</td>
-					<td className="flex justify-start px-4 content-center items-center text-sky-400 pt-0.5 w-1/5 hover:underline">
+					<td className="flex justify-center px-4 content-center items-center text-grey-content pt-0.5 w-1/5 hover:underline">
 						<a
-							className="text-sm lg:text-2xl font-medium md:text-base"
+							className="text-sm lg:text-2xl font-medium font-plus md:text-base"
 							href={picks[index]["external_link"]}
 						>
 							{picks[index]["coords"]
 								? `(x:${picks[index]["coords"]["x"]}, y:${picks[index]["coords"]["y"]})`
 								: picks[index]["center"]
-								? `(${picks[index]["name"]})`
-								: `no-asset`}
+									? `(${picks[index]["name"]})`
+									: `no-asset`}
 						</a>
 					</td>
 					<td className={rowDataStyle}>
@@ -109,7 +109,7 @@ const TopPicksLands = ({ metaverse }: Props) => {
 						) : (
 							<button
 								type="button"
-								className="py-2.5 px-5 mr-2 mb-2 text-sm font-small focus:outline-none rounded-lg border text-grey-content font-plus bg-[#ECEEF8] hover:text-white hover:bg-gray-700"
+								className="py-2.5 px-5 mr-2 mb-2 text-sm font-small focus:outline-none rounded-lg border text-grey-content font-plus bg-grey-dark hover:text-white hover:bg-gray-700"
 								onClick={() => {
 									setControlPageIndex(controlPageIndex - 1);
 								}}
@@ -125,7 +125,7 @@ const TopPicksLands = ({ metaverse }: Props) => {
 						) : (
 							<button
 								type="button"
-								className="py-2.5 px-5 mr-2 mb-2 text-sm font-small focus:outline-none rounded-lg border text-grey-content font-plus bg-[#ECEEF8] hover:bg-gray-200"
+								className="py-2.5 px-5 mr-2 mb-2 text-sm font-small focus:outline-none rounded-lg border text-grey-content font-plus bg-grey-dark hover:bg-gray-200"
 								onClick={() => {
 									setControlPageIndex(controlPageIndex + 1);
 								}}
@@ -136,7 +136,7 @@ const TopPicksLands = ({ metaverse }: Props) => {
 						<div className="w-full col-span-3 grid grid-cols-2 mb-7">
 							<button
 								type="button"
-								className="py-2.5 px-5 mr-2 mb-2 text-sm font-small focus:outline-none rounded-lg border text-grey-content font-plus bg-[#ECEEF8] hover:bg-gray-200 h-full"
+								className="py-2.5 px-5 mr-2 mb-2 text-sm font-small focus:outline-none rounded-lg border text-grey-content font-plus bg-grey-dark hover:bg-gray-200 h-full"
 								onClick={() => {
 									if (!pageSearcher) return;
 									if (pageSearcher >= 1 && pageSearcher <= pageLenght) {
@@ -149,7 +149,7 @@ const TopPicksLands = ({ metaverse }: Props) => {
 							<input
 								type="number"
 								id="phone"
-								className="border text-sm rounded-lg block w-full p-2.5 text-grey-content font-plus bg-[#ECEEF8] hover:bg-gray-200 placeholder-gray-400 focus:outline-none"
+								className="border text-sm rounded-lg block w-full p-2.5 text-grey-content font-plus bg-grey-dark hover:bg-gray-200 placeholder-gray-400 focus:outline-none"
 								placeholder={`1 - ${pageLenght}`}
 								required
 								value={pageSearcher}
@@ -160,8 +160,8 @@ const TopPicksLands = ({ metaverse }: Props) => {
 						</div>
 					</div>
 					<table className="w-full table-fixed border-collapse">
-						<thead className="bg-transparent text-slate-200 w-full">
-							<tr className="flex w-full mb-4 text-left text-grey-content font-plus bg-[#ECEEF8] rounded-lg">
+						<thead className="bg-transparent  text-slate-200 w-full">
+							<tr className="flex w-full mb-4 text-center text-grey-content font-plus bg-grey-dark rounded-lg">
 								<th className="p-4 w-1/5 text-xs lg:text-lg md:text-base ">
 									Land
 								</th>

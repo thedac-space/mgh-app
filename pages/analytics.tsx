@@ -67,7 +67,7 @@ const Analytics: NextPage<Props> = ({ prices }) => {
                 <title>MGH | Analytics</title>
                 <meta name="description" content="Analytics Dashboard" />
             </Head>
-            <div className="w-full max-w-7xl py-8 xl:pt-0 bg-[#F8F9FD] rounded-lg p-8 ">
+            <div className="w-full max-w-7xl py-8 xl:pt-0 bg-grey-lightest rounded-lg p-8 ">
                 {/* Main Header */}
                 <div className="border-t border-l border-white/10 p-5 flex flex-col md:flex-row justify-between items-center mb-16 mt-5 bg-grey-dark rounded-xl">
                     <h1 className="lg:text-5xl text-3xl text-grey-content font-plus mb-0 ">

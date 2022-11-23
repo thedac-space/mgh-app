@@ -217,7 +217,7 @@ h6 {
 }
 
 .gray-box {
-  @apply border-t border-l border-white/10 shadow-dark rounded-xl p-5 w-full bg-grey-dark bg-opacity-30;
+  @apply border-t border-l border-white/10 shadow-dark rounded-3xl p-5 w-full bg-grey-bone bg-opacity-30;
 }
 
 .text-gradient {

@@ -137,12 +137,10 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 				const parameters =
 					x && y ? `x=${x}&y=${y}` : tokenId ? `tokenId=${tokenId}` : null;
 				const response = await fetch(
-					`${process.env.ITRM_SERVICE}${
-						metaverse == "somnium-space" || metaverse == "axie-infinity"
-							? ""
-							: "/test"
-					}/${metaverse}/${
-						metaverse == "axie-infinity" ? "predict" : "map"
+					`${process.env.ITRM_SERVICE}${metaverse == "somnium-space" || metaverse == "axie-infinity"
+						? ""
+						: "/test"
+					}/${metaverse}/${metaverse == "axie-infinity" ? "predict" : "map"
 					}?${parameters}`,
 					{
 						method: "GET",
@@ -208,7 +206,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 				/>
 			</Head>
 			<section className="w-full h-full relative">
-				<div className="bg-[#F8F9FD] rounded-lg p-8">
+				<div className="bg-grey-lightest rounded-lg p-8">
 					{/* Main Header */}
 					<div className="border-t border-l border-white/10 rounded-xl p-5 w-full bg-opacity-30; flex flex-col lg:flex-row justify-between items-center mb-8 bg-grey-dark">
 						<h1 className="text-grey-content font-plus font-normal rounded-2xl lg:text-5xl text-3xl  mb-0 sm:mb-2">
@@ -245,7 +243,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 										{metaverse === "somnium-space" ? (
 											<div className="md:block w-[190px]"></div>
 										) : (
-											<div className="mb-2 hidden md:block w-[190px]">
+											<div className="mb-2 hidden md:block w-[190px] gray-box bg-grey-bone z-30">
 												<MapLandSummary
 													owner={hovered.owner}
 													name={hovered.name}
@@ -299,7 +297,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 								)}
 								{/* Full screen button - Hides when MapCard is showing (all screens) */}
 								{!isVisible && (
-									<div className="absolute z-20 top-2 right-2 gray-box bg-opacity-100 w-fit h-15">
+									<div className="absolute z-20 top-2 right-2 gray-box bg-grey-bone w-fit h-15">
 										<FullScreenButton
 											fullScreenRef={mapDivRef}
 											className="text-lg text-grey-content"
@@ -430,26 +428,26 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 							<div className="flex flex-col sm:flex-row space-y-5 sm:space-y-0 space-x-0 sm:space-x-5 md:space-x-10 items-stretch justify-between w-full mb-8">
 								{/* Daily Volume */}
 								<div className="flex flex-col justify-between w-full space-y-5 md:space-y-10 lg:space-y-5">
-                                <SalesVolumeDaily metaverse={metaverse} coinPrices={prices} />
-                            </div>
-                            {/* Floor Price */}
-                            <div className="flex flex-col justify-between w-full space-y-5 md:space-y-10 lg:space-y-5">
-                                <FloorPriceTracker
-                                    metaverse={metaverse}
-                                    coinPrices={prices}
-                                />
-                            </div>
+									<SalesVolumeDaily metaverse={metaverse} coinPrices={prices} />
+								</div>
+								{/* Floor Price */}
+								<div className="flex flex-col justify-between w-full space-y-5 md:space-y-10 lg:space-y-5">
+									<FloorPriceTracker
+										metaverse={metaverse}
+										coinPrices={prices}
+									/>
+								</div>
 							</div>
-							<div className="rounded-3xl shadowDiv bg-[#F9FAFB] p-5 mb-10">
+							<div className="rounded-3xl shadowDiv bg-grey-bone p-5 mb-10">
 								<h3 className="lg:text-3xl text-2xl text-grey-content font-plus mb-0 sm:mb-2">
 									Our Top Picks
 								</h3>
 								<TopPicksLands metaverse={metaverse} />
 							</div>
 
-							<div className="rounded-3xl shadowDiv bg-[#F9FAFB] p-5">
-                                <TopSellingLands metaverse={metaverse} />
-                            </div>
+							<div className="rounded-3xl shadowDiv bg-grey-bone p-5">
+								<TopSellingLands metaverse={metaverse} />
+							</div>
 
 							<div className="flex flex-col items-start shadow-blck rounded-xl py-3 px-4 w-full bg-grey-dark bg-opacity-20 text-left mb-8">
 								<p className="text-xs sm:text-sm text-grey-content font-plus pt-44">

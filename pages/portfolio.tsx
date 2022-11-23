@@ -190,7 +190,7 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 
             {openModal && <WalletModal onDismiss={() => setOpenModal(false)} />}
 
-            <section className="w-full xs:w-[22rem] sm:w-[26rem] md:w-[48rem] lg:w-full max-w-7xl pt-12 bg-[#F8F9FD] rounded-lg p-8">
+            <section className="w-full xs:w-[22rem] sm:w-[26rem] md:w-[48rem] lg:w-full max-w-7xl pt-12 bg-grey-lightest rounded-lg p-8">
                 {/* Headers */}
                 <hgroup className="text-gray-200 flex flex-col">
                     {/* Change Title if there's a query on the uri */}

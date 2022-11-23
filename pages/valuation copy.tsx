@@ -247,7 +247,7 @@ return (
             />
         </Head>
         <section className="w-full relative">
-            <div className="bg-[#F8F9FD] rounded-lg p-8">
+            <div className="bg-grey-lightest rounded-lg p-8">
                 {/* Main Header */}
                 <div className="border-t border-l border-white/10 rounded-xl p-5 w-full bg-opacity-30; flex flex-col lg:flex-row justify-between items-center mb-8 bg-grey-dark">
                     <h1 className="text-grey-content font-plus font-normal rounded-2xl lg:text-5xl text-3xl mb-0 sm:mb-2">
@@ -475,14 +475,14 @@ return (
                             </div>
                         </div>
 
-                        <div className="rounded-3xl shadowDiv bg-[#F9FAFB] p-5 mb-10">
+                        <div className="rounded-3xl shadowDiv bg-grey-bone p-5 mb-10">
                             <h3 className="lg:text-3xl text-2xl text-grey-content font-plus mb-0 sm:mb-2">
                                 Our Top Picks
                             </h3>
                             <TopPicksLands metaverse={metaverse} />
                         </div>
 
-                        <div className="rounded-3xl shadowDiv bg-[#F9FAFB] p-5">
+                        <div className="rounded-3xl shadowDiv bg-grey-bone p-5">
                             <TopSellingLands metaverse={metaverse} />
                         </div>
 

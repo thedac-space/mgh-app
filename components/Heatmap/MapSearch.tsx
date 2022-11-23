@@ -69,7 +69,7 @@ const MapSearch = ({ mapState, handleMapSelection }: Props) => {
     <div className='flex flex-col gap-6 md:absolute h-16 md:h-auto w-[190px]'>
       {/* Search */}
       <form
-        className='gray-box bg-[#F9FAFB]'
+        className='gray-box bg-grey-bone'
         onSubmit={(e) => searchOptions[searchBy].search(e)}
       >
         <div
