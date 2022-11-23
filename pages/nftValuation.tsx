@@ -11,6 +11,7 @@ import NftCard from "../components/NftCard";
 
 const Home: NextPage = () => {
 	const [nftFluf, setnftFluf] = useState([])
+	const [nftFlufObject, setnftFlufObject] = useState([])
     const [nftFlufGlobal, setnftFlufGlobal] = useState<AnyObject>({})
 	const [searchId, setSearchById] = useState(nftFluf)
 	const [nftId, setnftId] = useState('')
@@ -27,7 +28,7 @@ const Home: NextPage = () => {
 
     const filtered = (e:any) => {
         const keyWord = e.target.value
-		const results = nftFluf.filter((fluf: any) => {
+		const results = nftFlufObject.filter((fluf: any) => {
             return fluf.tokenId == keyWord
         });
         setSearchById(results);
@@ -56,10 +57,15 @@ const Home: NextPage = () => {
 				)
 				.then((response) => {
 					setnftFluf(response.data);
+					Object.entries(response.data).forEach(([key, value]) => {
+					dataArray.push(value);
+					});
 					setLoading(false);
 					setPageLenght(Math.trunc(response.data.length / 10 + 1));
 					setControlPageIndex(0);
-				})
+				}).then(() => {
+						setnftFlufObject(dataArray);
+					})
 				// .then((response) => {
 				// 	Object.entries(response.data).forEach(([key, value]) => {
 				// 		dataArray.push(value);
