@@ -85,13 +85,14 @@ module.exports = {
         color: '0 0px 20px 0px rgba(250, 250, 250, 0.5)',
         colorbottom: '0 0px 40px 0px rgba(250, 250, 250, 0.1)',
         button: '0 0px 8px 0px rgba(250, 250, 250, 0.4)',
-        dark: '0 0px 40px 0px rgba(0, 0, 0, 0.1)',
+        dark: '0 0px 8px 0px rgba(0, 0, 0, 0.1)',
         white: "rgba(250, 250, 250, 0.25) 10px 10px 50px",
         subtleWhite: '0 1px 7px 0px rgba(250, 250, 250, 0.2)',
       },
       fontFamily: {
         // 'sans': ['Quicksand', 'sans-serif'],
-        // 'sans': ['Montserrat', 'sans-serif'],
+        'mont': ['Montserrat', 'sans-serif'],
+        'plus': ['PlusJakartaSans', 'sans-serif'],
         'sans': ['Alterwave', 'sans-serif'],
         'prompt': ['Prompt', 'sans-serif'],
         'lighters': ['Lighters', 'sans-serif']
@@ -110,13 +111,12 @@ module.exports = {
       },
       colors: {
         grey: {
-          darker: '#24292e',
-          other: '#333e4a',
-          darkest: '#101010',
-          dark: '#3c4858',
-          DEFAULT: '#c0ccda',
-          light: '#e0e6ed',
-          lightest: '#f9fafc',
+          content: '#54575C',
+          sidebar: '#EDEDF5',
+          icon: '#9B9B9B',
+          dark: '#ECEEF8',
+          bone: '#F9FAFB',
+          lightest: '#F8F9FD'
         }
       },
     },

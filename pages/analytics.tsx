@@ -67,10 +67,10 @@ const Analytics: NextPage<Props> = ({ prices }) => {
                 <title>MGH | Analytics</title>
                 <meta name="description" content="Analytics Dashboard" />
             </Head>
-            <section className="w-full max-w-7xl py-8 xl:pt-0">
+            <div className="w-full max-w-7xl py-8 xl:pt-0 bg-grey-lightest rounded-lg p-8 ">
                 {/* Main Header */}
-                <div className="gray-box flex flex-col md:flex-row justify-between items-center mb-16">
-                    <h1 className="text-transparent bg-clip-text lg:text-5xl text-3xl bg-gradient-to-br green-text-gradient mb-0 sm:mb-2">
+                <div className="border-t border-l border-white/10 p-5 flex flex-col md:flex-row justify-between items-center mb-16 mt-5 bg-grey-dark rounded-xl">
+                    <h1 className="lg:text-5xl text-3xl text-grey-content font-plus mb-0 ">
                         Analytics
                     </h1>
                     {/* Links Wrapper */}
@@ -79,7 +79,7 @@ const Analytics: NextPage<Props> = ({ prices }) => {
                         {['portfolio', 'watchlist', 'valuation'].map(
                             (option) => (
                                 <Link key={option} href={`/${option}`}>
-                                    <a className="hover:scale-105 font-medium text-white px-3 sm:px-5 py-3 flex items-center justify-center rounded-xl bg-gradient-to-br from-blue-500/30 to-green-500/30 transition-all duration-300">
+                                    <a className="hover:scale-105 font-bold font-plus text-grey-content text-2xl px-3 sm:px-5 py-3 flex items-center justify-center rounded-3xl shadowDiv">
                                         <span className="text-base sm:text-lg md:text-xl">
                                             {formatName(option)}
                                         </span>
@@ -97,7 +97,7 @@ const Analytics: NextPage<Props> = ({ prices }) => {
                         setMetaverse={setMetaverse}
                     />
                     {/* Market Cap - Owners Land % */}
-                    <div className="w-fit flex flex-col justify-center text-base  sm:text-lg font-medium text-cyan-300 whitespace-nowrap">
+                    <div className="w-fit flex flex-col justify-center text-base  sm:text-lg font-medium text-grey-content font-plus whitespace-nowrap">
                         <p className="mb-8 flex gap-1">
                             Lands held by the top 1% of holders:{' '}
                             {loaded ? (
@@ -121,7 +121,7 @@ const Analytics: NextPage<Props> = ({ prices }) => {
                             if (values[element.route])
                                 return (
                                     <li key={index}>
-                                        <h3 className="text-gray-300 relative text-lg md:text-xl lg:text-2xl flex h-[70px]">
+                                        <h3 className="text-grey-content font-plus relative text-xl md:text-xl lg:text-2xl flex h-[70px]">
                                             {element.label}{' '}
                                                 <BsQuestionCircle className="text-gray-300 cursor-pointer peer bottom-[2px] ml-[5px] " />
                                                 <p className="relative -top-1 left-[1%] border border-gray-500 p-2 rounded-lg bg-black bg-opacity-10 backdrop-filter backdrop-blur font-medium text-xs text-gray-200 hidden peer-hover:block w-70 ">
@@ -140,7 +140,7 @@ const Analytics: NextPage<Props> = ({ prices }) => {
                         })}
                     </ul>
                 )}
-            </section>
+            </div>
         </>
     )
 

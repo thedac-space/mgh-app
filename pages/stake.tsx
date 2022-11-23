@@ -13,23 +13,20 @@ const Stake: NextPage = () => {
                 <meta name="description" content="Governance of metaverse related items, fair valuation and minting of NFT backed tokens and provision of metaverse market data." />
             </Head>
 
-
-            <div className="flex items-stretch w-full h-full self-center">
+            <div className="flex w-full bg-grey-lightest rounded-xl h-full place-content-center py-[10%] space-x-9">
                 <Link href="/stake-ethereum">
-                    <a className="flex flex-col w-1/2 items-center p-3 xs:p-5 text-center justify-center space-y-2 hover:bg-grey-darkest hover:bg-opacity-20 rounded-xl">
-                        <img src="/images/ethereum-eth-logo.png" className="h-18 sm:h-24 w-auto mb-8" />
-                        <p className="text-gray-200 text-xl sm:text-3xl font-medium">Ethereum Staking</p>
-                        <p className="text-gray-400 text-sm sm:text-xl">bonded staking, fixed APY, 4 different Pools</p>
+                    <a className="stake flex flex-col w-1/4 items-center px-3 py-6 xs:p-5 text-center justify-center rounded-xl">
+                        <img src="/images/ethereum-eth-logo.png" className="mb-8 h-60" />
+                        <p className="text-grey-content font-plus font-bold text-xl sm:text-3xl">Ethereum Staking</p>
+                        <p className="text-grey-content font-plus font-light text-sm leading-5 sm:text-xl pt-3">bonded staking, fixed APY, 4 different Pools</p>
                     </a>
                 </Link>
 
-                <hr className="border-opacity-20 border-0.5 h-3/4 self-center" />
-
                 <Link href="/stake-polygon">
-                    <a className="flex flex-col w-1/2 items-center p-3 xs:p-5 text-center justify-center space-y-2 hover:bg-grey-darkest hover:bg-opacity-20 rounded-xl">
-                        <img src="/images/polygon-matic-logo.png" className="h-18 sm:h-24 w-auto mb-8" />
-                        <p className="text-gray-200 text-xl sm:text-3xl font-medium">Polygon Staking</p>
-                        <p className="text-gray-400 text-sm sm:text-xl">unbonded staking, variable APY</p>
+                    <a className="stake flex flex-col w-1/4 items-center px-3 py-6 xs:p-5 text-center justify-center rounded-xl">
+                        <img src="/images/polygon-matic-logo.png" className="mb-8 h-60" />
+                        <p className="text-grey-content font-plus font-bold text-xl sm:text-3xl">Polygon Staking</p>
+                        <p className="text-grey-content font-plus font-light text-sm leading-5 sm:text-xl pt-3">unbonded staking, variable APY</p>
                     </a>
                 </Link>
             </div>

@@ -54,16 +54,16 @@ const MapCard = ({
 
   return errorQuery ? (
     <div className='gray-box bg-opacity-100 z-30'>
-      <p className='text-lg font-semibold text-center text-gray-200'>
+      <p className='text-lg font-semibold font-plus text-center text-grey-content'>
         No a Valid Land or not enough Data yet!
       </p>
     </div>
   ) : (
-    <div className='gray-box py-4 px-4 flex flex-col cursor-pointer text-white items-start justify-between gap-4 bg-opacity-100 md:min-h-[362px] md:min-w-[359px] relative z-30'>
+    <div className='gray-box p-6 flex flex-col cursor-pointer font-plus text-grey-content items-start justify-between gap-4 bg-opacity-100 md:min-h-[362px] md:min-w-[359px] relative z-30'>
       {loadingQuery ? (
         <div className='w-full flex flex-col gap-14 absolute top-2/4 left-2/4 -translate-x-2/4 -translate-y-2/4'>
           <Loader />
-          <p className='text-lg font-semibold text-center text-gray-200'>
+          <p className='text-lg font-semibold text-center text-grey-content'>
             Calculating
           </p>
         </div>
@@ -73,7 +73,7 @@ const MapCard = ({
         landCoords && (
           <>
             <IoClose
-              className='absolute top-1 right-1 text-xl hover:text-red-500 transition-all'
+              className='absolute top-2 right-2 text-xl text-grey-content hover:text-red-500 transition-all '
               onClick={() => setIsVisible(false)}
             />
             {/* /* LEFT */}
@@ -82,7 +82,7 @@ const MapCard = ({
               <a
                 href={apiData.external_link}
                 target='_blank'
-                className='hover:shadow-dark relative flex'
+                className='hover:shadow-dark relative flex font-plus'
               >
                 <OptimizedImage
                   height={imgSize}
@@ -90,7 +90,7 @@ const MapCard = ({
                   src={apiData.images?.image_url}
                   rounded='lg'
                 />
-                <FiExternalLink className='absolute top-0 right-0 text-white text-xs backdrop-filter backdrop-blur-sm rounded-xl w-6 h-6 p-1' />
+                <FiExternalLink className='absolute top-0 right-0 text-grey-content text-xs backdrop-filter backdrop-blur-sm rounded-xl w-6 h-6 p-1' />
               </a>
               {/* Main Land Info */}
               <div className='flex flex-col justify-between'>
@@ -106,7 +106,7 @@ const MapCard = ({
                     <BsTwitter
                       title='Share Valuation'
                       onClick={() => window.open(options.twitter.valuationLink)}
-                      className=' hidden relative bottom-[0.17rem] left-1  h-4 w-4 z-50 text-gray-200 hover:text-blue-400 transition ease-in-out duration-300 cursor-pointer'
+                      className=' hidden relative bottom-[0.17rem] left-1  h-4 w-4 z-50 text-grey-content hover:text-blue-400 transition ease-in-out duration-300 cursor-pointer'
                     />{' '}
                   </p>
                 </div>
@@ -118,7 +118,7 @@ const MapCard = ({
                   />
                 )}
                 {/* External Links */}
-                <nav className='flex flex-col md:gap-4 gap-[1.40rem]'>
+                <nav className='flex flex-col md:gap-4 gap-[1.40rem] text-grey-content'>
                   {apiData.opensea_link && (
                     <ExternalLink href={apiData.opensea_link} text='OpenSea' />
                   )}

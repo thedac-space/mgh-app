@@ -201,10 +201,10 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
           content='Governance of metaverse related items, fair valuation and minting of NFT backed tokens and provision of metaverse market data.'
         />
       </Head>
-      <section className='pt-12 xl:pt-0 animate-fade-in-slow flex flex-col items-center max-w-3xl text-white w-full'>
+      <div className='pt-12 xl:pt-0 animate-fade-in-slow flex flex-col items-center max-w-7xl bg-grey-lightest rounded-lg p-8 text-grey-content w-full'>
         {/* Title */}
-        <div className='sm:gray-box mb-8'>
-          <h1 className='md:text-5xl lg:text-6xl text-4xl green-text-gradient'>
+        <div className='sm:gray-box mb-8 border-t border-l border-white/10 rounded-xl p-5 mt-5 bg-grey-dark w-full'>
+          <h1 className='md:text-5xl lg:text-6xl text-4xl text-grey-content font-plus'>
             Your Watchlist
           </h1>
         </div>
@@ -224,7 +224,7 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
               typedKeys(lands[metaverse]).length > 0 && (
                 <article key={metaverse} className='mb-8 w-full'>
                   <Fade>
-                    <h3 className='gray-box xs:w-[22rem] sm:w-fit mx-auto  sm:ml-0 green-text-gradient mb-4'>
+                    <h3 className='shadowDiv xs:w-[22rem] sm:w-fit mx-auto  sm:ml-0 text-grey-content font-plus mb-4'>
                       {formatName(metaverse, true)}
                     </h3>
                   </Fade>
@@ -237,7 +237,7 @@ const WatchListPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                 </article>
               )
           )}
-      </section>
+      </div>
     </>
   )
 }

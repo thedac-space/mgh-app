@@ -77,7 +77,7 @@ const LandItem = ({
   return (
     <li
       onClick={handleExpanded}
-      className='gray-box p-4 hoverlift hover:bg-opacity-20 flex xs:w-[22rem] sm:w-full sm:flex-row flex-col cursor-pointer text-white items-start relative justify-between gap-4 sm:gap-0 '
+      className='gray-box p-4 hoverlift hover:bg-opacity-20 flex xs:w-[22rem] sm:w-full sm:flex-row flex-col cursor-pointer text-grey-content font-plus items-start relative justify-between gap-4 sm:gap-0 '
     >
       {/* LEFT */}
       <div className='flex flex-row sm:justify-start gap-4 sm:w-fit w-full  transition-all'>
@@ -93,7 +93,7 @@ const LandItem = ({
             src={land.images.image_url || 'images/mgh_logo.png'}
             rounded='lg'
           />
-          <FiExternalLink className='absolute top-0 right-0 text-white text-xs backdrop-filter backdrop-blur-sm rounded-xl w-6 h-6 p-1' />
+          <FiExternalLink className='absolute top-0 right-0 text-grey-content font-plus text-xs backdrop-filter backdrop-blur-sm rounded-xl w-6 h-6 p-1' />
         </a>
         {/* Main Land Info */}
         <div className='flex flex-col justify-between'>
@@ -101,12 +101,12 @@ const LandItem = ({
             <h3 className='text-base sm:text-xl font-normal md:text-2xl p-0 leading-4'>
               {handleLandName(metaverse, land.coords)}
             </h3>
-            <p className='text-gray-400'>
+            <p className='text-grey-content font-plus'>
               ID: {handleTokenID(landId)}{' '}
               <BsTwitter
                 title='Share Valuation'
                 onClick={() => window.open(options.twitter.valuationLink)}
-                className=' hidden sm:inline-block relative bottom-[0.17rem] left-1  h-4 w-4 z-50 text-gray-200 hover:text-blue-400 transition ease-in-out duration-300 cursor-pointer'
+                className=' hidden sm:inline-block relative bottom-[0.17rem] left-1  h-4 w-4 z-50 text-grey-content font-plus hover:text-blue-400 transition ease-in-out duration-300 cursor-pointer'
               />{' '}
             </p>
           </div>

@@ -6,7 +6,7 @@ import { getPoolData } from "../lib/utilities"
 import { useAppSelector } from "../state/hooks"
 
 
-const StakingPool = ({ poolId, web3Provider, stake, unstake, color }: any) => {
+const StakingPool = ({ poolId, web3Provider, stake, unstake }: any) => {
     const { address, chainId } = useAppSelector(state => state.account)
     const [stakeInput, setStakeInput] = useState("")
     const [unstakeInput, setUnstakeInput] = useState("")
@@ -27,20 +27,20 @@ const StakingPool = ({ poolId, web3Provider, stake, unstake, color }: any) => {
             <div className="animate-pulse h-60 w-full min-w-max max-w-md rounded-xl bg-grey-dark bg-opacity-30" />
         ) : (
             <div className="relative flex flex-col flex-grow min-w-max max-w-md w-full items-center justify-between shadow-dark rounded-xl bg-grey-dark bg-opacity-30">
-                <div className={`flex flex-col w-full ${web3Provider ? "rounded-t-xl" : "rounded-xl"} p-3 ${color}`}>
-                    <p className="text-pink-600 text-2xl mb-2 font-medium">{name}</p>
+                <div className={`flex flex-col w-full ${web3Provider ? "rounded-t-xl" : "rounded-xl"} p-3 stake`}>
+                    <p className="stakestyletext text-2xl mb-2 font-normal font-plus">{name}</p>
                     <div className="self-start flex items-center justify-between space-x-1 sm:space-x-3 w-full">
-                        <p className={`text-gray-300 font-medium text-base sm:text-lg pt-1 flex-grow`}>APY</p>
-                        <p className={`text-gray-400 font-medium text-base sm:text-lg pt-1 text-right`}>{APY}%</p>
+                        <p className={`text-grey-content font-plus font-bold text-sm pt-1 flex-grow`}>APY</p>
+                        <p className={`text-grey-content font-plus font-normal text-sm pt-1 text-right`}>{APY}%</p>
                     </div>
                     <div className="self-start flex items-center justify-between space-x-1 sm:space-x-3 w-full">
-                        <p className={`text-gray-300 font-medium text-base sm:text-lg pt-1 flex-grow`}>Locking Period</p>
-                        <p className={`text-gray-400 font-medium text-base sm:text-lg pt-1 text-right`}>{lockingMonth} Month</p>
+                        <p className={`text-grey-content font-plus font-bold text-sm pt-1 flex-grow`}>Locking Period</p>
+                        <p className={`text-grey-content font-plus font-normal text-sm  pt-1 text-right`}>{lockingMonth} Month</p>
                     </div>
                     {web3Provider && (
                         <div className="self-start flex items-center justify-between space-x-1 sm:space-x-3 w-full">
-                            <p className={`text-gray-300 font-medium text-base sm:text-lg pt-1 flex-grow`}>Your Balance</p>
-                            <p className={`text-gray-400 font-medium text-base sm:text-lg pt-1 text-right`}>{(+totalStaked)} <span className="text-sm sm:text-base font-normal">$MGH</span></p>
+                            <p className={`text-grey-content font-plus font-bold text-sm  pt-1 flex-grow`}>Your Balance</p>
+                            <p className={`text-grey-content font-plus font-normal text-sm  pt-1 text-right`}>{(+totalStaked)} <span className="text-sm sm:text-base font-normal">$MGH</span></p>
                         </div>
                     )}
                 </div>
@@ -80,7 +80,7 @@ const StakingPool = ({ poolId, web3Provider, stake, unstake, color }: any) => {
                             </>
                         ) : (
                             <div className="flex flex-col p-5 items-center text-center">
-                                <p className="text-gray-200 text-2xl font-medium mt-1">Pool locked</p>
+                                <p className="text-grey-content font-plus text-2xl font-medium mt-1">Pool locked</p>
                                 {(timeUntilDeposit && timeUntilDeposit > 0) ? (<p className="text-gray-400 font-medium pt-2">Next Deposit in {timeUntilDeposit} days</p>) : (timeUntilDeposit === 0 && <p className="text-gray-400 font-medium pt-2">Deposit opens soon!</p>)}
                             </div >
                         )}

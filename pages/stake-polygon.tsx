@@ -212,7 +212,7 @@ const PolygonStaking: NextPage = () => {
 
                             <div className="flex flex-col items-center w-full sm:flex-row space-y-3 sm:space-y-0 space-x-0 sm:space-x-3 max-w-sm">
                                 <button disabled={(+earned) ? false : true} onClick={claimRewards} className={`disabled:opacity-20 disabled:hover:shadow-dark disabled:cursor-default flex justify-center items-center border bg-blue-400 border-blue-400 shadow-dark hover:shadow-button transition ease-in-out duration-500 rounded-xl w-full max-w-sm py-3 sm:py-4`}>
-                                    <p className="pt-1 z-10 text-grey-darkest font-medium text-lg sm:text-xl">Claim</p>
+                                    <p className="pt-1 z-10 text-white font-medium text-lg sm:text-xl">Claim</p>
                                 </button>
                                 <button disabled={(+earned) ? false : true} onClick={reinvest} className={`disabled:opacity-20 disabled:hover:shadow-dark disabled:cursor-default flex justify-center items-center border border-blue-400 shadow-dark hover:shadow-button transition ease-in-out duration-500 rounded-xl w-full max-w-sm py-3 sm:py-4`}>
                                     <p className="pt-1 z-10 text-blue-400 font-medium text-lg sm:text-xl">Reinvest</p>

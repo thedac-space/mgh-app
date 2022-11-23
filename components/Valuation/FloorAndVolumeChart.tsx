@@ -117,8 +117,8 @@ const FloorAndVolumeChart = ({ metaverse }: { metaverse: Metaverse }) => {
             className={
               'gray-box font-semibold  rounded-lg p-2 text-xs text-gray-400' +
               (symbol === arrSymbol
-                ? ' text-gray-300 bg-opacity-80 '
-                : ' hover:text-gray-300 hover:bg-opacity-80')
+                ? ' text-grey-content bg-opacity-80 '
+                : ' hover:text-grey-content hover:bg-opacity-80')
             }
             onClick={() => setSymbol(arrSymbol)}
           >

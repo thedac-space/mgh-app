@@ -11,7 +11,7 @@ const ExternalLink = ({ className, href, text }: Props) => {
       href={href}
       target='_blank'
       className={
-        'flex items-center max-w-max space-x-1 text-gray-200 text-sm hover:text-blue-400 transition duration-300 ease-in-out' +
+        'flex items-center max-w-max space-x-1 text-grey-content text-sm hover:text-blue-400 transition duration-300 ease-in-out' +
         ' ' +
         className
       }

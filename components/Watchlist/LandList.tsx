@@ -20,7 +20,7 @@ const LandList = ({
   metaverse,
 }: Props) => {
   return (
-    <ul className='w-full flex lg:flex-col flex-wrap justify-center gap-4'>
+    <ul className='w-full flex lg:flex-col flex-wrap justify-center gap-4 font-plus'>
       <Fade duration={550} className='w-full flex justify-center'>
         {typedKeys(lands).map((land) => (
           <LandItem

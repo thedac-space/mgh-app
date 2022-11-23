@@ -33,7 +33,7 @@ const MapLegend = ({
   return (
     <ul
       className={
-        'flex flex-col gap-2 gray-box bg-opacity-100 w-fit ' + className
+        'flex flex-col gap-2 gray-box bg-grey-bone w-fit ' + className
       }
     >
       {colors.map((key) => (
@@ -46,7 +46,7 @@ const MapLegend = ({
             }
             onClick={() => handleLegendClick(key)}
           />
-          <span className='text-gray-200 text-sm md:text-base font-semibold'>
+          <span className='text-grey-content text-sm md:text-base font-semibold'>
             {formatName(key)}
           </span>
         </li>

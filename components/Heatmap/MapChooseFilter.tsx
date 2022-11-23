@@ -9,6 +9,7 @@ import { GiStopwatch } from 'react-icons/gi'
 import { MapFilter } from '../../lib/heatmap/heatmapCommonTypes'
 import { typedKeys } from '../../lib/utilities'
 import { useAppSelector } from '../../state/hooks'
+import InfoModal from '../InfoModal'
 
 interface Props {
   filterBy: MapFilter
@@ -18,39 +19,50 @@ interface Props {
 const MapChooseFilter = ({ filterBy, setFilterBy }: Props) => {
   const { role } = useAppSelector((state) => state.account)
   const isPremium = true // This will be replaced with role when we release this feature.
-
+  const [openModal, setOpenModal] = useState(false);
   const [opened, setOpened] = useState(false)
   const filterOptions = {
-    basic: { name: 'Basic', shortName: undefined, icon: <FiMap /> },
+    basic: { 
+      name: 'Basic', 
+      shortName: undefined, 
+      icon: <FiMap /> , 
+      description: 'Quickly find undervalued LANDs when clicking on the squares in the map'
+    },
     eth_predicted_price: {
       name: 'Predicted Price',
       shortName: undefined,
       icon: <BiTargetLock />,
+      description: 'This  filter shows the estimated price of the LANDs in a specifc area of the map.  green = low price estimation, red = high price estimation'
     },
     floor_adjusted_predicted_price: {
       name: 'Floor Adjusted Predicted Price',
       shortName: undefined,
       icon: <BiBullseye />,
+      description: 'This fliter adjusts the price predictions to the floor price of the collection eg. if the price prediction is below the floor price it gets adjusted to the current floor price of the collection'
     },
     listed_lands: {
       name: 'Listed Lands',
       shortName: undefined,
       icon: <VscGraphLine />,
+      description: 'This filter only shows the listed LANDs and their respective price estimation. green = low price estimation, red = high price estimation'
     },
     price_difference: {
       name: 'Price Difference',
       shortName: undefined,
       icon: <MdAttachMoney />,
+      description: 'This filter only shows the listed LANDs and their respective price estimation in relation to the listed price. green = undervalued red = overvalued'
     },
     transfers: {
       name: 'Transfers',
       shortName: undefined,
       icon: <BiTransferAlt />,
+      description: 'This filter shows how many times LANDs have exchanged owners throughout their trading history'
     },
     last_month_sells: {
       name: 'Sales of the last Month',
       shortName: undefined,
-      icon: <GiStopwatch />
+      icon: <GiStopwatch />,
+      description: 'This filter shows to which price the LANDs were sold in the last month. green= low selling price, red = high selling price'
     },
 
     // Not using this filters for now..Will delete if decision is permanent
@@ -73,13 +85,15 @@ const MapChooseFilter = ({ filterBy, setFilterBy }: Props) => {
   return (
     <div>
       {/* Filter Button + Name */}
+      {openModal && <InfoModal onDismiss={() => setOpenModal(false)}  name={filterOptions[filterBy].name} description={filterOptions[filterBy].description} />}
       <button
         onClick={() => setOpened(!opened)}
-        className='h-16 gray-box bg-opacity-100 mb-2 items-center w-96 tracking-wider font-semibold text-gray-200 hover:text-white flex justify-between cursor-pointer transition-all'
+        className='h-16 gray-box bg-grey-bone mb-2 items-center w-96 tracking-wider font-plus font-medium text-grey-content hover:text-[#7c7b7b] flex justify-between cursor-pointer transition-all'
       >
         {/* Icon */}
-        <span className='hidden sm:block text-lg'>
+        <span className='hidden sm:block text-lg' onClick={() => setOpenModal(true)}>
           {filterOptions[filterBy].icon}
+          
         </span>
 
         {/* Name */}
@@ -109,7 +123,7 @@ const MapChooseFilter = ({ filterBy, setFilterBy }: Props) => {
               filter !== filterBy && (
                 <Fade duration={500} key={filter} direction='down'>
                   <button
-                    className='flex gray-box gap-4 bg-opacity-100 items-center text-gray-200 hover:text-white font-semibold w-96 text-sm md:text-base'
+                    className='flex gray-box gap-4 bg-opacity-100 items-center  font-plus font-medium text-grey-content hover:text-[#7c7b7b] w-96 text-sm md:text-base'
                     onClick={() => {
                       setFilterBy(filter)
                       setOpened(false)

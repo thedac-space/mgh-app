@@ -23,7 +23,7 @@ const MapChooseMetaverse = ({ metaverse, setMetaverse }: Props) => {
     <div className='relative z-50'>
       <button
         onClick={() => setOpened(!opened)}
-        className='h-16 gray-box bg-opacity-100 mb-2 items-center w-70  md:w-56 tracking-wider font-semibold text-gray-200 hover:text-white flex justify-between cursor-pointer transition-all'
+        className='h-16 gray-box bg-grey-bone mb-2 items-center w-70  md:w-56 tracking-wider font-plus font-medium text-grey-content hover:text-[#7c7b7b] focus:outline-none flex justify-between cursor-pointer transition-all'
       >
         <div className='hidden sm:block'>
           <OptimizedImage
@@ -50,7 +50,7 @@ const MapChooseMetaverse = ({ metaverse, setMetaverse }: Props) => {
               mv !== metaverse && (
                 <Fade duration={500} key={mv} direction='down'>
                   <button
-                    className='flex gray-box gap-2 md:gap-4 bg-opacity-100 items-center text-gray-200 hover:text-white font-semibold whitespace-nowrap w-70 md:w-56'
+                    className='flex gray-box gap-2 md:gap-4 bg-opacity-100 items-center font-plus font-medium text-grey-content hover:text-[#7c7b7b] whitespace-nowrap w-70 md:w-56'
                     onClick={() => {
                       setMetaverse(mv)
                       setOpened(false)

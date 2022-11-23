@@ -51,14 +51,14 @@ const SalesVolumeDaily = ({ coinPrices, metaverse }: Props) => {
 
   return !predictions ? (
     <>
-      <div className='flex flex-col items-start gray-box'>
-        <p className={`text-lg xl:text-xl font-medium text-gray-300`}>
+      <div className='flex flex-col items-start border-t border-l border-white/10 rounded-xl p-5 w-full bg-[#E9ECF6]'>
+        <p className={`text-lg xl:text-xl font-medium text-grey-content`}>
           We couldn't obtain Daily Volume for the {formatName(metaverse)} lands
           collection. Check{' '}
           <a
             href='https://opensea.io/collection'
             target='_blank'
-            className='hover:underline text-pink-600'
+            className='hover:underline text-grey-content'
           >
             Open Sea Market
           </a>{' '}
@@ -68,10 +68,11 @@ const SalesVolumeDaily = ({ coinPrices, metaverse }: Props) => {
     </>
   ) : (
     <>
-      <div className='flex flex-col items-start gray-box'>
-        <p className={`text-lg xl:text-xl font-medium text-gray-300 mb-4`}>
+    <div className='flex flex-col'>
+        <p className={`text-lg xl:text-xl font-medium text-grey-content font-plus mb-4`}>
           Daily Volume:{' '}
         </p>
+      <div className='flex flex-col items-start border-t border-l border-white/10 rounded-xl p-5 w-full bg-[#E9ECF6]'>     
 
         <div
           className={
@@ -82,6 +83,8 @@ const SalesVolumeDaily = ({ coinPrices, metaverse }: Props) => {
           <PriceList predictions={predictions} metaverse={metaverse} />
         </div>
       </div>
+    </div>
+        
     </>
   )
 }
