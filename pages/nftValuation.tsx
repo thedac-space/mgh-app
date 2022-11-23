@@ -1,4 +1,5 @@
 import axios from "axios";
+import { AnyObject } from "immer/dist/internal";
 import { NextPage } from "next";
 import Head from "next/head";
 import { useEffect, useState } from "react";
@@ -10,7 +11,7 @@ import NftCard from "../components/NftCard";
 
 const Home: NextPage = () => {
 	const [nftFluf, setnftFluf] = useState([])
-    const [nftFlufGlobal, setnftFlufGlobal] = useState()
+    const [nftFlufGlobal, setnftFlufGlobal] = useState<AnyObject>({})
 	const [searchId, setSearchById] = useState(nftFluf)
 	const [nftId, setnftId] = useState('')
 
@@ -79,8 +80,8 @@ const Home: NextPage = () => {
             setnftFlufGlobal(
                     (
                         await axios.get(
-                        "https://services.itrmachines.com/" +
-                            "fluf/globalData"
+							process.env.ITRM_SERVICE +
+                            "/fluf/globalData"
 				        )
                     ).data
                 )
@@ -154,16 +155,16 @@ const Home: NextPage = () => {
 							</div>
 							<div className="items-end">
 								<p className={styleContent}>
-                                    {/* {nftFlufGlobal.stats.floor_price} */}
+                                    {nftFlufGlobal.stats?.floor_price}
 								</p>
 								<p className={styleContent}>
-                                    {/* {nftFlufGlobal.stats.total_volume} */}
+                                    {nftFlufGlobal.stats?.total_volume}
 								</p>
 								<p className={styleContent}>
-                                    {/* {nftFlufGlobal.stats.market_cap} */}
+                                    {nftFlufGlobal.stats?.market_cap}
 								</p>
 								<p className={styleContent}>
-									{/* {nftFlufGlobal.stats.num_owners} */}
+									{nftFlufGlobal.stats?.num_owners}
 								</p>
 							</div>
 						</div>
@@ -185,39 +186,6 @@ const Home: NextPage = () => {
 							<button type="submit" className="absolute block right-4 top-6 text-grey-content text-xl"><FiSearch/></button> 
 						</div>	
 					</div>
-					{ searchId && searchId.length > 0 ? (
-						<div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-5 xs:gap-2 sm:gap-5 w-full">
-						{searchId.map((fluf: any, key) => {
-							return (
-								<>
-								<NftCard
-									key={key}
-									image={fluf.images.image_small}
-									text="Estimated Price: "
-									value={fluf.floor_adjusted_predicted_price}
-								/>
-								</>
-								
-							)
-						})}
-						</div>
-						) : (
-							<div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-5 xs:gap-2 sm:gap-5 w-full">
-								{/* {nftFluf.map((fluf: any, key:any) => {
-									return (
-										<NftCard
-											key={key}
-											image={fluf.images.image_small}
-											text="Estimated Price: "
-											value={fluf.tokenId}
-										/>	
-									)
-								})} */}
-								{dataFluf()}
-							</div>
-							
-						)
-					}
 					<div className="grid grid-cols-3 content-center justify-items-center w-full">
 						{controlPageIndex === 0 ? (
 							<div></div>
@@ -274,6 +242,40 @@ const Home: NextPage = () => {
 							/>
 						</div>
 					</div>
+					{ searchId && searchId.length > 0 ? (
+						<div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-5 xs:gap-2 sm:gap-5 w-full">
+						{searchId.map((fluf: any, key) => {
+							return (
+								<>
+								<NftCard
+									key={key}
+									image={fluf.images.image_small}
+									text="Estimated Price: "
+									value={fluf.floor_adjusted_predicted_price}
+								/>
+								</>
+								
+							)
+						})}
+						</div>
+						) : (
+							<div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-5 xs:gap-2 sm:gap-5 w-full">
+								{/* {nftFluf.map((fluf: any, key:any) => {
+									return (
+										<NftCard
+											key={key}
+											image={fluf.images.image_small}
+											text="Estimated Price: "
+											value={fluf.tokenId}
+										/>	
+									)
+								})} */}
+								{dataFluf()}
+							</div>
+							
+						)
+					}
+					
 				</div>
 			</div>
 		</>
