@@ -4,7 +4,7 @@ import { typedKeys } from '../../lib/utilities'
 
 const COINS = {
   ethPrediction: {
-    src: '/images/ethereum-eth-logo.png',
+    src: '/images/eth.svg',
     name: 'ETH',
   },
   usdPrediction: {

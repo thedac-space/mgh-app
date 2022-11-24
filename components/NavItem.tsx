@@ -1,11 +1,6 @@
 import { useRouter } from 'next/dist/client/router';
 import Link from "next/link"
-import { RiHome6Line } from "react-icons/ri"
-import { IoIosSwap } from "react-icons/io"
-import { AiFillHome, AiOutlinePicture } from "react-icons/ai"
-import { VscLock } from "react-icons/vsc"
-import { MdOutlineCollections, MdOutlineAttachMoney } from "react-icons/md"
-import {FaHandHoldingUsd} from "react-icons/fa"
+
 
 
 const NavItem = ({ text, link }: any) => {
@@ -18,30 +13,42 @@ const NavItem = ({ text, link }: any) => {
         }
     }
 
-    function getIcon(link: any) {
+    const dict = {
+        'home': '&#xe901;',
+        'valuation':'&#xe902;',
+        'nftValuation': '&#xe904;',
+        'swap': '&#xe906;',
+        'stake':'&#xe905;',
+        'liquidity':'&#xe903;',
+        'gobernance':'&#xe900;',
+      }
 
+    function getIcon(link: any) {
+       
+            
+          
         switch (link) {
             case "/":
-                return <AiFillHome className={`text-4xl z-10 ${focus && "text-grey-icon"} group-hover:text-grey-icon`} />
+                return <div className={`text-5xl z-10 ${focus && "text-grey-icon"} group-hover:text-grey-icon nav-link__icon`}>&#xe901;</div>
             case "/swap":
-                return <IoIosSwap className={`text-4xl z-10 ${focus && "text-grey-icon"} group-hover:text-grey-icon`} />
+                return <div className={`text-5xl z-10 ${focus && "text-grey-icon"} group-hover:text-grey-icon nav-link__icon`}>&#xe906;</div>
             case "/liquidity":
-                return <FaHandHoldingUsd className={`text-4xl z-10 ${focus && "bg-slate-600 text-grey-icon"} group-hover:text-grey-icon`} />
+                return <div className={`text-5xl z-10 ${focus && "text-grey-icon"} group-hover:text-grey-icon nav-link__icon`}>&#xe903;</div>
             case "/stake": case "/stake-ethereum": case "stake-polygon":
-                return <VscLock className={`text-4xl z-10 ${focus && "text-grey-icon"} group-hover:text-grey-icon`} />
+                return <div className={`text-5xl z-10 ${focus && "text-grey-icon"} group-hover:text-grey-icon nav-link__icon`}>&#xe905;</div>
             case "https://snapshot.org/#/metagamehub.eth" || "/pools":
-                return <MdOutlineCollections className={`text-4xl z-10 ${focus && "text-grey-icon"} group-hover:text-grey-icon`} />
+                return <div className={`text-5xl z-10 ${focus && "text-grey-icon"} group-hover:text-grey-icon nav-link__icon`}>&#xe900;</div>
             case "/valuation":
-                return <MdOutlineAttachMoney className={`text-4xl z-10 ${focus && "text-grey-icon"} group-hover:text-grey-icon`} />
+                return <div className={`text-5xl z-10 ${focus && "text-grey-icon"} group-hover:text-grey-icon nav-link__icon`}>&#xe902;</div>
             case "/nftValuation":
-                return <AiOutlinePicture className={`text-4xl z-10 ${focus && "text-grey-icon"} group-hover:text-grey-icon`} />
+                return <div className={`text-5xl z-10 ${focus && "text-grey-icon"} group-hover:text-grey-icon nav-link__icon`}>&#xe904;</div>
         }
     }
 
     return (
         <>
             <Link href={link}>
-                <a className={`${focus ? "  shadowNavItem" : "shadowNormal"} hover:shadowNavItem relative flex items-center rounded-xl px-3 py-3 text-grey-icon w-full `}>
+                <a className={`${focus ? "  shadowNavItem" : "shadowNormal"} hover:shadowNavItem relative flex items-center rounded-xl px-2 py-2 text-grey-icon w-full `}>
                     <div className={`${focus ? "shadowNavItem" : "shadowNormal"} hidden h-full w-full absolute  rounded-xl blur-xl`} />
                     {getIcon(link)}
                     {/* <span className="pt-1.5 z-10">{text}</span> */}

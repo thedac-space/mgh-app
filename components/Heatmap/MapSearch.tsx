@@ -115,7 +115,7 @@ const MapSearch = ({ mapState, handleMapSelection }: Props) => {
                   {searchOptions[filter].hasGuide && (
                     <div className='items-center justify-center'>
                       <AiFillQuestionCircle className='text-grey-content cursor-pointer peer relative bottom-[2px]' />
-                      <p className='absolute -top-7 border border-gray-500 -left-6 xs:left-0 p-2 rounded-lg bg-black bg-opacity-10 backdrop-filter backdrop-blur font-medium text-xs text-gray-200 hidden peer-hover:block w-70'>
+                      <p className='absolute -top-7 border border-gray-500 -left-6 xs:left-0 p-2 rounded-lg bg-grey-bone bg-opacity-10 backdrop-filter backdrop-blur font-medium text-xs text-grey-content hidden peer-hover:block w-70'>
                         Find LAND on Opensea &gt; Details &gt; Token ID
                       </p>
                     </div>

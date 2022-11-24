@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 @layer base {
+  
   @font-face {
     font-family: 'Montserrat';
     font-weight: 100;
@@ -97,8 +98,22 @@
     font-weight: 400;
     src: url('./fonts/Lighters-Regular.ttf');
   }
+
+  @font-face {
+    font-family: 'iconSet1';
+    src: url('./fonts/fonts-icons/iconSet01.ttf');
+  }
+
 }
 
+:root {
+  --font-iconSet1: 'iconSet1'; 
+}
+
+.nav-link__icon {
+  font-family: var(--font-iconSet1);
+  font-size: 1.8rem;
+}
 .nav-item {
   @apply transform hover:scale-110 transition-all duration-500 ease-in-out hover:text-blue-400;
 }

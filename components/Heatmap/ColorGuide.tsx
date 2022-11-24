@@ -71,10 +71,10 @@ const ColorGuide = ({ percentFilter, setPercentFilter, filterBy }: Props) => {
           )
       )}
       {/* Max/Worst */}
-      <li className='text-gray-200 text-sm font-semibold'>
+      <li className='text-grey-content text-sm font-semibold'>
         {filterBy === 'price_difference' ? 'Worst' : 'Max'}
       </li>
-      <BsQuestionCircle className='text-gray-300 cursor-pointer peer relative bottom-[2px]' />
+      <BsQuestionCircle className='text-grey-content cursor-pointer peer relative bottom-[2px]' />
       <p className='absolute -top-7 border border-gray-500 -left-6 xs:left-0 p-2 rounded-lg bg-black bg-opacity-10 backdrop-filter backdrop-blur font-medium text-xs text-gray-200 hidden peer-hover:block w-70'>
         Message for {MESSAGE_BY_FILTER[filterBy]}
       </p>
