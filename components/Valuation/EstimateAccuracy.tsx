@@ -35,7 +35,7 @@ const EstimateAccuracy = ({ coinPrices, metaverse }: Props) => {
   }, [metaverse])
   return !values ? (
     <>
-      <div className='flex flex-col items-start border-t border-l border-white/10 rounded-xl p-5 w-full bg-[#E9ECF6]'>
+      <div className='flex flex-col items-start border-t border-l border-white/10 rounded-xl p-5 w-full bg-grey-panel'>
         <p className={`text-lg xl:text-xl font-medium text-grey-content`}>
           We couldn't obtain Estimate Accuracy
           Check{' '}
@@ -57,7 +57,7 @@ const EstimateAccuracy = ({ coinPrices, metaverse }: Props) => {
           Estimate Accuracy:{' '}
         </p>
         <div
-          className='flex border-t border-l border-white/10 shadow-blck rounded-xl justify-between p-9 bg-[#E9ECF6]'
+          className='flex border-t border-l border-white/10 shadow-blck rounded-xl justify-between p-9 bg-grey-panel'
         >
           <div className="flex flex-col space-y-1">
             <p className={styleContent}>

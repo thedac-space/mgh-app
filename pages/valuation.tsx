@@ -266,7 +266,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 						<span>
 							<img src="/images/imagevaluation.svg" alt="IMG" className="w-full flex" />
 						</span>
-						<div className="flex border-t border-l border-white/10 rounded-3xl shadowDiv p-5 bg-opacity-30 justify-between bg-[#F9FAFB] my-9">
+						<div className="flex border-t border-l border-white/10 rounded-3xl shadowDiv p-5 bg-opacity-30 justify-between bg-grey-bone my-9">
 								<div className="pr-5 w-3/4">
 									<h2 className="text-grey-content font-plus font-normal rounded-2xl lg:text-5xl text-3xl mb-0 sm:mb-2">
 										Description

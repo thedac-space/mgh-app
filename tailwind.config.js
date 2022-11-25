@@ -116,6 +116,7 @@ module.exports = {
           icon: '#9B9B9B',
           dark: '#ECEEF8',
           bone: '#F9FAFB',
+          panel:'#E9ECF6',
           lightest: '#F8F9FD'
         }
       },

@@ -110,3 +110,4 @@ export type LegendFilter = 'portfolio' | 'watchlist' | 'on-sale' | undefined
 
 // For Clicks and Searches
 export type LandCoords = { x?: string | number; y?: string | number }
+
