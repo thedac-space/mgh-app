@@ -25,16 +25,16 @@ export const getLimits = (array: (number | undefined)[]) => {
     if (value)
       arr.push(value);
   arr.sort(function (a, b) { return a - b; });
-  let values: number[] = [];
-  for (let i = 30; i < arr.length - 30; i++)
+  let values: number[] = [], minimum = Number.MAX_VALUE, maximum = 0;
+  for (let i = 30; i < arr.length - 30; i++) {
     values.push(arr[i]);
+    maximum = arr[i] > maximum ? arr[i] : maximum;
+    minimum = arr[i] < minimum ? arr[i] : minimum;
+  }
   let mid = Math.floor(values.length - 1);
   let median = (values.length % 2 == 0) ? (values[mid] + values[mid - 1]) / 2.0 : values[mid];
-  let deviation = 0;
-  for (let value of values)
-    deviation += (value - median) * (value - median);
-  deviation = Math.sqrt(deviation / (values.length - 1));
-  return { minimum: median - (2 * deviation), maximum: median + (2 * deviation) };
+  let distance = Math.min(Math.abs(minimum - median), Math.abs(maximum - median));
+  return { minimum: minimum, maximum: median + distance };
 }
 
 export const getPercentage = (
@@ -411,7 +411,7 @@ export const DECENTRALAND_API_COLORS: Record<number, string> = Object.freeze({
  * eth_predicted_price.
  */
 const filterPercentages = {
-  predictedPricePercentage: [0, 3, 7, 12, 30, 100],
+  predictedPricePercentage: [0, 20, 40, 60, 80, 100],
   normal: [0, 20, 40, 60, 80, 100],
 }
 
