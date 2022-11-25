@@ -98,7 +98,8 @@ const MaptalksCanva = ({
             minHeight: TILE_SIZE * 8,
             maxWidth: TILE_SIZE * 300,
             maxHeight: TILE_SIZE * 300,
-        })/* .clamp({
+        }).zoom(TILE_SIZE * 200)
+        /* .clamp({
             direction: 'all',
             underflow: 'center'
         }) */
