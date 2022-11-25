@@ -118,6 +118,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 
 	useEffect(() => {
 		setIsVisible(false);
+		setFilterBy('basic')
 	}, [metaverse]);
 
 	// Main Search Function through Clicks,Form inputs.
