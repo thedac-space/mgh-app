@@ -143,13 +143,13 @@ const Home: NextPage = () => {
 							</div>
 							<div className="items-end">
 								<p className={styleContent}>
-									{nftFlufGlobal.stats?.floor_price}
+									{formatter.format(nftFlufGlobal.stats?.floor_price)}
 								</p>
 								<p className={styleContent}>
-									{nftFlufGlobal.stats?.total_volume}
+									{formatter.format(nftFlufGlobal.stats?.total_volume)}
 								</p>
 								<p className={styleContent}>
-									{nftFlufGlobal.stats?.market_cap}
+									{formatter.format(nftFlufGlobal.stats?.market_cap)}
 								</p>
 								<p className={styleContent}>
 									{nftFlufGlobal.stats?.num_owners}
@@ -218,7 +218,7 @@ const Home: NextPage = () => {
 							) : (
 								<button
 									type="button"
-									className="py-2.5 px-5 mr-2 mb-2 text-sm font-small focus:outline-none rounded-lg border text-grey-content font-plus bg-[#ECEEF8] hover:text-white hover:bg-gray-700"
+									className="py-2.5 px-5 mr-2 mb-2 text-sm font-small focus:outline-none rounded-lg border text-grey-content font-plus bg-[#ECEEF8]  hover:bg-gray-200"
 									onClick={() => {
 										setControlPageIndex(controlPageIndex - 1);
 									}}

@@ -71,12 +71,13 @@ interface Hovered {
 	coords: { x: number; y: number };
 	owner?: string;
 }
-const styleContent = 'text-xxs xs:text-xxs xl:text-xs font-plus font-bold text-grey-content pt-0 sm:pt-5 flex justify-between'
+const styleContent =
+	"text-xxs xs:text-xxs xl:text-xs font-plus font-bold text-grey-content pt-0 sm:pt-5 flex justify-between";
 
 const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
-	const [globalData, setglobalData] = useState<AnyObject>({})
-	const [estimateAccuracy, setestimateAccuracy] = useState<AnyObject>({})
-	
+	const [globalData, setglobalData] = useState<AnyObject>({});
+	const [estimateAccuracy, setestimateAccuracy] = useState<AnyObject>({});
+
 	const { address, chainId } = useAppSelector((state) => state.account);
 	const { web3Provider } = useConnectWeb3();
 
@@ -105,6 +106,10 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 		width: mapDivRef.current?.offsetWidth,
 	});
 
+	const formatter = new Intl.NumberFormat('en-US', {
+		minimumFractionDigits: 2,
+		maximumFractionDigits: 2,
+	  });
 	// Function for resizing heatmap
 	const resize = () => {
 		if (!mapDivRef.current) return;
@@ -123,36 +128,49 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 		const coords = { x, y };
 		setHovered({ coords, owner, name });
 	};
-	useEffect(() => {
-		const getglobalData = async () => {
-            setglobalData(
-                    (
-                        await axios.get(
-							process.env.ITRM_SERVICE +
-                            "/fluf/globalData"
-				        )
-                    ).data
-                )
-		};
-		getglobalData();
-	}, []);
+
+	const getglobalData = async () => {
+		if (!metaverse) return;
+		try {
+			let data;
+			const response = await fetch(
+				`${process.env.ITRM_SERVICE}${
+					metaverse == "somnium-space" || metaverse == "axie-infinity"
+						? ""
+						: "/test"
+				}/${metaverse}/globalData`,
+				{
+					method: "GET",
+					body: JSON.stringify(data),
+				}
+			);
+			setglobalData(await response.json());
+		} catch (e) {
+			console.log("error", e);
+			setMapState("errorQuery");
+			return setTimeout(() => setIsVisible(false), 1100);
+		}
+	};
+
 	useEffect(() => {
 		const getEstimateAccuracy = async () => {
-            setestimateAccuracy(
-                    (
-                        await axios.get(
-							process.env.ITRM_SERVICE +
-                            "/test/sandbox/performance"
-				        )
-                    ).data
-                )
+			setestimateAccuracy(
+				(
+					await axios.get(
+						process.env.ITRM_SERVICE + "/test/sandbox/performance"
+					)
+				).data
+			);
 		};
 		getEstimateAccuracy();
 	}, []);
 
 	useEffect(() => {
 		setIsVisible(false);
-		setFilterBy('basic')
+		setFilterBy("basic");
+		console.log("pre ejecucion");
+		getglobalData();
+		console.log("post ejecucion");
 	}, [metaverse]);
 
 	// Main Search Function through Clicks,Form inputs.
@@ -172,10 +190,12 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 				const parameters =
 					x && y ? `x=${x}&y=${y}` : tokenId ? `tokenId=${tokenId}` : null;
 				const response = await fetch(
-					`${process.env.ITRM_SERVICE}${metaverse == "somnium-space" || metaverse == "axie-infinity"
-						? ""
-						: "/test"
-					}/${metaverse}/${metaverse == "axie-infinity" ? "predict" : "map"
+					`${process.env.ITRM_SERVICE}${
+						metaverse == "somnium-space" || metaverse == "axie-infinity"
+							? ""
+							: "/test"
+					}/${metaverse}/${
+						metaverse == "axie-infinity" ? "predict" : "map"
 					}?${parameters}`,
 					{
 						method: "GET",
@@ -247,7 +267,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 						<h1 className="text-grey-content font-plus font-normal rounded-2xl lg:text-5xl text-3xl  mb-0 sm:mb-2">
 							LAND Valuation
 						</h1>
-						
+
 						{/* Links Wrapper */}
 						<div className="flex gap-5">
 							{/* Links */}
@@ -262,12 +282,16 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 							))}
 						</div>
 					</div>
-					{metaverse &&(
-					<>
-						<span>
-							<img src="/images/imagevaluation.svg" alt="IMG" className="w-full flex" />
-						</span>
-						<div className="flex border-t border-l border-white/10 rounded-3xl shadowDiv p-5 bg-opacity-30 justify-between bg-grey-bone my-9">
+					{metaverse && (
+						<>
+							<span>
+								<img
+									src="/images/imagevaluation.svg"
+									alt="IMG"
+									className="w-full flex"
+								/>
+							</span>
+							<div className="flex border-t border-l border-white/10 rounded-3xl shadowDiv p-5 bg-opacity-30 justify-between bg-grey-bone my-9">
 								<div className="pr-5 w-3/4">
 									<h2 className="text-grey-content font-plus font-normal rounded-2xl lg:text-5xl text-3xl mb-0 sm:mb-2">
 										Description
@@ -276,42 +300,44 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 									<p
 										className={`text-sm xs:text-base xl:text-lg font-plus font-normal text-grey-content`}
 									>
-										Direct repair of aneurysm, pseudoaneurysm, or excision (partial or total) and graft insertion, with or without patch graft; for ruptured aneurysm, abdominal aorta  Direct repair of aneurysm, pseudoaneurysm, or excision (partial or total) and graft insertion, with or without patch graft; for ruptured aneurysm, abdominal aorta  
+										Direct repair of aneurysm, pseudoaneurysm, or excision
+										(partial or total) and graft insertion, with or without
+										patch graft; for ruptured aneurysm, abdominal aorta Direct
+										repair of aneurysm, pseudoaneurysm, or excision (partial or
+										total) and graft insertion, with or without patch graft; for
+										ruptured aneurysm, abdominal aorta
 									</p>
 								</div>
-								<div className="flex border-t border-l border-white/10 shadow-blck rounded-xl p-3 bg-[#D4D7DD] bg-opacity-30 w-1/4  justify-between pt-5 pb-5">
-									<div className="flex flex-col ">
-										<p className={styleContent}>
-											FLOOR :
-										</p>
-										<p className={styleContent}>
-											TRADING VOLUME :
-										</p>
-										<p className={styleContent}>
-											MCAP :
-										</p>
-										<p className={styleContent}>
-											OWNERS :
-										</p>
+								{
+									metaverse != 'axie-infinity' && (
+									<div className="flex border-t border-l border-white/10 shadow-blck rounded-xl p-3 bg-[#D4D7DD] bg-opacity-30 w-1/4  justify-between pt-5 pb-5">
+										<div className="flex flex-col ">
+											<p className={styleContent}>FLOOR :</p>
+											<p className={styleContent}>TRADING VOLUME :</p>
+											<p className={styleContent}>MCAP :</p>
+											<p className={styleContent}>OWNERS :</p>
+										</div>
+										<div className="items-end">
+											<p className={styleContent}>
+												{formatter.format(globalData.stats?.floor_price)}
+											</p>
+											<p className={styleContent}>
+												{formatter.format(globalData.stats?.total_volume)}
+											</p>
+											<p className={styleContent}>
+												{formatter.format(globalData.stats?.market_cap)}
+											</p>
+											<p className={styleContent}>
+												{globalData.stats?.num_owners}
+											</p>
+										</div>
 									</div>
-									<div className="items-end">
-										<p className={styleContent}>
-											{globalData.stats?.floor_price}
-										</p>
-										<p className={styleContent}>
-											{globalData.stats?.total_volume}
-										</p>
-										<p className={styleContent}>
-											{globalData.stats?.market_cap}
-										</p>
-										<p className={styleContent}>
-											{globalData.stats?.num_owners}
-										</p>
-									</div>
-								</div>
-						</div>
-					</>
-					)}		
+									)
+								}
+								
+							</div>
+						</>
+					)}
 					{/* Heatmap */}
 					<div className="relative mb-8 h-[55vh]" ref={mapDivRef}>
 						{!metaverse && (
@@ -320,10 +346,9 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 								setMetaverse={setMetaverse}
 							/>
 						)}
-						
+
 						{metaverse && (
 							<>
-							
 								<div className="absolute top-0 z-20 flex gap-4 p-2 md:w-fit w-full unselectable">
 									<div>
 										{/* Top left Coordinates */}
@@ -532,11 +557,10 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 								</div>
 								{/* Free Valuation */}
 								<div className="flex flex-col justify-between w-full space-y-5 md:space-y-10 lg:space-y-5">
-									<FreeValuation/>
+									<FreeValuation />
 								</div>
-								
 							</div>
-							
+
 							<div className="rounded-3xl shadowDiv bg-grey-bone p-5 mb-10">
 								<h3 className="lg:text-3xl text-2xl text-grey-content font-plus mb-0 sm:mb-2">
 									Our Top Picks
