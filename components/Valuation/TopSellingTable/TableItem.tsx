@@ -14,6 +14,12 @@ const TableItem = ({ item, metaverse }: { item: TopSellingRequestItem, metaverse
     return <span className="mr-2">{`${Number.parseFloat(dataTable.eth_price).toFixed(3)} ${dataTable.symbol}`}</span>
   }
 
+  const valuationLoader = () => {
+    if (typeof(dataTable?.valuation) === 'string' )
+      return <span className="mr-2">{dataTable.valuation}</span>
+    return <span className="mr-2">{`${Number.parseFloat(dataTable.valuation).toFixed(3)} ${dataTable.symbol}`}</span>
+  }
+
   const tdStyle = "border-t-0 px-8 align-middle border-l-0 border-r-0 text-sm whitespace-nowrap p-4"
 
   return (
@@ -29,6 +35,9 @@ const TableItem = ({ item, metaverse }: { item: TopSellingRequestItem, metaverse
       </th>
       <td className={tdStyle} >
         {priceLoader()}
+      </td>
+      <td className={tdStyle} >
+        {valuationLoader()}
       </td>
       <td className={tdStyle} >
         <span className="mr-2">{dataTable.buyer || 'anonymous'}</span>

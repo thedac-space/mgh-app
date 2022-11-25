@@ -4,7 +4,11 @@ import { Metaverse } from '../../lib/metaverse'
 import { IPredictions } from '../../lib/types'
 import { formatName } from '../../lib/utilities'
 import { ICoinPrices } from '../../lib/valuation/valuationTypes'
-import { getAxieFloorPrice, getSomniumSpaceFloorPrice } from '../../lib/valuation/valuationUtils'
+import {
+  getAxieFloorPrice,
+  getFloorPriceByItrm,
+  getSomniumSpaceFloorPrice
+} from '../../lib/valuation/valuationUtils'
 import { PriceList } from '../General'
 
 interface Props {
@@ -35,6 +39,11 @@ const FloorPriceTracker = ({ coinPrices, metaverse }: Props) => {
           const floorPrice = Number(await getSomniumSpaceFloorPrice())
           stats.floor_price = floorPrice
         } catch (error) { }
+      }
+
+      if (metaverse === 'somnium-space') {
+        const floorPrice = Number(await getFloorPriceByItrm(metaverse))
+        stats.floor_price = floorPrice
       }
 
       const formattedMetaverse =
@@ -77,12 +86,12 @@ const FloorPriceTracker = ({ coinPrices, metaverse }: Props) => {
     </>
   ) : (
     <>
-    <div>
-      <p className={`text-lg xl:text-xl font-medium font-plus text-grey-content mb-4`}>
-        Floor Price:{' '}
-      </p>
-      <div className='flex flex-col items-start border-t border-l border-white/10 rounded-xl p-5 w-full bg-grey-panel'>
-          
+      <div>
+        <p className={`text-lg xl:text-xl font-medium font-plus text-grey-content mb-4`}>
+          Floor Price:{' '}
+        </p>
+        <div className='flex flex-col items-start border-t border-l border-white/10 rounded-xl p-5 w-full bg-grey-panel'>
+
           <div
             className={
               (loading ? 'opacity-0' : 'opacity-100') +
@@ -91,9 +100,9 @@ const FloorPriceTracker = ({ coinPrices, metaverse }: Props) => {
           >
             <PriceList predictions={predictions} metaverse={metaverse} />
           </div>
+        </div>
       </div>
-    </div>
-      
+
     </>
   )
 }

@@ -36,6 +36,20 @@ export const handleOrderPrice = (sortDir: boolean, setSortDir: Function, data: [
   setData(sortArray)
 }
 
+export const handleOrderValuation = (sortDir: boolean, setSortDir: Function, data: [key: TopSellingRequestItem], setData: Function) => {
+  let sortArray = data
+  sortArray.sort((a: TopSellingRequestItem, b: TopSellingRequestItem) => {
+    let returns = 0
+    if (parseFloat(a.dataTable.valuation) > parseFloat(b.dataTable.valuation))
+      returns = 1
+    if (parseFloat(a.dataTable.valuation) < parseFloat(b.dataTable.valuation))
+      returns = -1
+    return sortDir ? returns : - returns
+  })
+  setSortDir(!sortDir)
+  setData(sortArray)
+}
+
 export const handleOrder = ( atribute: MapAtribute, sortDir: boolean, setSortDir: Function, data: [key: TopSellingRequestItem], setData: Function ) => {
   let sortArray = data
   sortArray.sort((a: TopSellingRequestItem, b: TopSellingRequestItem) => {

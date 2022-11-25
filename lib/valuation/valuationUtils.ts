@@ -199,20 +199,20 @@ export const getAxieFloorPrice = async () => {
         'https://graphql-gateway.axieinfinity.com/graphql',
         {
             method: 'POST',
-
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                operationName: 'GetLandsGrid',
-                variables: {
-                    from: 0,
-                    size: 1,
-                    sort: 'PriceAsc',
-                    auctionType: 'Sale',
-                    criteria: {},
+                "operationName": "GetLandsGrid",
+                "variables": {
+                    "from": 0,
+                    "size": 1,
+                    "sort": "PriceAsc",
+                    "auctionType": "Sale",
+                    "criteria": {}
                 },
-                query: 'query GetLandsGrid($from: Int!, $size: Int!, $sort: SortBy!, $owner: String, $criteria: LandSearchCriteria, $auctionType: AuctionType) {\n  lands(criteria: $criteria, from: $from, size: $size, sort: $sort, owner: $owner, auctionType: $auctionType) {\n    total\n    results {\n      ...LandBriefV2\n      __typename\n    }\n    __typename\n  }\n}\n\nfragment LandBriefV2 on LandPlot {\n  tokenId\n  owner\n  landType\n  row\n  col\n  auction {\n    currentPrice\n    startingTimestamp\n    currentPriceUSD\n    __typename\n  }\n  ownerProfile {\n    name\n    __typename\n  }\n  __typename\n}\n',
+                "query": "query GetLandsGrid($from: Int!, $size: Int!, $sort: SortBy!, $owner: String, $criteria: LandSearchCriteria, $auctionType: AuctionType) {\n  lands(criteria: $criteria, from: $from, size: $size, sort: $sort, owner: $owner, auctionType: $auctionType) {\n    total\n    results {\n      ...LandBriefV2\n      __typename\n    }\n    __typename\n  }\n}\n\nfragment LandBriefV2 on LandPlot {\n  tokenId\n  owner\n  landType\n  row\n  col\n  auction {\n    currentPrice\n    startingTimestamp\n    currentPriceUSD\n    __typename\n  }\n  ownerProfile {\n    name\n    __typename\n  }\n  __typename\n}\n"
+
             }),
         }
     )
@@ -261,4 +261,11 @@ export const fetchLandList = async (metaverse: Metaverse, lands: string[]) => {
     })
     const res = await fetch(link)
     return (await res.json()) as LandListAPIResponse
+}
+
+export const getFloorPriceByItrm = async (metaverse: Metaverse) => {
+    const res = await fetch(process.env.ITRM_SERVICE + '/val-analytics/generalFloorPrice?metaverse=' + metaverse)
+    const floorPrice = await res.json()
+    console.log(floorPrice)
+    return floorPrice.value
 }

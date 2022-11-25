@@ -1,5 +1,6 @@
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
+import { typedKeys } from '../../lib/utilities'
 import { Metaverse } from "../../lib/metaverse";
 import axios from "axios";
 import { RiLoader3Fill } from "react-icons/ri";

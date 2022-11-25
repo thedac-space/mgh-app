@@ -19,21 +19,32 @@ export const getMax = (array: (number | undefined)[]) => {
   return max
 }
 
-export const getMin = (array: (number | undefined)[]) => {
-  let min = Number.MAX_VALUE
-  array.forEach((number) => {
-    number && number < min && (min = number)
-  })
-  return min
+export const getLimits = (array: (number | undefined)[]) => {
+  let arr: number[] = [];
+  for (let value of array)
+    if (value)
+      arr.push(value);
+  arr.sort(function (a, b) { return a - b; });
+  let values: number[] = [], minimum = Number.MAX_VALUE, maximum = 0;
+  for (let i = 30; i < arr.length - 30; i++) {
+    values.push(arr[i]);
+    maximum = arr[i] > maximum ? arr[i] : maximum;
+    minimum = arr[i] < minimum ? arr[i] : minimum;
+  }
+  let mid = Math.floor(values.length - 1);
+  let median = (values.length % 2 == 0) ? (values[mid] + values[mid - 1]) / 2.0 : values[mid];
+  let distance = Math.min(Math.abs(minimum - median), Math.abs(maximum - median));
+  return { minimum: minimum, maximum: median + distance };
 }
 
 export const getPercentage = (
   partialValue: number | undefined,
   totalValue: number | undefined,
-  minValue: number | undefined
+  limits: { minimum: number, maximum: number } | undefined
 ) => {
-  if (!partialValue || !totalValue || !minValue) return 0
-  return Math.ceil(((partialValue - minValue) * 100) / (totalValue - minValue))
+  if (!partialValue || !totalValue || !limits) return 0
+  let percentage = Math.ceil(((partialValue - limits.minimum) * 100) / (limits.maximum - limits.minimum))
+  return percentage > 0 ? (percentage < 100 ? percentage : 100) : 0;
 }
 
 const CalculateMaxPriceOnHistoryDependGivenDays = (
@@ -100,7 +111,7 @@ that have a price difference of less than the number below
         const landPercentage = getPercentage(
           valuationAtlas[valuation].current_price_eth,
           valuationAtlas[valuation].eth_predicted_price,
-          min
+          limits
         )
         if (landPercentage < MAX_DIFF) {
           return landPercentage
@@ -138,36 +149,36 @@ that have a price difference of less than the number below
   } else {
     predictions = [land[element as keyof ValueOf<typeof land> & MapFilter]]
   }
-  let max = NaN, min = NaN
+  let max = NaN, limits: any = undefined
   max = getMax(predictions)
-  min = getMin(predictions)
+  limits = getLimits(predictions)
 
   // GENERATE PERCENTAGE FOR TILE.
   const priceDiffPercentage = getPercentage(
     land?.current_price_eth,
     land?.eth_predicted_price,
-    min
+    limits
   )
 
   const valuationOptions: any = {
-    transfers: getPercentage(land?.history?.length, max, min),
+    transfers: getPercentage(land?.history?.length, max, limits),
     price_difference: !land?.current_price_eth
       ? 0
       : priceDiffPercentage < MAX_DIFF
-        ? getPercentage(priceDiffPercentage, max, min)
+        ? getPercentage(priceDiffPercentage, max, limits)
         : 101, // If land's price difference is higher than MAX_DIFF make their percentage 101, this will show them as dark red.
     basic: 20,
     listed_lands: land?.current_price_eth
-      ? getPercentage(land?.eth_predicted_price, max, min)
+      ? getPercentage(land?.eth_predicted_price, max, limits)
       : NaN,
     floor_adjusted_predicted_price: getPercentage(
       land?.floor_adjusted_predicted_price,
-      max, min
+      max, limits
     ),
     last_month_sells: getLandDependingOnGivenNumberOfDays(land, 30)
       ? getPercentage(
         CalculateMaxPriceOnHistoryDependGivenDays(land, 30),
-        max, min
+        max, limits
       )
       : NaN,
   }
@@ -178,7 +189,7 @@ that have a price difference of less than the number below
   } else {
     percent = getPercentage(
       land[element as keyof ValueOf<typeof land> & MapFilter],
-      max, min
+      max, limits
     )
   }
   land = {
@@ -209,10 +220,10 @@ export const setColours = (
   }
 
   /**
- * Some Lands are listed for way too high prices.
- * To keep the price_difference filter consistent, we will consider
- that have a price difference of less than the number below
- */
+  * Some Lands are listed for way too high prices.
+  * To keep the price_difference filter consistent, we will consider
+  that have a price difference of less than the number below
+  */
   const MAX_DIFF = 400
 
   // GENERATE MAX
@@ -232,7 +243,7 @@ export const setColours = (
         const landPercentage = getPercentage(
           valuationAtlas[valuation].current_price_eth,
           valuationAtlas[valuation].eth_predicted_price,
-          min
+          limits
         )
         if (landPercentage < MAX_DIFF) {
           return landPercentage
@@ -277,10 +288,10 @@ export const setColours = (
         ]
     )
   }
-  let max = NaN, min = NaN
+  let max = NaN, limits: any = undefined
 
   max = getMax(predictions)
-  min = getMin(predictions)
+  limits = getLimits(predictions)
   // Adding Percent to each land depending on the max number from previous iteration.
 
   // GENERATE PERCENTAGE FOR EACH TILE.
@@ -288,29 +299,29 @@ export const setColours = (
     const priceDiffPercentage = getPercentage(
       valuationAtlas[valuation].current_price_eth,
       valuationAtlas[valuation].eth_predicted_price,
-      min
+      limits
     )
     const valuationOptions = {
       transfers: getPercentage(
         valuationAtlas[valuation].history?.length,
-        max, min
+        max, limits
       ),
       price_difference:
         typeof valuationAtlas[valuation].current_price_eth !== 'number'
           ? 0
           : priceDiffPercentage < MAX_DIFF
-            ? getPercentage(priceDiffPercentage, max, min)
+            ? getPercentage(priceDiffPercentage, max, limits)
             : 101, // If land's price difference is higher than MAX_DIFF make their percentage 101, this will show them as dark red.
       basic: 20,
       listed_lands: valuationAtlas[valuation].current_price_eth
         ? getPercentage(
           valuationAtlas[valuation].eth_predicted_price,
-          max, min
+          max, limits
         )
         : NaN,
       floor_adjusted_predicted_price: getPercentage(
         valuationAtlas[valuation]?.floor_adjusted_predicted_price,
-        max, min
+        max, limits
       ),
       last_month_sells: getLandDependingOnGivenNumberOfDays(valuation, 30)
         ? getPercentage(
@@ -318,7 +329,7 @@ export const setColours = (
             valuationAtlas[valuation],
             30
           ),
-          max, min
+          max, limits
         )
         : NaN,
     }
@@ -331,7 +342,7 @@ export const setColours = (
         valuationAtlas[valuation][
         element as keyof ValueOf<typeof valuationAtlas> & MapFilter
         ],
-        max, min
+        max, limits
       )
     }
     valuationAtlas[valuation] = {
@@ -364,9 +375,9 @@ export const LEGEND_COLORS = {
   'on-sale': 'rgb(255, 120, 193)', // On sale
 
   // Decentraland Only
-  roads: '#716C7A', // roads
-  plazas: '#70AC76', // plazas
-  districts: '#584D6D', // districts
+  roads: '#747679', // roads
+  plazas: '#26EC75', // plazas
+  districts: '#496274', // districts
 }
 
 // Colors for Tiles in Decentraland Api Basic Map
@@ -376,10 +387,10 @@ export const DECENTRALAND_API_COLORS: Record<number, string> = Object.freeze({
   2: '#ff9990', // my estates
   3: '#ff4053', // my estates on sale
   4: '#ffbd33', // parcels/estates where I have permissions
-  5: '#584D6D', // districts
+  5: '#496274', // districts
   6: '#563db8', // contributions
-  7: '#716C7A', // roads
-  8: '#70AC76', // plazas
+  7: '#747679', // roads
+  8: '#26EC75', // plazas
   9: '#3D3A46', // owned parcel/estate
   10: '#3D3A46', // parcels on sale (we show them as owned parcels)
   11: '#09080A', // unowned pacel/estate
@@ -402,7 +413,6 @@ export const DECENTRALAND_API_COLORS: Record<number, string> = Object.freeze({
 const filterPercentages = {
   predictedPricePercentage: [0, 20, 40, 60, 80, 100],
   normal: [0, 20, 40, 60, 80, 100],
-  /* predictedPricePercentage: [0, 3, 7, 12, 30, 100], */
 }
 
 const filterKey = (mapFilter: MapFilter | undefined) => {
