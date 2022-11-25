@@ -76,7 +76,7 @@ const styleContent = 'text-xxs xs:text-xxs xl:text-xs font-plus font-bold text-g
 const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 	const [globalData, setglobalData] = useState<AnyObject>({})
 	const [estimateAccuracy, setestimateAccuracy] = useState<AnyObject>({})
-	
+
 	const { address, chainId } = useAppSelector((state) => state.account);
 	const { web3Provider } = useConnectWeb3();
 
@@ -125,27 +125,27 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 	};
 	useEffect(() => {
 		const getglobalData = async () => {
-            setglobalData(
-                    (
-                        await axios.get(
-							process.env.ITRM_SERVICE +
-                            "/fluf/globalData"
-				        )
-                    ).data
-                )
+			setglobalData(
+				(
+					await axios.get(
+						process.env.ITRM_SERVICE +
+						"/fluf/globalData"
+					)
+				).data
+			)
 		};
 		getglobalData();
 	}, []);
 	useEffect(() => {
 		const getEstimateAccuracy = async () => {
-            setestimateAccuracy(
-                    (
-                        await axios.get(
-							process.env.ITRM_SERVICE +
-                            "/test/sandbox/performance"
-				        )
-                    ).data
-                )
+			setestimateAccuracy(
+				(
+					await axios.get(
+						process.env.ITRM_SERVICE +
+						"/test/sandbox/performance"
+					)
+				).data
+			)
 		};
 		getEstimateAccuracy();
 	}, []);
@@ -247,7 +247,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 						<h1 className="text-grey-content font-plus font-normal rounded-2xl lg:text-5xl text-3xl  mb-0 sm:mb-2">
 							LAND Valuation
 						</h1>
-						
+
 						{/* Links Wrapper */}
 						<div className="flex gap-5">
 							{/* Links */}
@@ -262,12 +262,12 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 							))}
 						</div>
 					</div>
-					{metaverse &&(
-					<>
-						<span>
-							<img src="/images/imagevaluation.svg" alt="IMG" className="w-full flex" />
-						</span>
-						<div className="flex border-t border-l border-white/10 rounded-3xl shadowDiv p-5 bg-opacity-30 justify-between bg-grey-bone my-9">
+					{metaverse && (
+						<>
+							<span>
+								<img src="/images/imagevaluation.svg" alt="IMG" className="w-full flex" />
+							</span>
+							<div className="flex border-t border-l border-white/10 rounded-3xl shadowDiv p-5 bg-opacity-30 justify-between bg-grey-bone my-9">
 								<div className="pr-5 w-3/4">
 									<h2 className="text-grey-content font-plus font-normal rounded-2xl lg:text-5xl text-3xl mb-0 sm:mb-2">
 										Description
@@ -276,7 +276,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 									<p
 										className={`text-sm xs:text-base xl:text-lg font-plus font-normal text-grey-content`}
 									>
-										Direct repair of aneurysm, pseudoaneurysm, or excision (partial or total) and graft insertion, with or without patch graft; for ruptured aneurysm, abdominal aorta  Direct repair of aneurysm, pseudoaneurysm, or excision (partial or total) and graft insertion, with or without patch graft; for ruptured aneurysm, abdominal aorta  
+										Direct repair of aneurysm, pseudoaneurysm, or excision (partial or total) and graft insertion, with or without patch graft; for ruptured aneurysm, abdominal aorta  Direct repair of aneurysm, pseudoaneurysm, or excision (partial or total) and graft insertion, with or without patch graft; for ruptured aneurysm, abdominal aorta
 									</p>
 								</div>
 								<div className="flex border-t border-l border-white/10 shadow-blck rounded-xl p-3 bg-[#D4D7DD] bg-opacity-30 w-1/4  justify-between pt-5 pb-5">
@@ -309,21 +309,21 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 										</p>
 									</div>
 								</div>
-						</div>
-					</>
-					)}		
+							</div>
+						</>
+					)}
 					{/* Heatmap */}
-					<div className="relative mb-8 h-[55vh]" ref={mapDivRef}>
+					<div className="relative mb-8 h-[55vh] bg-grey-panel" ref={mapDivRef}>
 						{!metaverse && (
 							<MapInitMvChoice
 								metaverse={metaverse}
 								setMetaverse={setMetaverse}
 							/>
 						)}
-						
+
 						{metaverse && (
 							<>
-							
+
 								<div className="absolute top-0 z-20 flex gap-4 p-2 md:w-fit w-full unselectable">
 									<div>
 										{/* Top left Coordinates */}
@@ -384,7 +384,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 								)}
 								{/* Full screen button - Hides when MapCard is showing (all screens) */}
 								{!isVisible && (
-									<div className="absolute z-20 top-2 right-2 gray-box bg-grey-bone w-fit h-15">
+									<div className="absolute z-20 top-2 right-2 gray-box bg-grey-panel w-fit h-15">
 										<FullScreenButton
 											fullScreenRef={mapDivRef}
 											className="text-xl text-grey-content"
@@ -532,11 +532,11 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 								</div>
 								{/* Free Valuation */}
 								<div className="flex flex-col justify-between w-full space-y-5 md:space-y-10 lg:space-y-5">
-									<FreeValuation/>
+									<FreeValuation />
 								</div>
-								
+
 							</div>
-							
+
 							<div className="rounded-3xl shadowDiv bg-grey-bone p-5 mb-10">
 								<h3 className="lg:text-3xl text-2xl text-grey-content font-plus mb-0 sm:mb-2">
 									Our Top Picks

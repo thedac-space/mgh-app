@@ -316,7 +316,7 @@ const MaptalksCanva = ({
         })
     }, [x, y])
 
-    return <div id="map" className='bg-white rounded-lg shadowDiv' style={{ width, height }} />
+    return <div id="map" className='bg-grey-panel rounded-lg shadowDiv' style={{ width, height }} />
 }
 
 export default MaptalksCanva
