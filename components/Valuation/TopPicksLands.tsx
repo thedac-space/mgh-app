@@ -4,6 +4,7 @@ import { typedKeys } from '../../lib/utilities'
 import { Metaverse } from "../../lib/metaverse";
 import axios from "axios";
 import { RiLoader3Fill } from "react-icons/ri";
+import Pagination from "../Pagination";
 
 interface Props {
 	metaverse: Metaverse;
@@ -14,7 +15,6 @@ const TopPicksLands = ({ metaverse }: Props) => {
 	const [picks, setPicks] = useState([]);
 	const [controlPageIndex, setControlPageIndex] = useState<number>(0);
 	const [pageLenght, setPageLenght] = useState(0);
-	const [pageSearcher, setPageSearcher] = useState<number>();
 
 	useEffect(() => {
 		const setData = async () => {
@@ -37,8 +37,7 @@ const TopPicksLands = ({ metaverse }: Props) => {
 		setData().catch((e) => console.log(e));
 	}, [metaverse]);
 
-	const rowDataStyle =
-		"flex justify-center px-4 content-center items-center text-sm lg:text-2xl font-medium font-plus md:text-base pt-0.5 w-1/5";
+	const rowDataStyle = "flex justify-center px-4 content-center items-center text-sm lg:text-2xl font-medium font-plus md:text-base pt-0.5 w-1/5";
 
 	const rowData = () => {
 		const rows: any = [];
@@ -104,62 +103,6 @@ const TopPicksLands = ({ metaverse }: Props) => {
 				</p>
 			) : (
 				<>
-					<div className="grid grid-cols-3 content-center justify-items-center w-full">
-						{controlPageIndex === 0 ? (
-							<div></div>
-						) : (
-							<button
-								type="button"
-								className="py-2.5 px-5 mr-2 mb-2 text-sm font-small focus:outline-none rounded-lg border text-grey-content font-plus bg-grey-dark hover:text-white hover:bg-gray-700"
-								onClick={() => {
-									setControlPageIndex(controlPageIndex - 1);
-								}}
-							>
-								{"< Prev Page"}
-							</button>
-						)}
-						<h3 className="text-lg text-grey-content">
-							{controlPageIndex + 1 + "/" + pageLenght}
-						</h3>
-						{controlPageIndex === pageLenght - 1 ? (
-							<div></div>
-						) : (
-							<button
-								type="button"
-								className="py-2.5 px-5 mr-2 mb-2 text-sm font-small focus:outline-none rounded-lg border text-grey-content font-plus bg-grey-dark hover:bg-gray-200"
-								onClick={() => {
-									setControlPageIndex(controlPageIndex + 1);
-								}}
-							>
-								{"Next Page >"}
-							</button>
-						)}
-						<div className="w-full col-span-3 grid grid-cols-2 mb-7">
-							<button
-								type="button"
-								className="py-2.5 px-5 mr-2 mb-2 text-sm font-small focus:outline-none rounded-lg border text-grey-content font-plus bg-grey-dark hover:bg-gray-200 h-full"
-								onClick={() => {
-									if (!pageSearcher) return;
-									if (pageSearcher >= 1 && pageSearcher <= pageLenght) {
-										setControlPageIndex(pageSearcher - 1);
-									}
-								}}
-							>
-								{"Search by Number of Page:"}
-							</button>
-							<input
-								type="number"
-								id="phone"
-								className="border text-sm rounded-lg block w-full p-2.5 text-grey-content font-plus bg-grey-dark hover:bg-gray-200 placeholder-gray-400 focus:outline-none"
-								placeholder={`1 - ${pageLenght}`}
-								required
-								value={pageSearcher}
-								onChange={(event) => {
-									setPageSearcher(parseInt(event.target.value));
-								}}
-							/>
-						</div>
-					</div>
 					<table className="w-full table-fixed border-collapse">
 						<thead className="bg-transparent  text-slate-200 w-full">
 							<tr className="flex w-full mb-4 text-center text-grey-content font-plus bg-grey-dark rounded-lg">
@@ -184,6 +127,11 @@ const TopPicksLands = ({ metaverse }: Props) => {
 							{rowData()}
 						</tbody>
 					</table>
+					<Pagination
+						pageLenght={pageLenght}
+						controlPageIndex={controlPageIndex + 1}
+						setControlPageIndex={setControlPageIndex}
+					/>
 				</>
 			)}
 		</div>
