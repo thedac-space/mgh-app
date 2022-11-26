@@ -8,6 +8,7 @@ import { GiFluffySwirl } from "react-icons/gi";
 import { IoClose } from "react-icons/io5";
 
 import NftCard from "../components/NftCard";
+import Pagination from "../components/Pagination";
 
 const Home: NextPage = () => {
 	const [nftFlufObject, setnftFlufObject] = useState([]);
@@ -211,65 +212,6 @@ const Home: NextPage = () => {
 							</button>
 						</div>
 					</div>
-					{!nftId && (
-						<div className="grid grid-cols-3 content-center justify-items-center w-full">
-							{controlPageIndex === 0 ? (
-								<div></div>
-							) : (
-								<button
-									type="button"
-									className="py-2.5 px-5 mr-2 mb-2 text-sm font-small focus:outline-none rounded-lg border text-grey-content font-plus bg-[#ECEEF8] hover:text-white hover:bg-gray-700"
-									onClick={() => {
-										setControlPageIndex(controlPageIndex - 1);
-									}}
-								>
-									{"< Prev Page"}
-								</button>
-							)}
-							<h3 className="text-lg text-grey-content">
-								{controlPageIndex + 1 + "/" + pageLenght}
-							</h3>
-							{controlPageIndex === pageLenght - 1 ? (
-								<div></div>
-							) : (
-								<button
-									type="button"
-									className="py-2.5 px-5 mr-2 mb-2 text-sm font-small focus:outline-none rounded-lg border text-grey-content font-plus bg-[#ECEEF8] hover:bg-gray-200"
-									onClick={() => {
-										setControlPageIndex(controlPageIndex + 1);
-									}}
-								>
-									{"Next Page >"}
-								</button>
-							)}
-							<div className="w-full col-span-3 grid grid-cols-2 mb-7">
-								<button
-									type="button"
-									className="py-2.5 px-5 mr-2 mb-2 text-sm font-small focus:outline-none rounded-lg border text-grey-content font-plus bg-[#ECEEF8] hover:bg-gray-200 h-full"
-									onClick={() => {
-										if (!pageSearcher) return;
-										if (pageSearcher >= 1 && pageSearcher <= pageLenght) {
-											setControlPageIndex(pageSearcher - 1);
-										}
-									}}
-								>
-									{"Search by Number of Page:"}
-								</button>
-								<input
-									type="number"
-									id="page"
-									className="border text-sm rounded-lg block w-full p-2.5 text-grey-content font-plus bg-[#ECEEF8] hover:bg-gray-200 placeholder-gray-400 focus:outline-none"
-									placeholder={`1 - ${pageLenght}`}
-									required
-									value={pageSearcher}
-									onChange={(event) => {
-										setPageSearcher(parseInt(event.target.value));
-									}}
-								/>
-							</div>
-						</div>
-					)}
-
 					{searchId && searchId.length > 0 ? (
 						<div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-5 xs:gap-2 sm:gap-5 w-full">
 							{searchId.map((fluf: any, key: number) => {
@@ -289,6 +231,13 @@ const Home: NextPage = () => {
 						<div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-5 xs:gap-2 sm:gap-5 w-full">
 							{dataFluf()}
 						</div>
+					)}
+					{!nftId && (
+						<Pagination
+							pageLenght={pageLenght}
+							controlPageIndex={controlPageIndex + 1}
+							setControlPageIndex={setControlPageIndex}
+						/>
 					)}
 				</div>
 			</div>

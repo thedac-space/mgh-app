@@ -22,6 +22,18 @@ const CenterPages = ({ controlPageIndex, setControlPageIndex, pageLenght }: ICen
         : preCounter = preCounter + 1
     }
 
+    if (controlPageIndex === 5) {
+      auxArray.unshift(<IndexItem index={2} isSelected={false} setControlPageIndex={setControlPageIndex} />)
+      auxArray.unshift(<IndexItem index={1} isSelected={false} setControlPageIndex={setControlPageIndex} />)
+    } else if (controlPageIndex === 4) {
+      auxArray.unshift(<IndexItem index={1} isSelected={false} setControlPageIndex={setControlPageIndex} />)
+    } else if (controlPageIndex === pageLenght - 4) {
+      auxArray.push(<IndexItem index={pageLenght - 1} isSelected={false} setControlPageIndex={setControlPageIndex} />)
+      auxArray.push(<IndexItem index={pageLenght} isSelected={false} setControlPageIndex={setControlPageIndex} />)
+    } else if (controlPageIndex === pageLenght - 3) {
+      auxArray.push(<IndexItem index={pageLenght} isSelected={false} setControlPageIndex={setControlPageIndex} />)
+    }
+
     for (let index = 1; index <= preCounter; index++) {
       if ((4 - preCounter) + index <= pageLenght)
         auxArray.push(<IndexItem index={(5 - preCounter) + index} isSelected={false} setControlPageIndex={setControlPageIndex} />)
@@ -35,7 +47,7 @@ const CenterPages = ({ controlPageIndex, setControlPageIndex, pageLenght }: ICen
 
   useEffect(() => {
     giveCenterItems()
-  }, [controlPageIndex])
+  }, [controlPageIndex, pageLenght])
 
   return (
     <> {centerArray.map((item) => item)} </>
