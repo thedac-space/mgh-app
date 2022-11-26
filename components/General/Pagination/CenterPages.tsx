@@ -27,7 +27,7 @@ const CenterPages = ({ controlPageIndex, setControlPageIndex, pageLenght }: ICen
       auxArray.unshift(<IndexItem index={1} isSelected={false} setControlPageIndex={setControlPageIndex} />)
     } else if (controlPageIndex === 4) {
       auxArray.unshift(<IndexItem index={1} isSelected={false} setControlPageIndex={setControlPageIndex} />)
-    } else if (controlPageIndex === pageLenght - 4) {
+    } if (controlPageIndex === pageLenght - 4) {
       auxArray.push(<IndexItem index={pageLenght - 1} isSelected={false} setControlPageIndex={setControlPageIndex} />)
       auxArray.push(<IndexItem index={pageLenght} isSelected={false} setControlPageIndex={setControlPageIndex} />)
     } else if (controlPageIndex === pageLenght - 3) {
