@@ -7,7 +7,7 @@ import { FiSearch } from "react-icons/fi";
 import { GiFluffySwirl } from "react-icons/gi";
 import { IoClose } from "react-icons/io5";
 
-import NftCard from "../components/NftCard";
+import NftCard from "../components/nftValuation/NftCard";
 import Pagination from "../components/Pagination";
 
 const Home: NextPage = () => {
