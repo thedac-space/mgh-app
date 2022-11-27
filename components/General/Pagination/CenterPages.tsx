@@ -22,7 +22,7 @@ const CenterPages = ({ controlPageIndex, setControlPageIndex, pageLenght }: ICen
         : preCounter = preCounter + 1
     }
 
-    if (controlPageIndex > 6) {
+    if (pageLenght > 6) {
       if (controlPageIndex === 5) {
         auxArray.unshift(<IndexItem index={2} isSelected={false} setControlPageIndex={setControlPageIndex} />)
         auxArray.unshift(<IndexItem index={1} isSelected={false} setControlPageIndex={setControlPageIndex} />)
