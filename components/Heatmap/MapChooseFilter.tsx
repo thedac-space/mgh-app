@@ -9,7 +9,7 @@ import { GiStopwatch } from 'react-icons/gi'
 import { MapFilter } from '../../lib/heatmap/heatmapCommonTypes'
 import { typedKeys } from '../../lib/utilities'
 import { useAppSelector } from '../../state/hooks'
-import InfoModal from '../InfoModal'
+import InfoModal from './InfoModal'
 
 interface Props {
   filterBy: MapFilter
@@ -22,10 +22,10 @@ const MapChooseFilter = ({ filterBy, setFilterBy }: Props) => {
   const [openModal, setOpenModal] = useState(false);
   const [opened, setOpened] = useState(false)
   const filterOptions = {
-    basic: { 
-      name: 'Basic', 
-      shortName: undefined, 
-      icon: <FiMap /> , 
+    basic: {
+      name: 'Basic',
+      shortName: undefined,
+      icon: <FiMap />,
       description: 'Quickly find undervalued LANDs when clicking on the squares in the map'
     },
     eth_predicted_price: {
@@ -85,7 +85,7 @@ const MapChooseFilter = ({ filterBy, setFilterBy }: Props) => {
   return (
     <div>
       {/* Filter Button + Name */}
-      {openModal && <InfoModal onDismiss={() => setOpenModal(false)}  name={filterOptions[filterBy].name} description={filterOptions[filterBy].description} />}
+      {openModal && <InfoModal onDismiss={() => setOpenModal(false)} name={filterOptions[filterBy].name} description={filterOptions[filterBy].description} />}
       <button
         onClick={() => setOpened(!opened)}
         className='h-16 gray-box bg-grey-bone mb-2 items-center w-96 tracking-wider font-plus font-medium text-grey-content hover:text-[#7c7b7b] flex justify-between cursor-pointer transition-all'
@@ -93,7 +93,7 @@ const MapChooseFilter = ({ filterBy, setFilterBy }: Props) => {
         {/* Icon */}
         <span className='hidden sm:block text-lg' onClick={() => setOpenModal(true)}>
           {filterOptions[filterBy].icon}
-          
+
         </span>
 
         {/* Name */}

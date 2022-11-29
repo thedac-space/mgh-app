@@ -7,7 +7,8 @@ import { FiSearch } from "react-icons/fi";
 import { GiFluffySwirl } from "react-icons/gi";
 import { IoClose } from "react-icons/io5";
 
-import NftCard from "../components/NftCard";
+import NftCard from "../components/nftValuation/NftCard";
+import Pagination from "../components/Pagination";
 
 const Home: NextPage = () => {
 	const [nftFlufObject, setnftFlufObject] = useState([]);
@@ -289,6 +290,13 @@ const Home: NextPage = () => {
 						<div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-5 xs:gap-2 sm:gap-5 w-full">
 							{dataFluf()}
 						</div>
+					)}
+					{!nftId && (
+						<Pagination
+							pageLenght={pageLenght}
+							controlPageIndex={controlPageIndex + 1}
+							setControlPageIndex={setControlPageIndex}
+						/>
 					)}
 				</div>
 			</div>
