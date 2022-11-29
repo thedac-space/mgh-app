@@ -122,6 +122,57 @@
   @apply hidden lg:block pb-1 text-xl font-medium bg-transparent;
 }
 
+.menu {
+  display: flex;
+  justify-content: center;
+}
+div
+.menu a {
+  position: relative;
+  display: block;
+  overflow: hidden;
+}
+
+.menu a .span-layout {
+  transition: transform 0.2s ease-out;
+}
+
+.menu a .span-layout:first-child {
+  display: inline-block;
+  padding: 10px;
+}
+
+.menu a .span-layout:last-child {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(-100%);
+}
+
+.menu a:hover .span-layout:first-child {
+  transform: translateY(100%);
+}
+
+.menu a:hover .span-layout:last-child,
+.menu[data-animation] a:hover .span-layout:last-child {
+  transform: none;
+}
+
+.menu[data-animation="to-right"] a .span-layout:last-child {
+  transform: translateX(-100%);
+}
+
+.menu[data-animation="to-right"] a:hover .span-layout:first-child {
+  transform: translateX(100%);
+}
+
+
+
 .social-media-icon {
   @apply text-2xl sm:text-3xl md:text-4xl lg:text-3xl xl:text-4xl text-gray-200 transform hover:scale-125 transition duration-300 ease-in-out;
 }
@@ -701,55 +752,4 @@ h6 {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-}
-
-.menu {
-  display: flex;
-  justify-content: center;
-}
-div
-.menu a {
-  position: relative;
-  display: block;
-  overflow: hidden;
-}
-
-.menu a .span-layout {
-  transition: transform 0.2s ease-out;
-}
-
-.menu a .span-layout:first-child {
-  display: inline-block;
-  padding: 10px;
-}
-
-.menu a .span-layout:last-child {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transform: translateY(-100%);
-}
-
-.menu a:hover .span-layout:first-child {
-  transform: translateY(100%);
-}
-
-.menu a:hover .span-layout:last-child,
-.menu[data-animation] a:hover .span-layout:last-child {
-  transform: none;
-}
-
-
-/*Animations*/
-.menu[data-animation="to-right"] a .span-layout:last-child {
-  transform: translateX(-100%);
-}
-
-.menu[data-animation="to-right"] a:hover .span-layout:first-child {
-  transform: translateX(100%);
 }

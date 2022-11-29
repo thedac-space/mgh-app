@@ -231,7 +231,7 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                         // Total Lands and Total Worth Container
                         <div className="flex flex-col md:flex-row gap-4 lg:gap-12 md:gap-6 mb-0 sm:mb-12">
                             {/* Total Lands */}
-                            <div className="flex flex-col w-1/2 justify-between gap-4 text-center transition-all gray-box relative">
+                            <div className="flex flex-col w-1/2 justify-between gap-4 text-center transition-all gray-box relative shadowNormal">
                                 <h3 className="text-xl md:text-3xl xl:text-4xl font-plus text-grey-content">
                                     Total LANDS Owned
                                 </h3>
@@ -291,7 +291,7 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                             </div>
 
                             {/* Total Worth */}
-                            <div className="flex flex-col w-1/2  transition-all justify-between text-center mb-8 sm:mb-0 gray-box">
+                            <div className="flex flex-col w-1/2  transition-all justify-between text-center mb-8 sm:mb-0 gray-box shadowNormal">
                                 <h3 className="text-xl md:text-3xl xl:text-4xl mb-4 whitespace-nowrap font-plus text-grey-content">
                                     Total Value Worth
                                 </h3>

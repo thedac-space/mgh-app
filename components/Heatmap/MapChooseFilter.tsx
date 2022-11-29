@@ -9,7 +9,6 @@ import { GiStopwatch } from 'react-icons/gi'
 import { MapFilter } from '../../lib/heatmap/heatmapCommonTypes'
 import { typedKeys } from '../../lib/utilities'
 import { useAppSelector } from '../../state/hooks'
-import InfoModal from './InfoModal'
 
 interface Props {
   filterBy: MapFilter
@@ -85,15 +84,14 @@ const MapChooseFilter = ({ filterBy, setFilterBy }: Props) => {
   return (
     <div>
       {/* Filter Button + Name */}
-      {openModal && <InfoModal onDismiss={() => setOpenModal(false)} name={filterOptions[filterBy].name} description={filterOptions[filterBy].description} />}
+      
       <button
         onClick={() => setOpened(!opened)}
         className='h-16 gray-box bg-grey-bone mb-2 items-center w-96 tracking-wider font-plus font-medium text-grey-content hover:text-[#7c7b7b] flex justify-between cursor-pointer transition-all'
       >
         {/* Icon */}
-        <span className='hidden sm:block text-lg' onClick={() => setOpenModal(true)}>
+        <span className='hidden sm:block text-lg'>
           {filterOptions[filterBy].icon}
-
         </span>
 
         {/* Name */}
@@ -123,16 +121,22 @@ const MapChooseFilter = ({ filterBy, setFilterBy }: Props) => {
               filter !== filterBy && (
                 <Fade duration={500} key={filter} direction='down'>
                   <button
-                    className='flex gray-box gap-4 bg-opacity-100 items-center  font-plus font-medium text-grey-content hover:text-[#7c7b7b] w-96 text-sm md:text-base'
+                    className=' flex gray-box gap-4 bg-opacity-100 items-center  font-plus font-medium text-grey-content hover:text-[#7c7b7b] w-96 text-sm md:text-base'
                     onClick={() => {
                       setFilterBy(filter)
                       setOpened(false)
-                    }}
+                    }} 
+
                   >
+
+
                     {filterOptions[filter].icon}
-                    <span className='whitespace-nowrap'>
+                    <span className='whitespace-nowrap tooltip'>
                       {filterOptions[filter].name}
                     </span>
+                    <span className='hidden text-grey-content'>{filterOptions[filter].description}</span>
+
+                    
                   </button>
                 </Fade>
               )
