@@ -144,13 +144,13 @@ const Home: NextPage = () => {
 							</div>
 							<div className="items-end">
 								<p className={styleContent}>
-									{nftFlufGlobal.stats?.floor_price}
+									{formatter.format(nftFlufGlobal.stats?.floor_price)}
 								</p>
 								<p className={styleContent}>
-									{nftFlufGlobal.stats?.total_volume}
+									{formatter.format(nftFlufGlobal.stats?.total_volume)}
 								</p>
 								<p className={styleContent}>
-									{nftFlufGlobal.stats?.market_cap}
+									{formatter.format(nftFlufGlobal.stats?.market_cap)}
 								</p>
 								<p className={styleContent}>
 									{nftFlufGlobal.stats?.num_owners}

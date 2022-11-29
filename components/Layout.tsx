@@ -33,26 +33,26 @@ const Layout = ({ children }: any) => {
 				/>
 
 				<div className="flex  min-h-[10vh] bg-grey-sidebar">
-					<div className="hidden lg:flex xl:flex h-full max-w-sm min-w-max flex-col items-center pt-9 px-12">
+					<div className="hidden lg:flex xl:flex  max-w-md min-w-max flex-col items-center pt-9 px-16">
 						<a
 							href="/"
 							className="hover:scale-110 transition-all duration-500 ease-in-out"
 						>
 							<OptimizedImage
 								src="/images/mgh_logo.svg"
-								height={80}
-								width={80}
+								height={90}
+								width={90}
 							/>
 						</a>
 						<div className="space-y-6 flex flex-col pt-16">
 							<NavItem text="Home" link="/" />
-							<NavItem text="LAND Valuation" link="/valuation" />
-							<NavItem text="NFT Valuation" link="/nftValuation" />
+							<NavItem text="Land V" link="/valuation" />
+							<NavItem text="NFT V" link="/nftValuation" />
 							<NavItem text="Swap" link="/swap" />
 							<NavItem text="Liquidity" link="/liquidity" />
 							<NavItem text="Stake" link="/stake" />
 							<NavItem
-								text="Governance"
+								text="Gov"
 								link="https://snapshot.org/#/metagamehub.eth"
 							/>
 						</div>
