@@ -33,7 +33,7 @@ const Layout = ({ children }: any) => {
 				/>
 
 				<div className="flex  min-h-[10vh] bg-grey-sidebar">
-					<div className="hidden lg:flex xl:flex  max-w-md min-w-max flex-col items-center pt-9 px-16">
+					<div className="hidden lg:flex xl:flex  max-w-md min-w-max flex-col items-center pt-9 px-8">
 						<a
 							href="/"
 							className="hover:scale-110 transition-all duration-500 ease-in-out"

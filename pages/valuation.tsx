@@ -289,7 +289,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 				<div className="bg-grey-lightest rounded-xl p-8">
 					{/* Main Header */}
 					<div className="border-t border-l border-white/10 rounded-xl p-5 w-full bg-opacity-30; flex flex-col lg:flex-row justify-between items-center mb-8 bg-grey-dark">
-						<h1 className="text-grey-content font-plus font-normal rounded-2xl lg:text-5xl text-3xl  mb-0 sm:mb-2">
+						<h1 className="text-grey-content font-plus font-normal rounded-2xl lg:text-3xl text-3xl  mb-0 sm:mb-2">
 							LAND Valuation
 						</h1>
 						
@@ -593,8 +593,8 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 								<TopSellingLands metaverse={metaverse} />
 							</div>
 
-							<div className="flex flex-col items-start shadow-blck rounded-xl py-3 px-4 w-full bg-grey-dark bg-opacity-20 text-left mb-8">
-								<p className="text-xs sm:text-sm text-grey-content font-plus pt-44">
+							<div className="flex flex-col text-center shadow-blck rounded-xl py-3 px-4 w-full bg-grey-dark bg-opacity-20 mb-8">
+								<p className="text-xs sm:text-sm text-grey-content font-plus pt-44 px-10">
 									The MGH DAO does not provide, personalized investment
 									recommendations or advisory services. Any information provided
 									through the land evaluation tool and others is not, and should

@@ -20,7 +20,7 @@ const TableItem = ({ item, metaverse }: { item: TopSellingRequestItem, metaverse
     return <span className="mr-2">{`${Number.parseFloat(dataTable.valuation).toFixed(3)} ${dataTable.symbol}`}</span>
   }
 
-  const tdStyle = "border-t-0 px-4 border-l-0 border-r-0 text-xs lg:text-2xl whitespace-nowrap p-4 text-center"
+  const tdStyle = "border-t-0 px-4 border-l-0 border-r-0 text-xs lg:text-xl whitespace-nowrap p-4 text-center"
 
   return (
     <tr>

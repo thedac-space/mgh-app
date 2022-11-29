@@ -14,7 +14,7 @@ const NavItem = ({ text, link }: any) => {
 		}
 	}
 
-	const styleItem = `span-layout text-6xl ${
+	const styleItem = `span-layout text-5xl ${
 		focus && "text-grey-icon"
 	} nav-link__icon`
 
@@ -79,7 +79,7 @@ const NavItem = ({ text, link }: any) => {
 						>
 							
 							{getIcon(link)}
-							<span className="font-plus font-bold justify-center span-layout text-base">{text}</span>
+							<span className="font-plus font-bold justify-center span-layout text-sm">{text}</span>
 						
 						</a>
 					

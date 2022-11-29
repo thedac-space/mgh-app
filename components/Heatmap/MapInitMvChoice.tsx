@@ -20,13 +20,13 @@ const MapInitMvChoice = ({ metaverse, setMetaverse }: Props) => {
   return (
     <div className='w-full h-full p-8'>
       {/* Title */}
-      <h2 className='text-grey-content font-plus font-normal rounded-2xl lg:text-5xl text-3xl text-center mb-8'>
+      <h2 className='text-grey-content font-plus font-normal rounded-2xl lg:text-3xl text-3xl text-center mb-8'>
         Choose a Metaverse
       </h2>
 
       <div className='flex space-x-2 items-center justify-center bg-grey-dark rounded-2xl w-[70%] m-auto p-2'>
         <BsExclamationCircleFill className={`text-2xl z-10 text-[#6196FF]`}/>
-        <p className='flex text-xs xs:text-base xl:text-lg font-normal font-plus text-grey-content pl-3'>
+        <p className='flex text-xs xs:text-base xl:text-base font-normal font-plus text-grey-content pl-3'>
           You can have &nbsp;<p className='font-bold'>5 free valuations</p>, after that pro version is needed
         </p>
       </div>
