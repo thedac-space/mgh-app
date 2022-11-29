@@ -655,6 +655,7 @@ h6 {
   background: #EBEBF3;
   border: 1px solid #FFFFFF;
   box-shadow: -2px -2px 4px #FFFFFF, 4px 6px 14px #CBCFDB, inset -2px -3px 4px #FFFFFF, inset 4px 1px 9px rgba(141, 141, 141, 0.25);
+  border-radius: 16px;
 }
 .shadowNormal {
   background: #F9FAFB;
@@ -700,4 +701,55 @@ h6 {
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+
+.menu {
+  display: flex;
+  justify-content: center;
+}
+div
+.menu a {
+  position: relative;
+  display: block;
+  overflow: hidden;
+}
+
+.menu a .span-layout {
+  transition: transform 0.2s ease-out;
+}
+
+.menu a .span-layout:first-child {
+  display: inline-block;
+  padding: 10px;
+}
+
+.menu a .span-layout:last-child {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(-100%);
+}
+
+.menu a:hover .span-layout:first-child {
+  transform: translateY(100%);
+}
+
+.menu a:hover .span-layout:last-child,
+.menu[data-animation] a:hover .span-layout:last-child {
+  transform: none;
+}
+
+
+/*Animations*/
+.menu[data-animation="to-right"] a .span-layout:last-child {
+  transform: translateX(-100%);
+}
+
+.menu[data-animation="to-right"] a:hover .span-layout:first-child {
+  transform: translateX(100%);
 }

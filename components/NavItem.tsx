@@ -14,89 +14,55 @@ const NavItem = ({ text, link }: any) => {
 		}
 	}
 
-	const dict = {
-		home: "&#xe901;",
-		valuation: "&#xe902;",
-		nftValuation: "&#xe904;",
-		swap: "&#xe906;",
-		stake: "&#xe905;",
-		liquidity: "&#xe903;",
-		gobernance: "&#xe900;",
-	};
+	const styleItem = `span-layout text-6xl ${
+		focus && "text-grey-icon"
+	} nav-link__icon`
 
 	function getIcon(link: any) {
 		switch (link) {
 			case "/":
 				return (
-					<div
-						className={`text-5xl z-10 ${
-							focus && "text-grey-icon"
-						} group-hover:text-grey-icon nav-link__icon`}
-					>
+					<span className={styleItem} aria-hidden="true">
 						&#xe901;
-					</div>
+					</span>
 				);
 			case "/swap":
 				return (
-					<div
-						className={`text-5xl z-10 ${
-							focus && "text-grey-icon"
-						} group-hover:text-grey-icon nav-link__icon`}
-					>
+					<span className={styleItem} aria-hidden="true">
 						&#xe906;
-					</div>
+					</span>
 				);
 			case "/liquidity":
 				return (
-					<div
-						className={`text-5xl z-10 ${
-							focus && "text-grey-icon"
-						} group-hover:text-grey-icon nav-link__icon`}
-					>
+					<span className={styleItem} aria-hidden="true">
 						&#xe903;
-					</div>
+					</span>
 				);
 			case "/stake":
 			case "/stake-ethereum":
 			case "stake-polygon":
 				return (
-					<div
-						className={`text-5xl z-10 ${
-							focus && "text-grey-icon"
-						} group-hover:text-grey-icon nav-link__icon`}
-					>
+					<span className={styleItem} aria-hidden="true">
 						&#xe905;
-					</div>
+					</span>
 				);
 			case "https://snapshot.org/#/metagamehub.eth" || "/pools":
 				return (
-					<div
-						className={`text-5xl z-10 ${
-							focus && "text-grey-icon"
-						} group-hover:text-grey-icon nav-link__icon`}
-					>
+					<span className={styleItem} aria-hidden="true">
 						&#xe900;
-					</div>
+					</span>
 				);
 			case "/valuation":
 				return (
-					<div
-						className={`text-5xl z-10 ${
-							focus && "text-grey-icon"
-						} group-hover:text-grey-icon nav-link__icon`}
-					>
+					<span className={styleItem} aria-hidden="true">
 						&#xe902;
-					</div>
+					</span>
 				);
 			case "/nftValuation":
 				return (
-					<div
-						className={`text-5xl z-10 ${
-							focus && "text-grey-icon"
-						} group-hover:text-grey-icon nav-link__icon`}
-					>
+					<span className={styleItem} aria-hidden="true">
 						&#xe904;
-					</div>
+					</span>
 				);
 		}
 	}
@@ -104,19 +70,22 @@ const NavItem = ({ text, link }: any) => {
 	return (
 		<>
 			<Link href={link}>
-				<a
-					className={`${
-						focus ? "  shadowNavItem" : "shadowNormal"
-					} hover:shadowNavItem relative flex items-center rounded-xl px-2 py-2 text-grey-icon w-full `}
-				>
-					<span
-						className={`${
-							focus ? "shadowNavItem" : "shadowNormal"
-						} hidden h-full w-full absolute  rounded-xl blur-xl`}
-					/>
-					{getIcon(link)}
-					{/* <span className="pt-1.5 z-10">{text}</span> */}
-				</a>
+				<ul className="menu cursor-pointer" data-animation="to-right">
+					
+						<a
+							className={`${
+								focus ? "  shadowNavItem" : "shadowNormal"
+							} justify-center rounded-2xl p-2 text-grey-icon `}
+						>
+							
+							{getIcon(link)}
+							<span className="font-plus font-bold justify-center span-layout text-base">{text}</span>
+						
+						</a>
+					
+						
+				</ul>
+				
 			</Link>
 		</>
 	);
