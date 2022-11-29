@@ -20,15 +20,15 @@ const TableItem = ({ item, metaverse }: { item: TopSellingRequestItem, metaverse
     return <span className="mr-2">{`${Number.parseFloat(dataTable.valuation).toFixed(3)} ${dataTable.symbol}`}</span>
   }
 
-  const tdStyle = "border-t-0 px-8 align-middle border-l-0 border-r-0 text-sm whitespace-nowrap p-4"
+  const tdStyle = "border-t-0 px-4 border-l-0 border-r-0 text-xs lg:text-2xl whitespace-nowrap p-4 text-center"
 
   return (
     <tr>
       <td className={tdStyle}>{item.position}</td>
-      <th className={`${tdStyle} text-left flex items-center`}>
+      <th className={`${tdStyle} text-left flex items-center font-plus`}>
         <img src={dataTable.image} className="h-12 w-12 bg-white rounded-full border" alt={`Land ${dataTable.asset} image`} />
-        <span className="ml-3 font-bold text-white">
-          Land: <a className="hover:underline text-sky-600" href={getExternalLink(metaverse, dataTable)} target='_blank'>
+        <span className="ml-3 font-normal text-grey-content">
+          <a className="hover:underline text-grey-content" href={getExternalLink(metaverse, dataTable)} target='_blank'>
             {dataTable.asset}
           </a>
         </span>
@@ -36,14 +36,14 @@ const TableItem = ({ item, metaverse }: { item: TopSellingRequestItem, metaverse
       <td className={tdStyle} >
         {priceLoader()}
       </td>
-      <td className={tdStyle} >
+      {/* <td className={tdStyle} >
         {valuationLoader()}
+      </td> */}
+      <td className={`${tdStyle} text-xs`} >
+        <span>{dataTable.buyer || 'anonymous'}</span>
       </td>
       <td className={tdStyle} >
-        <span className="mr-2">{dataTable.buyer || 'anonymous'}</span>
-      </td>
-      <td className={tdStyle} >
-        <span className="mr-2">{dataTable.date}</span>
+        <span>{dataTable.date}</span>
       </td>
     </tr>
   )

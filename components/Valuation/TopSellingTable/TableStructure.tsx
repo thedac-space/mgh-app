@@ -19,7 +19,7 @@ const TableStructure = ({ filterby, metaverse }: { filterby: filterBy, metaverse
   const [response, setResponse] = useState<[key: TopSellingRequestItem]>(filterData(filterby.data))
   const [sortDir, setSortDir] = useState<boolean>(false)
 
-  const thStyle = "px-6 align-middle py-3 text-xs lg:text-lg border-l-0 border-r-0 whitespace-nowrap font-semibold text-left bg-grey-dark text-grey-content font-plus cursor-pointer"
+  const thStyle = " p-4 w-1/5 align-middle text-xs lg:text-lg border-l-0 border-r-0 whitespace-nowrap font-bold bg-grey-dark text-grey-content font-plus cursor-pointer"
 
   useEffect(() => {
     setResponse(filterData(filterby.data))
@@ -31,16 +31,16 @@ const TableStructure = ({ filterby, metaverse }: { filterby: filterBy, metaverse
         response[0] ?
           <table className="items-center w-full bg-transparent border-collapse text-grey-content font-plus">
             <thead>
-              <tr className="bg-grey-dark rounded-2xl">
+              <tr className="bg-grey-dark rounded-xl text-center">
                 <th className={thStyle} onClick={() => handleOrderRank(sortDir, setSortDir, response, setResponse)} >Rank</th>
                 <th className={thStyle} onClick={() => handleOrder('asset', sortDir, setSortDir, response, setResponse)}>Asset</th>
                 <th className={thStyle} onClick={() => handleOrderPrice(sortDir, setSortDir, response, setResponse)}>Price</th>
-                <th className={thStyle} onClick={() => handleOrderValuation(sortDir, setSortDir, response, setResponse)}>Valuation</th>
+                {/* <th className={thStyle} onClick={() => handleOrderValuation(sortDir, setSortDir, response, setResponse)}>Valuation</th> */}
                 <th className={thStyle} onClick={() => handleOrder('buyer', sortDir, setSortDir, response, setResponse)}>Buyer</th>
                 <th className={thStyle} onClick={() => handleDate(sortDir, setSortDir, response, setResponse)}>Purchased</th>
               </tr>
             </thead>
-            <tbody className="bg-transparent items-center justify-between w-full h-52">
+            <tbody className="bg-transparent items-center w-full h-52">
               {
                 response.map((value) => <TableItem key={value.position} item={value} metaverse={metaverse}/>)
               }

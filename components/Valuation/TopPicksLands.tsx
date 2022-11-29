@@ -105,7 +105,7 @@ const TopPicksLands = ({ metaverse }: Props) => {
 				<>
 					<table className="w-full table-fixed border-collapse">
 						<thead className="bg-transparent  text-slate-200 w-full">
-							<tr className="flex w-full mb-4 text-center text-grey-content font-plus bg-grey-dark rounded-lg">
+							<tr className="flex w-full mb-4 text-center text-grey-content font-plus font-bold bg-grey-dark rounded-lg">
 								<th className="p-4 w-1/5 text-xs lg:text-lg md:text-base ">
 									Land
 								</th>
