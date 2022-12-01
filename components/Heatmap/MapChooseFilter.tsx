@@ -128,13 +128,10 @@ const MapChooseFilter = ({ filterBy, setFilterBy }: Props) => {
                     }} 
 
                   >
-
-
                     {filterOptions[filter].icon}
-                    <span className='whitespace-nowrap tooltip'>
+                    <span className='whitespace-nowrap tooltip' data-tooltip={filterOptions[filter].description}>
                       {filterOptions[filter].name}
                     </span>
-                    <span className='hidden text-grey-content'>{filterOptions[filter].description}</span>
 
                     
                   </button>

@@ -107,7 +107,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 
 	const formatter = new Intl.NumberFormat('en-US', {
 		minimumFractionDigits: 2,
-		maximumFractionDigits: 2,
+		maximumFractionDigits: 4,
 	  });
 	// Function for resizing heatmap
 	const resize = () => {
@@ -341,16 +341,16 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 									</div>
 									<div className="items-end">
 										<p className={styleContent}>
-											{globalData.stats?.floor_price}
+											{formatter.format(globalData.stats?.floor_price)}
 										</p>
 										<p className={styleContent}>
-											{globalData.stats?.total_volume}
+											{formatter.format(globalData.stats?.total_volume)}
 										</p>
 										<p className={styleContent}>
-											{globalData.stats?.market_cap}
+											{formatter.format(globalData.stats?.market_cap)}
 										</p>
 										<p className={styleContent}>
-											{globalData.stats?.num_owners}
+											{formatter.format(globalData.stats?.num_owners)}
 										</p>
 									</div>
 								</div>

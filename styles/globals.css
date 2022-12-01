@@ -753,3 +753,30 @@ h6 {
   -ms-user-select: none;
   user-select: none;
 }
+.tooltip {
+  position: relative;
+}
+
+.tooltip:hover:after{
+  
+  background: #54575C;
+  border-radius: 8px;
+  color: #F9FAFB;
+  content: attr(data-tooltip);
+  font-size: 16px;
+  bottom: 26px;
+  left: 20%;
+  padding: 5px 15px;
+  position: absolute;
+  z-index: 98;
+}
+
+.tooltip:hover:before{
+  border: solid;
+  border-color: #444 transparent;
+  bottom: 20px;
+  content: "";
+  left: 50%;
+  position: absolute;
+  z-index: 99;
+}
