@@ -37,7 +37,7 @@ const TopPicksLands = ({ metaverse }: Props) => {
 		setData().catch((e) => console.log(e));
 	}, [metaverse]);
 
-	const rowDataStyle = "flex justify-center px-4 content-center items-center text-sm lg:text-2xl font-medium font-plus md:text-base pt-0.5 w-1/5";
+	const rowDataStyle = "flex justify-center px-4 content-center items-center text-lg lg:text-xl font-medium font-plus md:text-base pt-0.5 w-1/5";
 
 	const rowData = () => {
 		const rows: any = [];
@@ -65,7 +65,7 @@ const TopPicksLands = ({ metaverse }: Props) => {
 					</td>
 					<td className="flex justify-center px-4 content-center items-center text-grey-content pt-0.5 w-1/5 hover:underline">
 						<a
-							className="text-sm lg:text-2xl font-medium font-plus md:text-base"
+							className="text-lg lg:text-xl font-medium font-plus md:text-base"
 							href={picks[index]["external_link"]}
 						>
 							{picks[index]["coords"]
@@ -104,7 +104,7 @@ const TopPicksLands = ({ metaverse }: Props) => {
 			) : (
 				<>
 					<table className="w-full table-fixed border-collapse">
-						<thead className="bg-transparent  text-slate-200 w-full">
+						<thead className="bg-transparent text-slate-200 w-full">
 							<tr className="flex w-full mb-4 text-center text-grey-content font-plus font-bold bg-grey-dark rounded-lg">
 								<th className="p-4 w-1/5 text-xs lg:text-lg md:text-base ">
 									Land

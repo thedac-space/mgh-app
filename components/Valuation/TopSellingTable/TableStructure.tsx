@@ -35,14 +35,14 @@ const TableStructure = ({ filterby, metaverse }: { filterby: filterBy, metaverse
                 <th className={thStyle} onClick={() => handleOrderRank(sortDir, setSortDir, response, setResponse)} >Rank</th>
                 <th className={thStyle} onClick={() => handleOrder('asset', sortDir, setSortDir, response, setResponse)}>Asset</th>
                 <th className={thStyle} onClick={() => handleOrderPrice(sortDir, setSortDir, response, setResponse)}>Price</th>
-                {/* <th className={thStyle} onClick={() => handleOrderValuation(sortDir, setSortDir, response, setResponse)}>Valuation</th> */}
+                <th className={thStyle} onClick={() => handleOrderValuation(sortDir, setSortDir, response, setResponse)}>Valuation</th>
                 <th className={thStyle} onClick={() => handleOrder('buyer', sortDir, setSortDir, response, setResponse)}>Buyer</th>
                 <th className={thStyle} onClick={() => handleDate(sortDir, setSortDir, response, setResponse)}>Purchased</th>
               </tr>
             </thead>
             <tbody className="bg-transparent items-center w-full h-52">
               {
-                response.map((value) => <TableItem key={value.position} item={value} metaverse={metaverse}/>)
+                response.map((value) => <TableItem key={value.position} item={value} metaverse={metaverse} />)
               }
             </tbody>
           </ table> :

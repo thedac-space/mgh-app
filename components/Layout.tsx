@@ -60,7 +60,7 @@ const Layout = ({ children }: any) => {
 				</div>
 				<div className="hidden lg:flex lg:flex-col space-x-10 w-full p-5 bg-white overflow-hidden">
 					<div className="flex space-x-3 justify-end pb-3">
-						{web3Provider && chainId && ( 
+						{web3Provider && chainId && (
 							<NetworkButton
 								provider={web3Provider.provider}
 								chainId={chainId}
@@ -71,7 +71,7 @@ const Layout = ({ children }: any) => {
 							disconnectWallet={disconnectWallet}
 						/>
 					</div>
-					<main className="z-10 w-full pt-1 sm:pt-2 md:pt-3 xl:pt-5 p-2 xs:p-3 sm:p-5 flex items-start justify-center flex-grow overflow-auto animate-none xl:animate__animated animate__slideInRight self-end bg-[#FFF]">
+					<main className="z-10 w-full pt-1 sm:pt-2 md:pt-3 xl:pt-5 p-2 xs:p-3 sm:p-5 flex items-start justify-center flex-grow overflow-auto animate-none xl:animate__animated animate__slideInRight self-end bg-[#FFF] scrollbar">
 						{children}
 					</main>
 				</div>
