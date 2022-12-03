@@ -20,7 +20,7 @@ const MapInitMvChoice = ({ metaverse, setMetaverse }: Props) => {
   return (
     <div className='w-full h-full p-8'>
       {/* Title */}
-      <h2 className='text-grey-content font-plus font-normal rounded-2xl lg:text-3xl text-3xl text-center mb-8'>
+      <h2 className='text-grey-content font-plus font-normal rounded-2xl lg:text-3xl text-2xl text-center mb-8'>
         Choose a Metaverse
       </h2>
 
@@ -50,7 +50,7 @@ const MapInitMvChoice = ({ metaverse, setMetaverse }: Props) => {
               className={`w-10 ${metaverse === landKey ? 'grayscale-0' : 'grayscale'
                 } group-hover:grayscale-0 transition duration-300 ease-in-out`}
             />
-            <p className='text-grey-content font-plus font-normal text-lg md:text-xl pt-7'>
+            <p className='text-grey-content font-plus font-normal text-lg md:text-lg pt-7'>
               {formatName(landKey)}
             </p>
           </button>
