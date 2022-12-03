@@ -298,8 +298,8 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 							{/* Links */}
 							{["portfolio", "watchlist", "analytics"].map((option) => (
 								<Link key={option} href={`/${option}`}>
-									<a className="hover:scale-105  px-8 py-3 flex items-center justify-center rounded-3xl shadowNormal">
-										<span className="pt-1 font-bold font-plus text-grey-content text-2xl">
+									<a className="hover:scale-105 px-8 py-3 flex items-center justify-center rounded-3xl shadowNormal">
+										<span className="pt-1 font-bold font-plus text-grey-content text-xl">
 											{formatName(option)}
 										</span>
 									</a>
