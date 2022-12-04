@@ -13,6 +13,7 @@ export enum Tokens {
 export enum Provider {
   METAMASK = 'metamask',
   WALLETCONNECT = 'walletconnect',
+  WEB3AUTH = 'web3auth'
 }
 
 // Commenting this out to use type from ./metaverse.ts If not we are constantly having to write "as Metaverse" when using this enum

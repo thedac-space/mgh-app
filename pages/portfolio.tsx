@@ -97,9 +97,9 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
         const provider =
             !web3Provider || chainId !== Chains.ETHEREUM_MAINNET.chainId
                 ? new ethers.providers.InfuraProvider(
-                      Chains.ETHEREUM_MAINNET.chainId,
-                      '03bfd7b76f3749c8bb9f2c91bdba37f3'
-                  )
+                    Chains.ETHEREUM_MAINNET.chainId,
+                    '03bfd7b76f3749c8bb9f2c91bdba37f3'
+                )
                 : web3Provider
 
         // Requesting and Formatting Assets
@@ -113,12 +113,12 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                     typedKeys(metaverseObject).map(async (metaverse) => {
                         let rawIds: string[] | undefined
                         if (metaverse === 'axie-infinity') {
-                             rawIds = await getAxieLands(
+                            rawIds = await getAxieLands(
                                 formatAddress(
                                     (externalWallet as string) ?? address
                                 )
-                            ) 
-                        } else { 
+                            )
+                        } else {
                             rawIds = await getUserNFTs(
                                 provider,
                                 formatAddress(

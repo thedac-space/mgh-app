@@ -4,15 +4,12 @@ import detectEthereumProvider from '@metamask/detect-provider';
 import { setLocal } from "../lib/local"
 import { Provider } from "../lib/enums"
 
-
 const WalletModal = ({ onDismiss }: any) => {
     const [provider, setProvider] = useState()
     const mounted = useRef(true)
 
     useEffect(() => {
-        detectEthereumProvider().then((res: any) => {
-            mounted.current && setProvider(res)
-        })
+        detectEthereumProvider().then((res: any) => { mounted.current && setProvider(res) })
         return () => { mounted.current = false }
     }, [])
 
@@ -30,9 +27,7 @@ const WalletModal = ({ onDismiss }: any) => {
                         <img src="/images/walletconnect.svg" className="w-16 h-16" />
                         <p className="text-xl font-medium pt-1">WalletConnect</p>
                     </div>
-
                 </div>
-
                 <p onClick={onDismiss} className="cursor-pointer max-w-max self-center font-medium text-gray-400">Close</p>
             </div>
         </div>
