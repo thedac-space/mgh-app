@@ -18,7 +18,7 @@ const PortfolioList = ({ lands, prices, metaverse }: Props) => {
     <ul className='grid gap-4 lg:gap-12 md:gap-6 md:grid-cols-2'>
       <Fade duration={400} className='w-full flex justify-center'>
         {typedKeys(lands).map((land) => (
-          <li key={land} className='w-full gray-box'>
+          <li key={land} className='w-full gray-box shadowNormal'>
             <HorizontalPriceCard
               metaverse={metaverse}
               land={lands[land]}

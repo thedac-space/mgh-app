@@ -318,7 +318,7 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                                     className="mb-8 sm:mb-12"
                                 >
                                     <Fade>
-                                        <h3 className="text-center gray-box green-text-gradient mb-8 sm:mb-12">
+                                        <h3 className="text-center gray-box shadowNormal mb-8 sm:mb-12">
                                             {formatName(metaverse, true)}
                                         </h3>
                                     </Fade>
