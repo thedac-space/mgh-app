@@ -29,6 +29,7 @@ export default function useConnectWeb3() {
       const [address] = await ethersWeb3Provider.listAccounts()
       const { chainId } = await ethersWeb3Provider.getNetwork()
       dispatch(setChain(chainId))
+
       if (address === addressFromRedux) return
 
       try {
@@ -102,3 +103,55 @@ export default function useConnectWeb3() {
 
   return { web3Provider, disconnectWallet }
 }
+
+/* import { useEffect, useState } from "react";
+// HIGHLIGHTSTART-importModules
+import { Web3Auth } from "@web3auth/modal";
+import { CHAIN_NAMESPACES, SafeEventEmitterProvider } from "@web3auth/base";
+
+const clientId = `${process.env.WEB3AUTH_CLIENT_ID}`
+
+export default function useConnectWeb3() {
+  const [web3auth, setWeb3auth] = useState<Web3Auth | null>(null);
+  const [provider, setProvider] = useState<SafeEventEmitterProvider | null>(null);
+
+  useEffect(() => {
+    const init = async () => {
+      try {
+        const web3auth = new Web3Auth({
+          clientId,
+          chainConfig: {
+            chainNamespace: CHAIN_NAMESPACES.EIP155,
+            chainId: "0x1",
+            rpcTarget: "https://rpc.ankr.com/eth", // This is the public RPC we have added, please pass on your own endpoint while creating an app
+          },
+        });
+        setWeb3auth(web3auth);
+        await web3auth.initModal();
+        if (web3auth.provider) {
+          setProvider(web3auth.provider);
+        };
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    init();
+  }, [])
+
+  const login = async () => {
+    if (!web3auth) {
+      console.log("web3auth not initialized yet");
+      return;
+    }
+    const web3authProvider = await web3auth.connect();
+    setProvider(web3authProvider);
+  };
+
+  let web3Provider = {
+    provider: 'undefined'
+  }
+  const disconnectWallet = () => { console.log('disconect') }
+
+  return { web3Provider, disconnectWallet }
+} */

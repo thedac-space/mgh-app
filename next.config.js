@@ -29,5 +29,6 @@ module.exports = {
 	env: {
 		ITRM_SERVICE: process.env.ITRM_SERVICE,
 		SOCKET_SERVICE: process.env.SOCKET_SERVICE,
+		WEB3AUTH_CLIENT_ID: process.env.WEB3AUTH_CLIENT_ID,
 	},
 };
