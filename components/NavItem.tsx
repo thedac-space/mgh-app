@@ -75,7 +75,7 @@ const NavItem = ({ text, link }: any) => {
 						<a
 							className={`${
 								focus ? "  shadowNavItem" : "shadowNormal"
-							} justify-center rounded-2xl p-2 text-grey-icon `}
+							} justify-center rounded-2xl text-grey-icon `}
 						>
 							
 							{getIcon(link)}

@@ -32,7 +32,7 @@ const Layout = ({ children }: any) => {
 					chainId={chainId}
 				/>
 
-				<div className="flex  min-h-[10vh] bg-grey-sidebar">
+				<div className="hidden xl:flex min-h-[10vh] bg-grey-sidebar">
 					<div className="hidden lg:flex xl:flex  max-w-md min-w-max flex-col items-center pt-9 px-8">
 						<a
 							href="/"
@@ -44,7 +44,7 @@ const Layout = ({ children }: any) => {
 								width={90}
 							/>
 						</a>
-						<div className="space-y-6 flex flex-col pt-16">
+						<div className="space-y-6 flex flex-col pt-6">
 							<NavItem text="Home" link="/" />
 							<NavItem text="Land V" link="/valuation" />
 							<NavItem text="NFT V" link="/nftValuation" />
