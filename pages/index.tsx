@@ -27,6 +27,7 @@ const Home: NextPage = () => {
                     <HomeCard image="/images/nft-pools.jpeg" link="/pools" text="Stake your NFTs and enter the world of MetaFi." />
                     <HomeCard image="/images/land-valuation.jpeg" link="/valuation" text="Evaluate your metaverse lands and look for undervalued parcels." />
                 </div>
+                <div className=""><a href='https://eth-india-hackaton-git-pushnotifications-dap-frontend.vercel.app/' className="text-slate-400 hover:text-sky-400 font-bold">MGM</a><span className="color-green"> | </span><a href='https://www.metagamehub.io/' className="text-slate-400 hover:text-sky-400 font-bold">MGH Website</a></div>
             </div>
         </>
     )
