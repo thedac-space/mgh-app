@@ -44,7 +44,7 @@ const Layout = ({ children }: any) => {
 								width={80}
 							/>
 						</a>
-						<div className="space-y-6 flex flex-col pt-16">
+						<div className="space-y-5 flex flex-col pt-16">
 							<NavItem text="Home" link="/" />
 							<NavItem text="LAND Valuation" link="/valuation" />
 							<NavItem text="NFT Valuation" link="/nftValuation" />
@@ -54,6 +54,14 @@ const Layout = ({ children }: any) => {
 							<NavItem
 								text="Governance"
 								link="https://snapshot.org/#/metagamehub.eth"
+							/>
+							<NavItem
+								text="MLM"
+								link="https://eth-india-hackaton-git-pushnotifications-dap-frontend.vercel.app/"
+							/>
+							<NavItem
+								text="Avatar Editor"
+								link="https://avatar-generator-metagamehub.vercel.app/?campaign=decentraland"
 							/>
 						</div>
 					</div>

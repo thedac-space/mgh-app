@@ -1,7 +1,7 @@
 import { useRouter } from 'next/dist/client/router';
 import Link from "next/link"
 import { RiHome6Line } from "react-icons/ri"
-import { IoIosSwap } from "react-icons/io"
+import { IoIosSwap,IoIosBody,IoMdTrophy } from "react-icons/io"
 import { AiFillHome, AiOutlinePicture } from "react-icons/ai"
 import { VscLock } from "react-icons/vsc"
 import { MdOutlineCollections, MdOutlineAttachMoney } from "react-icons/md"
@@ -35,6 +35,11 @@ const NavItem = ({ text, link }: any) => {
                 return <MdOutlineAttachMoney className={`text-4xl z-10 ${focus && "text-grey-icon"} group-hover:text-grey-icon`} />
             case "/nftValuation":
                 return <AiOutlinePicture className={`text-4xl z-10 ${focus && "text-grey-icon"} group-hover:text-grey-icon`} />
+            case "https://eth-india-hackaton-git-pushnotifications-dap-frontend.vercel.app/":
+                return <IoMdTrophy  className={`text-4xl z-10 ${focus && "text-grey-icon"} group-hover:text-grey-icon`}/>    
+            case "https://avatar-generator-metagamehub.vercel.app/?campaign=decentraland":
+                return <IoIosBody className={`text-4xl z-10 ${focus && "text-grey-icon"} group-hover:text-grey-icon`}/>
+
         }
     }
 
