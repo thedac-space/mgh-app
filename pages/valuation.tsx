@@ -1,4 +1,6 @@
 import { NextPage } from "next";
+import { AnyObject } from "immer/dist/internal";
+import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import { Fade } from "react-awesome-reveal";
 import {
@@ -43,6 +45,8 @@ import { findHeatmapLand } from "../lib/heatmap/findHeatmapLand";
 import Head from "next/head";
 import { Heatmap2D } from "../components/Heatmap/index";
 import { metaverseInitialCenter } from "../lib/valuation/valuationUtils";
+import EstimateAccuracy from "../components/Valuation/EstimateAccuracy";
+import FreeValuation from "../components/Valuation/FreeValuation";
 
 // Making this state as an object in order to iterate easily through it
 export const VALUATION_STATE_OPTIONS = [
@@ -67,8 +71,12 @@ interface Hovered {
 	coords: { x: number; y: number };
 	owner?: string;
 }
+const styleContent = 'text-xxs xs:text-xxs xl:text-xs font-plus font-bold text-grey-content pt-0 sm:pt-5 flex justify-between'
 
 const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
+	const [globalData, setglobalData] = useState<AnyObject>({})
+	const [estimateAccuracy, setestimateAccuracy] = useState<AnyObject>({})
+
 	const { address, chainId } = useAppSelector((state) => state.account);
 	const { web3Provider } = useConnectWeb3();
 
@@ -97,6 +105,10 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 		width: mapDivRef.current?.offsetWidth,
 	});
 
+	const formatter = new Intl.NumberFormat('en-US', {
+		minimumFractionDigits: 2,
+		maximumFractionDigits: 4,
+	});
 	// Function for resizing heatmap
 	const resize = () => {
 		if (!mapDivRef.current) return;
@@ -115,10 +127,72 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 		const coords = { x, y };
 		setHovered({ coords, owner, name });
 	};
+	useEffect(() => {
+		const getglobalData = async () => {
+			setglobalData(
+				(
+					await axios.get(
+						process.env.ITRM_SERVICE +
+						"/fluf/globalData"
+					)
+				).data
+			)
+		};
+		getglobalData();
+	}, []);
+	useEffect(() => {
+		const getEstimateAccuracy = async () => {
+			setestimateAccuracy(
+				(
+					await axios.get(
+						process.env.ITRM_SERVICE +
+						"/test/sandbox/performance"
+					)
+				).data
+			)
+		};
+		getEstimateAccuracy();
+	}, []);
+
+	const getglobalData = async () => {
+		if (!metaverse) return;
+		try {
+			let data;
+			const response = await fetch(
+				`${process.env.ITRM_SERVICE}${metaverse == "somnium-space" || metaverse == "axie-infinity"
+					? ""
+					: "/test"
+				}/${metaverse}/globalData`,
+				{
+					method: "GET",
+					body: JSON.stringify(data),
+				}
+			);
+			setglobalData(await response.json());
+		} catch (e) {
+			console.log("error", e);
+			setMapState("errorQuery");
+			return setTimeout(() => setIsVisible(false), 1100);
+		}
+	};
+
+	useEffect(() => {
+		const getEstimateAccuracy = async () => {
+			setestimateAccuracy(
+				(
+					await axios.get(
+						process.env.ITRM_SERVICE + "/test/sandbox/performance"
+					)
+				).data
+			);
+		};
+		getEstimateAccuracy();
+	}, []);
 
 	useEffect(() => {
 		setIsVisible(false);
-		setFilterBy('basic')
+		setFilterBy("basic");
+		getglobalData();
 	}, [metaverse]);
 
 	// Main Search Function through Clicks,Form inputs.
@@ -207,19 +281,20 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 				/>
 			</Head>
 			<section className="w-full h-full relative">
-				<div className="bg-grey-lightest rounded-lg p-8">
+				<div className="bg-grey-lightest rounded-xl p-8">
 					{/* Main Header */}
 					<div className="border-t border-l border-white/10 rounded-xl p-5 w-full bg-opacity-30; flex flex-col lg:flex-row justify-between items-center mb-8 bg-grey-dark">
-						<h1 className="text-grey-content font-plus font-normal rounded-2xl lg:text-5xl text-3xl  mb-0 sm:mb-2">
+						<h1 className="text-grey-content font-plus font-normal rounded-2xl lg:text-3xl text-3xl  mb-0 sm:mb-2">
 							LAND Valuation
 						</h1>
+
 						{/* Links Wrapper */}
 						<div className="flex gap-5">
 							{/* Links */}
 							{["portfolio", "watchlist", "analytics"].map((option) => (
 								<Link key={option} href={`/${option}`}>
-									<a className="hover:scale-105  px-8 py-3 flex items-center justify-center rounded-3xl shadowNormal">
-										<span className="pt-1 font-bold font-plus text-grey-content text-2xl">
+									<a className="hover:scale-105 px-8 py-3 flex items-center justify-center rounded-3xl shadowNormal">
+										<span className="pt-1 font-bold font-plus text-grey-content text-xl">
 											{formatName(option)}
 										</span>
 									</a>
@@ -227,7 +302,56 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 							))}
 						</div>
 					</div>
-
+					{metaverse && (
+						<>
+							<span>
+								<img src="/images/imagevaluation.svg" alt="IMG" className="w-full flex" />
+							</span>
+							<div className="flex border-t border-l border-white/10 rounded-3xl shadowDiv p-5 bg-opacity-30 justify-between bg-[#F9FAFB] my-9">
+								<div className="pr-5 w-3/4">
+									<h2 className="text-grey-content font-plus font-normal rounded-2xl lg:text-5xl text-3xl mb-0 sm:mb-2">
+										Description
+										<br />
+									</h2>
+									<p
+										className={`text-sm xs:text-base xl:text-lg font-plus font-normal text-grey-content`}
+									>
+										Direct repair of aneurysm, pseudoaneurysm, or excision (partial or total) and graft insertion, with or without patch graft; for ruptured aneurysm, abdominal aorta  Direct repair of aneurysm, pseudoaneurysm, or excision (partial or total) and graft insertion, with or without patch graft; for ruptured aneurysm, abdominal aorta
+									</p>
+								</div>
+								<div className="flex border-t border-l border-white/10 shadow-blck rounded-xl p-3 bg-[#D4D7DD] bg-opacity-30 w-1/4  justify-between pt-5 pb-5">
+									<div className="flex flex-col ">
+										<p className={styleContent}>
+											FLOOR :
+										</p>
+										<p className={styleContent}>
+											TRADING VOLUME :
+										</p>
+										<p className={styleContent}>
+											MCAP :
+										</p>
+										<p className={styleContent}>
+											OWNERS :
+										</p>
+									</div>
+									<div className="items-end">
+										<p className={styleContent}>
+											{formatter.format(globalData.stats?.floor_price)}
+										</p>
+										<p className={styleContent}>
+											{formatter.format(globalData.stats?.total_volume)}
+										</p>
+										<p className={styleContent}>
+											{formatter.format(globalData.stats?.market_cap)}
+										</p>
+										<p className={styleContent}>
+											{formatter.format(globalData.stats?.num_owners)}
+										</p>
+									</div>
+								</div>
+							</div>
+						</>
+					)}
 					{/* Heatmap */}
 					<div className="relative mb-8 h-[55vh]" ref={mapDivRef}>
 						{!metaverse && (
@@ -236,8 +360,10 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 								setMetaverse={setMetaverse}
 							/>
 						)}
+
 						{metaverse && (
 							<>
+
 								<div className="absolute top-0 z-20 flex gap-4 p-2 md:w-fit w-full unselectable">
 									<div>
 										{/* Top left Coordinates */}
@@ -286,7 +412,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 									<div
 										className={
 											(isVisible && "hidden") +
-											" md:block absolute z-20 bottom-2 left-2 unselectable"
+											" md:block absolute z-20 bottom-2 right-2 unselectable"
 										}
 									>
 										<ColorGuide
@@ -301,7 +427,7 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 									<div className="absolute z-20 top-2 right-2 gray-box bg-grey-bone w-fit h-15">
 										<FullScreenButton
 											fullScreenRef={mapDivRef}
-											className="text-lg text-grey-content"
+											className="text-xl text-grey-content"
 										/>
 									</div>
 								)}
@@ -439,6 +565,18 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 									/>
 								</div>
 							</div>
+							<div className="flex flex-col sm:flex-row space-y-5 sm:space-y-0 space-x-0 sm:space-x-5 md:space-x-10 items-stretch justify-between w-full h-full mb-8">
+								{/* Estimate accuracy */}
+								<div className="flex flex-col justify-between w-full space-y-5 md:space-y-10 lg:space-y-5">
+									<EstimateAccuracy metaverse={metaverse} coinPrices={prices} />
+								</div>
+								{/* Free Valuation */}
+								<div className="flex flex-col justify-between w-full space-y-5 md:space-y-10 lg:space-y-5">
+									<FreeValuation />
+								</div>
+
+							</div>
+
 							<div className="rounded-3xl shadowDiv bg-grey-bone p-5 mb-10">
 								<h3 className="lg:text-3xl text-2xl text-grey-content font-plus mb-0 sm:mb-2">
 									Our Top Picks
@@ -450,8 +588,8 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 								<TopSellingLands metaverse={metaverse} />
 							</div>
 
-							<div className="flex flex-col items-start shadow-blck rounded-xl py-3 px-4 w-full bg-grey-dark bg-opacity-20 text-left mb-8">
-								<p className="text-xs sm:text-sm text-grey-content font-plus pt-44">
+							<div className="flex flex-col text-center shadow-blck rounded-xl py-3 px-4 w-full bg-grey-dark bg-opacity-20 mb-8">
+								<p className="text-xs sm:text-sm text-grey-content font-plus pt-44 px-10">
 									The MGH DAO does not provide, personalized investment
 									recommendations or advisory services. Any information provided
 									through the land evaluation tool and others is not, and should

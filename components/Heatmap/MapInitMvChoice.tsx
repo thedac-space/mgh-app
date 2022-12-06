@@ -20,14 +20,14 @@ const MapInitMvChoice = ({ metaverse, setMetaverse }: Props) => {
   return (
     <div className='w-full h-full p-8'>
       {/* Title */}
-      <h2 className='text-grey-content font-plus font-normal rounded-2xl lg:text-5xl text-3xl text-center mb-8'>
+      <h2 className='text-grey-content font-plus font-normal rounded-2xl lg:text-3xl text-2xl text-center mb-8'>
         Choose a Metaverse
       </h2>
 
       <div className='flex space-x-2 items-center justify-center bg-grey-dark rounded-2xl w-[70%] m-auto p-2'>
-        <BsExclamationCircleFill className={`text-2xl z-10 text-[#6196FF]`}/>
-        <p className='flex text-xs xs:text-base xl:text-lg font-normal font-plus text-grey-content pl-3'>
-          You can have &nbsp;<p className='font-bold'>5 free valuations</p>, after that pro version is needed
+        <BsExclamationCircleFill className={`text-2xl z-10 text-[#6196FF]`} />
+        <p className='flex text-xs xs:text-base xl:text-base font-normal font-plus text-grey-content pl-3'>
+          You can have &nbsp;<span className='font-bold'>5 free valuations</span>, after that pro version is needed
         </p>
       </div>
 
@@ -38,8 +38,8 @@ const MapInitMvChoice = ({ metaverse, setMetaverse }: Props) => {
             key={landKey}
             onClick={() => setMetaverse(landKey)}
             className={`flex flex-col shadowMetaverse items-center justify-center space-y-2 rounded-xl cursor-pointer p-2 px-3 pt-4 w-[200px] h-[250px] group focus:outline-none ${metaverse === landKey
-                ? ' text-gray-200'
-                : ' hover:border-opacity-100  '
+              ? ' text-gray-200'
+              : ' hover:border-opacity-100  '
               }`}
           >
             <OptimizedImage
@@ -50,7 +50,7 @@ const MapInitMvChoice = ({ metaverse, setMetaverse }: Props) => {
               className={`w-10 ${metaverse === landKey ? 'grayscale-0' : 'grayscale'
                 } group-hover:grayscale-0 transition duration-300 ease-in-out`}
             />
-            <p className='text-grey-content font-plus font-normal text-lg md:text-xl pt-7'>
+            <p className='text-grey-content font-plus font-normal text-lg md:text-lg pt-7'>
               {formatName(landKey)}
             </p>
           </button>

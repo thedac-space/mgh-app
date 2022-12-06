@@ -32,27 +32,27 @@ const Layout = ({ children }: any) => {
 					chainId={chainId}
 				/>
 
-				<div className="flex  min-h-[10vh] bg-grey-sidebar">
-					<div className="hidden lg:flex xl:flex h-full max-w-sm min-w-max flex-col items-center pt-9 px-12">
+				<div className="hidden xl:flex min-h-[10vh] bg-grey-sidebar">
+					<div className="hidden lg:flex xl:flex  max-w-md min-w-max flex-col items-center pt-9 px-8">
 						<a
 							href="/"
 							className="hover:scale-110 transition-all duration-500 ease-in-out"
 						>
 							<OptimizedImage
 								src="/images/mgh_logo.svg"
-								height={80}
-								width={80}
+								height={90}
+								width={90}
 							/>
 						</a>
 						<div className="space-y-5 flex flex-col pt-16">
 							<NavItem text="Home" link="/" />
-							<NavItem text="LAND Valuation" link="/valuation" />
-							<NavItem text="NFT Valuation" link="/nftValuation" />
+							<NavItem text="Land V" link="/valuation" />
+							<NavItem text="NFT V" link="/nftValuation" />
 							<NavItem text="Swap" link="/swap" />
 							<NavItem text="Liquidity" link="/liquidity" />
 							<NavItem text="Stake" link="/stake" />
 							<NavItem
-								text="Governance"
+								text="Gov"
 								link="https://snapshot.org/#/metagamehub.eth"
 							/>
 							<NavItem
@@ -68,7 +68,7 @@ const Layout = ({ children }: any) => {
 				</div>
 				<div className="hidden lg:flex lg:flex-col space-x-10 w-full p-5 bg-white overflow-hidden">
 					<div className="flex space-x-3 justify-end pb-3">
-						{web3Provider && chainId && ( 
+						{web3Provider && chainId && (
 							<NetworkButton
 								provider={web3Provider.provider}
 								chainId={chainId}
@@ -79,7 +79,7 @@ const Layout = ({ children }: any) => {
 							disconnectWallet={disconnectWallet}
 						/>
 					</div>
-					<main className="z-10 w-full pt-1 sm:pt-2 md:pt-3 xl:pt-5 p-2 xs:p-3 sm:p-5 flex items-start justify-center flex-grow overflow-auto animate-none xl:animate__animated animate__slideInRight self-end bg-[#FFF]">
+					<main className="z-10 w-full pt-1 sm:pt-2 md:pt-3 xl:pt-5 p-2 xs:p-3 sm:p-5 flex items-start justify-center flex-grow overflow-auto animate-none xl:animate__animated animate__slideInRight self-end bg-[#FFF] scrollbar">
 						{children}
 					</main>
 				</div>

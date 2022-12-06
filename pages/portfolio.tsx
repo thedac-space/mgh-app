@@ -97,9 +97,9 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
         const provider =
             !web3Provider || chainId !== Chains.ETHEREUM_MAINNET.chainId
                 ? new ethers.providers.InfuraProvider(
-                      Chains.ETHEREUM_MAINNET.chainId,
-                      '03bfd7b76f3749c8bb9f2c91bdba37f3'
-                  )
+                    Chains.ETHEREUM_MAINNET.chainId,
+                    '03bfd7b76f3749c8bb9f2c91bdba37f3'
+                )
                 : web3Provider
 
         // Requesting and Formatting Assets
@@ -113,12 +113,12 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                     typedKeys(metaverseObject).map(async (metaverse) => {
                         let rawIds: string[] | undefined
                         if (metaverse === 'axie-infinity') {
-                             rawIds = await getAxieLands(
+                            rawIds = await getAxieLands(
                                 formatAddress(
                                     (externalWallet as string) ?? address
                                 )
-                            ) 
-                        } else { 
+                            )
+                        } else {
                             rawIds = await getUserNFTs(
                                 provider,
                                 formatAddress(
@@ -231,7 +231,7 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                         // Total Lands and Total Worth Container
                         <div className="flex flex-col md:flex-row gap-4 lg:gap-12 md:gap-6 mb-0 sm:mb-12">
                             {/* Total Lands */}
-                            <div className="flex flex-col w-1/2 justify-between gap-4 text-center transition-all gray-box relative">
+                            <div className="flex flex-col w-1/2 justify-between gap-4 text-center transition-all gray-box relative shadowNormal">
                                 <h3 className="text-xl md:text-3xl xl:text-4xl font-plus text-grey-content">
                                     Total LANDS Owned
                                 </h3>
@@ -291,7 +291,7 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                             </div>
 
                             {/* Total Worth */}
-                            <div className="flex flex-col w-1/2  transition-all justify-between text-center mb-8 sm:mb-0 gray-box">
+                            <div className="flex flex-col w-1/2  transition-all justify-between text-center mb-8 sm:mb-0 gray-box shadowNormal">
                                 <h3 className="text-xl md:text-3xl xl:text-4xl mb-4 whitespace-nowrap font-plus text-grey-content">
                                     Total Value Worth
                                 </h3>
@@ -318,7 +318,7 @@ const PortfolioPage: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
                                     className="mb-8 sm:mb-12"
                                 >
                                     <Fade>
-                                        <h3 className="text-center gray-box green-text-gradient mb-8 sm:mb-12">
+                                        <h3 className="text-center gray-box shadowNormal mb-8 sm:mb-12">
                                             {formatName(metaverse, true)}
                                         </h3>
                                     </Fade>

@@ -69,7 +69,7 @@ const FloorPriceTracker = ({ coinPrices, metaverse }: Props) => {
 
   return !predictions ? (
     <>
-      <div className='flex flex-col items-start border-t border-l border-white/10 rounded-xl p-5 w-full bg-[#E9ECF6]'>
+      <div className='flex flex-col items-start border-t border-l border-white/10 rounded-xl p-5 w-full bg-grey-panel'>
         <p className={`text-lg xl:text-xl font-medium text-grey-content font-plus`}>
           We couldn't obtain floor price for the {formatName(metaverse)} lands
           collection. Check{' '}
@@ -90,7 +90,7 @@ const FloorPriceTracker = ({ coinPrices, metaverse }: Props) => {
         <p className={`text-lg xl:text-xl font-medium font-plus text-grey-content mb-4`}>
           Floor Price:{' '}
         </p>
-        <div className='flex flex-col items-start border-t border-l border-white/10 rounded-xl p-5 w-full bg-[#E9ECF6]'>
+        <div className='flex flex-col items-start border-t border-l border-white/10 rounded-xl p-5 w-full bg-grey-panel'>
 
           <div
             className={

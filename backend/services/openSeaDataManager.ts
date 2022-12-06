@@ -19,6 +19,13 @@ async function getEthExchangePrice() {
   const data_json = await data.json()
   return data_json
 }
+async function getEstimateAccuracyValues() {
+  const data = await fetch(
+    `https://services.itrmachines.com/test/sandbox/performance`
+  )
+  const data_json = await data.json()
+  return data_json
+}
 
 export async function getCollectionData(collectionName: string) {
   if (!collectionName) {
@@ -36,6 +43,16 @@ export async function getCollectionData(collectionName: string) {
 export async function getETHExchangeValue() {
   try {
     const collectionData = await getEthExchangePrice()
+    return collectionData
+  } catch (error) {
+    console.log('problem getting exchange rate for eth', error)
+    return {}
+  }
+}
+
+export async function getEstimateAccuracy() {
+  try {
+    const collectionData = await getEstimateAccuracyValues()
     return collectionData
   } catch (error) {
     console.log('problem getting exchange rate for eth', error)

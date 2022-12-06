@@ -1,7 +1,6 @@
 import { useState } from "react"
 import { connect } from "../state/account"
 import { useAppDispatch, useAppSelector } from "../state/hooks"
-import WalletModal from "./WalletModal"
 import { ellipseAddress } from "../lib/utilities"
 import { FaWallet } from "react-icons/fa"
 

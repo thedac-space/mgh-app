@@ -51,7 +51,7 @@ const SalesVolumeDaily = ({ coinPrices, metaverse }: Props) => {
 
   return !predictions ? (
     <>
-      <div className='flex flex-col items-start border-t border-l border-white/10 rounded-xl p-5 w-full bg-[#E9ECF6]'>
+      <div className='flex flex-col items-start border-t border-l border-white/10 rounded-xl p-5 w-full bg-grey-panel'>
         <p className={`text-lg xl:text-xl font-medium text-grey-content`}>
           We couldn't obtain Daily Volume for the {formatName(metaverse)} lands
           collection. Check{' '}
@@ -72,7 +72,7 @@ const SalesVolumeDaily = ({ coinPrices, metaverse }: Props) => {
         <p className={`text-lg xl:text-xl font-medium text-grey-content font-plus mb-4`}>
           Daily Volume:{' '}
         </p>
-      <div className='flex flex-col items-start border-t border-l border-white/10 rounded-xl p-5 w-full bg-[#E9ECF6]'>     
+      <div className='flex flex-col items-start border-t border-l border-white/10 rounded-xl p-5 w-full bg-grey-panel'>     
 
         <div
           className={

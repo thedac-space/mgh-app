@@ -46,7 +46,7 @@ const HorizontalPriceCard = ({ land, landId, prices, metaverse }: Props) => {
       <BsTwitter
         title='Share Valuation'
         onClick={() => window.open(options.twitter.valuationLink)}
-        className='absolute h-5 w-5 bottom-[0.58rem] lg:bottom-0 md:bottom-2 right-0 text-gray-200 hover:text-blue-400 transition ease-in-out duration-300 cursor-pointer'
+        className='absolute h-5 w-5 bottom-[0.58rem] lg:bottom-0 md:bottom-2 right-0 text-grey-content hover:text-blue-400 transition ease-in-out duration-300 cursor-pointer'
       />
     </div>
   )

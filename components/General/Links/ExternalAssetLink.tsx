@@ -53,11 +53,11 @@ const ExternalAssetLink = ({
         {/* Name and Id */}
         <div>
           {/* Asset Name */}
-          <h3 className='text-base xs:text-xl lg:font-bold 2xl:text-2xl lg:text-2xl md:text-lg p-0 leading-4  text-gray-200'>
+          <h3 className='text-base xs:text-xl lg:font-bold 2xl:text-2xl lg:text-2xl md:text-lg p-0 leading-4  text-grey-content'>
             {handleLandName(metaverse, land.coords)}
           </h3>
           {/* Asset ID */}
-          <p className='text-xs text-gray-400'>
+          <p className='text-xs font-medium text-grey-content'>
             Token ID: {handleTokenID(landId)}
           </p>
         </div>
