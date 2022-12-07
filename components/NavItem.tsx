@@ -14,7 +14,7 @@ const NavItem = ({ text, link }: any) => {
 		}
 	}
 
-	const styleItem = `span-layout text-5xl ${
+	const styleItem = `span-layout text-6xl ${
 		focus && "text-grey-icon"
 	} nav-link__icon`
 
@@ -70,21 +70,21 @@ const NavItem = ({ text, link }: any) => {
 	return (
 		<>
 			<Link href={link}>
-				<ul className="menu cursor-pointer" data-animation="to-right">
+				<div className="menu cursor-pointer" data-animation="to-right">
 					
 						<a
 							className={`${
 								focus ? "  shadowNavItem" : "shadowNormal"
-							} justify-center rounded-2xl text-grey-icon `}
+							} justify-center rounded-2xl p-2 text-grey-icon `}
 						>
 							
 							{getIcon(link)}
-							<span className="font-plus font-bold justify-center span-layout text-sm">{text}</span>
+							<span className="font-plus font-bold justify-center span-layout text-sm text-center">{text}</span>
 						
 						</a>
 					
 						
-				</ul>
+				</div>
 				
 			</Link>
 		</>

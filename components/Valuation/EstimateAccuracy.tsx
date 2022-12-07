@@ -1,41 +1,38 @@
 import React, { useEffect, useState } from 'react'
 import { getEstimateAccuracy } from '../../backend/services/openSeaDataManager'
 import { Metaverse } from '../../lib/metaverse'
-import { IPredictions } from '../../lib/types'
-import { formatName } from '../../lib/utilities'
 import { ICoinPrices } from '../../lib/valuation/valuationTypes'
-import { getAxieDailyTradeVolume } from '../../lib/valuation/valuationUtils'
-import { PriceList } from '../General'
+
 
 interface Props {
   metaverse: Metaverse
   coinPrices: ICoinPrices
 }
 
-const EstimateAccuracy = ({ coinPrices, metaverse }: Props) => {
+const EstimateAccuracy = ({ metaverse }: Props) => {
   const [values, setValues] = useState<any>()
   const [loading, setLoading] = useState(true)
   const styleContent = 'text-base font-medium font-plus text-grey-content pt-0.5'
 
   const formatter = new Intl.NumberFormat('en-US', {
     minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+    maximumFractionDigits: 3,
   });
 
   useEffect(() => {
     const setData = async () => {
       setLoading(true)
       // Fetch Data from ITRM
-      const stats = await getEstimateAccuracy()
+      const stats = await getEstimateAccuracy(metaverse)
       
       setValues(stats)
       setLoading(false)
     }
     setData()
   }, [metaverse])
-  return !values ? (
+  return !values || metaverse =="axie-infinity" ? (
     <>
-      <div className='flex flex-col items-start border-t border-l border-white/10 rounded-xl p-5 w-full bg-grey-panel'>
+      <div className='flex flex-col items-start border-t border-l border-white/10 rounded-xl p-5 mt-10 w-full bg-grey-panel'>
         <p className={`text-lg xl:text-xl font-medium text-grey-content`}>
           We couldn't obtain Estimate Accuracy
           Check{' '}
@@ -73,7 +70,7 @@ const EstimateAccuracy = ({ coinPrices, metaverse }: Props) => {
               MINIMUN :
             </p>
           </div>
-          <div className="items-end space-y-1">
+          <div className="items-end space-y-1 text-right">
             <p className={styleContent}>
               {formatter.format(values.MAPE)}
             </p>

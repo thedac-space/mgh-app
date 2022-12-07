@@ -45,14 +45,14 @@ const Layout = ({ children }: any) => {
 							/>
 						</a>
 						<div className="space-y-6 flex flex-col pt-6">
-							<NavItem text="Home" link="/" />
-							<NavItem text="Land V" link="/valuation" />
-							<NavItem text="NFT V" link="/nftValuation" />
-							<NavItem text="Swap" link="/swap" />
-							<NavItem text="Liquidity" link="/liquidity" />
-							<NavItem text="Stake" link="/stake" />
+							<NavItem text="HOME" link="/" />
+							<NavItem text="LAND Valuation" link="/valuation" />
+							<NavItem text="NFT Valuation" link="/nftValuation" />
+							<NavItem text="SWAP" link="/swap" />
+							<NavItem text="LIQUIDITY" link="/liquidity" />
+							<NavItem text="STAKE" link="/stake" />
 							<NavItem
-								text="Gov"
+								text="Governance"
 								link="https://snapshot.org/#/metagamehub.eth"
 							/>
 						</div>

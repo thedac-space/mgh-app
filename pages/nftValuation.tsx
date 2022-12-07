@@ -114,9 +114,9 @@ const Home: NextPage = () => {
 				/>
 			</Head>
 			<div className="bg-grey-lightest rounded-lg p-8">
-				<div className="w-full flex flex-col  space-y-10 max-w-7xl mt-8 xl:mt-0">
+				<div className="w-full flex flex-col  space-y-10 mt-8 xl:mt-0">
 					<span>
-						<img src="/images/imagenft.svg" alt="IMG" className="w-[1500px]" />
+						<img src="/images/imagenft.svg" alt="IMG" className="w-full" />
 					</span>
 					<div className="flex border-t border-l border-white/10 rounded-3xl shadowDiv p-5 bg-opacity-30 justify-between bg-grey-bone">
 						<div className="pr-5 w-3/4">
