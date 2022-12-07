@@ -14,8 +14,9 @@ const NavItem = ({ text, link }: any) => {
 		}
 	}
 
-	const styleItem = `span-layout text-5xl ${focus && "text-grey-icon"
-		} nav-link__icon`
+	const styleItem = `span-layout text-6xl ${
+		focus && "text-grey-icon"
+	} nav-link__icon`
 
 	function getIcon(link: any) {
 		switch (link) {
@@ -70,14 +71,21 @@ const NavItem = ({ text, link }: any) => {
 		<>
 			<Link href={link}>
 				<div className="menu cursor-pointer" data-animation="to-right">
-					<a
-						className={`${focus ? "  shadowNavItem" : "shadowNormal"
-							} justify-center rounded-2xl text-grey-icon `}
-					>
-						{getIcon(link)}
-						<span className="font-plus font-bold justify-center span-layout text-sm">{text}</span>
-					</a>
+					
+						<a
+							className={`${
+								focus ? "  shadowNavItem" : "shadowNormal"
+							} justify-center rounded-2xl p-2 text-grey-icon `}
+						>
+							
+							{getIcon(link)}
+							<span className="font-plus font-bold justify-center span-layout text-sm text-center">{text}</span>
+						
+						</a>
+					
+						
 				</div>
+				
 			</Link>
 		</>
 	);

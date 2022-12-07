@@ -127,33 +127,6 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 		const coords = { x, y };
 		setHovered({ coords, owner, name });
 	};
-	useEffect(() => {
-		const getglobalData = async () => {
-			setglobalData(
-				(
-					await axios.get(
-						process.env.ITRM_SERVICE +
-						"/fluf/globalData"
-					)
-				).data
-			)
-		};
-		getglobalData();
-	}, []);
-	useEffect(() => {
-		const getEstimateAccuracy = async () => {
-			setestimateAccuracy(
-				(
-					await axios.get(
-						process.env.ITRM_SERVICE +
-						"/test/sandbox/performance"
-					)
-				).data
-			)
-		};
-		getEstimateAccuracy();
-	}, []);
-
 	const getglobalData = async () => {
 		if (!metaverse) return;
 		try {
@@ -175,19 +148,6 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 			return setTimeout(() => setIsVisible(false), 1100);
 		}
 	};
-
-	useEffect(() => {
-		const getEstimateAccuracy = async () => {
-			setestimateAccuracy(
-				(
-					await axios.get(
-						process.env.ITRM_SERVICE + "/test/sandbox/performance"
-					)
-				).data
-			);
-		};
-		getEstimateAccuracy();
-	}, []);
 
 	useEffect(() => {
 		setIsVisible(false);

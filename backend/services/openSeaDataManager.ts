@@ -19,9 +19,13 @@ async function getEthExchangePrice() {
   const data_json = await data.json()
   return data_json
 }
-async function getEstimateAccuracyValues() {
+async function getEstimateAccuracyValues(collectionName:string) {
+  console.log("collection", collectionName)
+  if (collectionName === 'axie-infinity' || collectionName === 'somnium-space' ) {
+    collectionName = '--'
+  }
   const data = await fetch(
-    `https://services.itrmachines.com/test/sandbox/performance`
+    `https://services.itrmachines.com/test/${collectionName}/performance`
   )
   const data_json = await data.json()
   return data_json
@@ -50,9 +54,12 @@ export async function getETHExchangeValue() {
   }
 }
 
-export async function getEstimateAccuracy() {
+export async function getEstimateAccuracy(collectionName:string) {
+  if (!collectionName) {
+    return {}
+  }
   try {
-    const collectionData = await getEstimateAccuracyValues()
+    const collectionData = await getEstimateAccuracyValues(collectionName)
     return collectionData
   } catch (error) {
     console.log('problem getting exchange rate for eth', error)
