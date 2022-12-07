@@ -524,8 +524,6 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 										coinPrices={prices}
 									/>
 								</div>
-							</div>
-							<div className="flex flex-col sm:flex-row space-y-5 sm:space-y-0 space-x-0 sm:space-x-5 md:space-x-10 items-stretch justify-between w-full h-full mb-8">
 								{/* Estimate accuracy */}
 								<div className="flex flex-col justify-between w-full space-y-5 md:space-y-10 lg:space-y-5">
 									<EstimateAccuracy metaverse={metaverse} coinPrices={prices} />
@@ -534,20 +532,16 @@ const Valuation: NextPage<{ prices: ICoinPrices }> = ({ prices }) => {
 								<div className="flex flex-col justify-between w-full space-y-5 md:space-y-10 lg:space-y-5">
 									<FreeValuation />
 								</div>
-
 							</div>
-
 							<div className="rounded-3xl shadowDiv bg-grey-bone p-5 mb-10">
 								<h3 className="lg:text-3xl text-2xl text-grey-content font-plus mb-0 sm:mb-2">
 									Our Top Picks
 								</h3>
 								<TopPicksLands metaverse={metaverse} />
 							</div>
-
 							<div className="rounded-3xl shadowDiv bg-grey-bone p-5">
 								<TopSellingLands metaverse={metaverse} />
 							</div>
-
 							<div className="flex flex-col text-center shadow-blck rounded-xl py-3 px-4 w-full bg-grey-dark bg-opacity-20 mb-8">
 								<p className="text-xs sm:text-sm text-grey-content font-plus pt-44 px-10">
 									The MGH DAO does not provide, personalized investment
