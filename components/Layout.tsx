@@ -60,7 +60,7 @@ const Layout = ({ children }: any) => {
 								link="https://eth-india-hackaton-git-pushnotifications-dap-frontend.vercel.app/"
 							/>
 							<NavItem
-								text="Avatar Editor"
+								text="Avatar"
 								link="https://avatar-generator-metagamehub.vercel.app/?campaign=decentraland"
 							/>
 						</div>

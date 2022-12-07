@@ -64,6 +64,18 @@ const NavItem = ({ text, link }: any) => {
 						&#xe904;
 					</span>
 				);
+			case 'https://eth-india-hackaton-git-pushnotifications-dap-frontend.vercel.app/':
+				return (
+					<span className={styleItem} aria-hidden="true">
+						&#xe904;
+					</span>
+				)
+			case 'https://avatar-generator-metagamehub.vercel.app/?campaign=decentraland':
+				return (
+					<span className={styleItem} aria-hidden="true">
+						&#xe904;
+					</span>
+				)
 		}
 	}
 
